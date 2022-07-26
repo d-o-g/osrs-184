@@ -17,7 +17,7 @@ public class VarcInteger extends DoublyLinkedNode {
     }
 
     void decode(int opcode) {
-        if (opcode == 2) {
+        if (opcode == Opcode.PERSIST) {
             persists = true;
         }
     }
@@ -31,5 +31,9 @@ public class VarcInteger extends DoublyLinkedNode {
 
             decode(opcode);
         }
+    }
+
+    public interface Opcode {
+        int PERSIST = 2;
     }
 }
