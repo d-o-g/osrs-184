@@ -40,7 +40,10 @@ public class JagClientProtHandler extends ClientProtHandler {
         synchronized (client.mouseRecorder.lock) {
             if (!client.lockMouseRecorder) {
                 client.mouseRecorder.caret = 0;
-            } else if (Mouse.clickMeta != 0 || client.mouseRecorder.caret >= 40) {
+                return;
+            }
+
+            if (Mouse.clickMeta != 0 || client.mouseRecorder.caret >= 40) {
                 MouseRecorder recorder = client.mouseRecorder;
                 OutgoingPacket packet = null;
                 int offset = 0;
@@ -67,57 +70,59 @@ public class JagClientProtHandler extends ClientProtHandler {
                         x = 65534;
                     }
 
-                    if (x != client.lastMouseRecordX || y != client.lastMouseRecordY) {
-                        if (packet == null) {
-                            packet = OutgoingPacket.prepare(ClientProt.MOUSE_MOTION_RECORD, netWriter.encryptor);
-                            packet.buffer.p1(0);
-                            offset = packet.buffer.pos;
-                            packet.buffer.pos += 2;
-                            timeDelta = 0;
-                            count = 0;
-                        }
-
-                        if (client.lastMouseRecordTime != -1L) {
-                            xDiff = x - client.lastMouseRecordX;
-                            yDiff = y - client.lastMouseRecordY;
-                            timeDiff = (int) ((recorder.times[i] - client.lastMouseRecordTime) / 20L);
-                            timeDelta = (int) ((long) timeDelta + (recorder.times[i] - client.lastMouseRecordTime) % 20L);
-                        } else {
-                            xDiff = x;
-                            yDiff = y;
-                            timeDiff = Integer.MAX_VALUE;
-                        }
-
-                        client.lastMouseRecordX = x;
-                        client.lastMouseRecordY = y;
-                        if (timeDiff < 8 && xDiff >= -32 && xDiff <= 31 && yDiff >= -32 && yDiff <= 31) {
-                            xDiff += 32;
-                            yDiff += 32;
-                            packet.buffer.p2((timeDiff << 12) + yDiff + (xDiff << 6));
-                        } else if (timeDiff < 32 && xDiff >= -128 && xDiff <= 127 && yDiff >= -128 && yDiff <= 127) {
-                            xDiff += 128;
-                            yDiff += 128;
-                            packet.buffer.p1(timeDiff + 128);
-                            packet.buffer.p2(yDiff + (xDiff << 8));
-                        } else if (timeDiff < 32) {
-                            packet.buffer.p1(timeDiff + 192);
-                            if (x != -1 && y != -1) {
-                                packet.buffer.p4(x | y << 16);
-                            } else {
-                                packet.buffer.p4(Integer.MIN_VALUE);
-                            }
-                        } else {
-                            packet.buffer.p2((timeDiff & 0x1fff) + 0xe000);
-                            if (x != -1 && y != -1) {
-                                packet.buffer.p4(x | (y << 16));
-                            } else {
-                                packet.buffer.p4(Integer.MIN_VALUE);
-                            }
-                        }
-
-                        ++count;
-                        client.lastMouseRecordTime = recorder.times[i];
+                    if (x == client.lastMouseRecordX && y == client.lastMouseRecordY) {
+                        continue;
                     }
+
+                    if (packet == null) {
+                        packet = OutgoingPacket.prepare(ClientProt.MOUSE_MOTION_RECORD, netWriter.encryptor);
+                        packet.buffer.p1(0);
+                        offset = packet.buffer.pos;
+                        packet.buffer.pos += 2;
+                        timeDelta = 0;
+                        count = 0;
+                    }
+
+                    if (client.lastMouseRecordTime != -1L) {
+                        xDiff = x - client.lastMouseRecordX;
+                        yDiff = y - client.lastMouseRecordY;
+                        timeDiff = (int) ((recorder.times[i] - client.lastMouseRecordTime) / 20L);
+                        timeDelta = (int) ((long) timeDelta + (recorder.times[i] - client.lastMouseRecordTime) % 20L);
+                    } else {
+                        xDiff = x;
+                        yDiff = y;
+                        timeDiff = Integer.MAX_VALUE;
+                    }
+
+                    client.lastMouseRecordX = x;
+                    client.lastMouseRecordY = y;
+                    if (timeDiff < 8 && xDiff >= -32 && xDiff <= 31 && yDiff >= -32 && yDiff <= 31) {
+                        xDiff += 32;
+                        yDiff += 32;
+                        packet.buffer.p2((timeDiff << 12) + yDiff + (xDiff << 6));
+                    } else if (timeDiff < 32 && xDiff >= -128 && xDiff <= 127 && yDiff >= -128 && yDiff <= 127) {
+                        xDiff += 128;
+                        yDiff += 128;
+                        packet.buffer.p1(timeDiff + 128);
+                        packet.buffer.p2(yDiff + (xDiff << 8));
+                    } else if (timeDiff < 32) {
+                        packet.buffer.p1(timeDiff + 192);
+                        if (x != -1 && y != -1) {
+                            packet.buffer.p4(x | y << 16);
+                        } else {
+                            packet.buffer.p4(Integer.MIN_VALUE);
+                        }
+                    } else {
+                        packet.buffer.p2((timeDiff & 0x1fff) + 0xe000);
+                        if (x != -1 && y != -1) {
+                            packet.buffer.p4(x | (y << 16));
+                        } else {
+                            packet.buffer.p4(Integer.MIN_VALUE);
+                        }
+                    }
+
+                    ++count;
+                    client.lastMouseRecordTime = recorder.times[i];
                 }
 
                 if (packet != null) {
@@ -130,13 +135,13 @@ public class JagClientProtHandler extends ClientProtHandler {
                     netWriter.writeLater(packet);
                 }
 
-                if (lastIndex >= recorder.caret) {
-                    recorder.caret = 0;
-                } else {
+                if (lastIndex < recorder.caret) {
                     recorder.caret -= lastIndex;
                     System.arraycopy(recorder.xs, lastIndex, recorder.xs, 0, recorder.caret);
                     System.arraycopy(recorder.ys, lastIndex, recorder.ys, 0, recorder.caret);
                     System.arraycopy(recorder.times, lastIndex, recorder.times, 0, recorder.caret);
+                } else {
+                    recorder.caret = 0;
                 }
             }
         }
@@ -166,35 +171,35 @@ public class JagClientProtHandler extends ClientProtHandler {
             }
 
             int compressedClickTimeDelta = (int) clickTimeDelta;
-            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.MOUSE_ACTION, netWriter.encryptor);
-            outgoing.buffer.p2((Mouse.clickMeta == 2 ? 1 : 0) + (compressedClickTimeDelta << 1));
-            outgoing.buffer.p2(x);
-            outgoing.buffer.p2(y);
-            netWriter.writeLater(outgoing);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.MOUSE_ACTION, netWriter.encryptor);
+            packet.buffer.p2((Mouse.clickMeta == 2 ? 1 : 0) + (compressedClickTimeDelta << 1));
+            packet.buffer.p2(x);
+            packet.buffer.p2(y);
+            netWriter.writeLater(packet);
         }
     }
 
     @Override
     public void processKeyInfo() {
         if (Keyboard.pressedKeysCount > 0) {
-            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.KEY_INFO, netWriter.encryptor);
-            outgoing.buffer.p2(0);
-            int startOffset = outgoing.buffer.pos;
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEY_INFO, netWriter.encryptor);
+            packet.buffer.p2(0);
+            int startOffset = packet.buffer.pos;
             long time = Clock.now();
 
             for (int i = 0; i < Keyboard.pressedKeysCount; ++i) {
                 long timeOffset = time - client.timeOfPreviousKeyPress;
-                if (timeOffset > 16777215L) {
-                    timeOffset = 16777215L;
+                if (timeOffset > 0xffffffL) {
+                    timeOffset = 0xffffffL;
                 }
 
                 client.timeOfPreviousKeyPress = time;
-                outgoing.buffer.ip3((int) timeOffset);
-                outgoing.buffer.writeByteS(Keyboard.anIntArray147[i]);
+                packet.buffer.ip3((int) timeOffset);
+                packet.buffer.writeByteS(Keyboard.pressedKeyIndices[i]);
             }
 
-            outgoing.buffer.psize2(outgoing.buffer.pos - startOffset);
-            netWriter.writeLater(outgoing);
+            packet.buffer.psize2(packet.buffer.pos - startOffset);
+            netWriter.writeLater(packet);
         }
     }
 

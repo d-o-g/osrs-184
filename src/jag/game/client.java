@@ -2323,8 +2323,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             if (index < 0) {
                                 Keyboard.heldKeys[~index] = false;
                             } else {
-                                if (!Keyboard.heldKeys[index] && Keyboard.pressedKeysCount < Keyboard.anIntArray147.length - 1) {
-                                    Keyboard.anIntArray147[Keyboard.pressedKeysCount++] = index;
+                                if (!Keyboard.heldKeys[index] && Keyboard.pressedKeysCount < Keyboard.pressedKeyIndices.length - 1) {
+                                    Keyboard.pressedKeyIndices[Keyboard.pressedKeysCount++] = index;
                                 }
 
                                 Keyboard.heldKeys[index] = true;
