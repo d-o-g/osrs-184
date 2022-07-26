@@ -1,9 +1,6 @@
 package jag.statics;
 
-import jag.game.client;
 import jag.opcode.OldConnectionTaskProcessor;
-import jag.opcode.OutgoingPacket;
-import jag.opcode.ClientProt;
 
 public class Statics35 {
 
@@ -23,12 +20,4 @@ public class Statics35 {
         return var6;
     }
 
-    public static void teleport(int var0, int var1, int var2, boolean var3) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TELEPORT, client.netWriter.encryptor);
-        packet.buffer.writeByteS(var2);
-        packet.buffer.ip4(var3 ? client.anInt1002 : 0);
-        packet.buffer.p2(var1);
-        packet.buffer.ip2a(var0);
-        client.netWriter.writeLater(packet);
-    }
 }

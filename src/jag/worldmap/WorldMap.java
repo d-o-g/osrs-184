@@ -10,7 +10,6 @@ import jag.opcode.Buffer;
 import jag.opcode.OutgoingPacket;
 import jag.opcode.ClientProt;
 import jag.script.ScriptEvent;
-import jag.statics.Statics35;
 
 import java.util.*;
 
@@ -273,7 +272,7 @@ public class WorldMap {
             if (mouseOver != null && var3) {
                 boolean jmod = client.rights >= 2;
                 if (jmod && Keyboard.heldKeys[82] && Keyboard.heldKeys[81]) {
-                    Statics35.teleport(mouseOver.x, mouseOver.y, mouseOver.floorLevel, false);
+                    client.teleport(mouseOver.x, mouseOver.y, mouseOver.floorLevel, false);
                 } else {
                     boolean var9 = true;
                     if (aBoolean1689) {
@@ -607,13 +606,13 @@ public class WorldMap {
         this.sizeToFont.put(WorldMapLabelSize.LARGE, namedFonts.get(VERDANA15));
         this.definitionLoader = new WorldMapDefinitionLoader(table);
 
-        int var7 = table.getGroup(WorldMapCacheFeature.DETAILS.name);
-        int[] ids = table.getFileIds(var7);
+        int groupId = table.getGroup(WorldMapCacheFeature.DETAILS.name);
+        int[] fileIds = table.getFileIds(groupId);
 
-        this.areas = new HashMap<>(ids.length);
+        this.areas = new HashMap<>(fileIds.length);
 
-        for (int id : ids) {
-            Buffer buffer = new Buffer(table.unpack(var7, id));
+        for (int id : fileIds) {
+            Buffer buffer = new Buffer(table.unpack(groupId, id));
             WorldMapCacheArea area = new WorldMapCacheArea();
             area.decode(buffer, id);
             areas.put(area.getJagName(), area);
@@ -650,19 +649,19 @@ public class WorldMap {
     }
 
     public void method1261(int var1, int var2, int var3, boolean var4) {
-        WorldMapCacheArea var5 = getAreaAt(var1, var2, var3);
-        if (var5 == null) {
+        WorldMapCacheArea area = getAreaAt(var1, var2, var3);
+        if (area == null) {
             if (!var4) {
                 return;
             }
 
-            var5 = mainland;
+            area = mainland;
         }
 
         boolean var6 = false;
-        if (var5 != aWorldMapCacheArea_1724 || var4) {
-            aWorldMapCacheArea_1724 = var5;
-            setArea(var5);
+        if (area != aWorldMapCacheArea_1724 || var4) {
+            aWorldMapCacheArea_1724 = area;
+            setArea(area);
             var6 = true;
         }
 
@@ -686,9 +685,9 @@ public class WorldMap {
 
     public void method1227(int var1, int var2, int var3) {
         if (activeArea != null) {
-            int[] var4 = activeArea.toScreen(var1, var2, var3);
-            if (var4 != null) {
-                setDestination(var4[0], var4[1]);
+            int[] screen = activeArea.toScreen(var1, var2, var3);
+            if (screen != null) {
+                setDestination(screen[0], screen[1]);
             }
 
         }

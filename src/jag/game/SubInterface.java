@@ -31,7 +31,7 @@ public class SubInterface extends Node {
                     int uid = (int) sub.key;
                     InterfaceComponent component = InterfaceComponent.lookup(uid);
                     if (component != null) {
-                        InterfaceComponent.repaint(component);
+                        InterfaceComponent.invalidate(component);
                     }
                 }
             }
@@ -46,14 +46,14 @@ public class SubInterface extends Node {
         client.subInterfaces.put(sub, key);
         InterfaceComponent.loadAnimable(id);
         InterfaceComponent component = InterfaceComponent.lookup(key);
-        InterfaceComponent.repaint(component);
+        InterfaceComponent.invalidate(component);
         if (client.pleaseWaitComponent != null) {
-            InterfaceComponent.repaint(client.pleaseWaitComponent);
+            InterfaceComponent.invalidate(client.pleaseWaitComponent);
             client.pleaseWaitComponent = null;
         }
 
         ContextMenu.method317();
-        GameShell.method925(client.interfaces[key >> 16], component, false);
+        InterfaceComponent.revalidateScroll(client.interfaces[key >> 16], component, false);
         InterfaceComponent.loadAndInitialize(id);
         if (client.rootInterfaceIndex != -1) {
             InterfaceComponent.method118(client.rootInterfaceIndex, 1);

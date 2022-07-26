@@ -11,10 +11,74 @@ import jag.js5.Js5Worker;
 import jag.opcode.*;
 import jag.statics.Statics53;
 
+import java.io.IOException;
+
 public class JagServerProtHandler extends ServerProtHandler {
 
     public JagServerProtHandler(NetWriter netWriter) {
         super(netWriter);
+    }
+
+    @Override
+    public boolean available(BitBuffer incoming) throws IOException {
+        Connection connection = netWriter.unwrap();
+        if (netWriter.currentIncomingPacket == null && !readIncomingPacket(connection, incoming)) {
+            return false;
+        }
+
+        if (netWriter.incomingPacketSize == -1) {
+            if (!connection.available(1)) {
+                return false;
+            }
+
+            netWriter.unwrap().read(incoming.payload, 0, 1);
+            netWriter.incomingPacketSize = incoming.payload[0] & 0xff;
+        }
+
+        if (netWriter.incomingPacketSize == -2) {
+            if (!connection.available(2)) {
+                return false;
+            }
+
+            netWriter.unwrap().read(incoming.payload, 0, 2);
+            incoming.pos = 0;
+            netWriter.incomingPacketSize = incoming.g2();
+        }
+
+        return connection.available(netWriter.incomingPacketSize);
+    }
+
+    private boolean readIncomingPacket(Connection connection, BitBuffer incoming) throws IOException {
+        if (netWriter.alive) {
+            if (!connection.available(1)) {
+                return false;
+            }
+
+            connection.read(netWriter.inbuffer.payload, 0, 1);
+            netWriter.idleReadTicks = 0;
+            netWriter.alive = false;
+        }
+
+        incoming.pos = 0;
+        if (incoming.nextIsSmart()) {
+            if (!connection.available(1)) {
+                return false;
+            }
+
+            connection.read(netWriter.inbuffer.payload, 1, 1);
+            netWriter.idleReadTicks = 0;
+        }
+
+        netWriter.alive = true;
+        ServerProt[] incomingPacketTypes = ServerProt.values();
+        int packetIndex = incoming.gesmart();
+        if (packetIndex < 0 || packetIndex >= incomingPacketTypes.length) {
+            throw new IOException(packetIndex + " " + incoming.pos);
+        }
+
+        netWriter.currentIncomingPacket = incomingPacketTypes[packetIndex];
+        netWriter.incomingPacketSize = netWriter.currentIncomingPacket.size;
+        return true;
     }
 
     @Override
@@ -29,8 +93,8 @@ public class JagServerProtHandler extends ServerProtHandler {
             end = -1;
         }
 
-        int key = incoming.method1015();
-        int hash = incoming.method1015();
+        int key = incoming.ig4();
+        int hash = incoming.ig4();
 
         for (int i = start; i <= end; ++i) {
             long value = ((long) hash << 32) + (long) i;
@@ -81,7 +145,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             int id = incoming.readLEUShortA();
             int stack = incoming.method1056();
             if (stack == 255) {
-                stack = incoming.method1015();
+                stack = incoming.ig4();
             }
 
             if (component != null && index < component.itemIds.length) {
@@ -93,7 +157,7 @@ public class JagServerProtHandler extends ServerProtHandler {
         }
 
         if (component != null) {
-            InterfaceComponent.repaint(component);
+            InterfaceComponent.invalidate(component);
         }
 
         SubInterface.process();

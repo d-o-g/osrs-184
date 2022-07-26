@@ -312,7 +312,7 @@ public class InterfaceComponent extends Node {
         }
 
         if (client.pleaseWaitComponent != null) {
-            repaint(client.pleaseWaitComponent);
+            invalidate(client.pleaseWaitComponent);
             client.pleaseWaitComponent = null;
         }
     }
@@ -602,7 +602,7 @@ public class InterfaceComponent extends Node {
                                                     if (var43 != null) {
                                                         var43.renderAlphaAt(var22, var23);
                                                     } else if (forceRepaint) {
-                                                        repaint(component);
+                                                        invalidate(component);
                                                     }
                                                 }
                                             } else {
@@ -650,7 +650,7 @@ public class InterfaceComponent extends Node {
 
                                                                     var29.insetY -= var30;
                                                                     client.draggingComponentY += var30;
-                                                                    repaint(var29);
+                                                                    invalidate(var29);
                                                                 }
 
                                                                 if (var23 + var26 + 32 > JagGraphics.drawingAreaRight && var29.insetY < var29.viewportHeight - var29.height) {
@@ -665,7 +665,7 @@ public class InterfaceComponent extends Node {
 
                                                                     var29.insetY += var30;
                                                                     client.draggingComponentY -= var30;
-                                                                    repaint(var29);
+                                                                    invalidate(var29);
                                                                 }
                                                             }
                                                         } else if (component == StockMarketOfferWorldComparator.anInterfaceComponent351 && var19 == client.anInt1015) {
@@ -674,7 +674,7 @@ public class InterfaceComponent extends Node {
                                                             var28.renderAlphaAt(var22, var23);
                                                         }
                                                     } else {
-                                                        repaint(component);
+                                                        invalidate(component);
                                                     }
                                                 }
                                             }
@@ -721,7 +721,7 @@ public class InterfaceComponent extends Node {
                                         var37 = component.method957();
                                         if (var37 == null) {
                                             if (forceRepaint) {
-                                                repaint(component);
+                                                invalidate(component);
                                             }
                                         } else {
                                             String var45 = component.text;
@@ -771,7 +771,7 @@ public class InterfaceComponent extends Node {
                                             if (var38 != null) {
                                                 var38.renderAlphaAt(absoluteX, absoluteY);
                                             } else if (forceRepaint) {
-                                                repaint(component);
+                                                invalidate(component);
                                             }
                                         } else {
                                             if (component.itemId != -1) {
@@ -782,7 +782,7 @@ public class InterfaceComponent extends Node {
 
                                             if (var38 == null) {
                                                 if (forceRepaint) {
-                                                    repaint(component);
+                                                    invalidate(component);
                                                 }
                                             } else {
                                                 var20 = var38.anInt112;
@@ -840,7 +840,7 @@ public class InterfaceComponent extends Node {
                                                         var42.computeBounds();
                                                         var22 = var42.height / 2;
                                                     } else {
-                                                        repaint(component);
+                                                        invalidate(component);
                                                     }
                                                 }
                                             } else if (component.modelType == 5) {
@@ -852,13 +852,13 @@ public class InterfaceComponent extends Node {
                                             } else if (var20 == -1) {
                                                 var42 = component.method956(null, -1, var36, PlayerEntity.local.model);
                                                 if (var42 == null && forceRepaint) {
-                                                    repaint(component);
+                                                    invalidate(component);
                                                 }
                                             } else {
                                                 AnimationSequence var47 = AnimationSequence.get(var20);
                                                 var42 = component.method956(var47, component.animationFrame, var36, PlayerEntity.local.model);
                                                 if (var42 == null && forceRepaint) {
-                                                    repaint(component);
+                                                    invalidate(component);
                                                 }
                                             }
 
@@ -884,7 +884,7 @@ public class InterfaceComponent extends Node {
                                                 var37 = component.method957();
                                                 if (var37 == null) {
                                                     if (forceRepaint) {
-                                                        repaint(component);
+                                                        invalidate(component);
                                                     }
                                                     continue;
                                                 }
@@ -1067,7 +1067,7 @@ public class InterfaceComponent extends Node {
                         if (animationId != -1) {
                             AnimationSequence animation = AnimationSequence.get(animationId);
 
-                            for (component.animationFrameCycle += client.anInt972; component.animationFrameCycle > animation.frameLengths[component.animationFrame]; repaint(component)) {
+                            for (component.animationFrameCycle += client.anInt972; component.animationFrameCycle > animation.frameLengths[component.animationFrame]; invalidate(component)) {
                                 component.animationFrameCycle -= animation.frameLengths[component.animationFrame];
                                 ++component.animationFrame;
                                 if (component.animationFrame >= animation.frameIds.length) {
@@ -1087,7 +1087,7 @@ public class InterfaceComponent extends Node {
                         animationId *= client.anInt972;
                         component.xRotation = var8 + component.xRotation & 2047;
                         component.zRotation = animationId + component.zRotation & 2047;
-                        repaint(component);
+                        invalidate(component);
                     }
                 }
             }
@@ -1169,7 +1169,7 @@ public class InterfaceComponent extends Node {
         }
     }
 
-    public static void repaint(InterfaceComponent component) {
+    public static void invalidate(InterfaceComponent component) {
         if (component.renderCycle == client.anInt1084) {
             client.renderedComponents[component.boundsIndex] = true;
         }
@@ -1300,10 +1300,10 @@ public class InterfaceComponent extends Node {
         if (Mouse.pressMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.pressMeta == 4) {
             if (var5 >= var1 && var5 < var1 + 16 && var6 >= var2 && var6 < var2 + 16) {
                 var0.insetY -= 4;
-                repaint(var0);
+                invalidate(var0);
             } else if (var5 >= var1 && var5 < var1 + 16 && var6 >= var3 + var2 - 16 && var6 < var3 + var2) {
                 var0.insetY += 4;
-                repaint(var0);
+                invalidate(var0);
             } else if (var5 >= var1 - client.scrollbarWidth && var5 < client.scrollbarWidth + var1 + 16 && var6 >= var2 + 16 && var6 < var3 + var2 - 16) {
                 var7 = var3 * (var3 - 32) / var4;
                 if (var7 < 8) {
@@ -1313,7 +1313,7 @@ public class InterfaceComponent extends Node {
                 int var8 = var6 - var2 - 16 - var7 / 2;
                 int var9 = var3 - 32 - var7;
                 var0.insetY = var8 * (var4 - var3) / var9;
-                repaint(var0);
+                invalidate(var0);
                 client.useDefaultScrollbar = true;
             }
         }
@@ -1322,85 +1322,83 @@ public class InterfaceComponent extends Node {
             var7 = var0.width;
             if (var5 >= var1 - var7 && var6 >= var2 && var5 < var1 + 16 && var6 <= var3 + var2) {
                 var0.insetY += client.mouseWheelPtr * 45;
-                repaint(var0);
+                invalidate(var0);
             }
         }
 
     }
 
-    public static void method728(InterfaceComponent var0, int var1, int var2, boolean var3) {
-        int var4 = var0.width;
-        int var5 = var0.height;
-        if (var0.xAlignment == 0) {
-            var0.width = var0.baseWidth;
-        } else if (var0.xAlignment == 1) {
-            var0.width = var1 - var0.baseWidth;
-        } else if (var0.xAlignment == 2) {
-            var0.width = var0.baseWidth * var1 >> 14;
+    public static void updateSize(InterfaceComponent component, int parentWidth, int parentHeight, boolean fireInputScripts) {
+        int width = component.width;
+        int height = component.height;
+        if (component.xAlignment == 0) {
+            component.width = component.baseWidth;
+        } else if (component.xAlignment == 1) {
+            component.width = parentWidth - component.baseWidth;
+        } else if (component.xAlignment == 2) {
+            component.width = component.baseWidth * parentWidth >> 14;
         }
 
-        if (var0.yAlignment == 0) {
-            var0.height = var0.baseHeight;
-        } else if (var0.yAlignment == 1) {
-            var0.height = var2 - var0.baseHeight;
-        } else if (var0.yAlignment == 2) {
-            var0.height = var2 * var0.baseHeight >> 14;
+        if (component.yAlignment == 0) {
+            component.height = component.baseHeight;
+        } else if (component.yAlignment == 1) {
+            component.height = parentHeight - component.baseHeight;
+        } else if (component.yAlignment == 2) {
+            component.height = parentHeight * component.baseHeight >> 14;
         }
 
-        if (var0.xAlignment == 4) {
-            var0.width = var0.scaleX * var0.height / var0.scaleY;
+        if (component.xAlignment == 4) {
+            component.width = component.scaleX * component.height / component.scaleY;
         }
 
-        if (var0.yAlignment == 4) {
-            var0.height = var0.scaleY * var0.width / var0.scaleX;
+        if (component.yAlignment == 4) {
+            component.height = component.scaleY * component.width / component.scaleX;
         }
 
-        if (var0.contentType == 1337) {
-            client.minimapComponent = var0;
+        if (component.contentType == 1337) {
+            client.minimapComponent = component;
         }
 
-        if (var3 && var0.anObjectArray1400 != null && (var4 != var0.width || var5 != var0.height)) {
-            ScriptEvent var6 = new ScriptEvent();
-            var6.component = var0;
-            var6.args = var0.anObjectArray1400;
-            client.inputOccuringEventScripts.add(var6);
+        if (fireInputScripts && component.anObjectArray1400 != null && (width != component.width || height != component.height)) {
+            ScriptEvent evt = new ScriptEvent();
+            evt.component = component;
+            evt.args = component.anObjectArray1400;
+            client.inputOccuringEventScripts.add(evt);
         }
-
     }
 
     public static boolean isExplicitlyHidden(InterfaceComponent component) {
         return component.explicitlyHidden;
     }
 
-    public static void method185(InterfaceComponent var0, int var1, int var2) {
-        if (var0.xLayout == 0) {
-            var0.relativeX = var0.xMargin;
-        } else if (var0.xLayout == 1) {
-            var0.relativeX = var0.xMargin + (var1 - var0.width) / 2;
-        } else if (var0.xLayout == 2) {
-            var0.relativeX = var1 - var0.width - var0.xMargin;
-        } else if (var0.xLayout == 3) {
-            var0.relativeX = var0.xMargin * var1 >> 14;
-        } else if (var0.xLayout == 4) {
-            var0.relativeX = (var1 - var0.width) / 2 + (var0.xMargin * var1 >> 14);
+    public static void updatePosition(InterfaceComponent component, int parentWidth, int parentHeight) {
+        if (component.xLayout == 0) {
+            component.relativeX = component.xMargin;
+        } else if (component.xLayout == 1) {
+            component.relativeX = component.xMargin + (parentWidth - component.width) / 2;
+        } else if (component.xLayout == 2) {
+            component.relativeX = parentWidth - component.width - component.xMargin;
+        } else if (component.xLayout == 3) {
+            component.relativeX = component.xMargin * parentWidth >> 14;
+        } else if (component.xLayout == 4) {
+            component.relativeX = (parentWidth - component.width) / 2 + (component.xMargin * parentWidth >> 14);
         } else {
-            var0.relativeX = var1 - var0.width - (var0.xMargin * var1 >> 14);
+            component.relativeX = parentWidth - component.width - (component.xMargin * parentWidth >> 14);
         }
 
-        if (var0.yLayout == 0) {
-            var0.relativeY = var0.yMargin;
-        } else if (var0.yLayout == 1) {
-            var0.relativeY = (var2 - var0.height) / 2 + var0.yMargin;
-        } else if (var0.yLayout == 2) {
-            var0.relativeY = var2 - var0.height - var0.yMargin;
-        } else if (var0.yLayout == 3) {
-            var0.relativeY = var2 * var0.yMargin >> 14;
-        } else if (var0.yLayout == 4) {
-            var0.relativeY = (var2 * var0.yMargin >> 14) + (var2 - var0.height) / 2;
+        if (component.yLayout == 0) {
+            component.relativeY = component.yMargin;
+        } else if (component.yLayout == 1) {
+            component.relativeY = (parentHeight - component.height) / 2 + component.yMargin;
+        } else if (component.yLayout == 2) {
+            component.relativeY = parentHeight - component.height - component.yMargin;
+        } else if (component.yLayout == 3) {
+            component.relativeY = parentHeight * component.yMargin >> 14;
+        } else if (component.yLayout == 4) {
+            component.relativeY = (parentHeight * component.yMargin >> 14) + (parentHeight - component.height) / 2;
         } else {
-            var0.relativeY = var2 - var0.height - (var2 * var0.yMargin >> 14);
+            component.relativeY = parentHeight - component.height - (parentHeight * component.yMargin >> 14);
         }
-
     }
 
     public static void method475(InterfaceComponent var0) {
@@ -1442,33 +1440,35 @@ public class InterfaceComponent extends Node {
         }
     }
 
-    public static void method610(InterfaceComponent[] var0, int var1, int var2, int var3, boolean var4) {
-        for (InterfaceComponent var6 : var0) {
-            if (var6 != null && var6.parentUid == var1) {
-                method728(var6, var2, var3, var4);
-                method185(var6, var2, var3);
-                if (var6.insetX > var6.viewportWidth - var6.width) {
-                    var6.insetX = var6.viewportWidth - var6.width;
-                }
+    public static void resizeGroup(InterfaceComponent[] group, int parentUid, int parentWidth, int parentHeight, boolean fireInputScripts) {
+        for (InterfaceComponent component : group) {
+            if (component == null || component.parentUid != parentUid) {
+                continue;
+            }
 
-                if (var6.insetX < 0) {
-                    var6.insetX = 0;
-                }
+            updateSize(component, parentWidth, parentHeight, fireInputScripts);
+            updatePosition(component, parentWidth, parentHeight);
 
-                if (var6.insetY > var6.viewportHeight - var6.height) {
-                    var6.insetY = var6.viewportHeight - var6.height;
-                }
+            if (component.insetX > component.viewportWidth - component.width) {
+                component.insetX = component.viewportWidth - component.width;
+            }
 
-                if (var6.insetY < 0) {
-                    var6.insetY = 0;
-                }
+            if (component.insetX < 0) {
+                component.insetX = 0;
+            }
 
-                if (var6.type == 0) {
-                    GameShell.method925(var0, var6, var4);
-                }
+            if (component.insetY > component.viewportHeight - component.height) {
+                component.insetY = component.viewportHeight - component.height;
+            }
+
+            if (component.insetY < 0) {
+                component.insetY = 0;
+            }
+
+            if (component.type == 0) {
+                revalidateScroll(group, component, fireInputScripts);
             }
         }
-
     }
 
     public static String getAction(InterfaceComponent var0, int var1) {
@@ -1503,7 +1503,7 @@ public class InterfaceComponent extends Node {
 
         InterfaceComponent cmp = lookup(key);
         if (cmp != null) {
-            repaint(cmp);
+            invalidate(cmp);
         }
 
         ContextMenu.method317();
@@ -1728,10 +1728,32 @@ public class InterfaceComponent extends Node {
         return (var0 >> 28 & 1) != 0;
     }
 
-    public static void method1112(int var0, int var1, int var2, boolean var3) {
-        if (load(var0)) {
-            method610(client.interfaces[var0], -1, var1, var2, var3);
+    public static void resizeGroup(int group, int var1, int var2, boolean var3) {
+        if (load(group)) {
+            resizeGroup(client.interfaces[group], -1, var1, var2, var3);
         }
+    }
+
+    public static void revalidateScroll(InterfaceComponent[] var0, InterfaceComponent var1, boolean var2) {
+        int var3 = var1.viewportWidth != 0 ? var1.viewportWidth : var1.width;
+        int var4 = var1.viewportHeight != 0 ? var1.viewportHeight : var1.height;
+        resizeGroup(var0, var1.uid, var3, var4, var2);
+        if (var1.subcomponents != null) {
+            resizeGroup(var1.subcomponents, var1.uid, var3, var4, var2);
+        }
+
+        SubInterface var5 = client.subInterfaces.lookup(var1.uid);
+        if (var5 != null) {
+            resizeGroup(var5.id, var3, var4, var2);
+        }
+
+        if (var1.contentType == 1337) {
+
+        }
+    }
+
+    public static boolean canDrag(int var0) {
+        return (var0 >> 29 & 1) != 0;
     }
 
     public Sprite method958(boolean enabled) {

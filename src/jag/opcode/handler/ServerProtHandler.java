@@ -3,6 +3,8 @@ package jag.opcode.handler;
 import jag.opcode.BitBuffer;
 import jag.opcode.NetWriter;
 
+import java.io.IOException;
+
 public abstract class ServerProtHandler {
 
     protected final NetWriter netWriter;
@@ -10,6 +12,8 @@ public abstract class ServerProtHandler {
     protected ServerProtHandler(NetWriter netWriter) {
         this.netWriter = netWriter;
     }
+
+    public abstract boolean available(BitBuffer incoming) throws IOException;
 
     public abstract boolean processComponentConfigUpdate(BitBuffer incoming);
 

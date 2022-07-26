@@ -95,24 +95,6 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
         WorldMapDecor.method382(new DefaultAudioSystemProvider());
     }
 
-    public static void method925(InterfaceComponent[] var0, InterfaceComponent var1, boolean var2) {
-        int var3 = var1.viewportWidth != 0 ? var1.viewportWidth : var1.width;
-        int var4 = var1.viewportHeight != 0 ? var1.viewportHeight : var1.height;
-        InterfaceComponent.method610(var0, var1.uid, var3, var4, var2);
-        if (var1.subcomponents != null) {
-            InterfaceComponent.method610(var1.subcomponents, var1.uid, var3, var4, var2);
-        }
-
-        SubInterface var5 = client.subInterfaces.lookup(var1.uid);
-        if (var5 != null) {
-            InterfaceComponent.method1112(var5.id, var3, var4, var2);
-        }
-
-        if (var1.contentType == 1337) {
-        }
-
-    }
-
     public static void drawScrollbar(int var0, int var1, int var2, int var3, int var4) {
         SerializableString.scrollbars[0].renderAt(var0, var1);
         SerializableString.scrollbars[1].renderAt(var0, var3 + var1 - 16);
@@ -487,7 +469,7 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
             }
 
             focused = true;
-            method737();
+            updateSize();
         }
     }
 
@@ -703,7 +685,7 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
         clipboard = getToolkit().getSystemClipboard();
     }
 
-    protected abstract void method737();
+    protected abstract void updateSize();
 
     void resetDrawing() {
         int screenX = this.screenX;

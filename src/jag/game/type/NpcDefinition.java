@@ -11,7 +11,6 @@ import jag.game.scene.entity.UnlitModel;
 import jag.graphics.JagGraphics3D;
 import jag.js5.ReferenceTable;
 import jag.opcode.Buffer;
-import jag.statics.Statics35;
 
 public class NpcDefinition extends DoublyLinkedNode {
 
@@ -124,7 +123,7 @@ public class NpcDefinition extends DoublyLinkedNode {
             var13 = PlayerEntity.local.floorLevel;
             var14 = client.baseX + (Camera.oculusOrbAbsoluteX >> 7);
             var15 = client.baseY + (Camera.oculusOrbAbsoluteY >> 7);
-            Statics35.teleport(var14, var15, var13, true);
+            client.teleport(var14, var15, var13, true);
         }
 
     }

@@ -27,7 +27,7 @@ public class ComponentSelection {
             }
 
             state = false;
-            InterfaceComponent.repaint(component);
+            InterfaceComponent.invalidate(component);
         }
     }
 
@@ -45,7 +45,7 @@ public class ComponentSelection {
         ComponentSelection.uid = uid;
         ComponentSelection.index = index;
         ComponentSelection.targetFlags = flags;
-        InterfaceComponent.repaint(component);
+        InterfaceComponent.invalidate(component);
     }
 
 }

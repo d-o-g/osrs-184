@@ -768,6 +768,15 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         return "<col=" + Integer.toHexString(color) + ">";
     }
 
+    public static void teleport(int var0, int var1, int var2, boolean var3) {
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TELEPORT, netWriter.encryptor);
+        packet.buffer.writeByteS(var2);
+        packet.buffer.ip4(var3 ? anInt1002 : 0);
+        packet.buffer.p2(var1);
+        packet.buffer.ip2a(var0);
+        netWriter.writeLater(packet);
+    }
+
     public void method741() {
         if (gameState != 1000) {
             boolean var1 = ResourceRequest.processResources();
@@ -782,10 +791,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         return PlayerEntity.local != null ? PlayerEntity.local.namePair : null;
     }
 
-    public void method733() {
+    public void callResizeJS() {
         int var1 = canvasWidth;
         int var2 = canvasHeight;
         if (this.width_ < var1) {
+
         }
 
         if (this.height_ < var2) {
@@ -885,8 +895,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         relationshipSystem = new RelationshipSystem(PreciseWorldMapAreaChunk.nameLengthParameter);
     }
 
-    public void method734(boolean var1) {
-        InterfaceComponent.method1112(rootInterfaceIndex, canvasWidth, canvasHeight, var1);
+    public void updateSize(boolean fireInputScripts) {
+        InterfaceComponent.resizeGroup(rootInterfaceIndex, canvasWidth, canvasHeight, fireInputScripts);
     }
 
     public void js5error(int var1) {
@@ -921,46 +931,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     }
 
-    public boolean method731() {
+    public boolean isOpenMenuOnLeftClick() {
         int last = ContextMenu.getLastRowIndex();
         return (varpControlledInt1 == 1 && ContextMenu.rowCount > 2 || ContextMenu.isComponentAction2(last)) && !ContextMenu.prioritizedActions[last];
     }
 
     protected void onExit() {
 
-    }
-
-    private boolean readIncomingPacket(Connection connection, BitBuffer incoming) throws IOException {
-        if (netWriter.alive) {
-            if (!connection.available(1)) {
-                return false;
-            }
-
-            connection.read(netWriter.inbuffer.payload, 0, 1);
-            netWriter.idleReadTicks = 0;
-            netWriter.alive = false;
-        }
-
-        incoming.pos = 0;
-        if (incoming.nextIsSmart()) {
-            if (!connection.available(1)) {
-                return false;
-            }
-
-            connection.read(netWriter.inbuffer.payload, 1, 1);
-            netWriter.idleReadTicks = 0;
-        }
-
-        netWriter.alive = true;
-        ServerProt[] incomingPacketTypes = ServerProt.values();
-        int packetIndex = incoming.gesmart();
-        if (packetIndex < 0 || packetIndex >= incomingPacketTypes.length) {
-            throw new IOException(packetIndex + " " + incoming.pos);
-        }
-
-        netWriter.currentIncomingPacket = incomingPacketTypes[packetIndex];
-        netWriter.incomingPacketSize = netWriter.currentIncomingPacket.size;
-        return true;
     }
 
     public boolean processIncomingPacket() {
@@ -971,30 +948,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         }
 
         try {
-            if (netWriter.currentIncomingPacket == null && !readIncomingPacket(connection, incoming)) {
-                return false;
-            }
-
-            if (netWriter.incomingPacketSize == -1) {
-                if (!connection.available(1)) {
-                    return false;
-                }
-
-                netWriter.unwrap().read(incoming.payload, 0, 1);
-                netWriter.incomingPacketSize = incoming.payload[0] & 0xff;
-            }
-
-            if (netWriter.incomingPacketSize == -2) {
-                if (!connection.available(2)) {
-                    return false;
-                }
-
-                netWriter.unwrap().read(incoming.payload, 0, 2);
-                incoming.pos = 0;
-                netWriter.incomingPacketSize = incoming.g2();
-            }
-
-            if (!connection.available(netWriter.incomingPacketSize)) {
+            if (!serverProtHandler.available(incoming)) {
                 return false;
             }
 
@@ -1022,19 +976,19 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.AN_SERVER_PROT_175 == netWriter.currentIncomingPacket) {
-                int var6 = incoming.method1070();
-                int var5 = incoming.method1070();
-                int var7 = incoming.method1015();
-                InterfaceComponent var47 = InterfaceComponent.lookup(var7);
-                if (var5 != var47.xMargin || var6 != var47.yMargin || var47.xLayout != 0 || var47.yLayout != 0) {
-                    var47.xMargin = var5;
-                    var47.yMargin = var6;
-                    var47.xLayout = 0;
-                    var47.yLayout = 0;
-                    InterfaceComponent.repaint(var47);
-                    this.method742(var47);
-                    if (var47.type == 0) {
-                        GameShell.method925(interfaces[var7 >> 16], var47, false);
+                int yMargin = incoming.method1070();
+                int xMargin = incoming.method1070();
+                int uid = incoming.ig4();
+                InterfaceComponent component = InterfaceComponent.lookup(uid);
+                if (xMargin != component.xMargin || yMargin != component.yMargin || component.xLayout != 0 || component.yLayout != 0) {
+                    component.xMargin = xMargin;
+                    component.yMargin = yMargin;
+                    component.xLayout = 0;
+                    component.yLayout = 0;
+                    InterfaceComponent.invalidate(component);
+                    this.updateComponentMargin(component);
+                    if (component.type == 0) {
+                        InterfaceComponent.revalidateScroll(interfaces[uid >> 16], component, false);
                     }
                 }
 
@@ -1123,7 +1077,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.AN_SERVER_PROT_211 == netWriter.currentIncomingPacket) {
-                int var6 = incoming.method1015();
+                int var6 = incoming.ig4();
                 int var5 = incoming.g4();
                 SubInterface var53 = subInterfaces.lookup(var5);
                 SubInterface var13 = subInterfaces.lookup(var6);
@@ -1138,13 +1092,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 InterfaceComponent component = InterfaceComponent.lookup(var5);
                 if (component != null) {
-                    InterfaceComponent.repaint(component);
+                    InterfaceComponent.invalidate(component);
                 }
 
                 component = InterfaceComponent.lookup(var6);
                 if (component != null) {
-                    InterfaceComponent.repaint(component);
-                    GameShell.method925(interfaces[component.uid >>> 16], component, true);
+                    InterfaceComponent.invalidate(component);
+                    InterfaceComponent.revalidateScroll(interfaces[component.uid >>> 16], component, true);
                 }
 
                 if (rootInterfaceIndex != -1) {
@@ -1219,7 +1173,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     var14.animation = var6;
                     var14.animationFrame = 0;
                     var14.animationFrameCycle = 0;
-                    InterfaceComponent.repaint(var14);
+                    InterfaceComponent.invalidate(var14);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1228,7 +1182,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (ServerProt.SET_COMPONENT_TO_ITEM_MODEL == netWriter.currentIncomingPacket) {
                 int var6 = incoming.g4();
-                int var5 = incoming.method1015();
+                int var5 = incoming.ig4();
                 int var7 = incoming.readLEUShortA();
                 if (var7 == 65535) {
                     var7 = -1;
@@ -1272,7 +1226,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
 
                 }
-                InterfaceComponent.repaint(var47);
+                InterfaceComponent.invalidate(var47);
 
                 netWriter.currentIncomingPacket = null;
                 return true;
@@ -1285,7 +1239,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 if (var14.modelType != 2 || var5 != var14.modelId) {
                     var14.modelType = 2;
                     var14.modelId = var5;
-                    InterfaceComponent.repaint(var14);
+                    InterfaceComponent.invalidate(var14);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1340,7 +1294,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.AN_SERVER_PROT_258 == netWriter.currentIncomingPacket) {
-                int var6 = incoming.method1015();
+                int var6 = incoming.ig4();
                 InterfaceComponent component = InterfaceComponent.lookup(var6);
 
                 for (int i = 0; i < component.itemIds.length; ++i) {
@@ -1348,7 +1302,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     component.itemIds[i] = 0;
                 }
 
-                InterfaceComponent.repaint(component);
+                InterfaceComponent.invalidate(component);
                 netWriter.currentIncomingPacket = null;
                 return true;
             }
@@ -1530,7 +1484,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             if (ServerProt.AN_SERVER_PROT_236 == netWriter.currentIncomingPacket) {
                 int rootInterfaceIndex = incoming.method1055();
                 client.rootInterfaceIndex = rootInterfaceIndex;
-                this.method734(false);
+                this.updateSize(false);
                 InterfaceComponent.loadAnimable(rootInterfaceIndex);
                 InterfaceComponent.loadAndInitialize(client.rootInterfaceIndex);
 
@@ -1581,11 +1535,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (ServerProt.SET_COMPONENT_HIDDEN == netWriter.currentIncomingPacket) {
                 boolean hidden = incoming.g1() == 1;
-                int uid = incoming.method1015();
+                int uid = incoming.ig4();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
                 if (hidden != component.explicitlyHidden) {
                     component.explicitlyHidden = hidden;
-                    InterfaceComponent.repaint(component);
+                    InterfaceComponent.invalidate(component);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1620,7 +1574,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 if (component != null) {
-                    InterfaceComponent.repaint(component);
+                    InterfaceComponent.invalidate(component);
                 }
 
                 SubInterface.process();
@@ -1636,7 +1590,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 if (component.modelType != 1 || var5 != component.modelId) {
                     component.modelType = 1;
                     component.modelId = var5;
-                    InterfaceComponent.repaint(component);
+                    InterfaceComponent.invalidate(component);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1645,7 +1599,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (ServerProt.SET_COMPONENT_FOREGROUND == netWriter.currentIncomingPacket) {
                 int var6 = incoming.g2();
-                int var5 = incoming.method1015();
+                int var5 = incoming.ig4();
                 int var7 = var6 >> 10 & 31;
                 int var8 = var6 >> 5 & 31;
                 int var9 = var6 & 31;
@@ -1653,7 +1607,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 InterfaceComponent var59 = InterfaceComponent.lookup(var5);
                 if (var15 != var59.foreground) {
                     var59.foreground = var15;
-                    InterfaceComponent.repaint(var59);
+                    InterfaceComponent.invalidate(var59);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1670,7 +1624,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     var17.xRotation = var5;
                     var17.zRotation = var7;
                     var17.modelZoom = var6;
-                    InterfaceComponent.repaint(var17);
+                    InterfaceComponent.invalidate(var17);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1804,7 +1758,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 if (pleaseWaitComponent != null) {
-                    InterfaceComponent.repaint(pleaseWaitComponent);
+                    InterfaceComponent.invalidate(pleaseWaitComponent);
                     pleaseWaitComponent = null;
                 }
 
@@ -1835,11 +1789,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_COMPONENT_MODEL_TYPE3 == netWriter.currentIncomingPacket) {
-                int uid = incoming.method1015();
+                int uid = incoming.ig4();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
                 component.modelType = 3;
                 component.modelId = PlayerEntity.local.model.hash();
-                InterfaceComponent.repaint(component);
+                InterfaceComponent.invalidate(component);
                 netWriter.currentIncomingPacket = null;
                 return true;
             }
@@ -1907,12 +1861,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_COMPONENT_TEXT == netWriter.currentIncomingPacket) {
-                int uid = incoming.method1015();
+                int uid = incoming.ig4();
                 StringBuilder text = new StringBuilder(incoming.gstr());
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
                 if (!text.toString().equals(component.text)) {
                     component.text = text.toString();
-                    InterfaceComponent.repaint(component);
+                    InterfaceComponent.invalidate(component);
                 }
 
                 netWriter.currentIncomingPacket = null;
@@ -1975,7 +1929,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 int var7 = incoming.g2();
                 if (var5 != rootInterfaceIndex) {
                     rootInterfaceIndex = var5;
-                    this.method734(false);
+                    this.updateSize(false);
                     InterfaceComponent.loadAnimable(rootInterfaceIndex);
                     InterfaceComponent.loadAndInitialize(rootInterfaceIndex);
 
@@ -2140,7 +2094,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.AN_SERVER_PROT_241 == netWriter.currentIncomingPacket) {
-                int var6 = incoming.method1015();
+                int var6 = incoming.ig4();
                 int var5 = incoming.method1060();
                 InterfaceComponent var14 = InterfaceComponent.lookup(var6);
                 if (var14 != null && var14.type == 0) {
@@ -2154,7 +2108,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                     if (var5 != var14.insetY) {
                         var14.insetY = var5;
-                        InterfaceComponent.repaint(var14);
+                        InterfaceComponent.invalidate(var14);
                     }
                 }
 
@@ -2600,29 +2554,29 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     }
 
-    protected void method737() {
+    protected void updateSize() {
         aLong1081 = Clock.now() + 500L;
-        this.method733();
+        this.callResizeJS();
         if (rootInterfaceIndex != -1) {
-            this.method734(true);
+            this.updateSize(true);
         }
 
     }
 
-    public void method742(InterfaceComponent var1) {
-        InterfaceComponent var2 = var1.parentUid == -1 ? null : InterfaceComponent.lookup(var1.parentUid);
-        int var3;
-        int var4;
-        if (var2 == null) {
-            var3 = canvasWidth;
-            var4 = canvasHeight;
+    public void updateComponentMargin(InterfaceComponent component) {
+        InterfaceComponent parent = component.parentUid != -1 ? InterfaceComponent.lookup(component.parentUid) : null;
+        int width;
+        int height;
+        if (parent != null) {
+            width = parent.width;
+            height = parent.height;
         } else {
-            var3 = var2.width;
-            var4 = var2.height;
+            width = canvasWidth;
+            height = canvasHeight;
         }
 
-        InterfaceComponent.method728(var1, var3, var4, false);
-        InterfaceComponent.method185(var1, var3, var4);
+        InterfaceComponent.updateSize(component, width, height, false);
+        InterfaceComponent.updatePosition(component, width, height);
     }
 
     public void processPackets() {
@@ -2637,522 +2591,518 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         if (pendingDisconnect) {
             pendingDisconnect = false;
             dropConnection();
-        } else {
-            if (!ContextMenu.open) {
-                ContextMenuBuilder.insertCancelItem();
-            }
+            return;
+        }
 
-            for (int i = 0; i < 100 && processIncomingPacket(); ++i) {
+        if (!ContextMenu.open) {
+            ContextMenuBuilder.insertCancelItem();
+        }
 
-            }
+        for (int i = 0; i < 100 && processIncomingPacket(); ++i) {
 
-            if (gameState == 30) {
-                while (true) {
-                    ClassStructure var2 = ClassStructure.list.head();
-                    boolean var29;
-                    var29 = var2 != null;
+        }
 
-                    int offset;
-                    if (!var29) {
-                        int var5;
-                        if (gameStateEvent.shouldProcess) {
-                            clientProtHandler.processGameStateEvents();
+        if (gameState == 30) {
+            while (true) {
+                ClassStructure structure = ClassStructure.list.head();
+                if (structure == null) {
+                    if (gameStateEvent.shouldProcess) {
+                        clientProtHandler.processGameStateEvents();
+                    }
+
+                    clientProtHandler.processMouseMotionRecords();
+                    clientProtHandler.processMouseActionRecords();
+                    clientProtHandler.processKeyInfo();
+                    clientProtHandler.processCameraInfo();
+                    clientProtHandler.processFocusInfo();
+
+                    if (worldMap != null) {
+                        worldMap.method1272();
+                    }
+
+                    if (StockMarketOfferLifetimeComparator.aBoolean584) {
+                        if (friendsChatSystem != null) {
+                            friendsChatSystem.sort();
                         }
 
-                        clientProtHandler.processMouseMotionRecords();
-                        clientProtHandler.processMouseActionRecords();
-                        clientProtHandler.processKeyInfo();
-                        clientProtHandler.processCameraInfo();
-                        clientProtHandler.processFocusInfo();
+                        GPI.method488();
+                        StockMarketOfferLifetimeComparator.aBoolean584 = false;
+                    }
 
-                        if (worldMap != null) {
-                            worldMap.method1272();
-                        }
+                    Statics44.updateMinimapFloorLevel();
+                    if (gameState != 30) {
+                        return;
+                    }
 
-                        if (StockMarketOfferLifetimeComparator.aBoolean584) {
-                            if (friendsChatSystem != null) {
-                                friendsChatSystem.sort();
+                    processObjectSpawns();
+                    processAudioEffects();
+                    ++netWriter.idleReadTicks;
+                    if (netWriter.idleReadTicks > 750) {
+                        dropConnection();
+                        return;
+                    }
+
+                    processPlayers();
+                    processNpcs();
+
+                    int[] indices = GPI.playerIndices;
+                    for (int i = 0; i < GPI.playerCount; ++i) {
+                        PlayerEntity player = players[indices[i]];
+                        if (player != null && player.overheadTextCyclesLeft > 0) {
+                            --player.overheadTextCyclesLeft;
+                            if (player.overheadTextCyclesLeft == 0) {
+                                player.overheadText = null;
                             }
-
-                            GPI.method488();
-                            StockMarketOfferLifetimeComparator.aBoolean584 = false;
-                        }
-
-                        Statics44.updateMinimapFloorLevel();
-                        if (gameState != 30) {
-                            return;
-                        }
-
-                        processObjectSpawns();
-                        processAudioEffects();
-                        ++netWriter.idleReadTicks;
-                        if (netWriter.idleReadTicks > 750) {
-                            dropConnection();
-                            return;
-                        }
-
-                        processPlayers();
-                        processNpcs();
-
-                        int[] var32 = GPI.playerIndices;
-                        for (var5 = 0; var5 < GPI.playerCount; ++var5) {
-                            PlayerEntity var23 = players[var32[var5]];
-                            if (var23 != null && var23.overheadTextCyclesLeft > 0) {
-                                --var23.overheadTextCyclesLeft;
-                                if (var23.overheadTextCyclesLeft == 0) {
-                                    var23.overheadText = null;
-                                }
-                            }
-                        }
-
-                        for (var5 = 0; var5 < npcCount; ++var5) {
-                            offset = npcIndices[var5];
-                            NpcEntity var24 = npcs[offset];
-                            if (var24 != null && var24.overheadTextCyclesLeft > 0) {
-                                --var24.overheadTextCyclesLeft;
-                                if (var24.overheadTextCyclesLeft == 0) {
-                                    var24.overheadText = null;
-                                }
-                            }
-                        }
-
-                        ++anInt972;
-                        if (ContextMenu.Crosshair.state != 0) {
-                            HintArrow.state = HintArrow.state + 20;
-                            if (HintArrow.state >= 400) {
-                                ContextMenu.Crosshair.state = 0;
-                            }
-                        }
-
-                        if (StockMarketOfferWorldComparator.anInterfaceComponent351 != null) {
-                            ++anInt1018;
-                            if (anInt1018 >= 15) {
-                                InterfaceComponent.repaint(StockMarketOfferWorldComparator.anInterfaceComponent351);
-                                StockMarketOfferWorldComparator.anInterfaceComponent351 = null;
-                            }
-                        }
-
-                        InterfaceComponent var34 = OldConnection.hoveredComponent;
-                        InterfaceComponent var31 = Statics24.anInterfaceComponent1417;
-                        OldConnection.hoveredComponent = null;
-                        Statics24.anInterfaceComponent1417 = null;
-                        draggedSpecialComponent = null;
-                        processingComponentDrag = false;
-                        processingComponentDragTopLevel = false;
-                        anInt1092 = 0;
-
-                        while (Keyboard.isKeyHeld() && anInt1092 < 128) {
-                            if (rights >= 2 && Keyboard.heldKeys[82] && SecureRandomService.anInt457 == 66) {
-                                String var39 = method9();
-                                instance.copyToClipboard(var39);
-                            } else if (Camera.oculusOrbMode != 1 || Keyboard.aChar151 <= 0) {
-                                anIntArray1096[anInt1092] = SecureRandomService.anInt457;
-                                anIntArray1097[anInt1092] = Keyboard.aChar151;
-                                ++anInt1092;
-                            }
-                        }
-
-                        boolean jmod = rights >= 2;
-                        if (jmod && Keyboard.heldKeys[82] && Keyboard.heldKeys[81] && mouseWheelPtr != 0) {
-                            int var6 = PlayerEntity.local.floorLevel - mouseWheelPtr;
-                            if (var6 < 0) {
-                                var6 = 0;
-                            } else if (var6 > 3) {
-                                var6 = 3;
-                            }
-
-                            if (var6 != PlayerEntity.local.floorLevel) {
-                                Statics35.teleport(PlayerEntity.local.pathXQueue[0] + baseX, PlayerEntity.local.pathYQueue[0] + baseY, var6, false);
-                            }
-
-                            mouseWheelPtr = 0;
-                        }
-
-                        if (rootInterfaceIndex != -1) {
-                            WorldMapTileDecor.processComponentRendering(rootInterfaceIndex, 0, 0, canvasWidth, canvasHeight, 0, 0);
-                        }
-
-                        ++anInt1075;
-
-                        while (true) {
-                            InterfaceComponent var25;
-                            InterfaceComponent var38;
-                            ScriptEvent var40;
-                            do {
-                                var40 = renderEventScripts.popFirst();
-                                if (var40 == null) {
-                                    while (true) {
-                                        do {
-                                            var40 = inputFinishedEventScripts.popFirst();
-                                            if (var40 == null) {
-                                                while (true) {
-                                                    do {
-                                                        var40 = inputOccuringEventScripts.popFirst();
-                                                        if (var40 == null) {
-                                                            this.method751();
-                                                            if (worldMap != null) {
-                                                                worldMap.method1261(SceneGraph.floorLevel, baseX + (PlayerEntity.local.absoluteX >> 7), baseY + (PlayerEntity.local.absoluteY >> 7), false);
-                                                                worldMap.method1225();
-                                                            }
-
-                                                            if (draggedComponent != null) {
-                                                                this.method732();
-                                                            }
-
-                                                            if (AnimationFrameGroup.dragComponent != null) {
-                                                                InterfaceComponent.repaint(AnimationFrameGroup.dragComponent);
-                                                                ++componentDragCycles;
-                                                                if (Mouse.pressMeta == 0) {
-                                                                    if (draggingComponent) {
-                                                                        if (AnimationFrameGroup.dragComponent == DefaultAudioSystemProvider.processingItemComponent && draggingComponentIndex != draggingComponentSourceIndex) {
-                                                                            InterfaceComponent var41 = AnimationFrameGroup.dragComponent;
-                                                                            byte var35 = 0;
-                                                                            if (anInt1054 == 1 && var41.contentType == 206) {
-                                                                                var35 = 1;
-                                                                            }
-
-                                                                            if (var41.itemIds[draggingComponentIndex] <= 0) {
-                                                                                var35 = 0;
-                                                                            }
-
-                                                                            if (WorldMapAreaChunk_Sub3.method367(InterfaceComponent.getConfig(var41))) {
-                                                                                int var8 = draggingComponentSourceIndex;
-                                                                                int var9 = draggingComponentIndex;
-                                                                                var41.itemIds[var9] = var41.itemIds[var8];
-                                                                                var41.itemStackSizes[var9] = var41.itemStackSizes[var8];
-                                                                                var41.itemIds[var8] = -1;
-                                                                                var41.itemStackSizes[var8] = 0;
-                                                                            } else if (var35 == 1) {
-                                                                                int var8 = draggingComponentSourceIndex;
-                                                                                int var9 = draggingComponentIndex;
-
-                                                                                while (var9 != var8) {
-                                                                                    if (var8 > var9) {
-                                                                                        var41.swapItem(var8 - 1, var8);
-                                                                                        --var8;
-                                                                                    } else if (var8 < var9) {
-                                                                                        var41.swapItem(var8 + 1, var8);
-                                                                                        ++var8;
-                                                                                    }
-                                                                                }
-                                                                            } else {
-                                                                                var41.swapItem(draggingComponentIndex, draggingComponentSourceIndex);
-                                                                            }
-
-                                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.DRAG_ITEM, netWriter.encryptor);
-                                                                            outgoing.buffer.pirf4(AnimationFrameGroup.dragComponent.uid);
-                                                                            outgoing.buffer.p2(draggingComponentIndex);
-                                                                            outgoing.buffer.p1(var35);
-                                                                            outgoing.buffer.ip2(draggingComponentSourceIndex);
-                                                                            netWriter.writeLater(outgoing);
-                                                                        }
-                                                                    } else if (this.method731()) {
-                                                                        this.openMenu(draggingComponentX, draggingComponentY);
-                                                                    } else if (ContextMenu.rowCount > 0) {
-                                                                        SerializableProcessor.method459(draggingComponentX, draggingComponentY);
-                                                                    }
-
-                                                                    anInt1018 = 10;
-                                                                    Mouse.clickMeta = 0;
-                                                                    AnimationFrameGroup.dragComponent = null;
-                                                                } else if (componentDragCycles >= 5 && (Mouse.x > draggingComponentX + 5 || Mouse.x < draggingComponentX - 5 || Mouse.y > draggingComponentY + 5 || Mouse.y < draggingComponentY - 5)) {
-                                                                    draggingComponent = true;
-                                                                }
-                                                            }
-
-                                                            if (SceneGraph.isMovementPending()) {
-                                                                int var6 = SceneGraph.pendingDestinationX;
-                                                                int var7 = SceneGraph.pendingDestinationY;
-                                                                OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.PROCESS_MOVEMENT, netWriter.encryptor);
-                                                                outgoing.buffer.p1(5);
-                                                                outgoing.buffer.ip2a(baseX + var6);
-                                                                outgoing.buffer.ip2(baseY + var7);
-                                                                outgoing.buffer.p1n(Keyboard.heldKeys[82] ? (Keyboard.heldKeys[81] ? 2 : 1) : 0);
-                                                                netWriter.writeLater(outgoing);
-                                                                SceneGraph.unsetPendingMovement();
-                                                                ContextMenu.Crosshair.x = Mouse.clickX;
-                                                                ContextMenu.Crosshair.y = Mouse.clickY;
-                                                                ContextMenu.Crosshair.state = 1;
-                                                                HintArrow.state = 0;
-                                                                destinationX = var6;
-                                                                destinationY = var7;
-                                                            }
-
-                                                            if (var34 != OldConnection.hoveredComponent) {
-                                                                if (var34 != null) {
-                                                                    InterfaceComponent.repaint(var34);
-                                                                }
-
-                                                                if (OldConnection.hoveredComponent != null) {
-                                                                    InterfaceComponent.repaint(OldConnection.hoveredComponent);
-                                                                }
-                                                            }
-
-                                                            if (var31 != Statics24.anInterfaceComponent1417 && anInt1036 == anInt1041) {
-                                                                if (var31 != null) {
-                                                                    InterfaceComponent.repaint(var31);
-                                                                }
-
-                                                                if (Statics24.anInterfaceComponent1417 != null) {
-                                                                    InterfaceComponent.repaint(Statics24.anInterfaceComponent1417);
-                                                                }
-                                                            }
-
-                                                            if (Statics24.anInterfaceComponent1417 != null) {
-                                                                if (anInt1041 < anInt1036) {
-                                                                    ++anInt1041;
-                                                                    if (anInt1041 == anInt1036) {
-                                                                        InterfaceComponent.repaint(Statics24.anInterfaceComponent1417);
-                                                                    }
-                                                                }
-                                                            } else if (anInt1041 > 0) {
-                                                                --anInt1041;
-                                                            }
-
-                                                            if (Camera.oculusOrbMode == 0) {
-                                                                int var6 = PlayerEntity.local.absoluteX;
-                                                                int var7 = PlayerEntity.local.absoluteY;
-                                                                if (Camera.oculusOrbAbsoluteX - var6 < -500 || Camera.oculusOrbAbsoluteX - var6 > 500 || Camera.oculusOrbAbsoluteY - var7 < -500 || Camera.oculusOrbAbsoluteY - var7 > 500) {
-                                                                    Camera.oculusOrbAbsoluteX = var6;
-                                                                    Camera.oculusOrbAbsoluteY = var7;
-                                                                }
-
-                                                                if (var6 != Camera.oculusOrbAbsoluteX) {
-                                                                    Camera.oculusOrbAbsoluteX += (var6 - Camera.oculusOrbAbsoluteX) / 16;
-                                                                }
-
-                                                                if (var7 != Camera.oculusOrbAbsoluteY) {
-                                                                    Camera.oculusOrbAbsoluteY += (var7 - Camera.oculusOrbAbsoluteY) / 16;
-                                                                }
-
-                                                                int var8 = Camera.oculusOrbAbsoluteX >> 7;
-                                                                int var9 = Camera.oculusOrbAbsoluteY >> 7;
-                                                                int var10 = SceneGraph.getTileHeight(Camera.oculusOrbAbsoluteX, Camera.oculusOrbAbsoluteY, SceneGraph.floorLevel);
-                                                                int var11 = 0;
-                                                                if (var8 > 3 && var9 > 3 && var8 < 100 && var9 < 100) {
-                                                                    for (int x = var8 - 4; x <= var8 + 4; ++x) {
-                                                                        for (int y = var9 - 4; y <= var9 + 4; ++y) {
-                                                                            int z = SceneGraph.floorLevel;
-                                                                            if (z < 3 && (Statics45.sceneRenderRules[1][x][y] & 2) == 2) {
-                                                                                ++z;
-                                                                            }
-
-                                                                            int var26 = var10 - Statics45.tileHeights[z][x][y];
-                                                                            if (var26 > var11) {
-                                                                                var11 = var26;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                                int xd = var11 * 192;
-                                                                if (xd > 98048) {
-                                                                    xd = 98048;
-                                                                }
-
-                                                                if (xd < 32768) {
-                                                                    xd = 32768;
-                                                                }
-
-                                                                if (xd > anInt1008) {
-                                                                    anInt1008 += (xd - anInt1008) / 24;
-                                                                } else if (xd < anInt1008) {
-                                                                    anInt1008 += (xd - anInt1008) / 80;
-                                                                }
-
-                                                                Camera.anInt802 = SceneGraph.getTileHeight(PlayerEntity.local.absoluteX, PlayerEntity.local.absoluteY, SceneGraph.floorLevel) - Camera.followHeight;
-                                                            } else if (Camera.oculusOrbMode == 1) {
-                                                                Camera.setOculusOrbToLocalPlayerPosition();
-                                                                short var36 = -1;
-                                                                if (Keyboard.heldKeys[33]) {
-                                                                    var36 = 0;
-                                                                } else if (Keyboard.heldKeys[49]) {
-                                                                    var36 = 1024;
-                                                                }
-
-                                                                if (Keyboard.heldKeys[48]) {
-                                                                    if (var36 == 0) {
-                                                                        var36 = 1792;
-                                                                    } else if (var36 == 1024) {
-                                                                        var36 = 1280;
-                                                                    } else {
-                                                                        var36 = 1536;
-                                                                    }
-                                                                } else if (Keyboard.heldKeys[50]) {
-                                                                    if (var36 == 0) {
-                                                                        var36 = 256;
-                                                                    } else if (var36 == 1024) {
-                                                                        var36 = 768;
-                                                                    } else {
-                                                                        var36 = 512;
-                                                                    }
-                                                                }
-
-                                                                byte var37 = 0;
-                                                                if (Keyboard.heldKeys[35]) {
-                                                                    var37 = -1;
-                                                                } else if (Keyboard.heldKeys[51]) {
-                                                                    var37 = 1;
-                                                                }
-
-                                                                int var8 = 0;
-                                                                if (var36 >= 0 || var37 != 0) {
-                                                                    var8 = Keyboard.heldKeys[81] ? Camera.oculusOrbSlowSpeed : Camera.oculusOrbSpeed;
-                                                                    var8 *= 16;
-                                                                    anInt986 = var36;
-                                                                    anInt997 = var37;
-                                                                }
-
-                                                                if (anInt977 < var8) {
-                                                                    anInt977 += var8 / 8;
-                                                                    if (anInt977 > var8) {
-                                                                        anInt977 = var8;
-                                                                    }
-                                                                } else if (anInt977 > var8) {
-                                                                    anInt977 = anInt977 * 9 / 10;
-                                                                }
-
-                                                                if (anInt977 > 0) {
-                                                                    int var9 = anInt977 / 16;
-                                                                    if (anInt986 >= 0) {
-                                                                        int var6 = anInt986 - Camera.yaw & 2047;
-                                                                        int var10 = JagGraphics3D.SIN_TABLE[var6];
-                                                                        int var11 = JagGraphics3D.COS_TABLE[var6];
-                                                                        Camera.oculusOrbAbsoluteX += var10 * var9 / 65536;
-                                                                        Camera.oculusOrbAbsoluteY += var9 * var11 / 65536;
-                                                                    }
-
-                                                                    if (anInt997 != 0) {
-                                                                        Camera.anInt802 += var9 * anInt997;
-                                                                        if (Camera.anInt802 > 0) {
-                                                                            Camera.anInt802 = 0;
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    anInt986 = -1;
-                                                                    anInt997 = -1;
-                                                                }
-
-                                                                if (Keyboard.heldKeys[13]) {
-                                                                    netWriter.writeLater(OutgoingPacket.prepare(ClientProt.CLOSE_OCULUS_ORB, netWriter.encryptor));
-                                                                    Camera.oculusOrbMode = 0;
-                                                                }
-                                                            }
-
-                                                            if (Mouse.pressMeta == 4 && WorldMapObjectIcon.mouseCameraEnabled) {
-                                                                int var6 = Mouse.y - Camera.mouseDragY;
-                                                                Camera.moveY = var6 * 2;
-                                                                Camera.mouseDragY = var6 != -1 && var6 != 1 ? (Camera.mouseDragY + Mouse.y) / 2 : Mouse.y;
-                                                                int var7 = Camera.mouseDragX - Mouse.x;
-                                                                Camera.moveX = var7 * 2;
-                                                                Camera.mouseDragX = var7 != -1 && var7 != 1 ? (Mouse.x + Camera.mouseDragX) / 2 : Mouse.x;
-                                                            } else {
-                                                                if (Keyboard.heldKeys[96]) {
-                                                                    Camera.moveX += (-24 - Camera.moveX) / 2;
-                                                                } else if (Keyboard.heldKeys[97]) {
-                                                                    Camera.moveX += (24 - Camera.moveX) / 2;
-                                                                } else {
-                                                                    Camera.moveX /= 2;
-                                                                }
-
-                                                                if (Keyboard.heldKeys[98]) {
-                                                                    Camera.moveY += (12 - Camera.moveY) / 2;
-                                                                } else if (Keyboard.heldKeys[99]) {
-                                                                    Camera.moveY += (-12 - Camera.moveY) / 2;
-                                                                } else {
-                                                                    Camera.moveY /= 2;
-                                                                }
-
-                                                                Camera.mouseDragY = Mouse.y;
-                                                                Camera.mouseDragX = Mouse.x;
-                                                            }
-
-                                                            Camera.yOffset = Camera.moveX / 2 + Camera.yOffset & 2047;
-                                                            Camera.minimumPitch += Camera.moveY / 2;
-                                                            if (Camera.minimumPitch < 128) {
-                                                                Camera.minimumPitch = 128;
-                                                            }
-
-                                                            if (Camera.minimumPitch > 383) {
-                                                                Camera.minimumPitch = 383;
-                                                            }
-
-                                                            if (cameraLocked) {
-                                                                SceneGraph.method517();
-                                                            }
-
-                                                            for (int var6 = 0; var6 < 5; ++var6) {
-                                                                int var10002 = anIntArray916[var6]++;
-                                                            }
-
-                                                            varcs.updateIfRequired();
-
-                                                            int mouseIdle = Mouse.getAndIncrementIdleTime();
-                                                            int keyboardIdle = Keyboard.getIdleTime();
-                                                            if (mouseIdle > 15000 && keyboardIdle > 15000) {
-                                                                logoutTimer = 250;
-                                                                Mouse.idleTime = 14500;
-                                                                OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.IDLE_LOGOUT, netWriter.encryptor);
-                                                                netWriter.writeLater(outgoing);
-                                                            }
-
-                                                            relationshipSystem.processFriendLogins();
-                                                            ++netWriter.idleWriteTicks;
-                                                            if (netWriter.idleWriteTicks > 50) {
-                                                                OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, netWriter.encryptor);
-                                                                netWriter.writeLater(outgoing);
-                                                            }
-
-                                                            try {
-                                                                netWriter.flush();
-                                                            } catch (IOException e) {
-                                                                dropConnection();
-                                                            }
-
-                                                            return;
-                                                        }
-
-                                                        var25 = var40.component;
-                                                        if (var25.subComponentIndex < 0) {
-                                                            break;
-                                                        }
-
-                                                        var38 = InterfaceComponent.lookup(var25.parentUid);
-                                                    }
-                                                    while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
-
-                                                    ScriptEvent.fire(var40);
-                                                }
-                                            }
-
-                                            var25 = var40.component;
-                                            if (var25.subComponentIndex < 0) {
-                                                break;
-                                            }
-
-                                            var38 = InterfaceComponent.lookup(var25.parentUid);
-                                        }
-                                        while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
-
-                                        ScriptEvent.fire(var40);
-                                    }
-                                }
-
-                                var25 = var40.component;
-                                if (var25.subComponentIndex < 0) {
-                                    break;
-                                }
-
-                                var38 = InterfaceComponent.lookup(var25.parentUid);
-                            }
-                            while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
-
-                            ScriptEvent.fire(var40);
                         }
                     }
 
-                    clientProtHandler.processReflection();
+                    for (int i = 0; i < npcCount; ++i) {
+                        int index = npcIndices[i];
+                        NpcEntity npc = npcs[index];
+                        if (npc != null && npc.overheadTextCyclesLeft > 0) {
+                            --npc.overheadTextCyclesLeft;
+                            if (npc.overheadTextCyclesLeft == 0) {
+                                npc.overheadText = null;
+                            }
+                        }
+                    }
+
+                    ++anInt972;
+                    if (ContextMenu.Crosshair.state != 0) {
+                        HintArrow.state = HintArrow.state + 20;
+                        if (HintArrow.state >= 400) {
+                            ContextMenu.Crosshair.state = 0;
+                        }
+                    }
+
+                    if (StockMarketOfferWorldComparator.anInterfaceComponent351 != null) {
+                        ++anInt1018;
+                        if (anInt1018 >= 15) {
+                            InterfaceComponent.invalidate(StockMarketOfferWorldComparator.anInterfaceComponent351);
+                            StockMarketOfferWorldComparator.anInterfaceComponent351 = null;
+                        }
+                    }
+
+                    InterfaceComponent hovered = OldConnection.hoveredComponent;
+                    InterfaceComponent var31 = Statics24.anInterfaceComponent1417;
+                    OldConnection.hoveredComponent = null;
+                    Statics24.anInterfaceComponent1417 = null;
+                    draggedSpecialComponent = null;
+                    processingComponentDrag = false;
+                    processingComponentDragTopLevel = false;
+                    anInt1092 = 0;
+
+                    while (Keyboard.isKeyHeld() && anInt1092 < 128) {
+                        if (rights >= 2 && Keyboard.heldKeys[82] && SecureRandomService.anInt457 == 66) {
+                            String chatline = method9();
+                            instance.copyToClipboard(chatline);
+                        } else if (Camera.oculusOrbMode != 1 || Keyboard.aChar151 <= 0) {
+                            anIntArray1096[anInt1092] = SecureRandomService.anInt457;
+                            anIntArray1097[anInt1092] = Keyboard.aChar151;
+                            ++anInt1092;
+                        }
+                    }
+
+                    boolean jmod = rights >= 2;
+                    if (jmod && Keyboard.heldKeys[82] && Keyboard.heldKeys[81] && mouseWheelPtr != 0) {
+                        int floor = PlayerEntity.local.floorLevel - mouseWheelPtr;
+                        if (floor < 0) {
+                            floor = 0;
+                        } else if (floor > 3) {
+                            floor = 3;
+                        }
+
+                        if (floor != PlayerEntity.local.floorLevel) {
+                            teleport(PlayerEntity.local.pathXQueue[0] + baseX, PlayerEntity.local.pathYQueue[0] + baseY, floor, false);
+                        }
+
+                        mouseWheelPtr = 0;
+                    }
+
+                    if (rootInterfaceIndex != -1) {
+                        WorldMapTileDecor.processComponentRendering(rootInterfaceIndex, 0, 0, canvasWidth, canvasHeight, 0, 0);
+                    }
+
+                    ++anInt1075;
+
+                    while (true) {
+                        InterfaceComponent var25;
+                        InterfaceComponent var38;
+                        ScriptEvent var40;
+                        do {
+                            var40 = renderEventScripts.popFirst();
+                            if (var40 == null) {
+                                while (true) {
+                                    do {
+                                        var40 = inputFinishedEventScripts.popFirst();
+                                        if (var40 == null) {
+                                            while (true) {
+                                                do {
+                                                    var40 = inputOccuringEventScripts.popFirst();
+                                                    if (var40 == null) {
+                                                        this.method751();
+                                                        if (worldMap != null) {
+                                                            worldMap.method1261(SceneGraph.floorLevel, baseX + (PlayerEntity.local.absoluteX >> 7), baseY + (PlayerEntity.local.absoluteY >> 7), false);
+                                                            worldMap.method1225();
+                                                        }
+
+                                                        if (draggedComponent != null) {
+                                                            this.method732();
+                                                        }
+
+                                                        if (AnimationFrameGroup.dragComponent != null) {
+                                                            InterfaceComponent.invalidate(AnimationFrameGroup.dragComponent);
+                                                            ++componentDragCycles;
+                                                            if (Mouse.pressMeta == 0) {
+                                                                if (draggingComponent) {
+                                                                    if (AnimationFrameGroup.dragComponent == DefaultAudioSystemProvider.processingItemComponent && draggingComponentIndex != draggingComponentSourceIndex) {
+                                                                        InterfaceComponent dragComponent = AnimationFrameGroup.dragComponent;
+                                                                        byte var35 = 0;
+                                                                        if (anInt1054 == 1 && dragComponent.contentType == 206) {
+                                                                            var35 = 1;
+                                                                        }
+
+                                                                        if (dragComponent.itemIds[draggingComponentIndex] <= 0) {
+                                                                            var35 = 0;
+                                                                        }
+
+                                                                        if (InterfaceComponent.canDrag(InterfaceComponent.getConfig(dragComponent))) {
+                                                                            int dragSrc = draggingComponentSourceIndex;
+                                                                            int dragDst = draggingComponentIndex;
+                                                                            dragComponent.itemIds[dragDst] = dragComponent.itemIds[dragSrc];
+                                                                            dragComponent.itemStackSizes[dragDst] = dragComponent.itemStackSizes[dragSrc];
+                                                                            dragComponent.itemIds[dragSrc] = -1;
+                                                                            dragComponent.itemStackSizes[dragSrc] = 0;
+                                                                        } else if (var35 == 1) {
+                                                                            int var8 = draggingComponentSourceIndex;
+                                                                            int var9 = draggingComponentIndex;
+
+                                                                            while (var9 != var8) {
+                                                                                if (var8 > var9) {
+                                                                                    dragComponent.swapItem(var8 - 1, var8);
+                                                                                    --var8;
+                                                                                } else if (var8 < var9) {
+                                                                                    dragComponent.swapItem(var8 + 1, var8);
+                                                                                    ++var8;
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            dragComponent.swapItem(draggingComponentIndex, draggingComponentSourceIndex);
+                                                                        }
+
+                                                                        OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.DRAG_ITEM, netWriter.encryptor);
+                                                                        outgoing.buffer.pirf4(AnimationFrameGroup.dragComponent.uid);
+                                                                        outgoing.buffer.p2(draggingComponentIndex);
+                                                                        outgoing.buffer.p1(var35);
+                                                                        outgoing.buffer.ip2(draggingComponentSourceIndex);
+                                                                        netWriter.writeLater(outgoing);
+                                                                    }
+                                                                } else if (this.isOpenMenuOnLeftClick()) {
+                                                                    this.openMenu(draggingComponentX, draggingComponentY);
+                                                                } else if (ContextMenu.rowCount > 0) {
+                                                                    SerializableProcessor.method459(draggingComponentX, draggingComponentY);
+                                                                }
+
+                                                                anInt1018 = 10;
+                                                                Mouse.clickMeta = 0;
+                                                                AnimationFrameGroup.dragComponent = null;
+                                                            } else if (componentDragCycles >= 5 && (Mouse.x > draggingComponentX + 5 || Mouse.x < draggingComponentX - 5 || Mouse.y > draggingComponentY + 5 || Mouse.y < draggingComponentY - 5)) {
+                                                                draggingComponent = true;
+                                                            }
+                                                        }
+
+                                                        if (SceneGraph.isMovementPending()) {
+                                                            int var6 = SceneGraph.pendingDestinationX;
+                                                            int var7 = SceneGraph.pendingDestinationY;
+                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.PROCESS_MOVEMENT, netWriter.encryptor);
+                                                            outgoing.buffer.p1(5);
+                                                            outgoing.buffer.ip2a(baseX + var6);
+                                                            outgoing.buffer.ip2(baseY + var7);
+                                                            outgoing.buffer.p1n(Keyboard.heldKeys[82] ? (Keyboard.heldKeys[81] ? 2 : 1) : 0);
+                                                            netWriter.writeLater(outgoing);
+                                                            SceneGraph.unsetPendingMovement();
+                                                            ContextMenu.Crosshair.x = Mouse.clickX;
+                                                            ContextMenu.Crosshair.y = Mouse.clickY;
+                                                            ContextMenu.Crosshair.state = 1;
+                                                            HintArrow.state = 0;
+                                                            destinationX = var6;
+                                                            destinationY = var7;
+                                                        }
+
+                                                        if (hovered != OldConnection.hoveredComponent) {
+                                                            if (hovered != null) {
+                                                                InterfaceComponent.invalidate(hovered);
+                                                            }
+
+                                                            if (OldConnection.hoveredComponent != null) {
+                                                                InterfaceComponent.invalidate(OldConnection.hoveredComponent);
+                                                            }
+                                                        }
+
+                                                        if (var31 != Statics24.anInterfaceComponent1417 && anInt1036 == anInt1041) {
+                                                            if (var31 != null) {
+                                                                InterfaceComponent.invalidate(var31);
+                                                            }
+
+                                                            if (Statics24.anInterfaceComponent1417 != null) {
+                                                                InterfaceComponent.invalidate(Statics24.anInterfaceComponent1417);
+                                                            }
+                                                        }
+
+                                                        if (Statics24.anInterfaceComponent1417 != null) {
+                                                            if (anInt1041 < anInt1036) {
+                                                                ++anInt1041;
+                                                                if (anInt1041 == anInt1036) {
+                                                                    InterfaceComponent.invalidate(Statics24.anInterfaceComponent1417);
+                                                                }
+                                                            }
+                                                        } else if (anInt1041 > 0) {
+                                                            --anInt1041;
+                                                        }
+
+                                                        if (Camera.oculusOrbMode == 0) {
+                                                            int localX = PlayerEntity.local.absoluteX;
+                                                            int localY = PlayerEntity.local.absoluteY;
+                                                            if (Camera.oculusOrbAbsoluteX - localX < -500 || Camera.oculusOrbAbsoluteX - localX > 500 || Camera.oculusOrbAbsoluteY - localY < -500 || Camera.oculusOrbAbsoluteY - localY > 500) {
+                                                                Camera.oculusOrbAbsoluteX = localX;
+                                                                Camera.oculusOrbAbsoluteY = localY;
+                                                            }
+
+                                                            if (localX != Camera.oculusOrbAbsoluteX) {
+                                                                Camera.oculusOrbAbsoluteX += (localX - Camera.oculusOrbAbsoluteX) / 16;
+                                                            }
+
+                                                            if (localY != Camera.oculusOrbAbsoluteY) {
+                                                                Camera.oculusOrbAbsoluteY += (localY - Camera.oculusOrbAbsoluteY) / 16;
+                                                            }
+
+                                                            int oculusX = Camera.oculusOrbAbsoluteX >> 7;
+                                                            int oculusY = Camera.oculusOrbAbsoluteY >> 7;
+                                                            int baseHeight = SceneGraph.getTileHeight(Camera.oculusOrbAbsoluteX, Camera.oculusOrbAbsoluteY, SceneGraph.floorLevel);
+                                                            int var11 = 0;
+                                                            if (oculusX > 3 && oculusY > 3 && oculusX < 100 && oculusY < 100) {
+                                                                for (int x = oculusX - 4; x <= oculusX + 4; ++x) {
+                                                                    for (int y = oculusY - 4; y <= oculusY + 4; ++y) {
+                                                                        int z = SceneGraph.floorLevel;
+                                                                        if (z < 3 && (Statics45.sceneRenderRules[1][x][y] & 2) == 2) {
+                                                                            ++z;
+                                                                        }
+
+                                                                        int var26 = baseHeight - Statics45.tileHeights[z][x][y];
+                                                                        if (var26 > var11) {
+                                                                            var11 = var26;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            int xd = var11 * 192;
+                                                            if (xd > 98048) {
+                                                                xd = 98048;
+                                                            }
+
+                                                            if (xd < 32768) {
+                                                                xd = 32768;
+                                                            }
+
+                                                            if (xd > anInt1008) {
+                                                                anInt1008 += (xd - anInt1008) / 24;
+                                                            } else if (xd < anInt1008) {
+                                                                anInt1008 += (xd - anInt1008) / 80;
+                                                            }
+
+                                                            Camera.anInt802 = SceneGraph.getTileHeight(PlayerEntity.local.absoluteX, PlayerEntity.local.absoluteY, SceneGraph.floorLevel) - Camera.followHeight;
+                                                        } else if (Camera.oculusOrbMode == 1) {
+                                                            Camera.setOculusOrbToLocalPlayerPosition();
+                                                            short var36 = -1;
+                                                            if (Keyboard.heldKeys[33]) {
+                                                                var36 = 0;
+                                                            } else if (Keyboard.heldKeys[49]) {
+                                                                var36 = 1024;
+                                                            }
+
+                                                            if (Keyboard.heldKeys[48]) {
+                                                                if (var36 == 0) {
+                                                                    var36 = 1792;
+                                                                } else if (var36 == 1024) {
+                                                                    var36 = 1280;
+                                                                } else {
+                                                                    var36 = 1536;
+                                                                }
+                                                            } else if (Keyboard.heldKeys[50]) {
+                                                                if (var36 == 0) {
+                                                                    var36 = 256;
+                                                                } else if (var36 == 1024) {
+                                                                    var36 = 768;
+                                                                } else {
+                                                                    var36 = 512;
+                                                                }
+                                                            }
+
+                                                            byte var37 = 0;
+                                                            if (Keyboard.heldKeys[35]) {
+                                                                var37 = -1;
+                                                            } else if (Keyboard.heldKeys[51]) {
+                                                                var37 = 1;
+                                                            }
+
+                                                            int var8 = 0;
+                                                            if (var36 >= 0 || var37 != 0) {
+                                                                var8 = Keyboard.heldKeys[81] ? Camera.oculusOrbSlowSpeed : Camera.oculusOrbSpeed;
+                                                                var8 *= 16;
+                                                                anInt986 = var36;
+                                                                anInt997 = var37;
+                                                            }
+
+                                                            if (anInt977 < var8) {
+                                                                anInt977 += var8 / 8;
+                                                                if (anInt977 > var8) {
+                                                                    anInt977 = var8;
+                                                                }
+                                                            } else if (anInt977 > var8) {
+                                                                anInt977 = anInt977 * 9 / 10;
+                                                            }
+
+                                                            if (anInt977 > 0) {
+                                                                int var9 = anInt977 / 16;
+                                                                if (anInt986 >= 0) {
+                                                                    int var6 = anInt986 - Camera.yaw & 2047;
+                                                                    int var10 = JagGraphics3D.SIN_TABLE[var6];
+                                                                    int var11 = JagGraphics3D.COS_TABLE[var6];
+                                                                    Camera.oculusOrbAbsoluteX += var10 * var9 / 65536;
+                                                                    Camera.oculusOrbAbsoluteY += var9 * var11 / 65536;
+                                                                }
+
+                                                                if (anInt997 != 0) {
+                                                                    Camera.anInt802 += var9 * anInt997;
+                                                                    if (Camera.anInt802 > 0) {
+                                                                        Camera.anInt802 = 0;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                anInt986 = -1;
+                                                                anInt997 = -1;
+                                                            }
+
+                                                            if (Keyboard.heldKeys[13]) {
+                                                                netWriter.writeLater(OutgoingPacket.prepare(ClientProt.CLOSE_OCULUS_ORB, netWriter.encryptor));
+                                                                Camera.oculusOrbMode = 0;
+                                                            }
+                                                        }
+
+                                                        if (Mouse.pressMeta == 4 && WorldMapObjectIcon.mouseCameraEnabled) {
+                                                            int var6 = Mouse.y - Camera.mouseDragY;
+                                                            Camera.moveY = var6 * 2;
+                                                            Camera.mouseDragY = var6 != -1 && var6 != 1 ? (Camera.mouseDragY + Mouse.y) / 2 : Mouse.y;
+                                                            int var7 = Camera.mouseDragX - Mouse.x;
+                                                            Camera.moveX = var7 * 2;
+                                                            Camera.mouseDragX = var7 != -1 && var7 != 1 ? (Mouse.x + Camera.mouseDragX) / 2 : Mouse.x;
+                                                        } else {
+                                                            if (Keyboard.heldKeys[96]) {
+                                                                Camera.moveX += (-24 - Camera.moveX) / 2;
+                                                            } else if (Keyboard.heldKeys[97]) {
+                                                                Camera.moveX += (24 - Camera.moveX) / 2;
+                                                            } else {
+                                                                Camera.moveX /= 2;
+                                                            }
+
+                                                            if (Keyboard.heldKeys[98]) {
+                                                                Camera.moveY += (12 - Camera.moveY) / 2;
+                                                            } else if (Keyboard.heldKeys[99]) {
+                                                                Camera.moveY += (-12 - Camera.moveY) / 2;
+                                                            } else {
+                                                                Camera.moveY /= 2;
+                                                            }
+
+                                                            Camera.mouseDragY = Mouse.y;
+                                                            Camera.mouseDragX = Mouse.x;
+                                                        }
+
+                                                        Camera.yOffset = Camera.moveX / 2 + Camera.yOffset & 2047;
+                                                        Camera.minimumPitch += Camera.moveY / 2;
+                                                        if (Camera.minimumPitch < 128) {
+                                                            Camera.minimumPitch = 128;
+                                                        }
+
+                                                        if (Camera.minimumPitch > 383) {
+                                                            Camera.minimumPitch = 383;
+                                                        }
+
+                                                        if (cameraLocked) {
+                                                            SceneGraph.method517();
+                                                        }
+
+                                                        for (int var6 = 0; var6 < 5; ++var6) {
+                                                            int var10002 = anIntArray916[var6]++;
+                                                        }
+
+                                                        varcs.updateIfRequired();
+
+                                                        int mouseIdle = Mouse.getAndIncrementIdleTime();
+                                                        int keyboardIdle = Keyboard.getIdleTime();
+                                                        if (mouseIdle > 15000 && keyboardIdle > 15000) {
+                                                            logoutTimer = 250;
+                                                            Mouse.idleTime = 14500;
+                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.IDLE_LOGOUT, netWriter.encryptor);
+                                                            netWriter.writeLater(outgoing);
+                                                        }
+
+                                                        relationshipSystem.processFriendLogins();
+                                                        ++netWriter.idleWriteTicks;
+                                                        if (netWriter.idleWriteTicks > 50) {
+                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, netWriter.encryptor);
+                                                            netWriter.writeLater(outgoing);
+                                                        }
+
+                                                        try {
+                                                            netWriter.flush();
+                                                        } catch (IOException e) {
+                                                            dropConnection();
+                                                        }
+
+                                                        return;
+                                                    }
+
+                                                    var25 = var40.component;
+                                                    if (var25.subComponentIndex < 0) {
+                                                        break;
+                                                    }
+
+                                                    var38 = InterfaceComponent.lookup(var25.parentUid);
+                                                }
+                                                while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
+
+                                                ScriptEvent.fire(var40);
+                                            }
+                                        }
+
+                                        var25 = var40.component;
+                                        if (var25.subComponentIndex < 0) {
+                                            break;
+                                        }
+
+                                        var38 = InterfaceComponent.lookup(var25.parentUid);
+                                    }
+                                    while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
+
+                                    ScriptEvent.fire(var40);
+                                }
+                            }
+
+                            var25 = var40.component;
+                            if (var25.subComponentIndex < 0) {
+                                break;
+                            }
+
+                            var38 = InterfaceComponent.lookup(var25.parentUid);
+                        }
+                        while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
+
+                        ScriptEvent.fire(var40);
+                    }
                 }
+
+                clientProtHandler.processReflection();
             }
         }
     }
@@ -3830,15 +3780,15 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             var8 = ContextMenu.secondaryArgs[var2];
                             var5 = ContextMenu.tertiaryArgs[var2];
                             InterfaceComponent var15 = InterfaceComponent.lookup(var5);
-                            if (InterfaceComponent.method650(InterfaceComponent.getConfig(var15)) || WorldMapAreaChunk_Sub3.method367(InterfaceComponent.getConfig(var15))) {
-                                if (AnimationFrameGroup.dragComponent != null && !draggingComponent && ContextMenu.rowCount > 0 && !this.method731()) {
+                            if (InterfaceComponent.method650(InterfaceComponent.getConfig(var15)) || InterfaceComponent.canDrag(InterfaceComponent.getConfig(var15))) {
+                                if (AnimationFrameGroup.dragComponent != null && !draggingComponent && ContextMenu.rowCount > 0 && !this.isOpenMenuOnLeftClick()) {
                                     SerializableProcessor.method459(draggingComponentX, draggingComponentY);
                                 }
 
                                 draggingComponent = false;
                                 componentDragCycles = 0;
                                 if (AnimationFrameGroup.dragComponent != null) {
-                                    InterfaceComponent.repaint(AnimationFrameGroup.dragComponent);
+                                    InterfaceComponent.invalidate(AnimationFrameGroup.dragComponent);
                                 }
 
                                 AnimationFrameGroup.dragComponent = InterfaceComponent.lookup(var5);
@@ -3849,13 +3799,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                     ParameterDefinition.method516(var2);
                                 }
 
-                                InterfaceComponent.repaint(AnimationFrameGroup.dragComponent);
+                                InterfaceComponent.invalidate(AnimationFrameGroup.dragComponent);
                                 return;
                             }
                         }
                     }
 
-                    if ((var16 == 1 || !WorldMapObjectIcon.mouseCameraEnabled && var16 == 4) && this.method731()) {
+                    if ((var16 == 1 || !WorldMapObjectIcon.mouseCameraEnabled && var16 == 4) && this.isOpenMenuOnLeftClick()) {
                         var16 = 2;
                     }
 
@@ -3873,7 +3823,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public void method732() {
-        InterfaceComponent.repaint(draggedComponent);
+        InterfaceComponent.invalidate(draggedComponent);
         ++CursorEntities.anInt654;
         if (processingComponentDrag && processingComponentDragTopLevel) {
             int var1 = Mouse.x;
@@ -3937,7 +3887,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         packet.buffer.p4(draggedComponent.uid);
                         netWriter.writeLater(packet);
                     }
-                } else if (this.method731()) {
+                } else if (this.isOpenMenuOnLeftClick()) {
                     this.openMenu(anInt1068 + currentComponentDragX, currentComponentDragY + anInt1073);
                 } else if (ContextMenu.rowCount > 0) {
                     SerializableProcessor.method459(anInt1068 + currentComponentDragX, anInt1073 + currentComponentDragY);

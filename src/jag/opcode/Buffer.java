@@ -558,7 +558,7 @@ public class Buffer extends Node {
         return v;
     }
 
-    public int method1015() {
+    public int ig4() {
         return (payload[pos++] & 0xff)
                 + ((payload[pos++] & 0xff) << 8)
                 + ((payload[pos++] & 0xff) << 16)

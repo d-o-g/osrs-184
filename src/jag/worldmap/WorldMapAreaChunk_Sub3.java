@@ -26,10 +26,6 @@ public class WorldMapAreaChunk_Sub3 implements WorldMapAreaChunk {
     WorldMapAreaChunk_Sub3() {
     }
 
-    public static boolean method367(int var0) {
-        return (var0 >> 29 & 1) != 0;
-    }
-
     public static void method368(String var0) {
         if (var0.equalsIgnoreCase("toggleroof")) {
             client.preferences.roofsHidden = !client.preferences.roofsHidden;

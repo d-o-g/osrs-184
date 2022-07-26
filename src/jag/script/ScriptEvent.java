@@ -870,7 +870,7 @@ public class ScriptEvent extends Node {
                 IdentikitDefinition.anInterfaceComponent1518 = var12;
             }
 
-            InterfaceComponent.repaint(var8);
+            InterfaceComponent.invalidate(var8);
             return 1;
         }
         InterfaceComponent var6;
@@ -878,13 +878,13 @@ public class ScriptEvent extends Node {
             var6 = var2 ? StockMarketOfferLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
             InterfaceComponent var7 = InterfaceComponent.lookup(var6.uid);
             var7.subcomponents[var6.subComponentIndex] = null;
-            InterfaceComponent.repaint(var7);
+            InterfaceComponent.invalidate(var7);
             return 1;
         }
         if (var0 == 102) {
             var6 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
             var6.subcomponents = null;
-            InterfaceComponent.repaint(var6);
+            InterfaceComponent.invalidate(var6);
             return 1;
         }
         if (var0 != 200) {
@@ -1908,10 +1908,10 @@ public class ScriptEvent extends Node {
             var4.yMargin = intStack[Statics46.anInt442 + 1];
             var4.xLayout = intStack[Statics46.anInt442 + 2];
             var4.yLayout = intStack[Statics46.anInt442 + 3];
-            InterfaceComponent.repaint(var4);
-            client.instance.method742(var4);
+            InterfaceComponent.invalidate(var4);
+            client.instance.updateComponentMargin(var4);
             if (var3 != -1 && var4.type == 0) {
-                GameShell.method925(client.interfaces[var3 >> 16], var4, false);
+                InterfaceComponent.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
             }
 
             return 1;
@@ -1922,10 +1922,10 @@ public class ScriptEvent extends Node {
             var4.baseHeight = intStack[Statics46.anInt442 + 1];
             var4.xAlignment = intStack[Statics46.anInt442 + 2];
             var4.yAlignment = intStack[Statics46.anInt442 + 3];
-            InterfaceComponent.repaint(var4);
-            client.instance.method742(var4);
+            InterfaceComponent.invalidate(var4);
+            client.instance.updateComponentMargin(var4);
             if (var3 != -1 && var4.type == 0) {
-                GameShell.method925(client.interfaces[var3 >> 16], var4, false);
+                InterfaceComponent.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
             }
 
             return 1;
@@ -1934,7 +1934,7 @@ public class ScriptEvent extends Node {
             boolean var5 = intStack[--Statics46.anInt442] == 1;
             if (var5 != var4.explicitlyHidden) {
                 var4.explicitlyHidden = var5;
-                InterfaceComponent.repaint(var4);
+                InterfaceComponent.invalidate(var4);
             }
 
             return 1;
@@ -3345,7 +3345,7 @@ public class ScriptEvent extends Node {
             var3 = var2 ? StockMarketOfferLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
         }
 
-        InterfaceComponent.repaint(var3);
+        InterfaceComponent.invalidate(var3);
         if (var0 != 1200 && var0 != 1205 && var0 != 1212) {
             if (var0 == 1201) {
                 var3.modelType = 2;
@@ -3419,48 +3419,48 @@ public class ScriptEvent extends Node {
                 var4.insetY = 0;
             }
 
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1101) {
             var4.foreground = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1102) {
             var4.filled = intStack[--Statics46.anInt442] == 1;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1103) {
             var4.alpha = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1104) {
             var4.lineWidth = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1105) {
             var4.materialId = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1106) {
             var4.spriteId = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1107) {
             var4.tileSprites = intStack[--Statics46.anInt442] == 1;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1108) {
             var4.modelType = 1;
             var4.modelId = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1109) {
@@ -3471,7 +3471,7 @@ public class ScriptEvent extends Node {
             var4.zRotation = intStack[Statics46.anInt442 + 3];
             var4.yRotation = intStack[Statics46.anInt442 + 4];
             var4.modelZoom = intStack[Statics46.anInt442 + 5];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         int var8;
@@ -3481,28 +3481,28 @@ public class ScriptEvent extends Node {
                 var4.animation = var8;
                 var4.animationFrame = 0;
                 var4.animationFrameCycle = 0;
-                InterfaceComponent.repaint(var4);
+                InterfaceComponent.invalidate(var4);
             }
 
             return 1;
         }
         if (var0 == 1111) {
             var4.perpendicular = intStack[--Statics46.anInt442] == 1;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1112) {
             String var6 = stringStack[--Statics46.anInt441];
             if (!var6.equals(var4.text)) {
                 var4.text = var6;
-                InterfaceComponent.repaint(var4);
+                InterfaceComponent.invalidate(var4);
             }
 
             return 1;
         }
         if (var0 == 1113) {
             var4.fontId = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1114) {
@@ -3510,41 +3510,41 @@ public class ScriptEvent extends Node {
             var4.horizontalMargin = intStack[Statics46.anInt442];
             var4.verticalMargin = intStack[Statics46.anInt442 + 1];
             var4.textSpacing = intStack[Statics46.anInt442 + 2];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1115) {
             var4.textShadowed = intStack[--Statics46.anInt442] == 1;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1116) {
             var4.borderThickness = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1117) {
             var4.shadowColor = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1118) {
             var4.flippedVertically = intStack[--Statics46.anInt442] == 1;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1119) {
             var4.flippedHorizontally = intStack[--Statics46.anInt442] == 1;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1120) {
             Statics46.anInt442 -= 2;
             var4.viewportWidth = intStack[Statics46.anInt442];
             var4.viewportHeight = intStack[Statics46.anInt442 + 1];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             if (var3 != -1 && var4.type == 0) {
-                GameShell.method925(client.interfaces[var3 >> 16], var4, false);
+                InterfaceComponent.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
             }
 
             return 1;
@@ -3552,22 +3552,22 @@ public class ScriptEvent extends Node {
         if (var0 == 1121) {
             Clock.processDialogActionPacket(var4.uid, var4.subComponentIndex);
             client.pleaseWaitComponent = var4;
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1122) {
             var4.enabledMaterialId = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1123) {
             var4.enabledForeground = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1124) {
             var4.enabledAlpha = intStack[--Statics46.anInt442];
-            InterfaceComponent.repaint(var4);
+            InterfaceComponent.invalidate(var4);
             return 1;
         }
         if (var0 == 1125) {
@@ -3575,7 +3575,7 @@ public class ScriptEvent extends Node {
             ComponentFillType var7 = (ComponentFillType) EnumType.getByOrdinal(ComponentFillType.getValues(), var8);
             if (var7 != null) {
                 var4.fillType = var7;
-                InterfaceComponent.repaint(var4);
+                InterfaceComponent.invalidate(var4);
             }
 
             return 1;

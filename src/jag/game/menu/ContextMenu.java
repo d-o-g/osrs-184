@@ -598,7 +598,7 @@ public class ContextMenu {
                             if (client.pleaseWaitComponent == null) {
                                 Clock.processDialogActionPacket(tertiary, secondary);
                                 client.pleaseWaitComponent = InterfaceComponent.lookup(tertiary, secondary);
-                                InterfaceComponent.repaint(client.pleaseWaitComponent);
+                                InterfaceComponent.invalidate(client.pleaseWaitComponent);
                             }
                         } else if (opcode == 31) {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_ITEM, client.netWriter.encryptor);
@@ -676,7 +676,7 @@ public class ContextMenu {
                                 ItemSelection.id = secondary;
                                 ItemSelection.uid = tertiary;
                                 ItemSelection.index = primary;
-                                InterfaceComponent.repaint(component);
+                                InterfaceComponent.invalidate(component);
                                 ItemSelection.name = client.getColorTags(16748608) + ItemDefinition.get(primary).name + client.getColorTags(16777215);
                                 if (ItemSelection.name == null) {
                                     ItemSelection.name = "null";
@@ -959,7 +959,7 @@ public class ContextMenu {
 
         if (ItemSelection.state != 0) {
             ItemSelection.state = 0;
-            InterfaceComponent.repaint(InterfaceComponent.lookup(ItemSelection.uid));
+            InterfaceComponent.invalidate(InterfaceComponent.lookup(ItemSelection.uid));
         }
 
         if (ComponentSelection.state) {
@@ -968,7 +968,7 @@ public class ContextMenu {
 
         //maybe drag related
         if (StockMarketOfferWorldComparator.anInterfaceComponent351 != null && client.anInt1018 == 0) {
-            InterfaceComponent.repaint(StockMarketOfferWorldComparator.anInterfaceComponent351);
+            InterfaceComponent.invalidate(StockMarketOfferWorldComparator.anInterfaceComponent351);
         }
 
     }
