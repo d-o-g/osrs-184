@@ -8,7 +8,6 @@ import jag.commons.collection.IntegerNode;
 import jag.commons.collection.LinkedList;
 import jag.commons.collection.NodeDeque;
 import jag.commons.collection.NodeTable;
-import jag.commons.crypt.Base37;
 import jag.commons.crypt.Djb2;
 import jag.commons.input.Keyboard;
 import jag.commons.input.Mouse;
@@ -133,7 +132,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static final Map<Integer, ChatHistory> chatHistory = new HashMap<>();
     public static final ArrayList<LoadedArchive> archives = new ArrayList<>(10);;
     public static final PlayerModel renderedAppearance = new PlayerModel();
-    public static final NetWriter netWriter = new NetWriter();
+    public static final ClientStream stream = new ClientStream();
     public static final OperatingSystemProvider operatingSystemProvider = new DefaultOperatingSystemProvider();
     public static final DefaultRouteStrategy routeStrategy = new DefaultRouteStrategy();
     public static final GameStateEvent gameStateEvent = new GameStateEvent();
@@ -345,9 +344,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static GraphicsProvider graphicsProvider;
 
-    private static final ClientProtHandler clientProtHandler = new JagClientProtHandler(netWriter);
+    private static final ClientProtHandler clientProtHandler = new JagClientProtHandler(stream);
 
-    private static final ServerProtHandler serverProtHandler = new JagServerProtHandler(netWriter);
+    private static final ServerProtHandler serverProtHandler = new JagServerProtHandler(stream);
 
     static {
         overheadMessageCapacity = 50;
@@ -523,8 +522,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         } else {
             gameStateEvent.dropConnection();
             setGameState(40);
-            WorldMapGroundDecorType2.aConnection299 = netWriter.unwrap();
-            netWriter.kill();
+            WorldMapGroundDecorType2.aConnection299 = stream.unwrap();
+            stream.kill();
         }
     }
 
@@ -757,11 +756,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public static void processGameBoundsPacket() {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GAME_BOUNDS, netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GAME_BOUNDS, stream.encryptor);
         packet.buffer.p1(isResizable());
         packet.buffer.p2(canvasWidth);
         packet.buffer.p2(canvasHeight);
-        netWriter.writeLater(packet);
+        stream.writeLater(packet);
     }
 
     public static String getColorTags(int color) {
@@ -769,12 +768,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public static void teleport(int var0, int var1, int var2, boolean var3) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TELEPORT, netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TELEPORT, stream.encryptor);
         packet.buffer.writeByteS(var2);
         packet.buffer.ip4(var3 ? anInt1002 : 0);
         packet.buffer.p2(var1);
         packet.buffer.ip2a(var0);
-        netWriter.writeLater(packet);
+        stream.writeLater(packet);
     }
 
     public static void method865() {
@@ -827,7 +826,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         }
 
         mouseRecorder = null;
-        netWriter.stop();
+        stream.stop();
         Keyboard.destroy();
         Mouse.destroy();
         MouseWheel.provider = null;
@@ -946,8 +945,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public boolean processIncomingPacket() {
-        Connection connection = netWriter.unwrap();
-        BitBuffer incoming = netWriter.inbuffer;
+        Connection connection = stream.unwrap();
+        BitBuffer incoming = stream.inbuffer;
         if (connection == null) {
             return false;
         }
@@ -958,91 +957,91 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             incoming.pos = 0;
-            connection.read(incoming.payload, 0, netWriter.incomingPacketSize);
-            netWriter.idleReadTicks = 0;
+            connection.read(incoming.payload, 0, stream.incomingPacketSize);
+            stream.idleReadTicks = 0;
             gameStateEvent.updateTime();
 
-            netWriter.thirdLastIncomingPacket = netWriter.secondLastIncomingPacket;
-            netWriter.secondLastIncomingPacket = netWriter.lastIncomingPacket;
-            netWriter.lastIncomingPacket = netWriter.currentIncomingPacket;
+            stream.thirdLastIncomingPacket = stream.secondLastIncomingPacket;
+            stream.secondLastIncomingPacket = stream.lastIncomingPacket;
+            stream.lastIncomingPacket = stream.currentIncomingPacket;
 
             for (ZoneProt zoneProt : ZoneProt.values()) {
-                if (netWriter.currentIncomingPacket == zoneProt.getServerProt()) {
+                if (stream.currentIncomingPacket == zoneProt.getServerProt()) {
                     return serverProtHandler.processZoneProt(incoming, ZoneProt.MAP_PROJANIM);
                 }
             }
 
-            if (ServerProt.UPDATE_COMPONENT_CONFIG == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_COMPONENT_CONFIG == stream.currentIncomingPacket) {
                 return serverProtHandler.processComponentConfigUpdate(incoming);
             }
 
-            if (ServerProt.SET_OCULUSORB_MODE == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_OCULUSORB_MODE == stream.currentIncomingPacket) {
                 return serverProtHandler.processOculusOrbModeUpdate(incoming);
             }
 
-            if (ServerProt.IF_SETPOS == netWriter.currentIncomingPacket) {
+            if (ServerProt.IF_SETPOS == stream.currentIncomingPacket) {
                 return serverProtHandler.setIfPosition(incoming);
             }
 
-            if (ServerProt.SET_UPDATE_TIMER == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_UPDATE_TIMER == stream.currentIncomingPacket) {
                 return serverProtHandler.setUpdateTimer(incoming);
             }
 
-            if (ServerProt.UPDATE_STOCKMARKET_EVENTS == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_STOCKMARKET_EVENTS == stream.currentIncomingPacket) {
                 return serverProtHandler.processStockMarketEvents(incoming);
             }
 
-            if (ServerProt.SET_JS_COOKIE == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_JS_COOKIE == stream.currentIncomingPacket) {
                 GameShell.setDocumentCookie(incoming.gstr());
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_ITEMTABLE == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_ITEMTABLE == stream.currentIncomingPacket) {
                 return serverProtHandler.processItemTableUpdate(incoming);
             }
 
-            if (ServerProt.LOCK_CAMERA == netWriter.currentIncomingPacket) {
+            if (ServerProt.LOCK_CAMERA == stream.currentIncomingPacket) {
                 return serverProtHandler.processLockCameraRequest(incoming);
             }
 
-            if (ServerProt.GARBAGE_COLLECTOR == netWriter.currentIncomingPacket) {
+            if (ServerProt.GARBAGE_COLLECTOR == stream.currentIncomingPacket) {
                 return serverProtHandler.processGcInfoRequest(incoming);
             }
 
-            if (ServerProt.SET_PLAYER_WEIGHT == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_PLAYER_WEIGHT == stream.currentIncomingPacket) {
                 return serverProtHandler.updatePlayerWeight(incoming);
             }
 
-            if (ServerProt.SET_OCULUS_ORB_LOCAL == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_OCULUS_ORB_LOCAL == stream.currentIncomingPacket) {
                 return serverProtHandler.setOculusOrbToLocalPlayer(incoming);
             }
 
-            if (ServerProt.UPDATE_FRIENDSCHAT == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_FRIENDSCHAT == stream.currentIncomingPacket) {
                 return serverProtHandler.processFriendsChatUpdate(incoming);
             }
 
-            if (ServerProt.MOVE_SUBIF == netWriter.currentIncomingPacket) {
+            if (ServerProt.MOVE_SUBIF == stream.currentIncomingPacket) {
                 return serverProtHandler.moveSubInterface(incoming);
             }
 
-            if (ServerProt.UPDATE_FRIENDLIST == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_FRIENDLIST == stream.currentIncomingPacket) {
                 return serverProtHandler.processFriendsListUpdate(incoming);
             }
 
-            if (ServerProt.ADD_FRIENDS_CHAT_MESSAGE == netWriter.currentIncomingPacket) {
+            if (ServerProt.ADD_FRIENDS_CHAT_MESSAGE == stream.currentIncomingPacket) {
                return serverProtHandler.processFriendsChatMessage(incoming);
             }
 
-            if (ServerProt.UPDATE_RANDOM == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_RANDOM == stream.currentIncomingPacket) {
                 return serverProtHandler.processRandomDatUpdate(incoming);
             }
 
-            if (ServerProt.UPDATE_GRAND_EXCHANGE == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_GRAND_EXCHANGE == stream.currentIncomingPacket) {
                 return serverProtHandler.processStockMarketUpdate(incoming);
             }
 
-            if (ServerProt.SET_IF_ANIMATION == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_IF_ANIMATION == stream.currentIncomingPacket) {
                 int animation = incoming.method1067();
                 int uid = incoming.method1011();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
@@ -1053,11 +1052,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(component);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_IF_TO_ITEM_MODEL == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_IF_TO_ITEM_MODEL == stream.currentIncomingPacket) {
                 int uid = incoming.g4();
                 int itemStackSize = incoming.ig4();
                 int itemId = incoming.readLEUShortA();
@@ -1069,7 +1068,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 if (!component.format) {
                     if (itemId == -1) {
                         component.modelType = 0;
-                        netWriter.currentIncomingPacket = null;
+                        stream.currentIncomingPacket = null;
                         return true;
                     }
 
@@ -1104,11 +1103,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 InterfaceComponent.invalidate(component);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_IF_MODEL_TYPE2 == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_IF_MODEL_TYPE2 == stream.currentIncomingPacket) {
                 int uid = incoming.method1011();
                 int modelId = incoming.method1055();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
@@ -1118,11 +1117,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(component);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.ADD_PREV_CHAT_MESSAGE == netWriter.currentIncomingPacket) {
+            if (ServerProt.ADD_PREV_CHAT_MESSAGE == stream.currentIncomingPacket) {
                 String var38 = incoming.gstr();
                 long var18 = incoming.g2();
                 int var20 = incoming.g3();
@@ -1159,11 +1158,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.CLEAR_INV == netWriter.currentIncomingPacket) {
+            if (ServerProt.CLEAR_INV == stream.currentIncomingPacket) {
                 int uid = incoming.ig4();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
 
@@ -1173,17 +1172,17 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 InterfaceComponent.invalidate(component);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.NPC_UPDATE1 == netWriter.currentIncomingPacket) {
+            if (ServerProt.NPC_UPDATE1 == stream.currentIncomingPacket) {
                 NpcEntity.update(true, incoming);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_VARP2 == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_VARP2 == stream.currentIncomingPacket) {
                 int value = incoming.method1019();
                 int index = incoming.readLEUShortA();
                 Vars.baseValues[index] = value;
@@ -1193,18 +1192,18 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 OldConnection.processOptionVarps(index);
                 anIntArray1076[++anInt1064 - 1 & 31] = index;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_REGION_CHUNK == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_REGION_CHUNK == stream.currentIncomingPacket) {
                 SceneGraph.regionChunkX = incoming.ig1();
                 SceneGraph.regionChunkY = incoming.g1();
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.AN_SERVER_PROT_192 == netWriter.currentIncomingPacket) {
+            if (ServerProt.AN_SERVER_PROT_192 == stream.currentIncomingPacket) {
                 int index = incoming.g1();
                 int var5 = incoming.g1();
                 int var7 = incoming.g1();
@@ -1214,11 +1213,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 anIntArray918[index] = var7;
                 anIntArray914[index] = var8;
                 anIntArray916[index] = 0;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_PLAYER_ACTION == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_PLAYER_ACTION == stream.currentIncomingPacket) {
                 int var6 = incoming.method1074();
                 StringBuilder action = new StringBuilder(incoming.gstr());
                 int var7 = incoming.method1056();
@@ -1233,11 +1232,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_WORLD == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_WORLD == stream.currentIncomingPacket) {
                 Server server = new Server();
                 server.domain = incoming.gstr();
                 server.id = incoming.g2();
@@ -1246,37 +1245,37 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 setGameState(45);
                 connection.stop();
                 SerializableString.setWorld(server);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return false;
             }
 
-            if (ServerProt.INIT_RELATIONSHIP_SYSYEM == netWriter.currentIncomingPacket) {
+            if (ServerProt.INIT_RELATIONSHIP_SYSYEM == stream.currentIncomingPacket) {
                 relationshipSystem.setLoading();
                 anInt1065 = anInt1075;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.DROP_CONNECTION == netWriter.currentIncomingPacket) {
+            if (ServerProt.DROP_CONNECTION == stream.currentIncomingPacket) {
                 int reason = incoming.g1();
                 AnimationSequence.method881(reason);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return false;
             }
 
-            if (ServerProt.UNLOCK_CAMERA == netWriter.currentIncomingPacket) {
+            if (ServerProt.UNLOCK_CAMERA == stream.currentIncomingPacket) {
                 cameraLocked = false;
 
                 for (int i = 0; i < 5; ++i) {
                     aBooleanArray919[i] = false;
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.INIT_FRIENDSCHAT == netWriter.currentIncomingPacket) {
-                if (netWriter.incomingPacketSize == 0) {
+            if (ServerProt.INIT_FRIENDSCHAT == stream.currentIncomingPacket) {
+                if (stream.incomingPacketSize == 0) {
                     friendsChatSystem = null;
                 } else {
                     if (friendsChatSystem == null) {
@@ -1287,11 +1286,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 method865();
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_HINT_ARROW == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_HINT_ARROW == stream.currentIncomingPacket) {
                 HintArrow.type = incoming.g1();
                 if (HintArrow.type == 1) {
                     HintArrow.npc = incoming.g2();
@@ -1333,19 +1332,19 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     HintArrow.player = incoming.g2();
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_INV_STOP_TRANSIT == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_INV_STOP_TRANSIT == stream.currentIncomingPacket) {
                 int key = incoming.method1055();
                 Inventory.delete(key);
                 inventories[++anInt1078 - 1 & 31] = key & 32767;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.AN_SERVER_PROT_236 == netWriter.currentIncomingPacket) {
+            if (ServerProt.AN_SERVER_PROT_236 == stream.currentIncomingPacket) {
                 int rootInterfaceIndex = incoming.method1055();
                 client.rootInterfaceIndex = rootInterfaceIndex;
                 this.updateSize(false);
@@ -1356,11 +1355,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     renderedComponents[i] = true;
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.ADD_CHAT_MESSAGE == netWriter.currentIncomingPacket) {
+            if (ServerProt.ADD_CHAT_MESSAGE == stream.currentIncomingPacket) {
                 int type = incoming.gsmarts();
                 boolean sentByPlayer = incoming.g1() == 1;
                 String name = "";
@@ -1377,27 +1376,27 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     ChatHistory.messageReceived(type, name, channel);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_MAP_REGION == netWriter.currentIncomingPacket) {
-                PlayerAccountType.onSceneXTEAKeyChange(false, netWriter.inbuffer);
-                netWriter.currentIncomingPacket = null;
+            if (ServerProt.UPDATE_MAP_REGION == stream.currentIncomingPacket) {
+                PlayerAccountType.onSceneXTEAKeyChange(false, stream.inbuffer);
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.OPEN_BROWSER_URL == netWriter.currentIncomingPacket) {
-                byte[] data = new byte[netWriter.incomingPacketSize];
+            if (ServerProt.OPEN_BROWSER_URL == stream.currentIncomingPacket) {
+                byte[] data = new byte[stream.incomingPacketSize];
                 incoming.ge(data, 0, data.length);
                 Buffer buffer = new Buffer(data);
                 String url = buffer.gstr();
                 CacheRequestWorker.openURL(url, true, false);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_COMPONENT_HIDDEN == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_COMPONENT_HIDDEN == stream.currentIncomingPacket) {
                 boolean hidden = incoming.g1() == 1;
                 int uid = incoming.ig4();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
@@ -1406,11 +1405,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(component);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_ITEM_TABLE == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_ITEM_TABLE == stream.currentIncomingPacket) {
                 int uid = incoming.g4();
                 int key = incoming.g2();
                 if (uid < -70000) {
@@ -1419,7 +1418,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 InterfaceComponent component = uid >= 0 ? InterfaceComponent.lookup(uid) : null;
 
-                while (incoming.pos < netWriter.incomingPacketSize) {
+                while (incoming.pos < stream.incomingPacketSize) {
                     int var8 = incoming.gsmarts();
                     int var9 = incoming.g2();
                     int var15 = 0;
@@ -1443,11 +1442,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 SubInterface.process();
                 inventories[++anInt1078 - 1 & 31] = key & 32767;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_COMPONENT_MODEL_TYPE1 == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_COMPONENT_MODEL_TYPE1 == stream.currentIncomingPacket) {
                 int var6 = incoming.method1019();
                 int var5 = incoming.method1055();
                 InterfaceComponent component = InterfaceComponent.lookup(var6);
@@ -1457,11 +1456,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(component);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_COMPONENT_FOREGROUND == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_COMPONENT_FOREGROUND == stream.currentIncomingPacket) {
                 int var6 = incoming.g2();
                 int var5 = incoming.ig4();
                 int var7 = var6 >> 10 & 31;
@@ -1474,11 +1473,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(var59);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_COMPONENT_ZOOM == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_COMPONENT_ZOOM == stream.currentIncomingPacket) {
                 int var6 = incoming.g2();
                 int var5 = incoming.method1055();
                 int var7 = incoming.method1060();
@@ -1491,18 +1490,18 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(var17);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_CHAT_MODE == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_CHAT_MODE == stream.currentIncomingPacket) {
                 tradeChatMode = incoming.method1074();
                 publicChatMode = incoming.method1056();
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_STATS == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_STATS == stream.currentIncomingPacket) {
                 SubInterface.process();
                 int experience = incoming.method1019();
                 int index = incoming.method1056();
@@ -1518,27 +1517,27 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 anIntArray1079[++anInt1063 - 1 & 31] = index;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_MAP_STATE == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_MAP_STATE == stream.currentIncomingPacket) {
                 mapState = incoming.g1();
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.AN_SERVER_PROT_245 == netWriter.currentIncomingPacket) {
+            if (ServerProt.AN_SERVER_PROT_245 == stream.currentIncomingPacket) {
                 int var6 = incoming.method1055();
                 int var5 = incoming.method1011();
                 int var7 = incoming.method1060();
                 InterfaceComponent var47 = InterfaceComponent.lookup(var5);
                 var47.rotationKey = var6 + (var7 << 16);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.FIRE_SCRIPT_EVENT == netWriter.currentIncomingPacket) {
+            if (ServerProt.FIRE_SCRIPT_EVENT == stream.currentIncomingPacket) {
                 String str = incoming.gstr();
                 Object[] args = new Object[str.length() + 1];
 
@@ -1554,11 +1553,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 ScriptEvent evt = new ScriptEvent();
                 evt.args = args;
                 ScriptEvent.fire(evt);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_CAMERA == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_CAMERA == stream.currentIncomingPacket) {
                 cameraLocked = true;
                 GameShell.anInt1288 = incoming.g1() * 16384;
                 SecureRandomService.anInt458 = incoming.g1() * 128;
@@ -1584,11 +1583,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.AN_SERVER_PROT_240 == netWriter.currentIncomingPacket) {
+            if (ServerProt.AN_SERVER_PROT_240 == stream.currentIncomingPacket) {
                 int key = incoming.g4();
                 int type = incoming.g1();
                 int id = incoming.g2();
@@ -1598,11 +1597,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 SubInterface.create(key, id, type);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.CLOSE_SUBIF == netWriter.currentIncomingPacket) {
+            if (ServerProt.CLOSE_SUBIF == stream.currentIncomingPacket) {
                 int var6 = incoming.g4();
                 SubInterface var58 = subInterfaces.lookup(var6);
                 if (var58 != null) {
@@ -1614,11 +1613,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     pleaseWaitComponent = null;
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_VARP == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_VARP == stream.currentIncomingPacket) {
                 int index = incoming.method1055();
                 byte value = incoming.g1b();
                 Vars.baseValues[index] = value;
@@ -1628,29 +1627,29 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 OldConnection.processOptionVarps(index);
                 anIntArray1076[++anInt1064 - 1 & 31] = index;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_RUN_ENERGY == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_RUN_ENERGY == stream.currentIncomingPacket) {
                 SubInterface.process();
                 energy = incoming.g1();
                 anInt1074 = anInt1075;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_COMPONENT_MODEL_TYPE3 == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_COMPONENT_MODEL_TYPE3 == stream.currentIncomingPacket) {
                 int uid = incoming.ig4();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
                 component.modelType = 3;
                 component.modelId = PlayerEntity.local.model.hash();
                 InterfaceComponent.invalidate(component);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.RESET_REGION_CHUNK == netWriter.currentIncomingPacket) {
+            if (ServerProt.RESET_REGION_CHUNK == stream.currentIncomingPacket) {
                 SceneGraph.regionChunkY = incoming.method1074();
                 SceneGraph.regionChunkX = incoming.ig1();
 
@@ -1669,17 +1668,17 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.PROCESS_REFLECTION_REQUEST == netWriter.currentIncomingPacket) {
+            if (ServerProt.PROCESS_REFLECTION_REQUEST == stream.currentIncomingPacket) {
                 ClassStructure.decode(incoming);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_VARPS == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_VARPS == stream.currentIncomingPacket) {
                 for (int i = 0; i < Vars.values.length; ++i) {
                     if (Vars.baseValues[i] != Vars.values[i]) {
                         Vars.values[i] = Vars.baseValues[i];
@@ -1688,31 +1687,31 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_IGNORELIST == netWriter.currentIncomingPacket) {
-                relationshipSystem.ignoreListContext.decode(incoming, netWriter.incomingPacketSize);
+            if (ServerProt.UPDATE_IGNORELIST == stream.currentIncomingPacket) {
+                relationshipSystem.ignoreListContext.decode(incoming, stream.incomingPacketSize);
                 RelationshipSystem.method843();
                 anInt1065 = anInt1075;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_NPCS == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_NPCS == stream.currentIncomingPacket) {
                 NpcEntity.update(false, incoming);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_INSTANCE_REGION == netWriter.currentIncomingPacket) {
-                PlayerAccountType.onSceneXTEAKeyChange(true, netWriter.inbuffer);
-                netWriter.currentIncomingPacket = null;
+            if (ServerProt.UPDATE_INSTANCE_REGION == stream.currentIncomingPacket) {
+                PlayerAccountType.onSceneXTEAKeyChange(true, stream.inbuffer);
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_COMPONENT_TEXT == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_COMPONENT_TEXT == stream.currentIncomingPacket) {
                 int uid = incoming.ig4();
                 StringBuilder text = new StringBuilder(incoming.gstr());
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
@@ -1721,22 +1720,22 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(component);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_AUDIOSYSTEM == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_AUDIOSYSTEM == stream.currentIncomingPacket) {
                 int var6 = incoming.g2();
                 if (var6 == 65535) {
                     var6 = -1;
                 }
 
                 AudioOverrideEffect.method795(var6);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_AUDIOTRACKS == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_AUDIOTRACKS == stream.currentIncomingPacket) {
                 int var6 = incoming.method1060();
                 if (var6 == 65535) {
                     var6 = -1;
@@ -1744,11 +1743,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 int var5 = incoming.method1017();
                 ClientProt.method5(var6);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.RESET_VARPS == netWriter.currentIncomingPacket) {
+            if (ServerProt.RESET_VARPS == stream.currentIncomingPacket) {
                 for (int i = 0; i < VarDefinition.count; ++i) {
                     VarDefinition varp = VarDefinition.get(i);
                     if (varp != null) {
@@ -1759,12 +1758,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 SubInterface.process();
                 anInt1064 += 32;
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_IF_CONFIGS == netWriter.currentIncomingPacket) {
-                int var6 = incoming.pos + netWriter.incomingPacketSize;
+            if (ServerProt.UPDATE_IF_CONFIGS == stream.currentIncomingPacket) {
+                int var6 = incoming.pos + stream.incomingPacketSize;
                 int var5 = incoming.g2();
                 int var7 = incoming.g2();
                 if (var5 != rootInterfaceIndex) {
@@ -1818,64 +1817,64 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SEND_PRIV_MSG2 == netWriter.currentIncomingPacket) {
+            if (ServerProt.SEND_PRIV_MSG2 == stream.currentIncomingPacket) {
                 String var38 = incoming.gstr();
                 StringBuilder var33 = new StringBuilder(BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(incoming))));
                 ChatHistory.messageReceived(6, var38, var33.toString());
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.LOGOUT == netWriter.currentIncomingPacket) {
+            if (ServerProt.LOGOUT == stream.currentIncomingPacket) {
                 DynamicObject.gc();
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return false;
             }
 
-            if (ServerProt.ADD_AUDIO_EFFECT == netWriter.currentIncomingPacket) {
+            if (ServerProt.ADD_AUDIO_EFFECT == stream.currentIncomingPacket) {
                 int var6 = incoming.g2();
                 int var5 = incoming.g1();
                 int var7 = incoming.g2();
                 method884(var6, var5, var7);
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_PLAYER == netWriter.currentIncomingPacket) {
-                PlayerEntity.update(incoming, netWriter.incomingPacketSize);
+            if (ServerProt.UPDATE_PLAYER == stream.currentIncomingPacket) {
+                PlayerEntity.update(incoming, stream.incomingPacketSize);
                 Archive.method485();
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.CLOSE_DIALOG == netWriter.currentIncomingPacket) {
+            if (ServerProt.CLOSE_DIALOG == stream.currentIncomingPacket) {
                 if (rootInterfaceIndex != -1) {
                     InterfaceComponent.executeCloseListeners(rootInterfaceIndex, 0);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.UPDATE_REGION_CHUNK == netWriter.currentIncomingPacket) {
+            if (ServerProt.UPDATE_REGION_CHUNK == stream.currentIncomingPacket) {
                 SceneGraph.regionChunkX = incoming.ig1();
                 SceneGraph.regionChunkY = incoming.g1();
 
-                while (incoming.pos < netWriter.incomingPacketSize) {
+                while (incoming.pos < stream.incomingPacketSize) {
                     int index = incoming.g1();
                     ZoneProt zoneProt = ZoneProt.values()[index];
                     ZoneProt.process(zoneProt);
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.RESET_PATHINGENTITY_ANIMS == netWriter.currentIncomingPacket) {
+            if (ServerProt.RESET_PATHINGENTITY_ANIMS == stream.currentIncomingPacket) {
                 for (PlayerEntity player : players) {
                     if (player != null) {
                         player.animation = -1;
@@ -1888,11 +1887,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_DESTINATION == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_DESTINATION == stream.currentIncomingPacket) {
                 destinationX = incoming.g1();
                 if (destinationX == 255) {
                     destinationX = 0;
@@ -1903,17 +1902,17 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     destinationY = 0;
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_PUBLIC_CHATMODE == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_PUBLIC_CHATMODE == stream.currentIncomingPacket) {
                 publicChatPrivacyMode = ChatModePrivacyType.valueOf(incoming.g1());
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.INIT_WORLDMAP_HEATMAP == netWriter.currentIncomingPacket) {
+            if (ServerProt.INIT_WORLDMAP_HEATMAP == stream.currentIncomingPacket) {
                 boolean var42 = incoming.gbool();
                 if (var42) {
                     if (WorldMap.heatmap == null) {
@@ -1923,11 +1922,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     WorldMap.heatmap = null;
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            if (ServerProt.SET_IF_SCROLL == netWriter.currentIncomingPacket) {
+            if (ServerProt.SET_IF_SCROLL == stream.currentIncomingPacket) {
                 int var6 = incoming.ig4();
                 int var5 = incoming.method1060();
                 InterfaceComponent var14 = InterfaceComponent.lookup(var6);
@@ -1946,18 +1945,18 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                netWriter.currentIncomingPacket = null;
+                stream.currentIncomingPacket = null;
                 return true;
             }
 
-            sendError("" + (netWriter.currentIncomingPacket != null ? netWriter.currentIncomingPacket.opcode : -1) + "," + (netWriter.secondLastIncomingPacket != null ? netWriter.secondLastIncomingPacket.opcode : -1) + "," + (netWriter.thirdLastIncomingPacket != null ? netWriter.thirdLastIncomingPacket.opcode : -1) + "," + netWriter.incomingPacketSize, null);
+            sendError("" + (stream.currentIncomingPacket != null ? stream.currentIncomingPacket.opcode : -1) + "," + (stream.secondLastIncomingPacket != null ? stream.secondLastIncomingPacket.opcode : -1) + "," + (stream.thirdLastIncomingPacket != null ? stream.thirdLastIncomingPacket.opcode : -1) + "," + stream.incomingPacketSize, null);
             DynamicObject.gc();
         } catch (IOException e) {
             dropConnection();
         } catch (Exception var37) {
-            StringBuilder builder = new StringBuilder("" + (netWriter.currentIncomingPacket != null ? netWriter.currentIncomingPacket.opcode : -1) + "," + (netWriter.secondLastIncomingPacket != null ? netWriter.secondLastIncomingPacket.opcode : -1) + "," + (netWriter.thirdLastIncomingPacket != null ? netWriter.thirdLastIncomingPacket.opcode : -1) + "," + netWriter.incomingPacketSize + "," + (PlayerEntity.local.pathXQueue[0] + baseX) + "," + (PlayerEntity.local.pathYQueue[0] + baseY) + ",");
+            StringBuilder builder = new StringBuilder("" + (stream.currentIncomingPacket != null ? stream.currentIncomingPacket.opcode : -1) + "," + (stream.secondLastIncomingPacket != null ? stream.secondLastIncomingPacket.opcode : -1) + "," + (stream.thirdLastIncomingPacket != null ? stream.thirdLastIncomingPacket.opcode : -1) + "," + stream.incomingPacketSize + "," + (PlayerEntity.local.pathXQueue[0] + baseX) + "," + (PlayerEntity.local.pathYQueue[0] + baseY) + ",");
 
-            for (int i = 0; i < netWriter.incomingPacketSize && i < 50; ++i) {
+            for (int i = 0; i < stream.incomingPacketSize && i < 50; ++i) {
                 builder.append(incoming.payload[i]).append(",");
             }
 
@@ -2470,8 +2469,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                     processObjectSpawns();
                     processAudioEffects();
-                    ++netWriter.idleReadTicks;
-                    if (netWriter.idleReadTicks > 750) {
+                    ++stream.idleReadTicks;
+                    if (stream.idleReadTicks > 750) {
                         dropConnection();
                         return;
                     }
@@ -2624,12 +2623,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                                             dragComponent.swapItem(draggingComponentIndex, draggingComponentSourceIndex);
                                                                         }
 
-                                                                        OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.DRAG_ITEM, netWriter.encryptor);
+                                                                        OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.DRAG_ITEM, stream.encryptor);
                                                                         outgoing.buffer.pirf4(AnimationFrameGroup.dragComponent.uid);
                                                                         outgoing.buffer.p2(draggingComponentIndex);
                                                                         outgoing.buffer.p1(var35);
                                                                         outgoing.buffer.ip2(draggingComponentSourceIndex);
-                                                                        netWriter.writeLater(outgoing);
+                                                                        stream.writeLater(outgoing);
                                                                     }
                                                                 } else if (this.isOpenMenuOnLeftClick()) {
                                                                     this.openMenu(draggingComponentX, draggingComponentY);
@@ -2648,12 +2647,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                         if (SceneGraph.isMovementPending()) {
                                                             int var6 = SceneGraph.pendingDestinationX;
                                                             int var7 = SceneGraph.pendingDestinationY;
-                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.PROCESS_MOVEMENT, netWriter.encryptor);
+                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.PROCESS_MOVEMENT, stream.encryptor);
                                                             outgoing.buffer.p1(5);
                                                             outgoing.buffer.ip2a(baseX + var6);
                                                             outgoing.buffer.ip2(baseY + var7);
                                                             outgoing.buffer.p1n(Keyboard.heldKeys[82] ? (Keyboard.heldKeys[81] ? 2 : 1) : 0);
-                                                            netWriter.writeLater(outgoing);
+                                                            stream.writeLater(outgoing);
                                                             SceneGraph.unsetPendingMovement();
                                                             ContextMenu.Crosshair.x = Mouse.clickX;
                                                             ContextMenu.Crosshair.y = Mouse.clickY;
@@ -2819,7 +2818,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                             }
 
                                                             if (Keyboard.heldKeys[13]) {
-                                                                netWriter.writeLater(OutgoingPacket.prepare(ClientProt.CLOSE_OCULUS_ORB, netWriter.encryptor));
+                                                                stream.writeLater(OutgoingPacket.prepare(ClientProt.CLOSE_OCULUS_ORB, stream.encryptor));
                                                                 Camera.oculusOrbMode = 0;
                                                             }
                                                         }
@@ -2877,19 +2876,19 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                         if (mouseIdle > 15000 && keyboardIdle > 15000) {
                                                             logoutTimer = 250;
                                                             Mouse.idleTime = 14500;
-                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.IDLE_LOGOUT, netWriter.encryptor);
-                                                            netWriter.writeLater(outgoing);
+                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.IDLE_LOGOUT, stream.encryptor);
+                                                            stream.writeLater(outgoing);
                                                         }
 
                                                         relationshipSystem.processFriendLogins();
-                                                        ++netWriter.idleWriteTicks;
-                                                        if (netWriter.idleWriteTicks > 50) {
-                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, netWriter.encryptor);
-                                                            netWriter.writeLater(outgoing);
+                                                        ++stream.idleWriteTicks;
+                                                        if (stream.idleWriteTicks > 50) {
+                                                            OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, stream.encryptor);
+                                                            stream.writeLater(outgoing);
                                                         }
 
                                                         try {
-                                                            netWriter.flush();
+                                                            stream.flush();
                                                         } catch (IOException e) {
                                                             dropConnection();
                                                         }
@@ -2942,8 +2941,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public void processConnect() {
-        Connection connection = netWriter.unwrap();
-        BitBuffer input = netWriter.inbuffer;
+        Connection connection = stream.unwrap();
+        BitBuffer input = stream.inbuffer;
 
         try {
             if (loginStage == 0) {
@@ -2983,18 +2982,18 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         connection = new OldConnection((Socket) LoginProt.task.result, taskProcessor, 5000);
                     }
 
-                    netWriter.setConnection(connection);
+                    stream.setConnection(connection);
                     LoginProt.task = null;
                     loginStage = 2;
                 }
             }
 
             if (loginStage == 2) {
-                netWriter.drop();
+                stream.drop();
                 OutgoingPacket packet = OutgoingPacket.prepareLoginPacket();
                 packet.buffer.p1(LoginProt.HANDSHAKE.value);
-                netWriter.writeLater(packet);
-                netWriter.flush();
+                stream.writeLater(packet);
+                stream.flush();
                 input.pos = 0;
                 loginStage = 3;
             }
@@ -3051,8 +3050,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (loginStage == 5) {
-                netWriter.inbuffer.pos = 0;
-                netWriter.drop();
+                stream.inbuffer.pos = 0;
+                stream.drop();
                 BitBuffer buffer = new BitBuffer(500);
                 int[] seed = new int[]{SecureRandomService.instance.nextInt(), SecureRandomService.instance.nextInt(), SecureRandomService.instance.nextInt(), SecureRandomService.instance.nextInt()};
                 buffer.pos = 0;
@@ -3164,9 +3163,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 packet.buffer.p4(Archive.mapland.hash);
                 packet.buffer.tinyenc2(seed, offset, packet.buffer.pos);
                 packet.buffer.psize2(packet.buffer.pos - var8);
-                netWriter.writeLater(packet);
-                netWriter.flush();
-                netWriter.encryptor = new IsaacCipher(seed);
+                stream.writeLater(packet);
+                stream.flush();
+                stream.encryptor = new IsaacCipher(seed);
                 int[] var34 = new int[4];
 
                 for (var12 = 0; var12 < 4; ++var12) {
@@ -3184,7 +3183,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 } else if (next == 2) {
                     loginStage = 11;
                 } else if (next == 15 && gameState == 40) {
-                    netWriter.incomingPacketSize = -1;
+                    stream.incomingPacketSize = -1;
                     loginStage = 16;
                 } else if (next == 64) {
                     loginStage = 7;
@@ -3271,11 +3270,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         throw new IOException(var8 + " " + input.pos);
                     }
 
-                    netWriter.currentIncomingPacket = var31[var8];
-                    netWriter.incomingPacketSize = netWriter.currentIncomingPacket.size;
+                    stream.currentIncomingPacket = var31[var8];
+                    stream.incomingPacketSize = stream.currentIncomingPacket.size;
                     connection.read(input.payload, 0, 2);
                     input.pos = 0;
-                    netWriter.incomingPacketSize = input.g2();
+                    stream.incomingPacketSize = input.g2();
 
                     try {
                         JSObjectUtil.call(instance, "zap");
@@ -3286,9 +3285,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 if (loginStage == 13) {
-                    if (connection.available() >= netWriter.incomingPacketSize) {
+                    if (connection.available() >= stream.incomingPacketSize) {
                         input.pos = 0;
-                        connection.read(input.payload, 0, netWriter.incomingPacketSize);
+                        connection.read(input.payload, 0, stream.incomingPacketSize);
                         gameStateEvent.completeLogin();
                         timeOfPreviousClick = 1L;
                         mouseRecorder.caret = 0;
@@ -3296,14 +3295,14 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         previousFocusState = true;
                         timeOfPreviousKeyPress = -1L;
                         ClassStructure.list = new LinkedList<>();
-                        netWriter.drop();
-                        netWriter.inbuffer.pos = 0;
-                        netWriter.currentIncomingPacket = null;
-                        netWriter.lastIncomingPacket = null;
-                        netWriter.secondLastIncomingPacket = null;
-                        netWriter.thirdLastIncomingPacket = null;
-                        netWriter.incomingPacketSize = 0;
-                        netWriter.idleReadTicks = 0;
+                        stream.drop();
+                        stream.inbuffer.pos = 0;
+                        stream.currentIncomingPacket = null;
+                        stream.lastIncomingPacket = null;
+                        stream.secondLastIncomingPacket = null;
+                        stream.thirdLastIncomingPacket = null;
+                        stream.incomingPacketSize = 0;
+                        stream.idleReadTicks = 0;
                         updateTimer = 0;
                         logoutTimer = 0;
                         HintArrow.type = 0;
@@ -3397,7 +3396,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         PlayerEntity.update(input);
                         ServerProt.anInt206 = -1;
                         PlayerAccountType.onSceneXTEAKeyChange(false, input);
-                        netWriter.currentIncomingPacket = null;
+                        stream.currentIncomingPacket = null;
                     }
 
                 } else {
@@ -3437,29 +3436,29 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             }
                         }
                     } else {
-                        if (netWriter.incomingPacketSize == -1) {
+                        if (stream.incomingPacketSize == -1) {
                             if (connection.available() < 2) {
                                 return;
                             }
 
                             connection.read(input.payload, 0, 2);
                             input.pos = 0;
-                            netWriter.incomingPacketSize = input.g2();
+                            stream.incomingPacketSize = input.g2();
                         }
 
-                        if (connection.available() >= netWriter.incomingPacketSize) {
-                            connection.read(input.payload, 0, netWriter.incomingPacketSize);
+                        if (connection.available() >= stream.incomingPacketSize) {
+                            connection.read(input.payload, 0, stream.incomingPacketSize);
                             input.pos = 0;
-                            int var29 = netWriter.incomingPacketSize;
+                            int var29 = stream.incomingPacketSize;
                             gameStateEvent.method1116();
-                            netWriter.drop();
-                            netWriter.inbuffer.pos = 0;
-                            netWriter.currentIncomingPacket = null;
-                            netWriter.lastIncomingPacket = null;
-                            netWriter.secondLastIncomingPacket = null;
-                            netWriter.thirdLastIncomingPacket = null;
-                            netWriter.incomingPacketSize = 0;
-                            netWriter.idleReadTicks = 0;
+                            stream.drop();
+                            stream.inbuffer.pos = 0;
+                            stream.currentIncomingPacket = null;
+                            stream.lastIncomingPacket = null;
+                            stream.secondLastIncomingPacket = null;
+                            stream.thirdLastIncomingPacket = null;
+                            stream.incomingPacketSize = 0;
+                            stream.idleReadTicks = 0;
                             updateTimer = 0;
                             ContextMenu.close();
                             mapState = 0;
@@ -3712,14 +3711,14 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
 
                     if (draggedSpecialComponent != null && InterfaceComponent.getTopLevelComponent(draggedComponent) != null) {
-                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DRAGGED_COMPONENT, netWriter.encryptor);
+                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DRAGGED_COMPONENT, stream.encryptor);
                         packet.buffer.ip2a(draggedSpecialComponent.subComponentIndex);
                         packet.buffer.ip2a(draggedSpecialComponent.itemId);
                         packet.buffer.ip2(draggedComponent.subComponentIndex);
                         packet.buffer.pirf4(draggedSpecialComponent.uid);
                         packet.buffer.p2a(draggedComponent.itemId);
                         packet.buffer.p4(draggedComponent.uid);
-                        netWriter.writeLater(packet);
+                        stream.writeLater(packet);
                     }
                 } else if (this.isOpenMenuOnLeftClick()) {
                     this.openMenu(anInt1068 + currentComponentDragX, currentComponentDragY + anInt1073);

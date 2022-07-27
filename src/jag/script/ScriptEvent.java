@@ -1319,11 +1319,11 @@ public class ScriptEvent extends Node {
             }
 
             client.tradeChatMode = intStack[Statics46.anInt442 + 2];
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_CHAT_MODE, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_CHAT_MODE, client.stream.encryptor);
             packet.buffer.p1(client.publicChatMode);
             packet.buffer.p1(client.publicChatPrivacyMode.index);
             packet.buffer.p1(client.tradeChatMode);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
         String var3;
@@ -1333,12 +1333,12 @@ public class ScriptEvent extends Node {
             Statics46.anInt442 -= 2;
             var4 = intStack[Statics46.anInt442];
             int var5 = intStack[Statics46.anInt442 + 1];
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.REPORT_ABUSE, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.REPORT_ABUSE, client.stream.encryptor);
             packet.buffer.p1(Buffer.stringLengthPlusOne(var3) + 2);
             packet.buffer.pcstr(var3);
             packet.buffer.p1(var4 - 1);
             packet.buffer.p1(var5);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
         int var7;
@@ -1512,7 +1512,7 @@ public class ScriptEvent extends Node {
                 }
             }
 
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.SEND_PUBLIC_CHAT, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.SEND_PUBLIC_CHAT, client.stream.encryptor);
             packet.buffer.p1(0);
             int var13 = packet.buffer.pos;
             packet.buffer.p1(var4);
@@ -1520,20 +1520,20 @@ public class ScriptEvent extends Node {
             packet.buffer.p1(var11);
             ResourceCache.method1491(packet.buffer, var3);
             packet.buffer.psize1(packet.buffer.pos - var13);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
         if (var0 == 5009) {
             Statics46.anInt441 -= 2;
             var3 = stringStack[Statics46.anInt441];
             String var9 = stringStack[Statics46.anInt441 + 1];
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.SEND_PRIVATE_CHAT, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.SEND_PRIVATE_CHAT, client.stream.encryptor);
             packet.buffer.p2(0);
             int var10 = packet.buffer.pos;
             packet.buffer.pcstr(var3);
             ResourceCache.method1491(packet.buffer, var9);
             packet.buffer.psize2(packet.buffer.pos - var10);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
         if (var0 != 5015) {
@@ -2527,28 +2527,28 @@ public class ScriptEvent extends Node {
                 var10 = BaseFont.method1501(var3);
             }
 
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_NUMERIC_INPUT, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_NUMERIC_INPUT, client.stream.encryptor);
             packet.buffer.p4(var10);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
 
         OutgoingPacket packet;
         if (var0 == 3105) {
             var3 = stringStack[--Statics46.anInt441];
-            packet = OutgoingPacket.prepare(ClientProt.PROCESS_NAME_INPUT, client.netWriter.encryptor);
+            packet = OutgoingPacket.prepare(ClientProt.PROCESS_NAME_INPUT, client.stream.encryptor);
             packet.buffer.p1(var3.length() + 1);
             packet.buffer.pcstr(var3);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
 
         if (var0 == 3106) {
             var3 = stringStack[--Statics46.anInt441];
-            packet = OutgoingPacket.prepare(ClientProt.PROCESS_ALPHABETICAL_INPUT, client.netWriter.encryptor);
+            packet = OutgoingPacket.prepare(ClientProt.PROCESS_ALPHABETICAL_INPUT, client.stream.encryptor);
             packet.buffer.p1(var3.length() + 1);
             packet.buffer.pcstr(var3);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
         String var6;
@@ -2597,9 +2597,9 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3115) {
             var14 = intStack[--Statics46.anInt442];
-            packet = OutgoingPacket.prepare(ClientProt.PROCESS_OBJ_INPUT, client.netWriter.encryptor);
+            packet = OutgoingPacket.prepare(ClientProt.PROCESS_OBJ_INPUT, client.stream.encryptor);
             packet.buffer.p2(var14);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return 1;
         }
         if (var0 == 3116) {
@@ -2613,12 +2613,12 @@ public class ScriptEvent extends Node {
             if (var5.length() > 500) {
                 return 1;
             }
-            OutgoingPacket var9 = OutgoingPacket.prepare(ClientProt.REPORT_BUG, client.netWriter.encryptor);
+            OutgoingPacket var9 = OutgoingPacket.prepare(ClientProt.REPORT_BUG, client.stream.encryptor);
             var9.buffer.p2(1 + Buffer.stringLengthPlusOne(var6) + Buffer.stringLengthPlusOne(var5));
             var9.buffer.pcstr(var6);
             var9.buffer.pcstr(var5);
             var9.buffer.p1n(var14);
-            client.netWriter.writeLater(var9);
+            client.stream.writeLater(var9);
             return 1;
         }
         if (var0 == 3117) {
@@ -4237,11 +4237,11 @@ public class ScriptEvent extends Node {
     }
 
     public static void method681(String var0, int var1) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.SET_CLANCHANNEL_RANK, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.SET_CLANCHANNEL_RANK, client.stream.encryptor);
         packet.buffer.p1(Buffer.stringLengthPlusOne(var0) + 1);
         packet.buffer.p1(var1);
         packet.buffer.pcstr(var0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     public static boolean method725(char var0) {

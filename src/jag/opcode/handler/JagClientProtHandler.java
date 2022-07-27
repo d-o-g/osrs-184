@@ -10,28 +10,28 @@ import jag.worldmap.WorldMapObjectIcon;
 
 public class JagClientProtHandler extends ClientProtHandler {
 
-    public JagClientProtHandler(NetWriter writer) {
+    public JagClientProtHandler(ClientStream writer) {
         super(writer);
     }
 
     @Override
     public void processReflection() {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_REFLECTION, netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_REFLECTION, stream.encryptor);
         packet.buffer.p1(0);
         int offset = packet.buffer.pos;
         ClassStructure.process(packet.buffer);
         packet.buffer.psize1(packet.buffer.pos - offset);
-        netWriter.writeLater(packet);
+        stream.writeLater(packet);
     }
 
     @Override
     public void processGameStateEvents() {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GAME_STATE_EVENT_REQUEST, netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GAME_STATE_EVENT_REQUEST, stream.encryptor);
         packet.buffer.p1(0);
         int previousOffset = packet.buffer.pos;
         client.gameStateEvent.writeTo(packet.buffer);
         packet.buffer.psize1(packet.buffer.pos - previousOffset);
-        netWriter.writeLater(packet);
+        stream.writeLater(packet);
         client.gameStateEvent.method1118();
     }
 
@@ -75,7 +75,7 @@ public class JagClientProtHandler extends ClientProtHandler {
                     }
 
                     if (packet == null) {
-                        packet = OutgoingPacket.prepare(ClientProt.MOUSE_MOTION_RECORD, netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.MOUSE_MOTION_RECORD, stream.encryptor);
                         packet.buffer.p1(0);
                         offset = packet.buffer.pos;
                         packet.buffer.pos += 2;
@@ -132,7 +132,7 @@ public class JagClientProtHandler extends ClientProtHandler {
                     packet.buffer.p1(timeDelta / count);
                     packet.buffer.p1(timeDelta % count);
                     packet.buffer.pos = prev;
-                    netWriter.writeLater(packet);
+                    stream.writeLater(packet);
                 }
 
                 if (lastIndex < recorder.caret) {
@@ -171,18 +171,18 @@ public class JagClientProtHandler extends ClientProtHandler {
             }
 
             int compressedClickTimeDelta = (int) clickTimeDelta;
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.MOUSE_ACTION, netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.MOUSE_ACTION, stream.encryptor);
             packet.buffer.p2((Mouse.clickMeta == 2 ? 1 : 0) + (compressedClickTimeDelta << 1));
             packet.buffer.p2(x);
             packet.buffer.p2(y);
-            netWriter.writeLater(packet);
+            stream.writeLater(packet);
         }
     }
 
     @Override
     public void processKeyInfo() {
         if (Keyboard.pressedKeysCount > 0) {
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEY_INFO, netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEY_INFO, stream.encryptor);
             packet.buffer.p2(0);
             int startOffset = packet.buffer.pos;
             long time = Clock.now();
@@ -199,7 +199,7 @@ public class JagClientProtHandler extends ClientProtHandler {
             }
 
             packet.buffer.psize2(packet.buffer.pos - startOffset);
-            netWriter.writeLater(packet);
+            stream.writeLater(packet);
         }
     }
 
@@ -217,10 +217,10 @@ public class JagClientProtHandler extends ClientProtHandler {
             Camera.packetIndicator = 20;
             Camera.emitPackets = false;
 
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.CAMERA_INFO, netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.CAMERA_INFO, stream.encryptor);
             packet.buffer.ip2a(Camera.minimumPitch);
             packet.buffer.ip2(Camera.yOffset);
-            netWriter.writeLater(packet);
+            stream.writeLater(packet);
         }
     }
 
@@ -229,17 +229,17 @@ public class JagClientProtHandler extends ClientProtHandler {
         if (client.hasFocus && !client.previousFocusState) {
             client.previousFocusState = true;
 
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.FOCUS_INFO, netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.FOCUS_INFO, stream.encryptor);
             packet.buffer.p1(1);
-            netWriter.writeLater(packet);
+            stream.writeLater(packet);
         }
 
         if (!client.hasFocus && client.previousFocusState) {
             client.previousFocusState = false;
 
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.FOCUS_INFO, netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.FOCUS_INFO, stream.encryptor);
             packet.buffer.p1(0);
-            netWriter.writeLater(packet);
+            stream.writeLater(packet);
         }
     }
 }

@@ -1,13 +1,13 @@
 package jag.opcode.handler;
 
-import jag.opcode.NetWriter;
+import jag.opcode.ClientStream;
 
 public abstract class ClientProtHandler {
 
-    protected final NetWriter netWriter;
+    protected final ClientStream stream;
 
-    protected ClientProtHandler(NetWriter netWriter) {
-        this.netWriter = netWriter;
+    protected ClientProtHandler(ClientStream stream) {
+        this.stream = stream;
     }
 
     public abstract void processReflection();

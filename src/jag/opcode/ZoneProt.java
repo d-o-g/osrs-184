@@ -33,7 +33,7 @@ public class ZoneProt {
     }
 
     public static void process(ZoneProt updateType) {
-        BitBuffer inbuff = client.netWriter.inbuffer;
+        BitBuffer inbuff = client.stream.inbuffer;
         int sceneY;
         int var5;
         int var6;

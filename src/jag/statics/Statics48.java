@@ -3,7 +3,6 @@ package jag.statics;
 import jag.commons.input.Mouse;
 import jag.game.InterfaceComponent;
 import jag.game.client;
-import jag.opcode.Connection;
 import jag.opcode.OutgoingPacket;
 import jag.opcode.ClientProt;
 
@@ -46,9 +45,9 @@ public final class Statics48 {
         }
 
         if (var1 == 326) {
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_APPEARANCE_BUTTON, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_APPEARANCE_BUTTON, client.stream.encryptor);
             client.renderedAppearance.writeAppearanceTo(packet.buffer);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             return true;
         }
         return false;

@@ -19,9 +19,9 @@ public class WorldMapLabel {
     }
 
     public static void method232() {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.JOIN_CLANCHANNEL, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.JOIN_CLANCHANNEL, client.stream.encryptor);
         packet.buffer.p1(0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     public static void method233(int var0, WorldMapPosition var1, boolean var2) {

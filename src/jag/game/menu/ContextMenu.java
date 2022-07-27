@@ -150,7 +150,7 @@ public class ContextMenu {
     //Object Actions
 
     private static void doItemOnObject(int id, int sceneX, int sceneY) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_OBJECT, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_OBJECT, client.stream.encryptor);
         packet.buffer.ip2(client.baseX + sceneX);
         packet.buffer.p2(client.baseY + sceneY);
         packet.buffer.p2a(ItemSelection.index);
@@ -158,110 +158,110 @@ public class ContextMenu {
         packet.buffer.p2(ItemSelection.id);
         packet.buffer.ip2a(id);
         packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doSpellOnObject(int id, int sceneX, int sceneY) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_OBJECT, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_OBJECT, client.stream.encryptor);
         packet.buffer.p4(ComponentSelection.uid);
         packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2(client.baseY + sceneY);
         packet.buffer.ip2a(id);
         packet.buffer.p2(client.baseX + sceneX);
         packet.buffer.p2a(ComponentSelection.index);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doObjectAction0(int id, int sceneX, int sceneY) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_0, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_0, client.stream.encryptor);
         packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2(id);
         packet.buffer.p2a(client.baseY + sceneY);
         packet.buffer.ip2a(client.baseX + sceneX);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doObjectAction1(int id, int sceneX, int sceneY) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_1, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_1, client.stream.encryptor);
         packet.buffer.ip2a(id);
         packet.buffer.p2(client.baseX + sceneX);
         packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2a(client.baseY + sceneY);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doObjectAction2(int id, int sceneX, int sceneY) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_2, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_2, client.stream.encryptor);
         packet.buffer.p2(id);
         packet.buffer.p2a(client.baseX + sceneX);
         packet.buffer.ip2a(client.baseY + sceneY);
         packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doObjectAction3(int id, int sceneX, int sceneY) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_3, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_3, client.stream.encryptor);
         packet.buffer.p2(client.baseX + sceneX);
         packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2a(id);
         packet.buffer.p2a(client.baseY + sceneY);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     //Npc Actions
 
     private static void processItemOnNpc(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_NPC, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_NPC, client.stream.encryptor);
         packet.buffer.ip4(ItemSelection.uid);
         packet.buffer.ip2a(ItemSelection.index);
         packet.buffer.p2a(idx);
         packet.buffer.ip2a(ItemSelection.id);
         packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void processSpellOnNpc(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_NPC, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_NPC, client.stream.encryptor);
         packet.buffer.ip2(ComponentSelection.index);
         packet.buffer.ip2(idx);
         packet.buffer.ip4(ComponentSelection.uid);
         packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doNpcAction0(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_0, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_0, client.stream.encryptor);
         packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.ip2(idx);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doNpcAction1(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_1, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_1, client.stream.encryptor);
         packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2a(idx);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doNpcAction2(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_2, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_2, client.stream.encryptor);
         packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.ip2(idx);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doNpcAction3(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_3, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_3, client.stream.encryptor);
         packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.ip2(idx);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     private static void doNpcAction4(int idx) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_4, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_4, client.stream.encryptor);
         packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.ip2(idx);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     //Player Actions
@@ -408,13 +408,13 @@ public class ContextMenu {
                     HintArrow.state = 0;
                     client.destinationX = secondary;
                     client.destinationY = tertiary;
-                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_PLAYER, client.netWriter.encryptor);
+                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_PLAYER, client.stream.encryptor);
                     packet.buffer.ip2a(primary);
                     packet.buffer.pirf4(ItemSelection.uid);
                     packet.buffer.p2(ItemSelection.index);
                     packet.buffer.ip2(ItemSelection.id);
                     packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
             } else if (opcode == 15) {
                 PlayerEntity player = client.players[primary];
@@ -425,12 +425,12 @@ public class ContextMenu {
                     HintArrow.state = 0;
                     client.destinationX = secondary;
                     client.destinationY = tertiary;
-                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_PLAYER, client.netWriter.encryptor);
+                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_PLAYER, client.stream.encryptor);
                     packet.buffer.ip2(primary);
                     packet.buffer.p2a(ComponentSelection.index);
                     packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
                     packet.buffer.pif4(ComponentSelection.uid);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
             } else if (opcode == 16) {
                 Crosshair.x = crossX;
@@ -439,7 +439,7 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_PICKABLE, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_PICKABLE, client.stream.encryptor);
                 packet.buffer.ip2a(primary);
                 packet.buffer.p4(ItemSelection.uid);
                 packet.buffer.p2a(ItemSelection.id);
@@ -447,7 +447,7 @@ public class ContextMenu {
                 packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.p2a(client.baseX + secondary);
                 packet.buffer.p2a(ItemSelection.index);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 17) {
                 Crosshair.x = crossX;
                 Crosshair.y = crossY;
@@ -455,14 +455,14 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_PICKABLE, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_PICKABLE, client.stream.encryptor);
                 packet.buffer.p2a(client.baseY + tertiary);
                 packet.buffer.ip4(ComponentSelection.uid);
                 packet.buffer.ip2a(primary);
                 packet.buffer.p2a(ComponentSelection.index);
                 packet.buffer.ip2(client.baseX + secondary);
                 packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 18) {
                 Crosshair.x = crossX;
                 Crosshair.y = crossY;
@@ -470,12 +470,12 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_0, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_0, client.stream.encryptor);
                 packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.ip2(client.baseY + tertiary);
                 packet.buffer.p2a(client.baseX + secondary);
                 packet.buffer.ip2a(primary);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 19) {
                 Crosshair.x = crossX;
                 Crosshair.y = crossY;
@@ -483,12 +483,12 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_1, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_1, client.stream.encryptor);
                 packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.p2a(client.baseX + secondary);
                 packet.buffer.p2a(primary);
                 packet.buffer.p2a(client.baseY + tertiary);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 20) {
                 Crosshair.x = crossX;
                 Crosshair.y = crossY;
@@ -496,12 +496,12 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_2, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_2, client.stream.encryptor);
                 packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.ip2a(client.baseX + secondary);
                 packet.buffer.p2a(client.baseY + tertiary);
                 packet.buffer.ip2(primary);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 21) {
                 Crosshair.x = crossX;
                 Crosshair.y = crossY;
@@ -509,12 +509,12 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_3, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_3, client.stream.encryptor);
                 packet.buffer.ip2a(client.baseX + secondary);
                 packet.buffer.p2a(client.baseY + tertiary);
                 packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.p2(primary);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 22) {
                 Crosshair.x = crossX;
                 Crosshair.y = crossY;
@@ -522,12 +522,12 @@ public class ContextMenu {
                 HintArrow.state = 0;
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_4, client.netWriter.encryptor);
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_4, client.stream.encryptor);
                 packet.buffer.ip2(client.baseX + secondary);
                 packet.buffer.ip2(client.baseY + tertiary);
                 packet.buffer.ip2a(primary);
                 packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
-                client.netWriter.writeLater(packet);
+                client.stream.writeLater(packet);
             } else if (opcode == 23) {
                 if (open) {
                     client.sceneGraph.method1443();
@@ -543,9 +543,9 @@ public class ContextMenu {
                     }
 
                     if (appearance) {
-                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.netWriter.encryptor);
+                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.stream.encryptor);
                         packet.buffer.p4(tertiary);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
                 } else {
                     if (opcode == 25) {
@@ -573,9 +573,9 @@ public class ContextMenu {
                         InterfaceComponent.closeInterface();
                     } else {
                         if (opcode == 28) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.stream.encryptor);
                             packet.buffer.p4(tertiary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             InterfaceComponent component = InterfaceComponent.lookup(tertiary);
                             if (component.cs1Opcodes != null && component.cs1Opcodes[0][0] == 5) {
                                 int index = component.cs1Opcodes[0][1];
@@ -583,9 +583,9 @@ public class ContextMenu {
                                 OldConnection.processOptionVarps(index);
                             }
                         } else if (opcode == 29) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.stream.encryptor);
                             packet.buffer.p4(tertiary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             InterfaceComponent component = InterfaceComponent.lookup(tertiary);
                             if (component.cs1Opcodes != null && component.cs1Opcodes[0][0] == 5) {
                                 int index = component.cs1Opcodes[0][1];
@@ -601,70 +601,70 @@ public class ContextMenu {
                                 InterfaceComponent.invalidate(client.pleaseWaitComponent);
                             }
                         } else if (opcode == 31) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_ITEM, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_ITEM, client.stream.encryptor);
                             packet.buffer.pirf4(tertiary);
                             packet.buffer.ip2a(ItemSelection.id);
                             packet.buffer.p4(ItemSelection.uid);
                             packet.buffer.p2(ItemSelection.index);
                             packet.buffer.p2(secondary);
                             packet.buffer.p2(primary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 32) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_ITEM, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_ITEM, client.stream.encryptor);
                             packet.buffer.ip2a(ComponentSelection.index);
                             packet.buffer.ip2(secondary);
                             packet.buffer.ip2(primary);
                             packet.buffer.pirf4(tertiary);
                             packet.buffer.pif4(ComponentSelection.uid);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 33) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_0, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_0, client.stream.encryptor);
                             packet.buffer.p4(tertiary);
                             packet.buffer.ip2(secondary);
                             packet.buffer.ip2(primary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 34) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_1, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_1, client.stream.encryptor);
                             packet.buffer.p4(tertiary);
                             packet.buffer.ip2(secondary);
                             packet.buffer.p2a(primary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 35) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_2, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_2, client.stream.encryptor);
                             packet.buffer.ip2(primary);
                             packet.buffer.ip4(tertiary);
                             packet.buffer.p2(secondary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 36) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_3, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_3, client.stream.encryptor);
                             packet.buffer.ip2a(primary);
                             packet.buffer.ip2(secondary);
                             packet.buffer.pirf4(tertiary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 37) {
-                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_4, client.netWriter.encryptor);
+                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_4, client.stream.encryptor);
                             packet.buffer.p2a(secondary);
                             packet.buffer.pirf4(tertiary);
                             packet.buffer.p2a(primary);
-                            client.netWriter.writeLater(packet);
+                            client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
@@ -686,47 +686,47 @@ public class ContextMenu {
                             }
 
                             if (opcode == 39) {
-                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_0, client.netWriter.encryptor);
+                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_0, client.stream.encryptor);
                                 packet.buffer.p2a(secondary);
                                 packet.buffer.p2(primary);
                                 packet.buffer.pif4(tertiary);
-                                client.netWriter.writeLater(packet);
+                                client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                                 client.anInt1015 = secondary;
                             } else if (opcode == 40) {
-                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_1, client.netWriter.encryptor);
+                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_1, client.stream.encryptor);
                                 packet.buffer.pirf4(tertiary);
                                 packet.buffer.p2a(secondary);
                                 packet.buffer.ip2a(primary);
-                                client.netWriter.writeLater(packet);
+                                client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                                 client.anInt1015 = secondary;
                             } else if (opcode == 41) {
-                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_2, client.netWriter.encryptor);
+                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_2, client.stream.encryptor);
                                 packet.buffer.ip2(secondary);
                                 packet.buffer.pif4(tertiary);
                                 packet.buffer.ip2(primary);
-                                client.netWriter.writeLater(packet);
+                                client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                                 client.anInt1015 = secondary;
                             } else if (opcode == 42) {
-                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_3, client.netWriter.encryptor);
+                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_3, client.stream.encryptor);
                                 packet.buffer.p2(primary);
                                 packet.buffer.p2(secondary);
                                 packet.buffer.pirf4(tertiary);
-                                client.netWriter.writeLater(packet);
+                                client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                                 client.anInt1015 = secondary;
                             } else if (opcode == 43) {
-                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_4, client.netWriter.encryptor);
+                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_4, client.stream.encryptor);
                                 packet.buffer.p2(primary);
                                 packet.buffer.pif4(tertiary);
                                 packet.buffer.p2(secondary);
-                                client.netWriter.writeLater(packet);
+                                client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                                 client.anInt1015 = secondary;
@@ -739,10 +739,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_0, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_0, client.stream.encryptor);
                                     packet.buffer.p2a(primary);
                                     packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 45) {
                                 PlayerEntity player = client.players[primary];
@@ -753,10 +753,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_1, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_1, client.stream.encryptor);
                                     packet.buffer.ip2a(primary);
                                     packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 46) {
                                 PlayerEntity player = client.players[primary];
@@ -767,10 +767,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_2, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_2, client.stream.encryptor);
                                     packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
                                     packet.buffer.ip2(primary);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 47) {
                                 PlayerEntity player = client.players[primary];
@@ -781,10 +781,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_3, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_3, client.stream.encryptor);
                                     packet.buffer.ip2a(primary);
                                     packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 48) {
                                 PlayerEntity player = client.players[primary];
@@ -795,10 +795,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_4, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_4, client.stream.encryptor);
                                     packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
                                     packet.buffer.ip2(primary);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 49) {
                                 PlayerEntity player = client.players[primary];
@@ -809,10 +809,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_5, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_5, client.stream.encryptor);
                                     packet.buffer.p2(primary);
                                     packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 50) {
                                 PlayerEntity player = client.players[primary];
@@ -823,10 +823,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_6, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_6, client.stream.encryptor);
                                     packet.buffer.ip2(primary);
                                     packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 51) {
                                 PlayerEntity player = client.players[primary];
@@ -837,10 +837,10 @@ public class ContextMenu {
                                     HintArrow.state = 0;
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
-                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_7, client.netWriter.encryptor);
+                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_7, client.stream.encryptor);
                                     packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
                                     packet.buffer.p2a(primary);
-                                    client.netWriter.writeLater(packet);
+                                    client.stream.writeLater(packet);
                                 }
                             } else {
                                 label960:
@@ -849,14 +849,14 @@ public class ContextMenu {
                                         if (opcode == 58) {
                                             InterfaceComponent component = InterfaceComponent.lookup(tertiary, secondary);
                                             if (component != null) {
-                                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_COMPONENT, client.netWriter.encryptor);
+                                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_COMPONENT, client.stream.encryptor);
                                                 packet.buffer.pirf4(tertiary);
                                                 packet.buffer.p2(component.itemId);
                                                 packet.buffer.ip4(ComponentSelection.uid);
                                                 packet.buffer.ip2a(secondary);
                                                 packet.buffer.p2a(ComponentSelection.index);
                                                 packet.buffer.p2a(ComponentSelection.target);
-                                                client.netWriter.writeLater(packet);
+                                                client.stream.writeLater(packet);
                                             }
                                             break label960;
                                         }
@@ -868,12 +868,12 @@ public class ContextMenu {
                                             HintArrow.state = 0;
                                             client.destinationX = secondary;
                                             client.destinationY = tertiary;
-                                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_4, client.netWriter.encryptor);
+                                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_4, client.stream.encryptor);
                                             packet.buffer.p2(client.baseY + tertiary);
                                             packet.buffer.p2(client.baseX + secondary);
                                             packet.buffer.p2(primary);
                                             packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                                            client.netWriter.writeLater(packet);
+                                            client.stream.writeLater(packet);
                                             break label960;
                                         }
 
@@ -882,9 +882,9 @@ public class ContextMenu {
                                             Crosshair.y = crossY;
                                             Crosshair.state = 2;
                                             HintArrow.state = 0;
-                                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_OBJECT, client.netWriter.encryptor);
+                                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_OBJECT, client.stream.encryptor);
                                             packet.buffer.ip2(primary);
-                                            client.netWriter.writeLater(packet);
+                                            client.stream.writeLater(packet);
                                             break label960;
                                         }
 
@@ -901,9 +901,9 @@ public class ContextMenu {
                                                 }
 
                                                 if (definition != null) {
-                                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_NPC, client.netWriter.encryptor);
+                                                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_NPC, client.stream.encryptor);
                                                     packet.buffer.p2a(definition.id);
-                                                    client.netWriter.writeLater(packet);
+                                                    client.stream.writeLater(packet);
                                                 }
                                             }
                                             break label960;
@@ -914,9 +914,9 @@ public class ContextMenu {
                                             Crosshair.y = crossY;
                                             Crosshair.state = 2;
                                             HintArrow.state = 0;
-                                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_ITEM, client.netWriter.encryptor);
+                                            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_ITEM, client.stream.encryptor);
                                             packet.buffer.p2(primary);
-                                            client.netWriter.writeLater(packet);
+                                            client.stream.writeLater(packet);
                                             break label960;
                                         }
 
@@ -925,9 +925,9 @@ public class ContextMenu {
                                             if (component != null && component.itemStackSizes[secondary] >= 100000) {
                                                 ChatHistory.messageReceived(27, "", component.itemStackSizes[secondary] + " x " + ItemDefinition.get(primary).name);
                                             } else {
-                                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_ITEM, client.netWriter.encryptor);
+                                                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_ITEM, client.stream.encryptor);
                                                 packet.buffer.p2(primary);
-                                                client.netWriter.writeLater(packet);
+                                                client.stream.writeLater(packet);
                                             }
 
                                             client.anInt1018 = 0;

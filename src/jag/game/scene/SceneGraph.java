@@ -1560,9 +1560,9 @@ public class SceneGraph {
                 ObjectDefinition.rawmodels.clear();
                 OutgoingPacket packet;
                 if (client.instance.hasFrame()) {
-                    packet = OutgoingPacket.prepare(ClientProt.USING_AWT_FRAME, client.netWriter.encryptor);
+                    packet = OutgoingPacket.prepare(ClientProt.USING_AWT_FRAME, client.stream.encryptor);
                     packet.buffer.p4(1057001181);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
 
                 if (!client.dynamicScene) {
@@ -1584,8 +1584,8 @@ public class SceneGraph {
                 client.setGameState(30);
                 AudioSystem.process();
                 BefriendedPlayer.method555();
-                packet = OutgoingPacket.prepare(ClientProt.SCENE_LOADED, client.netWriter.encryptor);
-                client.netWriter.writeLater(packet);
+                packet = OutgoingPacket.prepare(ClientProt.SCENE_LOADED, client.stream.encryptor);
+                client.stream.writeLater(packet);
                 GameShell.updateClock();
             }
         }

@@ -4,13 +4,15 @@ import jag.commons.collection.LinkedList;
 
 import java.io.IOException;
 
-public class NetWriter {
+public class ClientStream {
 
     public final Buffer outbuffer;
     public final LinkedList<OutgoingPacket> outgoing;
     public final BitBuffer inbuffer;
+
     public IsaacCipher encryptor;
     public Connection connection;
+
     public boolean alive;
 
     public int buffered;
@@ -23,7 +25,7 @@ public class NetWriter {
     public ServerProt secondLastIncomingPacket;
     public ServerProt thirdLastIncomingPacket;
 
-    public NetWriter() {
+    public ClientStream() {
         outgoing = new LinkedList<>();
         buffered = 0;
         outbuffer = new Buffer(5000);
@@ -44,7 +46,6 @@ public class NetWriter {
             connection.stop();
             connection = null;
         }
-
     }
 
     public final void writeLater(OutgoingPacket packet) {

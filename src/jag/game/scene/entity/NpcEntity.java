@@ -26,7 +26,7 @@ public final class NpcEntity extends PathingEntity {
         int var8;
         int var9;
         int var10;
-        while (buffer.remaining(client.netWriter.incomingPacketSize) >= 27) {
+        while (buffer.remaining(client.stream.incomingPacketSize) >= 27) {
             var3 = buffer.g(15);
             if (var3 == 32767) {
                 break;
@@ -233,8 +233,8 @@ public final class NpcEntity extends PathingEntity {
             }
         }
 
-        if (buffer.pos != client.netWriter.incomingPacketSize) {
-            throw new RuntimeException(buffer.pos + "," + client.netWriter.incomingPacketSize);
+        if (buffer.pos != client.stream.incomingPacketSize) {
+            throw new RuntimeException(buffer.pos + "," + client.stream.incomingPacketSize);
         }
         for (var3 = 0; var3 < client.npcCount; ++var3) {
             if (client.npcs[client.npcIndices[var3]] == null) {
@@ -245,7 +245,7 @@ public final class NpcEntity extends PathingEntity {
     }
 
     public static void method541() {
-        BitBuffer var0 = client.netWriter.inbuffer;
+        BitBuffer var0 = client.stream.inbuffer;
         var0.bitAccess();
         int var1 = var0.g(8);
         if (var1 < client.npcCount) {

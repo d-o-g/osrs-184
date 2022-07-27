@@ -52,7 +52,7 @@ public class DynamicObject extends Entity {
     }
 
     public static void gc() {
-        client.netWriter.stop();
+        client.stream.stop();
         client.gc();
         client.sceneGraph.init();
 

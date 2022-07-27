@@ -21,48 +21,48 @@ import java.io.IOException;
 
 public class JagServerProtHandler extends ServerProtHandler {
 
-    public JagServerProtHandler(NetWriter netWriter) {
-        super(netWriter);
+    public JagServerProtHandler(ClientStream stream) {
+        super(stream);
     }
 
     @Override
     public boolean available(BitBuffer incoming) throws IOException {
-        Connection connection = netWriter.unwrap();
-        if (netWriter.currentIncomingPacket == null && !readIncomingPacket(connection, incoming)) {
+        Connection connection = stream.unwrap();
+        if (stream.currentIncomingPacket == null && !readIncomingPacket(connection, incoming)) {
             return false;
         }
 
-        if (netWriter.incomingPacketSize == -1) {
+        if (stream.incomingPacketSize == -1) {
             if (!connection.available(1)) {
                 return false;
             }
 
-            netWriter.unwrap().read(incoming.payload, 0, 1);
-            netWriter.incomingPacketSize = incoming.payload[0] & 0xff;
+            stream.unwrap().read(incoming.payload, 0, 1);
+            stream.incomingPacketSize = incoming.payload[0] & 0xff;
         }
 
-        if (netWriter.incomingPacketSize == -2) {
+        if (stream.incomingPacketSize == -2) {
             if (!connection.available(2)) {
                 return false;
             }
 
-            netWriter.unwrap().read(incoming.payload, 0, 2);
+            stream.unwrap().read(incoming.payload, 0, 2);
             incoming.pos = 0;
-            netWriter.incomingPacketSize = incoming.g2();
+            stream.incomingPacketSize = incoming.g2();
         }
 
-        return connection.available(netWriter.incomingPacketSize);
+        return connection.available(stream.incomingPacketSize);
     }
 
     private boolean readIncomingPacket(Connection connection, BitBuffer incoming) throws IOException {
-        if (netWriter.alive) {
+        if (stream.alive) {
             if (!connection.available(1)) {
                 return false;
             }
 
-            connection.read(netWriter.inbuffer.payload, 0, 1);
-            netWriter.idleReadTicks = 0;
-            netWriter.alive = false;
+            connection.read(stream.inbuffer.payload, 0, 1);
+            stream.idleReadTicks = 0;
+            stream.alive = false;
         }
 
         incoming.pos = 0;
@@ -71,19 +71,19 @@ public class JagServerProtHandler extends ServerProtHandler {
                 return false;
             }
 
-            connection.read(netWriter.inbuffer.payload, 1, 1);
-            netWriter.idleReadTicks = 0;
+            connection.read(stream.inbuffer.payload, 1, 1);
+            stream.idleReadTicks = 0;
         }
 
-        netWriter.alive = true;
+        stream.alive = true;
         ServerProt[] incomingPacketTypes = ServerProt.values();
         int packetIndex = incoming.gesmart();
         if (packetIndex < 0 || packetIndex >= incomingPacketTypes.length) {
             throw new IOException(packetIndex + " " + incoming.pos);
         }
 
-        netWriter.currentIncomingPacket = incomingPacketTypes[packetIndex];
-        netWriter.incomingPacketSize = netWriter.currentIncomingPacket.size;
+        stream.currentIncomingPacket = incomingPacketTypes[packetIndex];
+        stream.incomingPacketSize = stream.currentIncomingPacket.size;
         return true;
     }
 
@@ -112,7 +112,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             client.interfaceConfigs.put(new IntegerNode(key), value);
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -120,7 +120,7 @@ public class JagServerProtHandler extends ServerProtHandler {
     public boolean processOculusOrbModeUpdate(BitBuffer incoming) {
         int state = incoming.g1();
         Js5Worker.setOculusOrbMode(state);
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -168,7 +168,7 @@ public class JagServerProtHandler extends ServerProtHandler {
 
         SubInterface.process();
         client.inventories[++client.anInt1078 - 1 & 31] = key & 32767;
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -186,7 +186,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             Camera.z = SceneGraph.getTileHeight(Camera.x, Camera.y, SceneGraph.floorLevel) - StockMarketOfferWorldComparator.anInt347;
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -195,13 +195,13 @@ public class JagServerProtHandler extends ServerProtHandler {
         int var6 = incoming.g4();
         int var5 = incoming.g4();
         int time = SerializableString.getGcTime();
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GARBAGE_COLLECTOR, netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GARBAGE_COLLECTOR, stream.encryptor);
         packet.buffer.p1n(time);
         packet.buffer.p4(var6);
         packet.buffer.pif4(var5);
         packet.buffer.writeByteS(client.anInt1292);
-        netWriter.writeLater(packet);
-        netWriter.currentIncomingPacket = null;
+        stream.writeLater(packet);
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -217,14 +217,14 @@ public class JagServerProtHandler extends ServerProtHandler {
         }
 
         client.anInt1071 = client.anInt1075;
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
     @Override
     public boolean processZoneProt(BitBuffer incoming, ZoneProt prot) {
         ZoneProt.process(prot);
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -246,7 +246,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             }
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -254,7 +254,7 @@ public class JagServerProtHandler extends ServerProtHandler {
     public boolean setUpdateTimer(BitBuffer incoming) {
         client.updateTimer = incoming.readLEUShortA() * 30;
         client.anInt1074 = client.anInt1075;
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -269,7 +269,7 @@ public class JagServerProtHandler extends ServerProtHandler {
         }
 
         client.stockMarketEventUpdateCycle = client.anInt1075;
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -278,7 +278,7 @@ public class JagServerProtHandler extends ServerProtHandler {
         SubInterface.process();
         client.weight = incoming.g2b();
         client.anInt1074 = client.anInt1075;
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -290,7 +290,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             Camera.setOculusOrbOnLocalPlayer();
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -301,7 +301,7 @@ public class JagServerProtHandler extends ServerProtHandler {
         }
 
         client.method865();
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -335,15 +335,15 @@ public class JagServerProtHandler extends ServerProtHandler {
             InterfaceComponent.executeCloseListeners(client.rootInterfaceIndex, 1);
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
     @Override
     public boolean processFriendsListUpdate(BitBuffer incoming) {
-        client.relationshipSystem.decodeFriends(incoming, netWriter.incomingPacketSize);
+        client.relationshipSystem.decodeFriends(incoming, stream.incomingPacketSize);
         client.anInt1065 = client.anInt1075;
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -379,7 +379,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             }
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 
@@ -390,7 +390,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             ResourceCache.method1489(incoming, incoming.pos - 28);
         }
 
-        netWriter.currentIncomingPacket = null;
+        stream.currentIncomingPacket = null;
         return true;
     }
 }

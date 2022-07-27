@@ -6,10 +6,10 @@ import java.io.IOException;
 
 public abstract class ServerProtHandler {
 
-    protected final NetWriter netWriter;
+    protected final ClientStream stream;
 
-    protected ServerProtHandler(NetWriter netWriter) {
-        this.netWriter = netWriter;
+    protected ServerProtHandler(ClientStream stream) {
+        this.stream = stream;
     }
 
     public abstract boolean available(BitBuffer incoming) throws IOException;

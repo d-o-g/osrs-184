@@ -44,25 +44,25 @@ public class WorldMapLabelSize {
             if (var7 != null && var7 != PlayerEntity.local && var7.namePair != null && var7.namePair.equals(var5)) {
                 OutgoingPacket packet;
                 if (var0 == 1) {
-                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_0, client.netWriter.encryptor);
+                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_0, client.stream.encryptor);
                     packet.buffer.p2a(var3[var6]);
                     packet.buffer.p1a(0);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 } else if (var0 == 4) {
-                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_3, client.netWriter.encryptor);
+                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_3, client.stream.encryptor);
                     packet.buffer.ip2a(var3[var6]);
                     packet.buffer.p1n(0);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 } else if (var0 == 6) {
-                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_5, client.netWriter.encryptor);
+                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_5, client.stream.encryptor);
                     packet.buffer.p2(var3[var6]);
                     packet.buffer.p1a(0);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 } else if (var0 == 7) {
-                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_6, client.netWriter.encryptor);
+                    packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_6, client.stream.encryptor);
                     packet.buffer.ip2(var3[var6]);
                     packet.buffer.p1a(0);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
 
                 var4 = true;

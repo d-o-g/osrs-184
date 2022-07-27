@@ -284,9 +284,9 @@ public class WorldMap {
                     }
 
                     if (var9) {
-                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.WORLD_MAP_DRAG, client.netWriter.encryptor);
+                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.WORLD_MAP_DRAG, client.stream.encryptor);
                         packet.buffer.p4(mouseOver.getHash());
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                         aLong1684 = 0L;
                     }
                 }

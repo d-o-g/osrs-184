@@ -303,8 +303,8 @@ public class InterfaceComponent extends Node {
     }
 
     public static void closeInterface() {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_CLOSE_ACTION, client.netWriter.encryptor);
-        client.netWriter.writeLater(packet);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_CLOSE_ACTION, client.stream.encryptor);
+        client.stream.writeLater(packet);
         for (SubInterface itf = client.subInterfaces.head(); itf != null; itf = client.subInterfaces.next()) {
             if (itf.type == 0 || itf.type == 3) {
                 close(itf, true);
@@ -1205,83 +1205,83 @@ public class InterfaceComponent extends Node {
                 if (actionEnabled) {
                     OutgoingPacket packet;
                     if (actionIndex == 1) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_0, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_0, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 2) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_1, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_1, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 3) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_2, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_2, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 4) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_3, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_3, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 5) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_4, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_4, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 6) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_5, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_5, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 7) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_6, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_6, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 8) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_7, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_7, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 9) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_8, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_8, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
 
                     if (actionIndex == 10) {
-                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_9, client.netWriter.encryptor);
+                        packet = OutgoingPacket.prepare(ClientProt.INTERFACE_ACTION_9, client.stream.encryptor);
                         packet.buffer.p4(uid);
                         packet.buffer.p2(subcomponent);
                         packet.buffer.p2(itemId);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
                 }
             }

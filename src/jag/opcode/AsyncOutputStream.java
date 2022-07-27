@@ -73,7 +73,7 @@ public class AsyncOutputStream implements Runnable {
             int dy = relativeY * cos - sin * relativeX >> 11;
             int sceneX = dx + PlayerEntity.local.absoluteX >> 7;
             int sceneY = PlayerEntity.local.absoluteY - dy >> 7;
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.WALK_MAP, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.WALK_MAP, client.stream.encryptor);
             packet.buffer.p1(18);
             packet.buffer.ip2a(client.baseX + sceneX);
             packet.buffer.ip2(client.baseY + sceneY);
@@ -88,7 +88,7 @@ public class AsyncOutputStream implements Runnable {
             packet.buffer.p2(PlayerEntity.local.absoluteX);
             packet.buffer.p2(PlayerEntity.local.absoluteY);
             packet.buffer.p1(63);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
             client.destinationX = sceneX;
             client.destinationY = sceneY;
         }

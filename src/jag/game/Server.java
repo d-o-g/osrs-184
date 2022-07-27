@@ -44,10 +44,10 @@ public class Server {
 
     public static void method1343(String var0) {
         if (!var0.equals("")) {
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.JOIN_CLANCHANNEL, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.JOIN_CLANCHANNEL, client.stream.encryptor);
             packet.buffer.p1(Buffer.stringLengthPlusOne(var0));
             packet.buffer.pcstr(var0);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
         }
     }
 

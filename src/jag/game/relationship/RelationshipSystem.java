@@ -100,10 +100,10 @@ public class RelationshipSystem {
                     message = "Please remove " + displayName + " from your ignore list first";
                     ChatHistory.messageReceived(30, "", message);
                 } else {
-                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ADD_FRIEND, client.netWriter.encryptor);
+                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ADD_FRIEND, client.stream.encryptor);
                     packet.buffer.p1(Buffer.stringLengthPlusOne(displayName));
                     packet.buffer.pcstr(displayName);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
             }
         }
@@ -115,10 +115,10 @@ public class RelationshipSystem {
             if (name.isFormattedPresent()) {
                 if (friendListContext.remove(name)) {
                     client.anInt1065 = client.anInt1075;
-                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.REMOVE_FRIEND, client.netWriter.encryptor);
+                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.REMOVE_FRIEND, client.stream.encryptor);
                     packet.buffer.p1(Buffer.stringLengthPlusOne(displayName));
                     packet.buffer.pcstr(displayName);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
 
                 PlayerEntity.method1400();
@@ -144,10 +144,10 @@ public class RelationshipSystem {
                         message = "Please remove " + var1 + " from your friend list first";
                         ChatHistory.messageReceived(30, "", message);
                     } else {
-                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ADD_TO_IGNORE_LIST, client.netWriter.encryptor);
+                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ADD_TO_IGNORE_LIST, client.stream.encryptor);
                         packet.buffer.p1(Buffer.stringLengthPlusOne(var1));
                         packet.buffer.pcstr(var1);
-                        client.netWriter.writeLater(packet);
+                        client.stream.writeLater(packet);
                     }
                 }
             }
@@ -160,10 +160,10 @@ public class RelationshipSystem {
             if (name.isFormattedPresent()) {
                 if (ignoreListContext.remove(name)) {
                     client.anInt1065 = client.anInt1075;
-                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.REMOVE_FROM_IGNORE_LIST, client.netWriter.encryptor);
+                    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.REMOVE_FROM_IGNORE_LIST, client.stream.encryptor);
                     packet.buffer.p1(Buffer.stringLengthPlusOne(displayName));
                     packet.buffer.pcstr(displayName);
-                    client.netWriter.writeLater(packet);
+                    client.stream.writeLater(packet);
                 }
 
                 method843();

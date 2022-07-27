@@ -19,10 +19,10 @@ public abstract class Clock {
     }
 
     public static void processDialogActionPacket(int var0, int var1) {
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DIALOG_ACTION, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DIALOG_ACTION, client.stream.encryptor);
         packet.buffer.ip4(var0);
         packet.buffer.p2(var1);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     public static int method722() {

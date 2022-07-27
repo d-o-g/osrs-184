@@ -75,10 +75,10 @@ public class WorldMapAreaChunk_Sub3 implements WorldMapAreaChunk {
             }
         }
 
-        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_COMMAND, client.netWriter.encryptor);
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_COMMAND, client.stream.encryptor);
         packet.buffer.p1(var0.length() + 1);
         packet.buffer.pcstr(var0);
-        client.netWriter.writeLater(packet);
+        client.stream.writeLater(packet);
     }
 
     public boolean contains(int x, int y) {

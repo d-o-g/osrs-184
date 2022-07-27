@@ -23,11 +23,11 @@ public class AssociateComparatorByMyWorld extends AssociateComparator {
         }
 
         if (client.gameState >= 25) {
-            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GAME_BOUNDS, client.netWriter.encryptor);
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GAME_BOUNDS, client.stream.encryptor);
             packet.buffer.p1(client.isResizable());
             packet.buffer.p2(client.canvasWidth);
             packet.buffer.p2(client.canvasHeight);
-            client.netWriter.writeLater(packet);
+            client.stream.writeLater(packet);
         }
 
     }

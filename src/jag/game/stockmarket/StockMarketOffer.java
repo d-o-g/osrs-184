@@ -39,15 +39,15 @@ public class StockMarketOffer {
 
     public static void method231(boolean var0) {
         AudioSystem.process();
-        ++client.netWriter.idleWriteTicks;
-        if (client.netWriter.idleWriteTicks >= 50 || var0) {
-            client.netWriter.idleWriteTicks = 0;
-            if (!client.pendingDisconnect && client.netWriter.unwrap() != null) {
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, client.netWriter.encryptor);
-                client.netWriter.writeLater(packet);
+        ++client.stream.idleWriteTicks;
+        if (client.stream.idleWriteTicks >= 50 || var0) {
+            client.stream.idleWriteTicks = 0;
+            if (!client.pendingDisconnect && client.stream.unwrap() != null) {
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, client.stream.encryptor);
+                client.stream.writeLater(packet);
 
                 try {
-                    client.netWriter.flush();
+                    client.stream.flush();
                 } catch (IOException var3) {
                     client.pendingDisconnect = true;
                 }
