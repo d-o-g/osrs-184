@@ -5,6 +5,7 @@ public class IgnoredPlayer extends Chatter {
     public int anInt1147;
 
     IgnoredPlayer() {
+
     }
 
     int method842(IgnoredPlayer var1) {

@@ -4,7 +4,6 @@ import jag.commons.collection.NodeDeque;
 import jag.game.client;
 import jag.game.scene.SceneGraph;
 import jag.game.scene.entity.*;
-import jag.game.stockmarket.StockMarketOfferLifetimeComparator;
 import jag.game.type.ObjectDefinition;
 import jag.statics.Statics45;
 
@@ -23,11 +22,6 @@ public class ZoneProt {
     public static int parsedTotp;
 
     ZoneProt() {
-    }
-
-    public static void method865() {
-        client.anInt1061 = client.anInt1075;
-        StockMarketOfferLifetimeComparator.aBoolean584 = true;
     }
 
     public static ZoneProt[] values() {

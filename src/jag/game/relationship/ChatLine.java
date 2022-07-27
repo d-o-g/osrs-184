@@ -46,7 +46,7 @@ public class ChatLine extends DoublyLinkedNode {
 
     public final void method886() {
         if (this.channel != null) {
-            this.channelPair = new NamePair(PlayerAccountType.getNameExcludingTags(this.channel), PreciseWorldMapAreaChunk.nameLengthParameter);
+            this.channelPair = new NamePair(PlayerAccountType.getNameExcludingTags(this.channel), PreciseWorldMapAreaChunk.loginTypeParameter);
         } else {
             this.channelPair = null;
         }

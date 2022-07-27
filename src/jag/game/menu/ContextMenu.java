@@ -580,7 +580,7 @@ public class ContextMenu {
                             if (component.cs1Opcodes != null && component.cs1Opcodes[0][0] == 5) {
                                 int index = component.cs1Opcodes[0][1];
                                 Vars.values[index] = 1 - Vars.values[index];
-                                OldConnection.method712(index);
+                                OldConnection.processOptionVarps(index);
                             }
                         } else if (opcode == 29) {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.netWriter.encryptor);
@@ -591,7 +591,7 @@ public class ContextMenu {
                                 int index = component.cs1Opcodes[0][1];
                                 if (Vars.values[index] != component.cs1Values[0]) {
                                     Vars.values[index] = component.cs1Values[0];
-                                    OldConnection.method712(index);
+                                    OldConnection.processOptionVarps(index);
                                 }
                             }
                         } else if (opcode == 30) {

@@ -8,7 +8,6 @@ import jag.game.type.AnimationSequence;
 import jag.game.type.IdentikitDefinition;
 import jag.game.type.ItemDefinition;
 import jag.game.type.NpcDefinition;
-import jag.js5.Js5Worker;
 import jag.opcode.Buffer;
 import jag.worldmap.HAlign;
 
@@ -36,6 +35,10 @@ public class PlayerModel {
         return (int) Math.pow(2.0D, 7.0F + (float) var0 / 256.0F);
     }
 
+    public static boolean method1094(int var0, int var1) {
+        return var0 != 4 || var1 < 8;
+    }
+
     public void update(int[] equipment, int[] appearance, boolean female, int transformedNpcId) {
         if (equipment == null) {
             equipment = new int[12];
@@ -55,151 +58,147 @@ public class PlayerModel {
         this.appearance = appearance;
         this.female = female;
         this.transformedNpcId = transformedNpcId;
+
         computeHash();
     }
 
     public void computeHash() {
-        long var1 = hash;
+        long hash = this.hash;
         int var3 = equipment[5];
         int var4 = equipment[9];
         equipment[5] = var4;
         equipment[9] = var3;
-        hash = 0L;
+        this.hash = 0L;
 
-        int var5;
-        for (var5 = 0; var5 < 12; ++var5) {
-            hash <<= 4;
-            if (equipment[var5] >= 256) {
-                hash += equipment[var5] - 256;
+        for (int i = 0; i < 12; ++i) {
+            this.hash <<= 4;
+            if (equipment[i] >= 256) {
+                this.hash += equipment[i] - 256;
             }
         }
 
         if (equipment[0] >= 256) {
-            hash += equipment[0] - 256 >> 4;
+            this.hash += equipment[0] - 256 >> 4;
         }
 
         if (equipment[1] >= 256) {
-            hash += equipment[1] - 256 >> 8;
+            this.hash += equipment[1] - 256 >> 8;
         }
 
-        for (var5 = 0; var5 < 5; ++var5) {
-            hash <<= 3;
-            hash += this.appearance[var5];
+        for (int i = 0; i < 5; ++i) {
+            this.hash <<= 3;
+            this.hash += this.appearance[i];
         }
 
-        hash <<= 1;
-        hash += this.female ? 1 : 0;
+        this.hash <<= 1;
+        this.hash += this.female ? 1 : 0;
         equipment[5] = var3;
         equipment[9] = var4;
-        if (var1 != 0L && hash != var1) {
-            models.remove(var1);
+        if (hash != 0L && this.hash != hash) {
+            models.remove(hash);
         }
     }
 
-    public Model getModel(AnimationSequence var1, int var2, AnimationSequence var3, int var4) {
+    public Model getModel(AnimationSequence animation, int animFrame, AnimationSequence stance, int stanceFrame) {
         if (transformedNpcId != -1) {
-            return NpcDefinition.get(transformedNpcId).getModel(var1, var2, var3, var4);
+            return NpcDefinition.get(transformedNpcId).getModel(animation, animFrame, stance, stanceFrame);
         }
 
-        long var6 = hash;
+        long hash = this.hash;
         int[] equipment = this.equipment;
-        if (var1 != null && (var1.offHand >= 0 || var1.mainHand >= 0)) {
+        if (animation != null && (animation.offHand >= 0 || animation.mainHand >= 0)) {
             equipment = new int[12];
 
             System.arraycopy(this.equipment, 0, equipment, 0, 12);
 
-            if (var1.offHand >= 0) {
-                var6 += var1.offHand - this.equipment[5] << 8;
-                equipment[5] = var1.offHand;
+            if (animation.offHand >= 0) {
+                hash += (long) animation.offHand - this.equipment[5] << 8;
+                equipment[5] = animation.offHand;
             }
 
-            if (var1.mainHand >= 0) {
-                var6 += var1.mainHand - this.equipment[3] << 16;
-                equipment[3] = var1.mainHand;
+            if (animation.mainHand >= 0) {
+                hash += (long) animation.mainHand - this.equipment[3] << 16;
+                equipment[3] = animation.mainHand;
             }
         }
 
-        Model var9 = models.get(var6);
-        if (var9 == null) {
-            boolean var11 = false;
+        Model model = models.get(hash);
+        if (model == null) {
+            boolean valid = false;
 
-            int var13;
-            for (int var12 = 0; var12 < 12; ++var12) {
-                var13 = equipment[var12];
-                if (var13 >= 256 && var13 < 512 && !IdentikitDefinition.get(var13 - 256).method1114()) {
-                    var11 = true;
+            for (int i = 0; i < 12; ++i) {
+                int id = equipment[i];
+                if (id >= 256 && id < 512 && !IdentikitDefinition.get(id - 256).method1114()) {
+                    valid = true;
                 }
 
-                if (var13 >= 512 && !ItemDefinition.get(var13 - 512).method518(female)) {
-                    var11 = true;
+                if (id >= 512 && !ItemDefinition.get(id - 512).method518(female)) {
+                    valid = true;
                 }
             }
 
-            if (var11) {
+            if (valid) {
                 if (modelHash != -1L) {
-                    var9 = models.get(modelHash);
+                    model = models.get(modelHash);
                 }
 
-                if (var9 == null) {
+                if (model == null) {
                     return null;
                 }
             }
 
-            if (var9 == null) {
-                UnlitModel[] var14 = new UnlitModel[12];
-                var13 = 0;
-
-                int var16;
-                for (int var15 = 0; var15 < 12; ++var15) {
-                    var16 = equipment[var15];
-                    UnlitModel var17;
-                    if (var16 >= 256 && var16 < 512) {
-                        var17 = IdentikitDefinition.get(var16 - 256).method978();
-                        if (var17 != null) {
-                            var14[var13++] = var17;
+            if (model == null) {
+                UnlitModel[] parts = new UnlitModel[12];
+                int partCount = 0;
+                for (int i = 0; i < 12; ++i) {
+                    int id = equipment[i];
+                    if (id >= 256 && id < 512) {
+                        UnlitModel kitModel = IdentikitDefinition.get(id - 256).method978();
+                        if (kitModel != null) {
+                            parts[partCount++] = kitModel;
                         }
                     }
 
-                    if (var16 >= 512) {
-                        var17 = ItemDefinition.get(var16 - 512).getEquipmentModel(female);
-                        if (var17 != null) {
-                            var14[var13++] = var17;
+                    if (id >= 512) {
+                        UnlitModel equippedModel = ItemDefinition.get(id - 512).getEquipmentModel(female);
+                        if (equippedModel != null) {
+                            parts[partCount++] = equippedModel;
                         }
                     }
                 }
 
-                UnlitModel var19 = new UnlitModel(var14, var13);
+                UnlitModel fullModel = new UnlitModel(parts, partCount);
 
-                for (var16 = 0; var16 < 5; ++var16) {
-                    if (appearance[var16] < colors[var16].length) {
-                        var19.texturize(HAlign.aShortArray1482[var16], colors[var16][appearance[var16]]);
+                for (int i = 0; i < 5; ++i) {
+                    if (appearance[i] < colors[i].length) {
+                        fullModel.texturize(HAlign.aShortArray1482[i], colors[i][appearance[i]]);
                     }
 
-                    if (appearance[var16] < DefaultAudioSystemProvider.aShortArrayArray145[var16].length) {
-                        var19.texturize(colors2[var16], DefaultAudioSystemProvider.aShortArrayArray145[var16][appearance[var16]]);
+                    if (appearance[i] < DefaultAudioSystemProvider.aShortArrayArray145[i].length) {
+                        fullModel.texturize(colors2[i], DefaultAudioSystemProvider.aShortArrayArray145[i][appearance[i]]);
                     }
                 }
 
-                var9 = var19.light(64, 850, -30, -50, -30);
-                models.put(var9, var6);
-                modelHash = var6;
+                model = fullModel.light(64, 850, -30, -50, -30);
+                models.put(model, hash);
+                modelHash = hash;
             }
         }
 
-        if (var1 == null && var3 == null) {
-            return var9;
+        if (animation == null && stance == null) {
+            return model;
         }
 
-        Model var18;
-        if (var1 != null && var3 != null) {
-            var18 = var1.applyStanceAndAnimation(var9, var2, var3, var4);
-        } else if (var1 != null) {
-            var18 = var1.applySequence(var9, var2);
+        Model animated;
+        if (animation != null && stance != null) {
+            animated = animation.applyStanceAndAnimation(model, animFrame, stance, stanceFrame);
+        } else if (animation != null) {
+            animated = animation.applySequence(model, animFrame);
         } else {
-            var18 = var3.applySequence(var9, var4);
+            animated = stance.applySequence(model, stanceFrame);
         }
 
-        return var18;
+        return animated;
     }
 
     UnlitModel method1427() {
@@ -208,9 +207,8 @@ public class PlayerModel {
         }
         boolean var1 = false;
 
-        int var3;
         for (int var2 = 0; var2 < 12; ++var2) {
-            var3 = equipment[var2];
+            int var3 = equipment[var2];
             if (var3 >= 256 && var3 < 512 && !IdentikitDefinition.get(var3 - 256).method882()) {
                 var1 = true;
             }
@@ -223,12 +221,11 @@ public class PlayerModel {
         if (var1) {
             return null;
         }
-        UnlitModel[] var4 = new UnlitModel[12];
-        var3 = 0;
 
-        int var6;
+        UnlitModel[] var4 = new UnlitModel[12];
+        int var3 = 0;
         for (int var5 = 0; var5 < 12; ++var5) {
-            var6 = equipment[var5];
+            int var6 = equipment[var5];
             UnlitModel var7;
             if (var6 >= 256 && var6 < 512) {
                 var7 = IdentikitDefinition.get(var6 - 256).method1113();
@@ -247,13 +244,13 @@ public class PlayerModel {
 
         UnlitModel var8 = new UnlitModel(var4, var3);
 
-        for (var6 = 0; var6 < 5; ++var6) {
-            if (appearance[var6] < colors[var6].length) {
-                var8.texturize(HAlign.aShortArray1482[var6], colors[var6][appearance[var6]]);
+        for (int i = 0; i < 5; ++i) {
+            if (appearance[i] < colors[i].length) {
+                var8.texturize(HAlign.aShortArray1482[i], colors[i][appearance[i]]);
             }
 
-            if (appearance[var6] < DefaultAudioSystemProvider.aShortArrayArray145[var6].length) {
-                var8.texturize(colors2[var6], DefaultAudioSystemProvider.aShortArrayArray145[var6][appearance[var6]]);
+            if (appearance[i] < DefaultAudioSystemProvider.aShortArrayArray145[i].length) {
+                var8.texturize(colors2[i], DefaultAudioSystemProvider.aShortArrayArray145[i][appearance[i]]);
             }
         }
 
@@ -289,25 +286,26 @@ public class PlayerModel {
         }
     }
 
-    public void method1432(int var1, boolean var2) {
-        int var3 = appearance[var1];
+    public void method1432(int index, boolean var2) {
+        int color = appearance[index];
         if (!var2) {
             do {
-                --var3;
-                if (var3 < 0) {
-                    var3 = colors[var1].length - 1;
+                --color;
+                if (color < 0) {
+                    color = colors[index].length - 1;
                 }
-            } while (!Js5Worker.method1094(var1, var3));
+            } while (!method1094(index, color));
         } else {
             do {
-                ++var3;
-                if (var3 >= colors[var1].length) {
-                    var3 = 0;
+                ++color;
+                if (color >= colors[index].length) {
+                    color = 0;
                 }
-            } while (!Js5Worker.method1094(var1, var3));
+            } while (!method1094(index, color));
         }
 
-        appearance[var1] = var3;
+        appearance[index] = color;
+
         computeHash();
     }
 

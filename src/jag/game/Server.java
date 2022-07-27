@@ -55,24 +55,24 @@ public class Server {
         SceneGraph.absoluteToViewport(entity.absoluteX, entity.absoluteY, height);
     }
 
-    public static void method852(int var0, int var1) {
-        int[] var2 = new int[4];
-        int[] var3 = new int[4];
-        var2[0] = var0;
-        var3[0] = var1;
-        int var4 = 1;
+    public static void sort(int indexType, int populationType) {
+        int[] indexComparator = new int[4];
+        int[] populationComparator = new int[4];
+        indexComparator[0] = indexType;
+        populationComparator[0] = populationType;
 
-        for (int var5 = 0; var5 < 4; ++var5) {
-            if (indexComparator[var5] != var0) {
-                var2[var4] = indexComparator[var5];
-                var3[var4] = populationComparator[var5];
-                ++var4;
+        int srcIndex = 1;
+        for (int dstIndex = 0; dstIndex < 4; ++dstIndex) {
+            if (Server.indexComparator[dstIndex] != indexType) {
+                indexComparator[srcIndex] = Server.indexComparator[dstIndex];
+                populationComparator[srcIndex] = Server.populationComparator[dstIndex];
+                ++srcIndex;
             }
         }
 
-        indexComparator = var2;
-        populationComparator = var3;
-        sort(servers, 0, servers.length - 1, indexComparator, populationComparator);
+        Server.indexComparator = indexComparator;
+        Server.populationComparator = populationComparator;
+        sort(servers, 0, servers.length - 1, Server.indexComparator, Server.populationComparator);
     }
 
     public static String method149(int var0) {
@@ -191,7 +191,6 @@ public class Server {
             sort(array, start, var6, comparatorA, comparatorB);
             sort(array, var6 + 1, end, comparatorA, comparatorB);
         }
-
     }
 
     public static Server next() {

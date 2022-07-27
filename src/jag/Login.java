@@ -394,7 +394,7 @@ public class Login {
                         var15 = var15.substring(0, var15.length() - 1);
                     }
 
-                    var0.drawString(BaseFont.method1166(var15), credentialsBoxX + 180 - 70, var41, 16777215, 0);
+                    var0.drawString(BaseFont.processGtLt(var15), credentialsBoxX + 180 - 70, var41, 16777215, 0);
                     var41 += 15;
                     var9 = "Password: ";
                     var17 = password;
@@ -468,7 +468,7 @@ public class Login {
                         var15 = var15.substring(1);
                     }
 
-                    var0.drawString(BaseFont.method1166(var15) + (anInt461 == 0 & client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 70, var41, 16777215, 0);
+                    var0.drawString(BaseFont.processGtLt(var15) + (anInt461 == 0 & client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 70, var41, 16777215, 0);
                     var41 += 15;
                     var9 = "Password: ";
                     var17 = password;
@@ -603,7 +603,7 @@ public class Login {
                                 var15 = var15.substring(1);
                             }
 
-                            var0.drawString(BaseFont.method1166(var15) + (client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 34, var41, 16777215, 0);
+                            var0.drawString(BaseFont.processGtLt(var15) + (client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 34, var41, 16777215, 0);
                             var20 = credentialsBoxX + 180 - 80;
                             var49 = 321;
                             GraphicsProvider.titlebuttonSprite.renderAt(var20 - 73, var49 - 20);
@@ -1283,45 +1283,45 @@ public class Login {
 
                     int var1 = paddingX + 280;
                     if (Mouse.clickX >= var1 && Mouse.clickX <= var1 + 14 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(0, 0);
+                        Server.sort(0, 0);
                         break;
                     }
 
                     if (Mouse.clickX >= var1 + 15 && Mouse.clickX <= var1 + 80 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(0, 1);
+                        Server.sort(0, 1);
                         break;
                     }
 
                     int var2 = paddingX + 390;
                     if (Mouse.clickX >= var2 && Mouse.clickX <= var2 + 14 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(1, 0);
+                        Server.sort(1, 0);
                         break;
                     }
 
                     if (Mouse.clickX >= var2 + 15 && Mouse.clickX <= var2 + 80 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(1, 1);
+                        Server.sort(1, 1);
                         break;
                     }
 
                     int var17 = paddingX + 500;
                     if (Mouse.clickX >= var17 && Mouse.clickX <= var17 + 14 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(2, 0);
+                        Server.sort(2, 0);
                         break;
                     }
 
                     if (Mouse.clickX >= var17 + 15 && Mouse.clickX <= var17 + 80 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(2, 1);
+                        Server.sort(2, 1);
                         break;
                     }
 
                     var6 = paddingX + 610;
                     if (Mouse.clickX >= var6 && Mouse.clickX <= var6 + 14 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(3, 0);
+                        Server.sort(3, 0);
                         break;
                     }
 
                     if (Mouse.clickX >= var6 + 15 && Mouse.clickX <= var6 + 80 && Mouse.clickY >= 4 && Mouse.clickY <= 18) {
-                        Server.method852(3, 1);
+                        Server.sort(3, 1);
                         break;
                     }
 

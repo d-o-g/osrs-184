@@ -29,7 +29,7 @@ public final class ObjectSound extends Node {
     public ObjectSound() {
     }
 
-    public void method254() {
+    public void apply() {
         int id = ambientSoundId;
         ObjectDefinition definition = this.definition.transform();
         if (definition != null) {

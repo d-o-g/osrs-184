@@ -328,7 +328,7 @@ public final class PlayerEntity extends PathingEntity {
                         GPI.chatBuffer.pos = 0;
                         packet.igdata(GPI.chatBuffer.payload, 0, var14);
                         GPI.chatBuffer.pos = 0;
-                        String var17 = BaseFont.method1166(OldConnection.method714(DefaultRouteStrategy.method294(GPI.chatBuffer)));
+                        String var17 = BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(GPI.chatBuffer)));
                         player.overheadText = var17.trim();
                         player.overheadTextForeground = var7 >> 8;
                         player.overheadTextEffect = var7 & 255;
@@ -579,9 +579,9 @@ public final class PlayerEntity extends PathingEntity {
         if (model == null) {
             return null;
         }
-        AnimationSequence var1 = super.animation != -1 && super.animationDelay == 0 ? AnimationSequence.get(super.animation) : null;
-        AnimationSequence var2 = super.stance != -1 && !aBoolean1905 && (super.stance != super.idleStance || var1 == null) ? AnimationSequence.get(super.stance) : null;
-        Model var3 = model.getModel(var1, super.animationFrame, var2, super.stanceFrame);
+        AnimationSequence animation = super.animation != -1 && super.animationDelay == 0 ? AnimationSequence.get(super.animation) : null;
+        AnimationSequence stance = super.stance != -1 && !aBoolean1905 && (super.stance != super.idleStance || animation == null) ? AnimationSequence.get(super.stance) : null;
+        Model var3 = model.getModel(animation, super.animationFrame, stance, super.stanceFrame);
         if (var3 == null) {
             return null;
         }
@@ -757,7 +757,7 @@ public final class PlayerEntity extends PathingEntity {
             super.runStance = -1;
         }
 
-        namePair = new NamePair(buffer.gstr(), PreciseWorldMapAreaChunk.nameLengthParameter);
+        namePair = new NamePair(buffer.gstr(), PreciseWorldMapAreaChunk.loginTypeParameter);
         setIsBefriendedDefaults();
         setIsInFriendsChatDefaults();
         if (this == local) {

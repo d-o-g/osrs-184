@@ -31,7 +31,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 public final class StockMarketOfferLifetimeComparator implements Comparator<StockMarketEvent> {
-    public static boolean aBoolean584;
+    public static boolean inFriendsChat;
     public static InterfaceComponent anInterfaceComponent585;
 
     public static void method411() {
@@ -366,7 +366,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                 var22.effects = var8.soundEffects;
                 if (var8.transformIds != null) {
                     var22.definition = var8;
-                    var22.method254();
+                    var22.apply();
                 }
 
                 ObjectSound.OBJECT_SOUNDS.add(var22);

@@ -5,7 +5,7 @@ import jag.opcode.Buffer;
 
 public class PreciseWorldMapAreaChunk implements WorldMapAreaChunk {
 
-    public static ClientParameter nameLengthParameter;
+    public static ClientParameter loginTypeParameter;
 
     int anInt279;
     int minLevel;

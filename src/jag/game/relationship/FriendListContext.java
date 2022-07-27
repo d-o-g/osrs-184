@@ -9,6 +9,7 @@ public class FriendListContext extends ChatterContext<BefriendedPlayer> {
 
     public final ClientParameter nameLengthParameter;
     public final LinkableDeque<FriendLoginUpdate> loginUpdates;
+
     public int anInt833;
 
     public FriendListContext(ClientParameter var1) {

@@ -224,14 +224,14 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
         return var2 + var0 + "." + var4 + "/l=" + WorldMapLabelSize.aClientLocale_525 + "/a=" + WorldMapCacheArea.anInt130 + var3 + "/";
     }
 
-    public static void method1417(String var0) {
-        Statics57.aString1162 = var0;
+    public static void setDocumentCookie(String string) {
+        Statics57.aString1162 = string;
 
         try {
-            String var1 = client.instance.getParameter(Integer.toString(18));
-            String var2 = client.instance.getParameter(Integer.toString(13));
-            String var3 = var1 + "settings=" + var0 + "; version=1; path=/; domain=" + var2;
-            if (var0.length() == 0) {
+            String p18 = client.instance.getParameter(Integer.toString(18));
+            String p13 = client.instance.getParameter(Integer.toString(13));
+            String var3 = p18 + "settings=" + string + "; version=1; path=/; domain=" + p13;
+            if (string.length() == 0) {
                 var3 = var3 + "; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=0";
             } else {
                 String var4 = var3 + "; Expires=";

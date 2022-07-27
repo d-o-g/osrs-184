@@ -126,15 +126,15 @@ public class IdentikitDefinition extends DoublyLinkedNode {
         if (anIntArray747 == null) {
             return true;
         }
-        boolean var1 = true;
 
-        for (int anAnIntArray747 : anIntArray747) {
-            if (!StockMarketOfferWorldComparator.aReferenceTable350.load(anAnIntArray747, 0)) {
-                var1 = false;
+        boolean present = true;
+        for (int i : anIntArray747) {
+            if (!StockMarketOfferWorldComparator.aReferenceTable350.load(i, 0)) {
+                present = false;
             }
         }
 
-        return var1;
+        return present;
     }
 
     public void decode(Buffer var1) {

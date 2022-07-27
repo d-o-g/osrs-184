@@ -198,7 +198,7 @@ public class ScriptEvent extends Node {
         if (var0 == 3609) {
             var5 = stringStack[--Statics46.anInt441];
             var5 = PlayerAccountType.getNameExcludingTags(var5);
-            intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.isBefriended(new NamePair(var5, PreciseWorldMapAreaChunk.nameLengthParameter)) ? 1 : 0;
+            intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.isBefriended(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
             return 1;
         }
         if (var0 == 3611) {
@@ -296,7 +296,7 @@ public class ScriptEvent extends Node {
         if (var0 == 3623) {
             var5 = stringStack[--Statics46.anInt441];
             var5 = PlayerAccountType.getNameExcludingTags(var5);
-            intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.isIgnoring(new NamePair(var5, PreciseWorldMapAreaChunk.nameLengthParameter)) ? 1 : 0;
+            intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.isIgnoring(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
             return 1;
         }
         if (var0 == 3624) {
@@ -641,7 +641,7 @@ public class ScriptEvent extends Node {
                         } else if (var29 == 2) {
                             var12 = var7[id];
                             Vars.values[var12] = intStack[--Statics46.anInt442];
-                            OldConnection.method712(var12);
+                            OldConnection.processOptionVarps(var12);
                         } else if (var29 == 3) {
                             stringStack[++Statics46.anInt441 - 1] = script.aStringArray1645[id];
                         } else if (var29 == 6) {
@@ -1792,7 +1792,7 @@ public class ScriptEvent extends Node {
             }
             if (var0 == 4111) {
                 var3 = stringStack[--Statics46.anInt441];
-                stringStack[++Statics46.anInt441 - 1] = BaseFont.method1166(var3);
+                stringStack[++Statics46.anInt441 - 1] = BaseFont.processGtLt(var3);
                 return 1;
             }
             if (var0 == 4112) {
@@ -2439,7 +2439,7 @@ public class ScriptEvent extends Node {
             return 1;
         }
         if (var0 == 3317) {
-            intStack[++Statics46.anInt442 - 1] = client.rebootTimer;
+            intStack[++Statics46.anInt442 - 1] = client.updateTimer;
             return 1;
         }
         if (var0 == 3318) {

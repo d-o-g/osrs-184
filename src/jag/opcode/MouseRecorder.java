@@ -32,40 +32,39 @@ public class MouseRecorder implements Runnable {
         times = new long[500];
     }
 
-    public static void method265(InterfaceComponent[] var0, int var1) {
-        for (InterfaceComponent var3 : var0) {
-            if (var3 != null) {
-                if (var3.type == 0) {
-                    if (var3.subcomponents != null) {
-                        method265(var3.subcomponents, var1);
+    public static void method265(InterfaceComponent[] group, int var1) {
+        for (InterfaceComponent component : group) {
+            if (component != null) {
+                if (component.type == 0) {
+                    if (component.subcomponents != null) {
+                        method265(component.subcomponents, var1);
                     }
 
-                    SubInterface var4 = client.subInterfaces.lookup(var3.uid);
-                    if (var4 != null) {
-                        InterfaceComponent.method118(var4.id, var1);
+                    SubInterface sub = client.subInterfaces.lookup(component.uid);
+                    if (sub != null) {
+                        InterfaceComponent.executeCloseListeners(sub.id, var1);
                     }
                 }
 
-                ScriptEvent var5;
-                if (var1 == 0 && var3.anObjectArray1397 != null) {
-                    var5 = new ScriptEvent();
-                    var5.component = var3;
-                    var5.args = var3.anObjectArray1397;
-                    ScriptEvent.fire(var5);
+                if (var1 == 0 && component.anObjectArray1397 != null) {
+                    ScriptEvent event = new ScriptEvent();
+                    event.component = component;
+                    event.args = component.anObjectArray1397;
+                    ScriptEvent.fire(event);
                 }
 
-                if (var1 == 1 && var3.anObjectArray1393 != null) {
-                    if (var3.subComponentIndex >= 0) {
-                        InterfaceComponent var6 = InterfaceComponent.lookup(var3.uid);
-                        if (var6 == null || var6.subcomponents == null || var3.subComponentIndex >= var6.subcomponents.length || var3 != var6.subcomponents[var3.subComponentIndex]) {
+                if (var1 == 1 && component.anObjectArray1393 != null) {
+                    if (component.subComponentIndex >= 0) {
+                        InterfaceComponent var6 = InterfaceComponent.lookup(component.uid);
+                        if (var6 == null || var6.subcomponents == null || component.subComponentIndex >= var6.subcomponents.length || component != var6.subcomponents[component.subComponentIndex]) {
                             continue;
                         }
                     }
 
-                    var5 = new ScriptEvent();
-                    var5.component = var3;
-                    var5.args = var3.anObjectArray1393;
-                    ScriptEvent.fire(var5);
+                    ScriptEvent event = new ScriptEvent();
+                    event.component = component;
+                    event.args = component.anObjectArray1393;
+                    ScriptEvent.fire(event);
                 }
             }
         }

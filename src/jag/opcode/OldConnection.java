@@ -47,18 +47,18 @@ public final class OldConnection extends Connection implements Runnable {
         output = this.socket.getOutputStream();
     }
 
-    public static void method712(int var0) {
+    public static void processOptionVarps(int id) {
         SubInterface.process();
 
-        for (ObjectSound var1 = ObjectSound.OBJECT_SOUNDS.head(); var1 != null; var1 = ObjectSound.OBJECT_SOUNDS.next()) {
-            if (var1.definition != null) {
-                var1.method254();
+        for (ObjectSound sound = ObjectSound.OBJECT_SOUNDS.head(); sound != null; sound = ObjectSound.OBJECT_SOUNDS.next()) {
+            if (sound.definition != null) {
+                sound.apply();
             }
         }
 
-        int value = VarDefinition.get(var0).value;
+        int value = VarDefinition.get(id).value;
         if (value != 0) {
-            int varp = Vars.values[var0];
+            int varp = Vars.values[id];
             if (value == 1) {
                 if (varp == 1) {
                     JagGraphics3D.method634(0.9D);
@@ -84,41 +84,41 @@ public final class OldConnection extends Connection implements Runnable {
             }
 
             if (value == 3) {
-                short var4 = 0;
+                short test = 0;
                 if (varp == 0) {
-                    var4 = 255;
+                    test = 255;
                 }
 
                 if (varp == 1) {
-                    var4 = 192;
+                    test = 192;
                 }
 
                 if (varp == 2) {
-                    var4 = 128;
+                    test = 128;
                 }
 
                 if (varp == 3) {
-                    var4 = 64;
+                    test = 64;
                 }
 
                 if (varp == 4) {
-                    var4 = 0;
+                    test = 0;
                 }
 
-                if (var4 != client.anInt900) {
+                if (test != client.anInt900) {
                     if (client.anInt900 == 0 && client.anInt898 != -1) {
-                        Statics51.method344(Archive.audioTracks, client.anInt898, 0, var4, false);
+                        Statics51.method344(Archive.audioTracks, client.anInt898, 0, test, false);
                         client.aBoolean904 = false;
-                    } else if (var4 == 0) {
+                    } else if (test == 0) {
                         Statics57.method533();
                         client.aBoolean904 = false;
                     } else if (AudioSystem.state != 0) {
-                        AudioSystem.volume = var4;
+                        AudioSystem.volume = test;
                     } else {
-                        Statics50.aClass5_Sub6_Sub3_326.method703(var4);
+                        Statics50.aClass5_Sub6_Sub3_326.method703(test);
                     }
 
-                    client.anInt900 = var4;
+                    client.anInt900 = test;
                 }
             }
 

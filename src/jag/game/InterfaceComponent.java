@@ -1175,7 +1175,7 @@ public class InterfaceComponent extends Node {
         }
     }
 
-    public static void method118(int group, int var1) {
+    public static void executeCloseListeners(int group, int var1) {
         if (load(group)) {
             MouseRecorder.method265(client.interfaces[group], var1);
         }
@@ -1508,7 +1508,7 @@ public class InterfaceComponent extends Node {
 
         ContextMenu.method317();
         if (client.rootInterfaceIndex != -1) {
-            method118(client.rootInterfaceIndex, 1);
+            executeCloseListeners(client.rootInterfaceIndex, 1);
         }
 
     }

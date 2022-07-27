@@ -37,10 +37,6 @@ public class Js5Worker {
     public static ResourceRequest current;
     public static Buffer archiveBuffer;
 
-    public static boolean method1094(int var0, int var1) {
-        return var0 != 4 || var1 < 8;
-    }
-
     public static void setOculusOrbMode(int var0) {
         Camera.oculusOrbMode = var0;
     }
@@ -55,7 +51,7 @@ public class Js5Worker {
     }
 
     public static void request(Archive archive, int var1, int var2, int crc, byte padding, boolean var5) {
-        long var6 = (var1 << 16) + var2;
+        long var6 = ((long) var1 << 16) + var2;
         ResourceRequest req = pendingPriority.lookup(var6);
         if (req == null) {
             req = pendingPriorityRecv.lookup(var6);

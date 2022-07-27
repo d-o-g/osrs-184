@@ -56,7 +56,7 @@ public class SubInterface extends Node {
         InterfaceComponent.revalidateScroll(client.interfaces[key >> 16], component, false);
         InterfaceComponent.loadAndInitialize(id);
         if (client.rootInterfaceIndex != -1) {
-            InterfaceComponent.method118(client.rootInterfaceIndex, 1);
+            InterfaceComponent.executeCloseListeners(client.rootInterfaceIndex, 1);
         }
 
         return sub;

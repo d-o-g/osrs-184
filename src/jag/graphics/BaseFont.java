@@ -243,7 +243,7 @@ public abstract class BaseFont extends JagGraphics {
         }
     }
 
-    public static String method1166(String var0) {
+    public static String processGtLt(String var0) {
         int var1 = var0.length();
         int var2 = 0;
 

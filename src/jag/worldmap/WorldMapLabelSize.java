@@ -37,7 +37,7 @@ public class WorldMapLabelSize {
         int var2 = GPI.playerCount;
         int[] var3 = GPI.playerIndices;
         boolean var4 = false;
-        NamePair var5 = new NamePair(var1, PreciseWorldMapAreaChunk.nameLengthParameter);
+        NamePair var5 = new NamePair(var1, PreciseWorldMapAreaChunk.loginTypeParameter);
 
         for (int var6 = 0; var6 < var2; ++var6) {
             PlayerEntity var7 = client.players[var3[var6]];
