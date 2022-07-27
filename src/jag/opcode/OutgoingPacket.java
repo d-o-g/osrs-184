@@ -5,23 +5,28 @@ import jag.commons.collection.Node;
 public class OutgoingPacket extends Node {
 
     public static final OutgoingPacket[] cache = new OutgoingPacket[300];
+
     public static byte[][] aByteArrayArray114;
-    public static int anInt112 = 0;
+
+    public static int index = 0;
 
     public BitBuffer buffer;
+
     public int size;
-    ClientProt meta;
     int payloadSize;
 
+    ClientProt meta;
+
     OutgoingPacket() {
+
     }
 
     public static OutgoingPacket prepare(ClientProt meta, IsaacCipher cipher) {
         OutgoingPacket packet;
-        if (anInt112 == 0) {
+        if (index == 0) {
             packet = new OutgoingPacket();
         } else {
-            packet = cache[--anInt112];
+            packet = cache[--index];
         }
 
         packet.meta = meta;
@@ -46,10 +51,10 @@ public class OutgoingPacket extends Node {
 
     public static OutgoingPacket prepareLoginPacket() {
         OutgoingPacket packet;
-        if (anInt112 == 0) {
+        if (index == 0) {
             packet = new OutgoingPacket();
         } else {
-            packet = cache[--anInt112];
+            packet = cache[--index];
         }
 
         packet.meta = null;
@@ -59,8 +64,8 @@ public class OutgoingPacket extends Node {
     }
 
     public void cache() {
-        if (anInt112 < cache.length) {
-            cache[++anInt112 - 1] = this;
+        if (index < cache.length) {
+            cache[++index - 1] = this;
         }
     }
 }

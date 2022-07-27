@@ -1,15 +1,21 @@
 package jag.opcode.handler;
 
-import jag.SerializableString;
+import jag.*;
 import jag.commons.collection.IntegerNode;
+import jag.commons.crypt.Base37;
 import jag.commons.time.Clock;
 import jag.game.*;
+import jag.game.menu.ContextMenu;
+import jag.game.relationship.ChatHistory;
+import jag.game.relationship.NamePair;
 import jag.game.scene.SceneGraph;
-import jag.game.stockmarket.StockMarketOffer;
-import jag.game.stockmarket.StockMarketOfferWorldComparator;
+import jag.game.stockmarket.*;
+import jag.graphics.BaseFont;
 import jag.js5.Js5Worker;
+import jag.js5.ResourceCache;
 import jag.opcode.*;
 import jag.statics.Statics53;
+import jag.worldmap.PreciseWorldMapAreaChunk;
 
 import java.io.IOException;
 
@@ -211,6 +217,179 @@ public class JagServerProtHandler extends ServerProtHandler {
         }
 
         client.anInt1071 = client.anInt1075;
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean processZoneProt(BitBuffer incoming, ZoneProt prot) {
+        ZoneProt.process(prot);
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean setIfPosition(BitBuffer incoming) {
+        int yMargin = incoming.method1070();
+        int xMargin = incoming.method1070();
+        int uid = incoming.ig4();
+        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        if (xMargin != component.xMargin || yMargin != component.yMargin || component.xLayout != 0 || component.yLayout != 0) {
+            component.xMargin = xMargin;
+            component.yMargin = yMargin;
+            component.xLayout = 0;
+            component.yLayout = 0;
+            InterfaceComponent.invalidate(component);
+            client.instance.updateComponentMargin(component);
+            if (component.type == 0) {
+                InterfaceComponent.revalidateScroll(client.interfaces[uid >> 16], component, false);
+            }
+        }
+
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean setUpdateTimer(BitBuffer incoming) {
+        client.updateTimer = incoming.readLEUShortA() * 30;
+        client.anInt1074 = client.anInt1075;
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean processStockMarketEvents(BitBuffer incoming) {
+        boolean var42 = incoming.g1() == 1;
+        if (var42) {
+            StockMarketOffer.ageAdjustment = Clock.now() - incoming.g8();
+            StockMarketOffer.mediator = new StockMarketMediator(incoming);
+        } else {
+            StockMarketOffer.mediator = null;
+        }
+
+        client.stockMarketEventUpdateCycle = client.anInt1075;
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean updatePlayerWeight(BitBuffer incoming) {
+        SubInterface.process();
+        client.weight = incoming.g2b();
+        client.anInt1074 = client.anInt1075;
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean setOculusOrbToLocalPlayer(BitBuffer incoming) {
+        int var6 = incoming.g4();
+        if (var6 != client.anInt1002) {
+            client.anInt1002 = var6;
+            Camera.setOculusOrbOnLocalPlayer();
+        }
+
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean processFriendsChatUpdate(BitBuffer incoming) {
+        if (client.friendsChatSystem != null) {
+            client.friendsChatSystem.decodeUpdate(incoming);
+        }
+
+        client.method865();
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean moveSubInterface(BitBuffer incoming) {
+        int key2 = incoming.ig4();
+        int key1 = incoming.g4();
+        SubInterface sub1 = client.subInterfaces.lookup(key1);
+        SubInterface sub2 = client.subInterfaces.lookup(key2);
+        if (sub2 != null) {
+            InterfaceComponent.close(sub2, sub1 == null || sub2.id != sub1.id);
+        }
+
+        if (sub1 != null) {
+            sub1.unlink();
+            client.subInterfaces.put(sub1, key2);
+        }
+
+        InterfaceComponent component = InterfaceComponent.lookup(key1);
+        if (component != null) {
+            InterfaceComponent.invalidate(component);
+        }
+
+        component = InterfaceComponent.lookup(key2);
+        if (component != null) {
+            InterfaceComponent.invalidate(component);
+            InterfaceComponent.revalidateScroll(client.interfaces[component.uid >>> 16], component, true);
+        }
+
+        if (client.rootInterfaceIndex != -1) {
+            InterfaceComponent.executeCloseListeners(client.rootInterfaceIndex, 1);
+        }
+
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean processFriendsListUpdate(BitBuffer incoming) {
+        client.relationshipSystem.decodeFriends(incoming, netWriter.incomingPacketSize);
+        client.anInt1065 = client.anInt1075;
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean processFriendsChatMessage(BitBuffer incoming) {
+        String var38 = incoming.gstr();
+        long var18 = incoming.g8();
+        long var20 = incoming.g2();
+        long var10 = incoming.g3();
+        PlayerAccountType accountType = (PlayerAccountType) EnumType.getByOrdinal(PlayerAccountType.getValues(), incoming.g1());
+        long var22 = var10 + (var20 << 32);
+        boolean ignored = false;
+
+        for (int i = 0; i < 100; ++i) {
+            if (client.messageIds[i] == var22) {
+                ignored = true;
+                break;
+            }
+        }
+
+        if (accountType.notJagex && client.relationshipSystem.isIgnoring(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+            ignored = true;
+        }
+
+        if (!ignored && client.anInt1014 == 0) {
+            client.messageIds[client.messageIndex] = var22;
+            client.messageIndex = (client.messageIndex + 1) % 100;
+            String escaped = BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(incoming)));
+            if (accountType.icon != -1) {
+                ChatHistory.messageReceived(9, ContextMenu.addImgTags(accountType.icon) + var38, escaped, Base37.decode(var18));
+            } else {
+                ChatHistory.messageReceived(9, var38, escaped, Base37.decode(var18));
+            }
+        }
+
+        netWriter.currentIncomingPacket = null;
+        return true;
+    }
+
+    @Override
+    public boolean processRandomDatUpdate(BitBuffer incoming) {
+        incoming.pos += 28;
+        if (incoming.matchCrcs()) {
+            ResourceCache.method1489(incoming, incoming.pos - 28);
+        }
+
         netWriter.currentIncomingPacket = null;
         return true;
     }

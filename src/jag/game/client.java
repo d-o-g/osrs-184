@@ -239,7 +239,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int draggingComponentIndex = 0;
     public static int bootState = 0;
     public static int anInt1074 = 0;
-    public static int stockMarketUpdateCycle = 0;
+    public static int stockMarketEventUpdateCycle = 0;
     public static int audioEffectCount = 0;
     public static int energy = 0;
     public static int anInt898 = -1;
@@ -966,10 +966,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             netWriter.secondLastIncomingPacket = netWriter.lastIncomingPacket;
             netWriter.lastIncomingPacket = netWriter.currentIncomingPacket;
 
-            if (ServerProt.MAP_PROJANIM == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.MAP_PROJANIM);
-                netWriter.currentIncomingPacket = null;
-                return true;
+            for (ZoneProt zoneProt : ZoneProt.values()) {
+                if (netWriter.currentIncomingPacket == zoneProt.getServerProt()) {
+                    return serverProtHandler.processZoneProt(incoming, ZoneProt.MAP_PROJANIM);
+                }
             }
 
             if (ServerProt.UPDATE_COMPONENT_CONFIG == netWriter.currentIncomingPacket) {
@@ -981,51 +981,15 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.IF_SETPOS == netWriter.currentIncomingPacket) {
-                int yMargin = incoming.method1070();
-                int xMargin = incoming.method1070();
-                int uid = incoming.ig4();
-                InterfaceComponent component = InterfaceComponent.lookup(uid);
-                if (xMargin != component.xMargin || yMargin != component.yMargin || component.xLayout != 0 || component.yLayout != 0) {
-                    component.xMargin = xMargin;
-                    component.yMargin = yMargin;
-                    component.xLayout = 0;
-                    component.yLayout = 0;
-                    InterfaceComponent.invalidate(component);
-                    this.updateComponentMargin(component);
-                    if (component.type == 0) {
-                        InterfaceComponent.revalidateScroll(interfaces[uid >> 16], component, false);
-                    }
-                }
-
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
-            if (ServerProt.LOC_DEL == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.LOC_DEL);
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.setIfPosition(incoming);
             }
 
             if (ServerProt.SET_UPDATE_TIMER == netWriter.currentIncomingPacket) {
-                updateTimer = incoming.readLEUShortA() * 30;
-                anInt1074 = anInt1075;
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.setUpdateTimer(incoming);
             }
 
-            if (ServerProt.UPDATE_STOCKMARKET == netWriter.currentIncomingPacket) {
-                boolean var42 = incoming.g1() == 1;
-                if (var42) {
-                    StockMarketOffer.ageAdjustment = Clock.now() - incoming.g8();
-                    StockMarketOffer.mediator = new StockMarketMediator(incoming);
-                } else {
-                    StockMarketOffer.mediator = null;
-                }
-
-                stockMarketUpdateCycle = anInt1075;
-                netWriter.currentIncomingPacket = null;
-                return true;
+            if (ServerProt.UPDATE_STOCKMARKET_EVENTS == netWriter.currentIncomingPacket) {
+                return serverProtHandler.processStockMarketEvents(incoming);
             }
 
             if (ServerProt.SET_JS_COOKIE == netWriter.currentIncomingPacket) {
@@ -1042,128 +1006,36 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 return serverProtHandler.processLockCameraRequest(incoming);
             }
 
-            if (ServerProt.MAP_ANIM == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.MAP_ANIM);
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
             if (ServerProt.GARBAGE_COLLECTOR == netWriter.currentIncomingPacket) {
                 return serverProtHandler.processGcInfoRequest(incoming);
             }
 
             if (ServerProt.SET_PLAYER_WEIGHT == netWriter.currentIncomingPacket) {
-                SubInterface.process();
-                weight = incoming.g2b();
-                anInt1074 = anInt1075;
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.updatePlayerWeight(incoming);
             }
 
             if (ServerProt.SET_OCULUS_ORB_LOCAL == netWriter.currentIncomingPacket) {
-                int var6 = incoming.g4();
-                if (var6 != anInt1002) {
-                    anInt1002 = var6;
-                    Camera.setOculusOrbOnLocalPlayer();
-                }
-
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.setOculusOrbToLocalPlayer(incoming);
             }
 
             if (ServerProt.UPDATE_FRIENDSCHAT == netWriter.currentIncomingPacket) {
-                if (friendsChatSystem != null) {
-                    friendsChatSystem.decodeUpdate(incoming);
-                }
-
-                method865();
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.processFriendsChatUpdate(incoming);
             }
 
             if (ServerProt.MOVE_SUBIF == netWriter.currentIncomingPacket) {
-                int key2 = incoming.ig4();
-                int key1 = incoming.g4();
-                SubInterface sub1 = subInterfaces.lookup(key1);
-                SubInterface sub2 = subInterfaces.lookup(key2);
-                if (sub2 != null) {
-                    InterfaceComponent.close(sub2, sub1 == null || sub2.id != sub1.id);
-                }
-
-                if (sub1 != null) {
-                    sub1.unlink();
-                    subInterfaces.put(sub1, key2);
-                }
-
-                InterfaceComponent component = InterfaceComponent.lookup(key1);
-                if (component != null) {
-                    InterfaceComponent.invalidate(component);
-                }
-
-                component = InterfaceComponent.lookup(key2);
-                if (component != null) {
-                    InterfaceComponent.invalidate(component);
-                    InterfaceComponent.revalidateScroll(interfaces[component.uid >>> 16], component, true);
-                }
-
-                if (rootInterfaceIndex != -1) {
-                    InterfaceComponent.executeCloseListeners(rootInterfaceIndex, 1);
-                }
-
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.moveSubInterface(incoming);
             }
 
             if (ServerProt.UPDATE_FRIENDLIST == netWriter.currentIncomingPacket) {
-                relationshipSystem.decodeFriends(incoming, netWriter.incomingPacketSize);
-                anInt1065 = anInt1075;
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.processFriendsListUpdate(incoming);
             }
 
             if (ServerProt.ADD_FRIENDS_CHAT_MESSAGE == netWriter.currentIncomingPacket) {
-                String var38 = incoming.gstr();
-                long var18 = incoming.g8();
-                long var20 = incoming.g2();
-                long var10 = incoming.g3();
-                PlayerAccountType accountType = (PlayerAccountType) EnumType.getByOrdinal(PlayerAccountType.getValues(), incoming.g1());
-                long var22 = var10 + (var20 << 32);
-                boolean ignored = false;
-
-                for (int i = 0; i < 100; ++i) {
-                    if (messageIds[i] == var22) {
-                        ignored = true;
-                        break;
-                    }
-                }
-
-                if (accountType.notJagex && relationshipSystem.isIgnoring(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
-                    ignored = true;
-                }
-
-                if (!ignored && anInt1014 == 0) {
-                    messageIds[messageIndex] = var22;
-                    messageIndex = (messageIndex + 1) % 100;
-                    String escaped = BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(incoming)));
-                    if (accountType.icon != -1) {
-                        ChatHistory.messageReceived(9, ContextMenu.addImgTags(accountType.icon) + var38, escaped, Base37.decode(var18));
-                    } else {
-                        ChatHistory.messageReceived(9, var38, escaped, Base37.decode(var18));
-                    }
-                }
-
-                netWriter.currentIncomingPacket = null;
-                return true;
+               return serverProtHandler.processFriendsChatMessage(incoming);
             }
 
             if (ServerProt.UPDATE_RANDOM == netWriter.currentIncomingPacket) {
-                incoming.pos += 28;
-                if (incoming.matchCrcs()) {
-                    ResourceCache.method1489(incoming, incoming.pos - 28);
-                }
-
-                netWriter.currentIncomingPacket = null;
-                return true;
+                return serverProtHandler.processRandomDatUpdate(incoming);
             }
 
             if (ServerProt.UPDATE_GRAND_EXCHANGE == netWriter.currentIncomingPacket) {
@@ -1246,12 +1118,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     InterfaceComponent.invalidate(component);
                 }
 
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
-            if (ServerProt.LOC_ANIM == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.LOC_ANIM);
                 netWriter.currentIncomingPacket = null;
                 return true;
             }
@@ -1405,12 +1271,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     aBooleanArray919[i] = false;
                 }
 
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
-            if (ServerProt.PICKABLE_ADD == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.PICKABLE_ADD);
                 netWriter.currentIncomingPacket = null;
                 return true;
             }
@@ -1728,12 +1588,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 return true;
             }
 
-            if (ServerProt.SOUND_AREA == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.SOUND_AREA);
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
             if (ServerProt.AN_SERVER_PROT_240 == netWriter.currentIncomingPacket) {
                 int key = incoming.g4();
                 int type = incoming.g1();
@@ -1744,12 +1598,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 SubInterface.create(key, id, type);
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
-            if (ServerProt.LOC_ADD_CHANGE == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.LOC_ADD_CHANGE);
                 netWriter.currentIncomingPacket = null;
                 return true;
             }
@@ -1900,12 +1748,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 return true;
             }
 
-            if (ServerProt.PLAYER_LOC_TRANSMOG == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.PLAYER_LOC_TRANSMOG);
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
             if (ServerProt.RESET_VARPS == netWriter.currentIncomingPacket) {
                 for (int i = 0; i < VarDefinition.count; ++i) {
                     VarDefinition varp = VarDefinition.get(i);
@@ -1917,12 +1759,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 SubInterface.process();
                 anInt1064 += 32;
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
-            if (ServerProt.PICKABLE_REMOVE == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.PICKABLE_REMOVE);
                 netWriter.currentIncomingPacket = null;
                 return true;
             }
@@ -2016,12 +1852,6 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 return true;
             }
 
-            if (ServerProt.PICKABLE_COUNT == netWriter.currentIncomingPacket) {
-                ZoneProt.process(ZoneProt.PICKABLE_COUNT);
-                netWriter.currentIncomingPacket = null;
-                return true;
-            }
-
             if (ServerProt.CLOSE_DIALOG == netWriter.currentIncomingPacket) {
                 if (rootInterfaceIndex != -1) {
                     InterfaceComponent.executeCloseListeners(rootInterfaceIndex, 0);
@@ -2036,9 +1866,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 SceneGraph.regionChunkY = incoming.g1();
 
                 while (incoming.pos < netWriter.incomingPacketSize) {
-                    int var6 = incoming.g1();
-                    ZoneProt var55 = ZoneProt.values()[var6];
-                    ZoneProt.process(var55);
+                    int index = incoming.g1();
+                    ZoneProt zoneProt = ZoneProt.values()[index];
+                    ZoneProt.process(zoneProt);
                 }
 
                 netWriter.currentIncomingPacket = null;

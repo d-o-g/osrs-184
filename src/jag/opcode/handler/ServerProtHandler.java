@@ -1,7 +1,6 @@
 package jag.opcode.handler;
 
-import jag.opcode.BitBuffer;
-import jag.opcode.NetWriter;
+import jag.opcode.*;
 
 import java.io.IOException;
 
@@ -26,4 +25,26 @@ public abstract class ServerProtHandler {
     public abstract boolean processGcInfoRequest(BitBuffer incoming);
 
     public abstract boolean processStockMarketUpdate(BitBuffer incoming);
+
+    public abstract boolean processZoneProt(BitBuffer incoming, ZoneProt prot);
+
+    public abstract boolean setIfPosition(BitBuffer incoming);
+
+    public abstract boolean setUpdateTimer(BitBuffer incoming);
+
+    public abstract boolean processStockMarketEvents(BitBuffer incoming);
+
+    public abstract boolean updatePlayerWeight(BitBuffer incoming);
+
+    public abstract boolean setOculusOrbToLocalPlayer(BitBuffer incoming);
+
+    public abstract boolean processFriendsChatUpdate(BitBuffer incoming);
+
+    public abstract boolean moveSubInterface(BitBuffer incoming);
+
+    public abstract boolean processFriendsListUpdate(BitBuffer incoming);
+
+    public abstract boolean processFriendsChatMessage(BitBuffer incoming);
+
+    public abstract boolean processRandomDatUpdate(BitBuffer incoming);
 }

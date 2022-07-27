@@ -8,20 +8,24 @@ import jag.game.type.ObjectDefinition;
 import jag.statics.Statics45;
 
 public class ZoneProt {
-    public static final ZoneProt LOC_ADD_CHANGE = new ZoneProt();
-    public static final ZoneProt SOUND_AREA = new ZoneProt();
-    public static final ZoneProt PLAYER_LOC_TRANSMOG = new ZoneProt();
-    public static final ZoneProt PICKABLE_ADD = new ZoneProt();
-    public static final ZoneProt MAP_PROJANIM = new ZoneProt();
-    public static final ZoneProt LOC_DEL = new ZoneProt();
-    public static final ZoneProt LOC_ANIM = new ZoneProt();
-    public static final ZoneProt MAP_ANIM = new ZoneProt();
-    public static final ZoneProt PICKABLE_COUNT = new ZoneProt();
-    public static final ZoneProt PICKABLE_REMOVE = new ZoneProt();
+
+    public static final ZoneProt LOC_ADD_CHANGE = new ZoneProt(ServerProt.LOC_ADD_CHANGE);
+    public static final ZoneProt SOUND_AREA = new ZoneProt(ServerProt.SOUND_AREA);
+    public static final ZoneProt PLAYER_LOC_TRANSMOG = new ZoneProt(ServerProt.PLAYER_LOC_TRANSMOG);
+    public static final ZoneProt PICKABLE_ADD = new ZoneProt(ServerProt.PICKABLE_ADD);
+    public static final ZoneProt MAP_PROJANIM = new ZoneProt(ServerProt.MAP_PROJANIM);
+    public static final ZoneProt LOC_DEL = new ZoneProt(ServerProt.LOC_DEL);
+    public static final ZoneProt LOC_ANIM = new ZoneProt(ServerProt.LOC_ANIM);
+    public static final ZoneProt MAP_ANIM = new ZoneProt(ServerProt.MAP_ANIM);
+    public static final ZoneProt PICKABLE_COUNT = new ZoneProt(ServerProt.PICKABLE_COUNT);
+    public static final ZoneProt PICKABLE_REMOVE = new ZoneProt(ServerProt.PICKABLE_REMOVE);
 
     public static int parsedTotp;
 
-    ZoneProt() {
+    private final ServerProt serverProt;
+
+    ZoneProt(ServerProt serverProt) {
+        this.serverProt = serverProt;
     }
 
     public static ZoneProt[] values() {
@@ -334,5 +338,9 @@ public class ZoneProt {
                 }
             }
         }
+    }
+
+    public ServerProt getServerProt() {
+        return serverProt;
     }
 }

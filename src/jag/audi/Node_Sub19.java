@@ -499,7 +499,7 @@ public class Node_Sub19 extends Node {
                                     client.inputOccuringEventScripts.add(var28);
                                 }
 
-                                if (client.stockMarketUpdateCycle > c.anInt1406 && c.anObjectArray1394 != null) {
+                                if (client.stockMarketEventUpdateCycle > c.anInt1406 && c.anObjectArray1394 != null) {
                                     var28 = new ScriptEvent();
                                     var28.component = c;
                                     var28.args = c.anObjectArray1394;
