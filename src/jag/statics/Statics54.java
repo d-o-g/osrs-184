@@ -13,26 +13,6 @@ public class Statics54 {
     public static final BigInteger aBigInteger626 = new BigInteger("7237300117305667488707183861728052766358166655052137727439795191253340127955075499635575104901523446809299097934591732635674173519120047404024393881551683");
     public static int anInt627;
 
-    public static synchronized void method445(byte[] var0) {
-        if (var0.length == 100 && Buffer.smallCount < 1000) {
-            Buffer.SMALL[++Buffer.smallCount - 1] = var0;
-        } else if (var0.length == 5000 && Buffer.mediumCount < 250) {
-            Buffer.MEDIUM[++Buffer.mediumCount - 1] = var0;
-        } else if (var0.length == 30000 && Buffer.largeCount < 50) {
-            Buffer.LARGE[++Buffer.largeCount - 1] = var0;
-        } else {
-            if (Buffer.variadic != null) {
-                for (int var1 = 0; var1 < Buffer.variadicSizes.length; ++var1) {
-                    if (var0.length == Buffer.variadicSizes[var1] && Buffer.variadicIndices[var1] < Buffer.variadic[var1].length) {
-                        Buffer.variadic[var1][Buffer.variadicIndices[var1]++] = var0;
-                        return;
-                    }
-                }
-            }
-
-        }
-    }
-
     public static void method444(byte[] var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7, SceneGraph var8, CollisionMap[] var9) {
         Buffer var10 = new Buffer(var0);
         int var11 = -1;

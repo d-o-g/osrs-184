@@ -6,6 +6,7 @@ import jag.game.relationship.ChatLine;
 import jag.opcode.OldConnectionTaskProcessor;
 import jag.statics.Statics53;
 
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -91,6 +92,12 @@ public final class Keyboard implements KeyListener, FocusListener {
             anInt157 = anInt157 + 1 & 127;
             return true;
         }
+    }
+
+    public static void attachListeners(Component target) {
+        target.removeKeyListener(instance);
+        target.removeFocusListener(instance);
+        meta = -1;
     }
 
     public synchronized void keyReleased(KeyEvent event) {

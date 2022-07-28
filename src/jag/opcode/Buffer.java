@@ -239,6 +239,26 @@ public class Buffer extends Node {
         return var0.length() + 2;
     }
 
+    public static synchronized void allocate(byte[] buffer) {
+        if (buffer.length == 100 && smallCount < 1000) {
+            SMALL[++smallCount - 1] = buffer;
+        } else if (buffer.length == 5000 && mediumCount < 250) {
+            MEDIUM[++mediumCount - 1] = buffer;
+        } else if (buffer.length == 30000 && largeCount < 50) {
+            LARGE[++largeCount - 1] = buffer;
+        } else {
+            if (variadic != null) {
+                for (int var1 = 0; var1 < variadicSizes.length; ++var1) {
+                    if (buffer.length == variadicSizes[var1] && variadicIndices[var1] < variadic[var1].length) {
+                        variadic[var1][variadicIndices[var1]++] = buffer;
+                        return;
+                    }
+                }
+            }
+
+        }
+    }
+
     public boolean gbool() {
         return (g1() & 1) == 1;
     }
@@ -503,7 +523,7 @@ public class Buffer extends Node {
 
     public void cache() {
         if (payload != null) {
-            Statics54.method445(payload);
+            allocate(payload);
         }
 
         payload = null;

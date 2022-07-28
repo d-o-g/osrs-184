@@ -257,54 +257,54 @@ public class PlayerModel {
         return var8;
     }
 
-    public void method1428(int var1, boolean var2) {
-        if (var1 != 1 || !female) {
-            int var3 = equipment[equipmentIndexes[var1]];
-            if (var3 != 0) {
-                var3 -= 256;
+    public void method1428(int equipIndex, boolean decrement) {
+        if (equipIndex != 1 || !female) {
+            int id = equipment[equipmentIndexes[equipIndex]];
+            if (id != 0) {
+                id -= 256;
 
-                IdentikitDefinition var4;
+                IdentikitDefinition kit;
                 do {
-                    if (!var2) {
-                        --var3;
-                        if (var3 < 0) {
-                            var3 = identikitCount - 1;
+                    if (!decrement) {
+                        --id;
+                        if (id < 0) {
+                            id = identikitCount - 1;
                         }
                     } else {
-                        ++var3;
-                        if (var3 >= identikitCount) {
-                            var3 = 0;
+                        ++id;
+                        if (id >= identikitCount) {
+                            id = 0;
                         }
                     }
 
-                    var4 = IdentikitDefinition.get(var3);
-                } while (var4 == null || var4.hidden || var4.index != var1 + (female ? 7 : 0));
+                    kit = IdentikitDefinition.get(id);
+                } while (kit == null || kit.hidden || kit.index != equipIndex + (female ? 7 : 0));
 
-                equipment[equipmentIndexes[var1]] = var3 + 256;
+                equipment[equipmentIndexes[equipIndex]] = id + 256;
                 computeHash();
             }
         }
     }
 
-    public void method1432(int index, boolean var2) {
-        int color = appearance[index];
+    public void method1432(int appearanceIndex, boolean var2) {
+        int color = appearance[appearanceIndex];
         if (!var2) {
             do {
                 --color;
                 if (color < 0) {
-                    color = colors[index].length - 1;
+                    color = colors[appearanceIndex].length - 1;
                 }
-            } while (!method1094(index, color));
+            } while (!method1094(appearanceIndex, color));
         } else {
             do {
                 ++color;
-                if (color >= colors[index].length) {
+                if (color >= colors[appearanceIndex].length) {
                     color = 0;
                 }
-            } while (!method1094(index, color));
+            } while (!method1094(appearanceIndex, color));
         }
 
-        appearance[index] = color;
+        appearance[appearanceIndex] = color;
 
         computeHash();
     }

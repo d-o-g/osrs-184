@@ -89,8 +89,8 @@ public final class SerializableString implements Serializable {
         LoginStep.currentDomain = var0.domain;
         client.currentWorld = var0.id;
         client.currentWorldMask = var0.mask;
-        HitsplatDefinition.anInt1929 = client.gameType == 0 ? 43594 : var0.id + 40000;
-        Bzip2Entry.anInt1579 = client.gameType == 0 ? 443 : var0.id + 50000;
+        HitsplatDefinition.anInt1929 = client.gameTypeId == 0 ? 43594 : var0.id + 40000;
+        Bzip2Entry.anInt1579 = client.gameTypeId == 0 ? 443 : var0.id + 50000;
         NpcEntity.port = HitsplatDefinition.anInt1929;
     }
 

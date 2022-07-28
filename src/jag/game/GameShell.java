@@ -203,15 +203,15 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
 
     public static String method611(String var0, boolean var1) {
         String var2 = var1 ? "https://" : "http://";
-        if (client.gameType == 1) {
+        if (client.gameTypeId == 1) {
             var0 = var0 + "-wtrc";
-        } else if (client.gameType == 2) {
+        } else if (client.gameTypeId == 2) {
             var0 = var0 + "-wtqa";
-        } else if (client.gameType == 3) {
+        } else if (client.gameTypeId == 3) {
             var0 = var0 + "-wtwip";
-        } else if (client.gameType == 5) {
+        } else if (client.gameTypeId == 5) {
             var0 = var0 + "-wti";
-        } else if (client.gameType == 4) {
+        } else if (client.gameTypeId == 4) {
             var0 = "local";
         }
 
@@ -633,7 +633,7 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
     }
 
     final void method932() {
-        Statics51.method343(canvas);
+        Keyboard.attachListeners(canvas);
         CollisionMap.method155(canvas);
         if (mouseWheel != null) {
             mouseWheel.method224(canvas);
@@ -644,7 +644,7 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
         var1.setFocusTraversalKeysEnabled(false);
         var1.addKeyListener(Keyboard.instance);
         var1.addFocusListener(Keyboard.instance);
-        Statics48.method95(canvas);
+        Mouse.attachListeners(canvas);
         if (mouseWheel != null) {
             mouseWheel.method223(canvas);
         }

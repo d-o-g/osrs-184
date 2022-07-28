@@ -1,12 +1,12 @@
 package jag;
 
 import jag.commons.time.Clock;
+import jag.game.client;
 import jag.game.option.ClientPreferences;
 import jag.game.type.VarcInteger;
 import jag.js5.Archive;
 import jag.js5.DiskFile;
 import jag.opcode.Buffer;
-import jag.statics.Statics55;
 
 import java.io.EOFException;
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class Varcs {
     }
 
     DiskFile getPreferences(boolean createNew) {
-        return ClientPreferences.getFile("2", Statics55.gameType.name, createNew);
+        return ClientPreferences.getFile("2", client.gameType.name, createNew);
     }
 
     public boolean persist() {

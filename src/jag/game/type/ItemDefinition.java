@@ -18,7 +18,6 @@ import jag.js5.DiskFile;
 import jag.js5.ReferenceTable;
 import jag.opcode.Buffer;
 import jag.statics.Statics5;
-import jag.statics.Statics55;
 
 import java.io.IOException;
 
@@ -125,7 +124,7 @@ public class ItemDefinition extends DoublyLinkedNode {
         ClientPreferences var1 = new ClientPreferences();
 
         try {
-            var0 = ClientPreferences.getFile("", Statics55.gameType.name, false);
+            var0 = ClientPreferences.getFile("", client.gameType.name, false);
             byte[] var2 = new byte[(int) var0.length()];
 
             int var4;

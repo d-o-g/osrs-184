@@ -6,7 +6,6 @@ import jag.js5.DiskFile;
 import jag.opcode.AsyncConnection;
 import jag.opcode.Buffer;
 import jag.statics.Statics5;
-import jag.statics.Statics55;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +110,7 @@ public class ClientPreferences {
         DiskFile var0 = null;
 
         try {
-            var0 = getFile("", Statics55.gameType.name, true);
+            var0 = getFile("", client.gameType.name, true);
             Buffer var1 = client.preferences.createOutputBuffer();
             var0.write(var1.payload, 0, var1.pos);
         } catch (Exception ignored) {

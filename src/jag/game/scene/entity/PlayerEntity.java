@@ -767,7 +767,7 @@ public final class PlayerEntity extends PathingEntity {
         combatLevel = buffer.g1();
         skillLevel = buffer.g2();
         hidden = buffer.g1() == 1;
-        if (client.gameType == 0 && client.rights >= 2) {
+        if (client.gameTypeId == 0 && client.rights >= 2) {
             hidden = false;
         }
 

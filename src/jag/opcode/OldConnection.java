@@ -107,7 +107,7 @@ public final class OldConnection extends Connection implements Runnable {
 
                 if (test != client.anInt900) {
                     if (client.anInt900 == 0 && client.anInt898 != -1) {
-                        Statics51.method344(Archive.audioTracks, client.anInt898, 0, test, false);
+                        AudioSystem.init(Archive.audioTracks, client.anInt898, 0, test, false);
                         client.aBoolean904 = false;
                     } else if (test == 0) {
                         Statics57.method533();

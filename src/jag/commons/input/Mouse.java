@@ -2,6 +2,7 @@ package jag.commons.input;
 
 import jag.commons.time.Clock;
 
+import java.awt.*;
 import java.awt.event.*;
 
 public class Mouse implements MouseListener, MouseMotionListener, FocusListener {
@@ -57,6 +58,12 @@ public class Mouse implements MouseListener, MouseMotionListener, FocusListener 
             timeOfClick = pendingTimeOfClick;
             pendingClickMeta = 0;
         }
+    }
+
+    public static void attachListeners(Component target) {
+        target.addMouseListener(instance);
+        target.addMouseMotionListener(instance);
+        target.addFocusListener(instance);
     }
 
     public final synchronized void mouseMoved(MouseEvent e) {

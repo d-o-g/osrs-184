@@ -1,7 +1,6 @@
 package jag.audi;
 
 import jag.ClientLocale;
-import jag.SerializableLong;
 import jag.audi.vorbis.RawAudioOverride;
 import jag.commons.collection.Node;
 import jag.commons.input.Keyboard;
@@ -50,7 +49,7 @@ public class Node_Sub19 extends Node {
 
     public static void processComponentEvents(InterfaceComponent[] group, int var1, int var2, int var3, int var4, int var5, int rootX, int rootY) {
         for (InterfaceComponent c : group) {
-            if (c != null && c.parentUid == var1 && (!c.format || c.type == 0 || c.decodedObjects || InterfaceComponent.getConfig(c) != 0 || c == client.topLevelOfDraggedComponent || c.contentType == 1338)) {
+            if (c != null && c.parentUid == var1 && (!c.format || c.type == 0 || c.decodedObjects || InterfaceComponent.getConfig(c) != 0 || c == client.topLevelOfDraggedComponent || c.clientcode == 1338)) {
                 if (c.format) {
                     if (InterfaceComponent.isExplicitlyHidden(c)) {
                         continue;
@@ -169,19 +168,19 @@ public class Node_Sub19 extends Node {
                     }
 
                     boolean var34 = var18 >= var13 && var20 >= var14 && var18 < var15 && var20 < var16;
-                    if (c.contentType == 1337) {
+                    if (c.clientcode == 1337) {
                         if (!client.loadingPleaseWait && !ContextMenu.open && var34) {
                             ContextMenuBuilder.build(var18, var20, var13, var14);
                         }
-                    } else if (c.contentType == 1338) {
+                    } else if (c.clientcode == 1338) {
                         AsyncOutputStream.processMinimapClick(c, var11, var12);
                     } else {
-                        if (c.contentType == 1400) {
+                        if (c.clientcode == 1400) {
                             client.worldMap.poll(Mouse.x, Mouse.y, var34, var11, var12, c.width, c.height);
                         }
 
                         if (!ContextMenu.open && var34) {
-                            if (c.contentType == 1400) {
+                            if (c.clientcode == 1400) {
                                 client.worldMap.buildMenuActions(var11, var12, c.width, c.height, var18, var20);
                             } else {
                                 ContextMenuBuilder.applyComponentActions(c, var18 - var11, var20 - var12);
@@ -221,7 +220,7 @@ public class Node_Sub19 extends Node {
                                         InterfaceComponent.processAction(var22 + 1, c.uid, c.subComponentIndex, c.itemId, "");
                                     } else if (var22 == 10) {
                                         ComponentSelection.process();
-                                        ComponentSelection.select(c.uid, c.subComponentIndex, SerializableLong.getComponentSpellTargets(InterfaceComponent.getConfig(c)), c.itemId);
+                                        ComponentSelection.select(c.uid, c.subComponentIndex, InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(c)), c.itemId);
                                         ComponentSelection.action = InterfaceComponent.getSelectedAction(c);
                                         if (ComponentSelection.action == null) {
                                             ComponentSelection.action = "null";
@@ -270,7 +269,7 @@ public class Node_Sub19 extends Node {
                                 InterfaceComponent.drag(c, Mouse.clickX - var11, Mouse.clickY - var12);
                             }
 
-                            if (c.contentType == 1400) {
+                            if (c.clientcode == 1400) {
                                 client.worldMap.method1278(var18, var20, var34 & var35, var34 & var23);
                             }
 

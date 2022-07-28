@@ -12,10 +12,6 @@ public final class SerializableLong implements Serializable {
         return Class97.method536(seq, var1);
     }
 
-    public static int getComponentSpellTargets(int value) {
-        return value >> 11 & 63;
-    }
-
     void encodeAsLong(Long value, Buffer buffer) {
         buffer.p8(value);
     }

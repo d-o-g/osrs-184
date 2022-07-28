@@ -3,8 +3,6 @@ package jag.game.stockmarket;
 import jag.ByteBufferProvider;
 import jag.game.client;
 import jag.game.scene.SceneGraph;
-import jag.game.scene.entity.PlayerEntity;
-import jag.statics.Statics55;
 
 import java.util.Comparator;
 
@@ -34,30 +32,6 @@ public final class StockMarketOfferPriceComparator implements Comparator<StockMa
             return var2.get();
         }
         throw new IllegalArgumentException();
-    }
-
-    public static boolean displayPlayerName(PlayerEntity player) {
-        if (client.displayPlayerNames == 0) {
-            return false;
-        }
-        if (PlayerEntity.local != player) {
-            boolean var1 = (client.displayPlayerNames & 4) != 0;
-            boolean var2 = var1;
-            boolean var3;
-            if (!var1) {
-                var3 = (client.displayPlayerNames & 1) != 0;
-                var2 = var3 && player.method609();
-            }
-
-            var3 = var2;
-            if (!var2) {
-                boolean var4 = (client.displayPlayerNames & 2) != 0;
-                var3 = var4 && player.method258();
-            }
-
-            return var3;
-        }
-        return Statics55.method446();
     }
 
     int method332(StockMarketEvent var1, StockMarketEvent var2) {

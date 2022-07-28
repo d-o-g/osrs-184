@@ -145,7 +145,7 @@ public class InterfaceComponent extends Node {
     public int xMargin;
     public int baseWidth;
     public int relativeX;
-    public int contentType;
+    public int clientcode;
     public int yAlignment;
     public int yLayout;
     public int relativeY;
@@ -202,7 +202,7 @@ public class InterfaceComponent extends Node {
         uid = -1;
         subComponentIndex = -1;
         buttonType = 0;
-        contentType = 0;
+        clientcode = 0;
         xLayout = 0;
         yLayout = 0;
         xAlignment = 0;
@@ -404,7 +404,7 @@ public class InterfaceComponent extends Node {
                 component.boundsIndex = nextBoundsIndex;
                 component.renderCycle = client.engineCycle;
                 if (!component.format || !isExplicitlyHidden(component)) {
-                    if (component.contentType > 0) {
+                    if (component.clientcode > 0) {
                         method475(component);
                     }
 
@@ -493,8 +493,8 @@ public class InterfaceComponent extends Node {
                     }
 
                     if (!component.format || var15 < var17 && var16 < var18) {
-                        if (component.contentType != 0) {
-                            if (component.contentType == 1336) {
+                        if (component.clientcode != 0) {
+                            if (component.clientcode == 1336) {
                                 if (client.displayFps) {
                                     absoluteY += 15;
                                     Font.p12full.method1151("Fps:" + client.anInt1292, absoluteX + component.width, absoluteY, 16776960, -1);
@@ -511,7 +511,7 @@ public class InterfaceComponent extends Node {
                                 continue;
                             }
 
-                            if (component.contentType == 1337) {
+                            if (component.clientcode == 1337) {
                                 client.anInt1039 = absoluteX;
                                 client.anInt1038 = absoluteY;
                                 SceneGraph.renderEntities(absoluteX, absoluteY, component.width, component.height);
@@ -520,27 +520,27 @@ public class InterfaceComponent extends Node {
                                 continue;
                             }
 
-                            if (component.contentType == 1338) {
+                            if (component.clientcode == 1338) {
                                 SceneGraph.renderMinimap(component, absoluteX, absoluteY, nextBoundsIndex);
                                 JagGraphics.setClip(absoluteX, absoluteY, width, height);
                                 continue;
                             }
 
-                            if (component.contentType == 1339) {
+                            if (component.clientcode == 1339) {
                                 AudioRunnable.method985(component, absoluteX, absoluteY);
                                 JagGraphics.setClip(absoluteX, absoluteY, width, height);
                                 continue;
                             }
 
-                            if (component.contentType == 1400) {
+                            if (component.clientcode == 1400) {
                                 client.worldMap.method1268(absoluteX, absoluteY, component.width, component.height, client.engineCycle);
                             }
 
-                            if (component.contentType == 1401) {
+                            if (component.clientcode == 1401) {
                                 client.worldMap.method1269(absoluteX, absoluteY, component.width, component.height);
                             }
 
-                            if (component.contentType == 1402) {
+                            if (component.clientcode == 1402) {
                                 AsyncOutputStream.loginScreenEffect.render(absoluteX, client.engineCycle);
                             }
                         }
@@ -1194,8 +1194,8 @@ public class InterfaceComponent extends Node {
             }
 
             boolean var7 = true;
-            if (component.contentType > 0) {
-                var7 = Statics48.isAppearanceCode(component);
+            if (component.clientcode > 0) {
+                var7 = isAppearanceCode(component);
             }
 
             if (var7) {
@@ -1355,7 +1355,7 @@ public class InterfaceComponent extends Node {
             component.height = component.scaleY * component.width / component.scaleX;
         }
 
-        if (component.contentType == 1337) {
+        if (component.clientcode == 1337) {
             client.minimapComponent = component;
         }
 
@@ -1402,7 +1402,7 @@ public class InterfaceComponent extends Node {
     }
 
     public static void method475(InterfaceComponent var0) {
-        int var1 = var0.contentType;
+        int var1 = var0.clientcode;
         if (var1 == 324) {
             if (client.anInt930 == -1) {
                 client.anInt930 = var0.materialId;
@@ -1481,7 +1481,7 @@ public class InterfaceComponent extends Node {
     }
 
     public static String getSelectedAction(InterfaceComponent var0) {
-        if (SerializableLong.getComponentSpellTargets(getConfig(var0)) == 0) {
+        if (getSpellTargets(getConfig(var0)) == 0) {
             return null;
         }
         return var0.selectedAction != null && var0.selectedAction.trim().length() != 0 ? var0.selectedAction : null;
@@ -1747,13 +1747,54 @@ public class InterfaceComponent extends Node {
             resizeGroup(var5.id, var3, var4, var2);
         }
 
-        if (var1.contentType == 1337) {
+        if (var1.clientcode == 1337) {
 
         }
     }
 
     public static boolean canDrag(int var0) {
         return (var0 >> 29 & 1) != 0;
+    }
+
+    public static int getSpellTargets(int value) {
+        return value >> 11 & 63;
+    }
+
+    public static boolean isAppearanceCode(InterfaceComponent component) {
+        int code = component.clientcode;
+        if (code == 205) {
+            client.logoutTimer = 250;
+            return true;
+        }
+
+        if (code >= 300 && code <= 313) {
+            int equipIndex = (code - 300) / 2;
+            int type = code & 1;
+            client.renderedAppearance.method1428(equipIndex, type == 1);
+        }
+
+        if (code >= 314 && code <= 323) {
+            int appearanceIndex = (code - 314) / 2;
+            int type = code & 1;
+            client.renderedAppearance.method1432(appearanceIndex, type == 1);
+        }
+
+        if (code == 324) {
+            client.renderedAppearance.setGender(false);
+        }
+
+        if (code == 325) {
+            client.renderedAppearance.setGender(true);
+        }
+
+        if (code == 326) {
+            OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_APPEARANCE_BUTTON, client.stream.encryptor);
+            client.renderedAppearance.writeAppearanceTo(packet.buffer);
+            client.stream.writeLater(packet);
+            return true;
+        }
+
+        return false;
     }
 
     public Sprite method958(boolean enabled) {
@@ -1807,7 +1848,7 @@ public class InterfaceComponent extends Node {
         format = false;
         type = buffer.g1();
         buttonType = buffer.g1();
-        contentType = buffer.g2();
+        clientcode = buffer.g2();
         xMargin = buffer.g2b();
         yMargin = buffer.g2b();
         baseWidth = buffer.g2();
@@ -2050,7 +2091,7 @@ public class InterfaceComponent extends Node {
         buffer.g1();
         format = true;
         type = buffer.g1();
-        contentType = buffer.g2();
+        clientcode = buffer.g2();
         xMargin = buffer.g2b();
         yMargin = buffer.g2b();
         baseWidth = buffer.g2();

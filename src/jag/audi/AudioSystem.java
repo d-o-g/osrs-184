@@ -68,6 +68,16 @@ public class AudioSystem {
 
     }
 
+    public static void init(ReferenceTable var0, int var1, int var2, int var3, boolean var4) {
+        state = 1;
+        tracks = var0;
+        trackGroup = var1;
+        trackFile = var2;
+        volume = var3;
+        aBoolean620 = var4;
+        pcmSampleLength = 10000;
+    }
+
     public void method1085() {
     }
 

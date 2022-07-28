@@ -2976,7 +2976,7 @@ public class ScriptEvent extends Node {
     static int method32(int var0) {
         InterfaceComponent var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
         if (var0 == 2800) {
-            intStack[++Statics46.anInt442 - 1] = SerializableLong.getComponentSpellTargets(InterfaceComponent.getConfig(var3));
+            intStack[++Statics46.anInt442 - 1] = InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(var3));
             return 1;
         }
         if (var0 != 2801) {
@@ -3597,7 +3597,7 @@ public class ScriptEvent extends Node {
     static int method1352(int var0, boolean var2) {
         InterfaceComponent var3 = var2 ? StockMarketOfferLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
         if (var0 == 1800) {
-            intStack[++Statics46.anInt442 - 1] = SerializableLong.getComponentSpellTargets(InterfaceComponent.getConfig(var3));
+            intStack[++Statics46.anInt442 - 1] = InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(var3));
             return 1;
         }
         if (var0 != 1801) {

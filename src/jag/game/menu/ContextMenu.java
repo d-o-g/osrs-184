@@ -1,6 +1,5 @@
 package jag.game.menu;
 
-import jag.SerializableLong;
 import jag.commons.input.Keyboard;
 import jag.commons.input.Mouse;
 import jag.commons.time.Clock;
@@ -19,7 +18,6 @@ import jag.graphics.Font;
 import jag.opcode.OldConnection;
 import jag.opcode.OutgoingPacket;
 import jag.opcode.ClientProt;
-import jag.statics.Statics48;
 import jag.worldmap.WorldMapPosition;
 
 public class ContextMenu {
@@ -538,8 +536,8 @@ public class ContextMenu {
                 if (opcode == 24) {
                     InterfaceComponent component = InterfaceComponent.lookup(tertiary);
                     boolean appearance = true;
-                    if (component.contentType > 0) {
-                        appearance = Statics48.isAppearanceCode(component);
+                    if (component.clientcode > 0) {
+                        appearance = InterfaceComponent.isAppearanceCode(component);
                     }
 
                     if (appearance) {
@@ -552,7 +550,7 @@ public class ContextMenu {
                         InterfaceComponent component = InterfaceComponent.lookup(tertiary, secondary);
                         if (component != null) {
                             ComponentSelection.process();
-                            ComponentSelection.select(tertiary, secondary, SerializableLong.getComponentSpellTargets(InterfaceComponent.getConfig(component)), component.itemId);
+                            ComponentSelection.select(tertiary, secondary, InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(component)), component.itemId);
                             ItemSelection.state = 0;
                             ComponentSelection.action = InterfaceComponent.getSelectedAction(component);
                             if (ComponentSelection.action == null) {

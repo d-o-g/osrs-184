@@ -1,11 +1,11 @@
 package jag.opcode;
 
 import jag.Login;
+import jag.audi.AudioSystem;
 import jag.audi.ObjectSound;
 import jag.game.client;
 import jag.graphics.IndexedSprite;
 import jag.js5.Archive;
-import jag.statics.Statics51;
 import jag.worldmap.WorldMapAreaChunk_Sub2;
 import jag.worldmap.WorldMapElement;
 import jag.worldmap.WorldMapLabelSize;
@@ -144,7 +144,7 @@ public class ClientProt implements OutgoingPacketProtocol {
 
     public static void method5(int var0) {
         if (client.anInt900 != 0 && var0 != -1) {
-            Statics51.method344(Archive.audioTracks2, var0, 0, client.anInt900, false);
+            AudioSystem.init(Archive.audioTracks2, var0, 0, client.anInt900, false);
             client.aBoolean904 = true;
         }
 

@@ -194,7 +194,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int currentWorldMask = 0;
     public static int loginProcess = 0; //TODO name
     public static int loginStage = 0;
-    public static int gameType = 0;
+    public static int gameTypeId = 0;
     public static int anInt1039 = -1;
     public static int relationshipSystemState = 0;
     public static int anInt923 = -1;
@@ -344,6 +344,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static GraphicsProvider graphicsProvider;
 
+    public static GameType gameType;
+
     private static final ClientProtHandler clientProtHandler = new JagClientProtHandler(stream);
 
     private static final ServerProtHandler serverProtHandler = new JagServerProtHandler(stream);
@@ -439,7 +441,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (!var12) {
                 if (anInt900 != 0 && anInt898 != -1) {
-                    Statics51.method344(Archive.audioTracks, anInt898, 0, anInt900, false);
+                    AudioSystem.init(Archive.audioTracks, anInt898, 0, anInt900, false);
                 }
 
                 aBoolean904 = false;
@@ -865,8 +867,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             Buffer.variadic = null;
         }
 
-        HitsplatDefinition.anInt1929 = gameType == 0 ? 43594 : currentWorld + 40000;
-        Bzip2Entry.anInt1579 = gameType == 0 ? 443 : currentWorld + 50000;
+        HitsplatDefinition.anInt1929 = gameTypeId == 0 ? 43594 : currentWorld + 40000;
+        Bzip2Entry.anInt1579 = gameTypeId == 0 ? 443 : currentWorld + 50000;
         NpcEntity.port = HitsplatDefinition.anInt1929;
         HAlign.aShortArray1482 = PlayerModel.Colors.aShortArray1225;
         PlayerModel.colors = PlayerModel.Colors.aShortArrayArray1226;
@@ -879,7 +881,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         canvas.setFocusTraversalKeysEnabled(false);
         canvas.addKeyListener(Keyboard.instance);
         canvas.addFocusListener(Keyboard.instance);
-        Statics48.method95(canvas);
+        Mouse.attachListeners(canvas);
 
         MouseWheel.provider = this.method943();
         WorldMapTileDecor_Sub2.aResourceCache649 = new ResourceCache(255, BufferedFile.dataFile, BufferedFile.indexFile, 500000);
@@ -891,7 +893,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             WorldMapController.aString325 = var4;
         }
 
-        if (gameType != 0) {
+        if (gameTypeId != 0) {
             displayFps = true;
         }
 
@@ -2591,7 +2593,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                                     if (AnimationFrameGroup.dragComponent == DefaultAudioSystemProvider.processingItemComponent && draggingComponentIndex != draggingComponentSourceIndex) {
                                                                         InterfaceComponent dragComponent = AnimationFrameGroup.dragComponent;
                                                                         byte var35 = 0;
-                                                                        if (anInt1054 == 1 && dragComponent.contentType == 206) {
+                                                                        if (anInt1054 == 1 && dragComponent.clientcode == 206) {
                                                                             var35 = 1;
                                                                         }
 
@@ -3778,8 +3780,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                 break;
                             case 10:
                                 GameType[] var3 = new GameType[]{GameType.GAME3, GameType.RUNESCAPE, GameType.STELLARDAWN, GameType.OSRS, GameType.GAME4, GameType.GAME5};
-                                Statics55.gameType = (GameType) EnumType.getByOrdinal(var3, Integer.parseInt(var2));
-                                if (Statics55.gameType == GameType.OSRS) {
+                                gameType = (GameType) EnumType.getByOrdinal(var3, Integer.parseInt(var2));
+                                if (gameType == GameType.OSRS) {
                                     PreciseWorldMapAreaChunk.loginTypeParameter = ClientParameter.A_CLIENT_PARAMETER___1801;
                                 } else {
                                     PreciseWorldMapAreaChunk.loginTypeParameter = ClientParameter.A_CLIENT_PARAMETER___1799;
@@ -3792,7 +3794,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                 WorldMapCacheArea.anInt130 = Integer.parseInt(var2);
                                 break;
                             case 15:
-                                gameType = Integer.parseInt(var2);
+                                gameTypeId = Integer.parseInt(var2);
                                 break;
                             case 17:
                                 Server.slu = var2;

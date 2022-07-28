@@ -3,7 +3,6 @@ package jag.game.scene.entity;
 import jag.commons.collection.LinkedList;
 import jag.game.*;
 import jag.game.scene.HintArrow;
-import jag.game.stockmarket.StockMarketOfferPriceComparator;
 import jag.game.type.*;
 import jag.graphics.*;
 import jag.opcode.Buffer;
@@ -497,7 +496,7 @@ public abstract class PathingEntity extends Entity {
             int var7 = GPI.playerCount;
             int[] var8 = GPI.playerIndices;
             byte var9 = 0;
-            if (var1 < var7 && entity.renderCycle == client.engineCycle && StockMarketOfferPriceComparator.displayPlayerName((PlayerEntity) entity)) {
+            if (var1 < var7 && entity.renderCycle == client.engineCycle && displayPlayerName((PlayerEntity) entity)) {
                 PlayerEntity var10 = (PlayerEntity) entity;
                 if (var1 < var7) {
                     Server.absoluteToViewport(entity, entity.modelHeight + 15);
@@ -1237,6 +1236,34 @@ public abstract class PathingEntity extends Entity {
             }
         }
 
+    }
+
+    public static boolean displayPlayerName(PlayerEntity player) {
+        if (client.displayPlayerNames == 0) {
+            return false;
+        }
+        if (PlayerEntity.local != player) {
+            boolean var1 = (client.displayPlayerNames & 4) != 0;
+            boolean var2 = var1;
+            boolean var3;
+            if (!var1) {
+                var3 = (client.displayPlayerNames & 1) != 0;
+                var2 = var3 && player.method609();
+            }
+
+            var3 = var2;
+            if (!var2) {
+                boolean var4 = (client.displayPlayerNames & 2) != 0;
+                var3 = var4 && player.method258();
+            }
+
+            return var3;
+        }
+        return displayPlayerNames();
+    }
+
+    public static boolean displayPlayerNames() {
+        return (client.displayPlayerNames & 8) != 0;
     }
 
     public final void addHitSplat(int type, int damage, int id, int special, int currentCycle, int delay) {
