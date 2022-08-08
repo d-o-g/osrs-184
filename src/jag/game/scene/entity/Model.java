@@ -30,7 +30,7 @@ public class Model extends Entity {
     public static final int[] anIntArray1746 = new int[10];
     public static final int[] anIntArray1751 = new int[2000];
     public static final int[] anIntArray1744 = new int[2000];
-    public static final int[] colorPalette = JagGraphics3D.colorPalette;
+    public static final int[] colorPalette = JagGraphics3D.COLOR_PALETTE;
 
     public static final boolean[] aBooleanArray1733 = new boolean[4700];
     public static final boolean[] offscreenTriangles = new boolean[4700];

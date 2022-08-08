@@ -4,11 +4,13 @@ import jag.commons.collection.DoublyLinkedNode;
 
 public class JagGraphics extends DoublyLinkedNode {
 
-    public static int drawingAreaTop = 0;
-    public static int drawingAreaLeft = 0;
     public static int[] drawingAreaPixels;
+
     public static int drawingAreaWidth;
     public static int drawingAreaHeight;
+
+    public static int drawingAreaTop = 0;
+    public static int drawingAreaLeft = 0;
     public static int drawingAreaRight = 0;
     public static int drawingAreaBottom = 0;
 

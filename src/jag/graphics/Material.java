@@ -66,7 +66,7 @@ public class Material extends Node {
         }
     }
 
-    public void method254() {
+    public void reset() {
         pixels = null;
     }
 

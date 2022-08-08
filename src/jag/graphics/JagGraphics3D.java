@@ -2,21 +2,25 @@ package jag.graphics;
 
 public class JagGraphics3D extends JagGraphics {
 
-    public static final int[] SIN_TABLE;
-    public static final int[] COS_TABLE;
-    public static final int[] colorPalette = new int[65536];
-    public static final int[] anIntArray781;
-    public static final int[] anIntArray785;
-    public static boolean aBoolean789 = true;
-    public static int scale = 512;
+    public static final int[] SIN_TABLE = new int[2048];
+    public static final int[] COS_TABLE = new int[2048];
+    public static final int[] COLOR_PALETTE = new int[65536];
+    public static final int[] anIntArray781 = new int[512];
+    public static final int[] anIntArray785 = new int[2048];
+
+    public static int[] anIntArray787 = new int[1024];
+
     public static MaterialProvider materialProvider;
-    public static int anInt386;
+
     public static boolean drawingOffscreen = false;
-    public static int anInt366;
-    public static int alpha = 0;
+    public static boolean aBoolean789 = true;
     public static boolean aBoolean786 = false;
     public static boolean lowDetail = false;
-    public static int[] anIntArray787 = new int[1024];
+
+    public static int alpha = 0;
+    public static int scale = 512;
+    public static int anInt386;
+    public static int anInt366;
     public static int anInt666;
     public static int anInt788;
     public static int anInt791;
@@ -25,11 +29,6 @@ public class JagGraphics3D extends JagGraphics {
     public static int anInt702;
 
     static {
-        anIntArray781 = new int[512];
-        anIntArray785 = new int[2048];
-        SIN_TABLE = new int[2048];
-        COS_TABLE = new int[2048];
-
         for (int i = 1; i < 512; ++i) {
             anIntArray781[i] = 32768 / i;
         }
@@ -42,7 +41,6 @@ public class JagGraphics3D extends JagGraphics {
             SIN_TABLE[i] = (int) (65536.0D * Math.sin((double) i * 0.0030679615D));
             COS_TABLE[i] = (int) (65536.0D * Math.cos((double) i * 0.0030679615D));
         }
-
     }
 
     public static int method625(int var0, int var1, int var2, int var3) {
@@ -1802,7 +1800,7 @@ public class JagGraphics3D extends JagGraphics {
                 if (alpha == 0) {
                     if (var3 > 0) {
                         do {
-                            var2 = colorPalette[var6 >> 8];
+                            var2 = COLOR_PALETTE[var6 >> 8];
                             var6 += var7;
                             var0[var1++] = var2;
                             var0[var1++] = var2;
@@ -1814,7 +1812,7 @@ public class JagGraphics3D extends JagGraphics {
 
                     var3 = var5 - var4 & 3;
                     if (var3 > 0) {
-                        var2 = colorPalette[var6 >> 8];
+                        var2 = COLOR_PALETTE[var6 >> 8];
 
                         do {
                             var0[var1++] = var2;
@@ -1826,7 +1824,7 @@ public class JagGraphics3D extends JagGraphics {
                     var9 = 256 - alpha;
                     if (var3 > 0) {
                         do {
-                            var2 = colorPalette[var6 >> 8];
+                            var2 = COLOR_PALETTE[var6 >> 8];
                             var6 += var7;
                             var2 = (var9 * (var2 & 65280) >> 8 & 65280) + (var9 * (var2 & 16711935) >> 8 & 16711935);
                             var10 = var0[var1];
@@ -1843,7 +1841,7 @@ public class JagGraphics3D extends JagGraphics {
 
                     var3 = var5 - var4 & 3;
                     if (var3 > 0) {
-                        var2 = colorPalette[var6 >> 8];
+                        var2 = COLOR_PALETTE[var6 >> 8];
                         var2 = (var9 * (var2 & 65280) >> 8 & 65280) + (var9 * (var2 & 16711935) >> 8 & 16711935);
 
                         do {
@@ -1858,7 +1856,7 @@ public class JagGraphics3D extends JagGraphics {
                 var3 = var5 - var4;
                 if (alpha == 0) {
                     do {
-                        var0[var1++] = colorPalette[var6 >> 8];
+                        var0[var1++] = COLOR_PALETTE[var6 >> 8];
                         var6 += var7;
                         --var3;
                     } while (var3 > 0);
@@ -1867,7 +1865,7 @@ public class JagGraphics3D extends JagGraphics {
                     var9 = 256 - alpha;
 
                     do {
-                        var2 = colorPalette[var6 >> 8];
+                        var2 = COLOR_PALETTE[var6 >> 8];
                         var6 += var7;
                         var2 = (var9 * (var2 & 65280) >> 8 & 65280) + (var9 * (var2 & 16711935) >> 8 & 16711935);
                         var10 = var0[var1];
@@ -2582,7 +2580,7 @@ public class JagGraphics3D extends JagGraphics {
                     var32 = 1;
                 }
 
-                colorPalette[var4++] = var32;
+                COLOR_PALETTE[var4++] = var32;
             }
         }
 

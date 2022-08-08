@@ -1,12 +1,16 @@
 package jag.graphics;
 
 public abstract class GraphicsProvider {
+
     public static IndexedSprite titlebuttonSprite;
+
     public int[] anIntArray1818;
+
     public int width;
     public int height;
 
     protected GraphicsProvider() {
+
     }
 
     public final void method1318() {

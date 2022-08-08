@@ -7,6 +7,7 @@ import java.util.Hashtable;
 public final class ImageGraphicsProvider extends GraphicsProvider {
 
     public final Image image;
+
     public Component target;
 
     public ImageGraphicsProvider(int width, int height, Component target) {

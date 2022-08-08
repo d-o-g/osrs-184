@@ -6,17 +6,19 @@ import jag.opcode.Buffer;
 
 public class DefaultMaterialProvider implements MaterialProvider {
 
-    final Material[] materials;
     final int capacity;
+
     final ReferenceTable sprites;
-    int size;
-    double brightness;
+    final Material[] materials;
+
     NodeDeque<Material> deque;
+
+    int size;
     int remaining;
 
+    double brightness;
+
     public DefaultMaterialProvider(ReferenceTable textures, ReferenceTable sprites, int capacity, double brightness, int size) {
-        this.brightness = 1.0D;
-        this.size = 128;
         this.sprites = sprites;
         this.capacity = capacity;
         this.remaining = capacity;
@@ -36,7 +38,7 @@ public class DefaultMaterialProvider implements MaterialProvider {
     public void clear() {
         for (Material material : materials) {
             if (material != null) {
-                material.method254();
+                material.reset();
             }
         }
 
@@ -60,8 +62,8 @@ public class DefaultMaterialProvider implements MaterialProvider {
             boolean var3 = material.index(brightness, size, sprites);
             if (var3) {
                 if (remaining == 0) {
-                    Material var4 = deque.popLast();
-                    var4.method254();
+                    Material last = deque.popLast();
+                    last.reset();
                 } else {
                     --remaining;
                 }

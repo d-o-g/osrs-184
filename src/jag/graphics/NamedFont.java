@@ -11,6 +11,7 @@ public class NamedFont {
     public static final NamedFont VERDANA15 = new NamedFont("verdana_15pt_regular");
     public static final NamedFont P12 = new NamedFont("p12_full");
     public static final NamedFont B12 = new NamedFont("b12_full");
+
     public static int[] anIntArray1626;
 
     public String name;

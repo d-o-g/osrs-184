@@ -8,12 +8,15 @@ import jag.opcode.OutgoingPacket;
 import jag.statics.Statics41;
 
 public final class Sprite extends JagGraphics {
+
     public static Sprite[] mapfunctions;
+
+    public int[] pixels;
+
+    public int width;
+    public int height;
     public int anInt112;
     public int anInt377;
-    public int height;
-    public int[] pixels;
-    public int width;
     public int anInt375;
     public int anInt574;
 
@@ -30,6 +33,7 @@ public final class Sprite extends JagGraphics {
     }
 
     public Sprite() {
+
     }
 
     static void method812(int[] var0, int[] var1, int var2, int var3, int var4, int var5, int var6, int var7) {

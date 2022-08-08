@@ -5,9 +5,10 @@ import jag.commons.collection.DoublyLinkedNode;
 public class ComponentSprite extends DoublyLinkedNode {
 
     public final int[] anIntArray1108;
+    public final int[] anIntArray749;
+
     public final int anInt380;
     public final int anInt568;
-    public final int[] anIntArray749;
 
     public ComponentSprite(int var1, int var2, int[] var3, int[] var4) {
         this.anInt380 = var1;

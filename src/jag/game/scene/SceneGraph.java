@@ -1263,7 +1263,7 @@ public class SceneGraph {
 
                                         var46 = 0;
                                         if (var42 != -1) {
-                                            var46 = JagGraphics3D.colorPalette[method848(var42, 96)];
+                                            var46 = JagGraphics3D.COLOR_PALETTE[method848(var42, 96)];
                                         }
 
                                         if (var49 == 0) {
@@ -1312,7 +1312,7 @@ public class SceneGraph {
 
                                             var58 = 0;
                                             if (var56 != -2) {
-                                                var58 = JagGraphics3D.colorPalette[WorldMapScriptEvent.method187(var56, 96)];
+                                                var58 = JagGraphics3D.COLOR_PALETTE[WorldMapScriptEvent.method187(var56, 96)];
                                             }
 
                                             if (var51.secondaryRgb != -1) {
@@ -1325,7 +1325,7 @@ public class SceneGraph {
                                                 }
 
                                                 var56 = StockMarketOfferLifetimeComparator.method412(var59, var51.secondarySaturation, var60);
-                                                var58 = JagGraphics3D.colorPalette[WorldMapScriptEvent.method187(var56, 96)];
+                                                var58 = JagGraphics3D.COLOR_PALETTE[WorldMapScriptEvent.method187(var56, 96)];
                                             }
 
                                             var63.method1480(var4, var13, var25, var43, var74, var55, var33, var34, var38, var35, method848(var41, var36), method848(var41, var37), method848(var41, var50), method848(var41, var40), WorldMapScriptEvent.method187(var57, var36), WorldMapScriptEvent.method187(var57, var37), WorldMapScriptEvent.method187(var57, var50), WorldMapScriptEvent.method187(var57, var40), var46, var58);

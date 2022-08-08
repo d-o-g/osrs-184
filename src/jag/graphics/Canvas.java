@@ -12,10 +12,10 @@ import java.awt.*;
 
 public final class Canvas extends java.awt.Canvas {
 
-    public final Component aComponent793;
+    public final Component component;
 
-    public Canvas(Component var1) {
-        this.aComponent793 = var1;
+    public Canvas(Component component) {
+        this.component = component;
     }
 
     public static Sprite[] method643(ReferenceTable var0, int var1, int var2) {
@@ -61,11 +61,11 @@ public final class Canvas extends java.awt.Canvas {
         StockMarketOfferNameComparator.method328(var6, var10, 0, var6.length - 1);
     }
 
-    public void update(Graphics var1) {
-        this.aComponent793.update(var1);
+    public void update(Graphics g) {
+        this.component.update(g);
     }
 
-    public void paint(Graphics var1) {
-        this.aComponent793.paint(var1);
+    public void paint(Graphics g) {
+        this.component.paint(g);
     }
 }

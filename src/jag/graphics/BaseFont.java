@@ -6,9 +6,12 @@ import jag.audi.Class97;
 import java.util.Random;
 
 public abstract class BaseFont extends JagGraphics {
+
     static final String[] aStringArray1572 = new String[100];
     static final Random aRandom1575 = new Random();
+
     public static IndexedSprite[] aDoublyNode_Sub24_Sub4Array1573;
+
     static int anInt367 = -1;
     static int anInt386 = -1;
     static int anInt666 = 256;
@@ -22,13 +25,16 @@ public abstract class BaseFont extends JagGraphics {
     public int anInt375;
     public int anInt372;
     public int anInt379;
+
     int[] anIntArray1574;
-    byte[][] aByteArrayArray582;
     int[] anIntArray1107;
     int[] anIntArray747;
-    byte[] aByteArray1425;
     int[] anIntArray749;
     int[] anIntArray1108;
+
+    byte[][] aByteArrayArray582;
+
+    byte[] aByteArray1425;
 
     BaseFont(byte[] var1, int[] var2, int[] var3, int[] var4, int[] var5, byte[][] var7) {
         this.aByteArrayArray582 = new byte[256][];

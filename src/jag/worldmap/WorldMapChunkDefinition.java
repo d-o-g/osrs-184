@@ -207,7 +207,7 @@ public class WorldMapChunkDefinition {
                         var16 = var18 + (var14 & 65408);
                     }
 
-                    var12 = JagGraphics3D.colorPalette[var16] | -16777216;
+                    var12 = JagGraphics3D.COLOR_PALETTE[var16] | -16777216;
                 } else if (var11.rgb == 16711935) {
                     var12 = var9;
                 } else {
@@ -235,7 +235,7 @@ public class WorldMapChunkDefinition {
                         var14 = var18 + (var16 & 65408);
                     }
 
-                    var12 = JagGraphics3D.colorPalette[var14] | -16777216;
+                    var12 = JagGraphics3D.COLOR_PALETTE[var14] | -16777216;
                 }
             }
 
@@ -415,7 +415,7 @@ public class WorldMapChunkDefinition {
                             var15 = var17 + (var13 & 65408);
                         }
 
-                        var10 = JagGraphics3D.colorPalette[var15] | -16777216;
+                        var10 = JagGraphics3D.COLOR_PALETTE[var15] | -16777216;
                     } else if (var9.rgb == 16711935) {
                         var10 = var7;
                     } else {
@@ -443,7 +443,7 @@ public class WorldMapChunkDefinition {
                             var13 = var17 + (var15 & 65408);
                         }
 
-                        var10 = JagGraphics3D.colorPalette[var13] | -16777216;
+                        var10 = JagGraphics3D.COLOR_PALETTE[var13] | -16777216;
                     }
                 }
 

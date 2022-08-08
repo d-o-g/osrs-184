@@ -5,14 +5,16 @@ import jag.statics.Statics38;
 
 public final class IndexedSprite extends JagGraphics {
 
-    public int insetX;
+    public byte[] indices;
+
     public int[] palette;
+
+    public int insetX;
+    public int insetY;
     public int anInt378;
     public int anInt375;
     public int anInt377;
-    public int insetY;
     public int anInt372;
-    public byte[] indices;
 
     static void method1323(int[] var0, byte[] var1, int[] var2, int var3, int var4, int var5, int var6, int var7, int var8) {
         int var9 = -(var5 >> 2);
