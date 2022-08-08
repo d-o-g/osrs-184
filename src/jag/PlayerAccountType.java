@@ -63,10 +63,7 @@ public enum PlayerAccountType implements EnumType {
             Statics44.anIntArray352 = new int[count];
             WorldMapObjectIcon.aByteArrayArray493 = new byte[count][];
             LoadedArchive.aByteArrayArray425 = new byte[count][];
-            boolean var17 = false;
-            if ((var3 / 8 == 48 || var3 / 8 == 49) && var4 / 8 == 48) {
-                var17 = true;
-            }
+            boolean var17 = (var3 / 8 == 48 || var3 / 8 == 49) && var4 / 8 == 48;
 
             if (var3 / 8 == 48 && var4 / 8 == 148) {
                 var17 = true;

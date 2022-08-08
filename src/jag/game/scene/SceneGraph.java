@@ -1978,7 +1978,7 @@ public class SceneGraph {
         }
 
         if (client.displaySelf) {
-            GPI.loadPlayersIntoScene(PlayerEntity.local, false);
+            GPI.loadPlayerIntoScene(PlayerEntity.local, false);
         }
 
         GPI.loadPlayerIntoScene();

@@ -25,11 +25,11 @@ public class ChatLine extends DoublyLinkedNode {
     }
 
     public void method775() {
-        this.friend = client.relationshipSystem.friendListContext.isCached(this.channelPair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
+        this.friend = client.relationshipManager.friendListContext.isCached(this.channelPair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
     }
 
     public void method828() {
-        this.ignore = client.relationshipSystem.ignoreListContext.isCached(this.channelPair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
+        this.ignore = client.relationshipManager.ignoreListContext.isCached(this.channelPair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
     }
 
     public void set(int type, String channel, String source, String message) {

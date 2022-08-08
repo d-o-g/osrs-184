@@ -21,7 +21,7 @@ public class GPI {
     public static int globalPlayerCount = 0;
     public static int anInt594 = 0;
 
-    public static void loadPlayersIntoScene(PlayerEntity var0, boolean var1) {
+    public static void loadPlayerIntoScene(PlayerEntity var0, boolean var1) {
         if (var0 != null && var0.isDefined() && !var0.hidden) {
             var0.aBoolean1905 = (client.lowMemory && playerCount > 50 || playerCount > 200) && var1 && var0.idleStance == var0.stance;
 
@@ -61,7 +61,7 @@ public class GPI {
 
     public static void loadPlayerIntoScene() {
         if (client.varpControlledInt2 >= 0 && client.players[client.varpControlledInt2] != null) {
-            loadPlayersIntoScene(client.players[client.varpControlledInt2], false);
+            loadPlayerIntoScene(client.players[client.varpControlledInt2], false);
         }
 
     }

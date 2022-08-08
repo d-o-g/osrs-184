@@ -15,7 +15,7 @@ public class AudioRunnable implements Runnable {
         this.systems = new AudioSystem[2];
     }
 
-    public static void method985(InterfaceComponent var0, int var1, int var2) {
+    public static void renderCompass(InterfaceComponent var0, int var1, int var2) {
         ComponentSprite var4 = var0.getSprite(false);
         if (var4 != null) {
             if (client.mapState < 3) {

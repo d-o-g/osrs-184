@@ -319,10 +319,7 @@ public final class PlayerEntity extends PathingEntity {
                 var14 = packet.ig1();
                 var15 = packet.pos;
                 if (player.namePair != null && player.model != null) {
-                    boolean var16 = false;
-                    if (var20.notJagex && client.relationshipSystem.isIgnoring(player.namePair)) {
-                        var16 = true;
-                    }
+                    boolean var16 = var20.notJagex && client.relationshipManager.isIgnored(player.namePair);
 
                     if (!var16 && client.anInt1014 == 0 && !player.hidden) {
                         GPI.chatBuffer.pos = 0;
@@ -482,8 +479,8 @@ public final class PlayerEntity extends PathingEntity {
         }
 
         Keyboard.method100();
-        if (client.friendsChatSystem != null) {
-            client.friendsChatSystem.method1392();
+        if (client.friendChat != null) {
+            client.friendChat.method1392();
         }
 
     }
@@ -639,11 +636,11 @@ public final class PlayerEntity extends PathingEntity {
     }
 
     public void method828() {
-        friendsChatUserStatus = client.friendsChatSystem != null && client.friendsChatSystem.isCached(namePair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
+        friendsChatUserStatus = client.friendChat != null && client.friendChat.isCached(namePair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
     }
 
     public void method775() {
-        befriendedPlayerStatus = client.relationshipSystem.isFriendLoggedIn(namePair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
+        befriendedPlayerStatus = client.relationshipManager.isFriendLoggedIn(namePair) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
     }
 
     public void method1414(int var1, int var2) {

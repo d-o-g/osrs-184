@@ -431,7 +431,7 @@ public abstract class BaseFont extends JagGraphics {
                     var6.append(var16);
                     var6.append('>');
                     if (var16.equals("br")) {
-                        var3[var12] = var6.toString().substring(var5, var6.length());
+                        var3[var12] = var6.substring(var5, var6.length());
                         ++var12;
                         var5 = var6.length();
                         var4 = 0;
@@ -481,7 +481,7 @@ public abstract class BaseFont extends JagGraphics {
                     }
 
                     if (var2 != null && var4 > var2[var12 < var2.length ? var12 : var2.length - 1] && var7 >= 0) {
-                        var3[var12] = var6.toString().substring(var5, var7 - var9);
+                        var3[var12] = var6.substring(var5, var7 - var9);
                         ++var12;
                         var5 = var7;
                         var7 = -1;

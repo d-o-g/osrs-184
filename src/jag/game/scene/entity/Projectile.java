@@ -8,7 +8,7 @@ public final class Projectile extends Entity {
 
     public final AnimationSequence sequence;
 
-    public final int anInt693;
+    public final int id;
     public final int startX;
     public final int endCycle;
     public final int startY;
@@ -40,7 +40,7 @@ public final class Projectile extends Entity {
         inMotion = false;
         anInt1659 = 0;
         anInt1661 = 0;
-        anInt693 = var1;
+        id = var1;
         floorLevel = var2;
         startX = var3;
         startY = var4;
@@ -52,7 +52,7 @@ public final class Projectile extends Entity {
         targetIndex = var10;
         anInt112 = var11;
         inMotion = false;
-        int id = EffectAnimation.get(anInt693).animation;
+        int id = EffectAnimation.get(this.id).animation;
         if (id != -1) {
             sequence = AnimationSequence.get(id);
         } else {
@@ -89,7 +89,7 @@ public final class Projectile extends Entity {
     }
 
     protected Model getModel() {
-        EffectAnimation var1 = EffectAnimation.get(anInt693);
+        EffectAnimation var1 = EffectAnimation.get(id);
         Model var2 = var1.method1004(anInt1659);
         if (var2 == null) {
             return null;

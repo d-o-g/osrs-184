@@ -5,12 +5,12 @@ import jag.graphics.Font;
 import jag.js5.ReferenceTable;
 import jag.statics.Statics50;
 
-public class FriendsChatUser extends Associate {
+public class FriendChatUser extends Associate<FriendChatUser> {
 
     public AssociateStatus aAssociateStatus_869;
     public AssociateStatus aAssociateStatus_868;
 
-    public FriendsChatUser() {
+    public FriendChatUser() {
         this.aAssociateStatus_868 = AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1554;
         this.aAssociateStatus_869 = AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1554;
     }
@@ -20,11 +20,11 @@ public class FriendsChatUser extends Associate {
     }
 
     public void method709() {
-        this.aAssociateStatus_868 = client.relationshipSystem.friendListContext.isCached(super.displayName) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
+        this.aAssociateStatus_868 = client.relationshipManager.friendListContext.isCached(super.displayName) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
     }
 
     public void method705() {
-        this.aAssociateStatus_869 = client.relationshipSystem.ignoreListContext.isCached(super.displayName) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
+        this.aAssociateStatus_869 = client.relationshipManager.ignoreListContext.isCached(super.displayName) ? AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1555 : AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1553;
     }
 
     public void method710() {

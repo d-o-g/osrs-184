@@ -1,6 +1,6 @@
 package jag.game.relationship;
 
-public class Chatter implements Comparable {
+public class Chatter<T extends Chatter<T>> implements Comparable<T> {
 
     public NamePair previousName;
     public NamePair displayName;
@@ -8,7 +8,7 @@ public class Chatter implements Comparable {
     public Chatter() {
     }
 
-    public int compare0(Chatter var1) {
+    public int compare0(T var1) {
         return this.displayName.compare0(var1.displayName);
     }
 
@@ -32,7 +32,7 @@ public class Chatter implements Comparable {
         return this.previousName == null ? "" : this.previousName.getRaw();
     }
 
-    public int compareTo(Object var1) {
-        return this.compare0((Chatter) var1);
+    public int compareTo(T var1) {
+        return this.compare0(var1);
     }
 }

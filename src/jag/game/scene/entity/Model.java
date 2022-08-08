@@ -741,10 +741,7 @@ public class Model extends Entity {
                         if (var22 / var14 < JagGraphics3D.anInt563) {
                             int var23 = var13 + (var2 * super.height >> 16);
                             boolean var24 = false;
-                            boolean var25 = false;
-                            if (var12 - var23 <= 50) {
-                                var25 = true;
-                            }
+                            boolean var25 = var12 - var23 <= 50;
 
                             boolean var26 = var25 || texturedTriangleCount > 0;
                             int var27 = Clock.method722();

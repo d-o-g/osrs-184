@@ -258,10 +258,7 @@ public class Node_Sub19 extends Node {
                         if (c.format) {
                             var34 = Mouse.x >= var13 && Mouse.y >= var14 && Mouse.x < var15 && Mouse.y < var16;
 
-                            boolean var35 = false;
-                            if ((Mouse.pressMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.pressMeta == 4) && var34) {
-                                var35 = true;
-                            }
+                            boolean var35 = (Mouse.pressMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.pressMeta == 4) && var34;
 
                             var23 = (Mouse.clickMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.clickMeta == 4) && Mouse.clickX >= var13 && Mouse.clickY >= var14 && Mouse.clickX < var15 && Mouse.clickY < var16;
 

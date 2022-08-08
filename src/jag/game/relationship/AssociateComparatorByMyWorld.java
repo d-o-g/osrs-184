@@ -4,7 +4,7 @@ import jag.game.client;
 import jag.opcode.OutgoingPacket;
 import jag.opcode.ClientProt;
 
-public class AssociateComparatorByMyWorld extends AssociateComparator {
+public class AssociateComparatorByMyWorld<T extends Associate<T>> extends AssociateComparator<T> {
 
     public final boolean aBoolean764;
 
@@ -32,7 +32,7 @@ public class AssociateComparatorByMyWorld extends AssociateComparator {
 
     }
 
-    int method604(Associate var1, Associate var2) {
+    int method604(T var1, T var2) {
         if (client.currentWorld == var1.world) {
             if (var2.world != client.currentWorld) {
                 return this.aBoolean764 ? -1 : 1;
@@ -44,7 +44,7 @@ public class AssociateComparatorByMyWorld extends AssociateComparator {
         return this.method1135(var1, var2);
     }
 
-    public int compare(Associate var1, Associate var2) {
+    public int compare(T var1, T var2) {
         return this.method604(var1, var2);
     }
 }

@@ -130,7 +130,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static final NodeDeque<Projectile> projectiles = new NodeDeque<>();
 
     public static final Map<Integer, ChatHistory> chatHistory = new HashMap<>();
-    public static final ArrayList<LoadedArchive> archives = new ArrayList<>(10);;
+    public static final ArrayList<LoadedArchive> archives = new ArrayList<>(10);
     public static final PlayerModel renderedAppearance = new PlayerModel();
     public static final ClientStream stream = new ClientStream();
     public static final OperatingSystemProvider operatingSystemProvider = new DefaultOperatingSystemProvider();
@@ -328,9 +328,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static OperatingSystemNode operatingSystemNode;
 
-    public static FriendsChatSystem friendsChatSystem;
+    public static FriendChat friendChat;
 
-    public static RelationshipSystem relationshipSystem;
+    public static RelationshipManager relationshipManager;
 
     public static URLRequestProcessor urlRequestProcessor;
 
@@ -898,7 +898,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         }
 
         AssociateComparatorByMyWorld.method603(preferences.resizable);
-        relationshipSystem = new RelationshipSystem(PreciseWorldMapAreaChunk.loginTypeParameter);
+        relationshipManager = new RelationshipManager(PreciseWorldMapAreaChunk.loginTypeParameter);
     }
 
     public void updateSize(boolean fireInputScripts) {
@@ -1138,7 +1138,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                if (relationshipSystem.isIgnoring(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+                if (relationshipManager.isIgnored(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
                     ignore = true;
                 }
 
@@ -1252,7 +1252,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.INIT_RELATIONSHIP_SYSYEM == stream.currentIncomingPacket) {
-                relationshipSystem.setLoading();
+                relationshipManager.setLoading();
                 anInt1065 = anInt1075;
                 stream.currentIncomingPacket = null;
                 return true;
@@ -1278,13 +1278,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (ServerProt.INIT_FRIENDSCHAT == stream.currentIncomingPacket) {
                 if (stream.incomingPacketSize == 0) {
-                    friendsChatSystem = null;
+                    friendChat = null;
                 } else {
-                    if (friendsChatSystem == null) {
-                        friendsChatSystem = new FriendsChatSystem(PreciseWorldMapAreaChunk.loginTypeParameter, instance);
+                    if (friendChat == null) {
+                        friendChat = new FriendChat(PreciseWorldMapAreaChunk.loginTypeParameter, instance);
                     }
 
-                    friendsChatSystem.decode(incoming);
+                    friendChat.decode(incoming);
                 }
 
                 method865();
@@ -1368,7 +1368,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 boolean ignored = false;
                 if (sentByPlayer) {
                     name = incoming.gstr();
-                    if (relationshipSystem.isIgnoring(new NamePair(name, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+                    if (relationshipManager.isIgnored(new NamePair(name, PreciseWorldMapAreaChunk.loginTypeParameter))) {
                         ignored = true;
                     }
                 }
@@ -1694,8 +1694,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_IGNORELIST == stream.currentIncomingPacket) {
-                relationshipSystem.ignoreListContext.decode(incoming, stream.incomingPacketSize);
-                RelationshipSystem.method843();
+                relationshipManager.ignoreListContext.decode(incoming, stream.incomingPacketSize);
+                RelationshipManager.method843();
                 anInt1065 = anInt1075;
                 stream.currentIncomingPacket = null;
                 return true;
@@ -2456,8 +2456,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
 
                     if (StockMarketOfferLifetimeComparator.inFriendsChat) {
-                        if (friendsChatSystem != null) {
-                            friendsChatSystem.sort();
+                        if (friendChat != null) {
+                            friendChat.sort();
                         }
 
                         GPI.method488();
@@ -2882,7 +2882,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                             stream.writeLater(outgoing);
                                                         }
 
-                                                        relationshipSystem.processFriendLogins();
+                                                        relationshipManager.processFriendLogins();
                                                         ++stream.idleWriteTicks;
                                                         if (stream.idleWriteTicks > 50) {
                                                             OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, stream.encryptor);
@@ -3349,7 +3349,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
 
                         pendingSpawns = new NodeDeque();
-                        relationshipSystem.clear();
+                        relationshipManager.clear();
 
                         for (var29 = 0; var29 < VarDefinition.count; ++var29) {
                             VarDefinition var24 = VarDefinition.get(var29);
@@ -3388,7 +3388,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
 
                         processGameBoundsPacket();
-                        friendsChatSystem = null;
+                        friendChat = null;
 
                         for (var29 = 0; var29 < 8; ++var29) {
                             stockMarketOffers[var29] = new StockMarketOffer();

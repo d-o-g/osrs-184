@@ -11,15 +11,16 @@ import jag.opcode.ClientProt;
 import jag.statics.Statics53;
 import jag.worldmap.WorldMapCacheFeature;
 
-public class RelationshipSystem {
+public class RelationshipManager {
 
     public final IgnoreListContext ignoreListContext;
     public final FriendListContext friendListContext;
     public final ClientParameter nameLengthParameter;
-    public int state;
 
-    public RelationshipSystem(ClientParameter nameLengthParameter) {
-        state = 0;
+    public int mainState;
+
+    public RelationshipManager(ClientParameter nameLengthParameter) {
+        mainState = 0;
         this.nameLengthParameter = nameLengthParameter;
         friendListContext = new FriendListContext(nameLengthParameter);
         ignoreListContext = new IgnoreListContext(nameLengthParameter);
@@ -30,8 +31,8 @@ public class RelationshipSystem {
             var1.method592();
         }
 
-        if (client.friendsChatSystem != null) {
-            client.friendsChatSystem.method1386();
+        if (client.friendChat != null) {
+            client.friendChat.method1386();
         }
 
     }
@@ -49,7 +50,7 @@ public class RelationshipSystem {
         return friendListContext.isFull() || friendListContext.getMemberCount() >= 200 && client.relationshipSystemState != 1;
     }
 
-    public final boolean isBefriended(NamePair name) {
+    public final boolean isFriend(NamePair name) {
         if (name == null) {
             return false;
         }
@@ -61,25 +62,26 @@ public class RelationshipSystem {
         return friendListContext.isCached(name, false);
     }
 
-    public final boolean isIgnoring(NamePair name) {
+    public final boolean isIgnored(NamePair name) {
         if (name == null) {
             return false;
         }
+
         return ignoreListContext.isCached(name);
     }
 
     public final void decodeFriends(Buffer buffer, int var2) {
         friendListContext.decode(buffer, var2);
-        state = 2;
+        mainState = 2;
         PlayerEntity.method1400();
     }
 
     public final void setLoading() {
-        state = 1;
+        mainState = 1;
     }
 
     public boolean isReady() {
-        return state == 2;
+        return mainState == 2;
     }
 
     public final void befriend(String displayName) {
@@ -93,10 +95,10 @@ public class RelationshipSystem {
                 } else if (PlayerEntity.local.namePair.equals(name)) {
                     message = "You can't add yourself to your own friend list";
                     ChatHistory.messageReceived(30, "", message);
-                } else if (isBefriended(name)) {
+                } else if (isFriend(name)) {
                     message = displayName + " is already on your friend list";
                     ChatHistory.messageReceived(30, "", message);
-                } else if (isIgnoring(name)) {
+                } else if (isIgnored(name)) {
                     message = "Please remove " + displayName + " from your ignore list first";
                     ChatHistory.messageReceived(30, "", message);
                 } else {
@@ -137,10 +139,10 @@ public class RelationshipSystem {
                     if (PlayerEntity.local.namePair.equals(var2)) {
                         message = "You can't add yourself to your own ignore list";
                         ChatHistory.messageReceived(30, "", message);
-                    } else if (isIgnoring(var2)) {
+                    } else if (isIgnored(var2)) {
                         message = var1 + " is already on your ignore list";
                         ChatHistory.messageReceived(30, "", message);
-                    } else if (isBefriended(var2)) {
+                    } else if (isFriend(var2)) {
                         message = "Please remove " + var1 + " from your friend list first";
                         ChatHistory.messageReceived(30, "", message);
                     } else {
@@ -172,7 +174,7 @@ public class RelationshipSystem {
     }
 
     public final void clear() {
-        state = 0;
+        mainState = 0;
         friendListContext.clear();
         ignoreListContext.clear();
     }

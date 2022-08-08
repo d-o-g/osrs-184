@@ -6,7 +6,7 @@ import jag.js5.LoadedArchive;
 import jag.graphics.NamedFont;
 import jag.statics.*;
 
-public class BefriendedPlayer extends Associate {
+public class BefriendedPlayer extends Associate<BefriendedPlayer> {
 
     public boolean aBoolean745;
     public boolean aBoolean746;
@@ -29,39 +29,39 @@ public class BefriendedPlayer extends Associate {
         Statics45.anIntArray389 = null;
     }
 
-    int method552(BefriendedPlayer var1) {
-        if (super.world == client.currentWorld && client.currentWorld != var1.world) {
+    int compare(BefriendedPlayer friend) {
+        if (super.world == client.currentWorld && client.currentWorld != friend.world) {
             return -1;
         }
-        if (client.currentWorld == var1.world && super.world != client.currentWorld) {
+        if (client.currentWorld == friend.world && super.world != client.currentWorld) {
             return 1;
         }
-        if (super.world != 0 && var1.world == 0) {
+        if (super.world != 0 && friend.world == 0) {
             return -1;
         }
-        if (var1.world != 0 && super.world == 0) {
+        if (friend.world != 0 && super.world == 0) {
             return 1;
         }
-        if (this.aBoolean745 && !var1.aBoolean745) {
+        if (this.aBoolean745 && !friend.aBoolean745) {
             return -1;
         }
-        if (!this.aBoolean745 && var1.aBoolean745) {
+        if (!this.aBoolean745 && friend.aBoolean745) {
             return 1;
         }
-        if (this.aBoolean746 && !var1.aBoolean746) {
+        if (this.aBoolean746 && !friend.aBoolean746) {
             return -1;
         }
-        if (!this.aBoolean746 && var1.aBoolean746) {
+        if (!this.aBoolean746 && friend.aBoolean746) {
             return 1;
         }
-        return super.world != 0 ? super.index - var1.index : var1.index - super.index;
+        return super.world != 0 ? super.index - friend.index : friend.index - super.index;
     }
 
-    public int compare0(Chatter var1) {
-        return this.method552((BefriendedPlayer) var1);
+    public int compare0(BefriendedPlayer var1) {
+        return this.compare(var1);
     }
 
-    public int compareTo(Object var1) {
-        return this.method552((BefriendedPlayer) var1);
+    public int compareTo(BefriendedPlayer var1) {
+        return this.compare(var1);
     }
 }

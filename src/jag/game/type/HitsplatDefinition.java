@@ -4,7 +4,7 @@ import jag.commons.collection.DoublyLinkedNode;
 import jag.commons.collection.ReferenceCache;
 import jag.game.HealthBar;
 import jag.game.Vars;
-import jag.game.relationship.FriendsChatUser;
+import jag.game.relationship.FriendChatUser;
 import jag.game.stockmarket.StockMarketOfferNameComparator;
 import jag.graphics.Font;
 import jag.graphics.Sprite;
@@ -235,7 +235,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         if (font != null) {
             return font;
         }
-        font = FriendsChatUser.method708(StockMarketOfferNameComparator.aReferenceTable480, aReferenceTable1515, fontId, 0);
+        font = FriendChatUser.method708(StockMarketOfferNameComparator.aReferenceTable480, aReferenceTable1515, fontId, 0);
         if (font != null) {
             fonts.put(font, fontId);
         }

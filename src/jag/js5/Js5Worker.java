@@ -42,7 +42,7 @@ public class Js5Worker {
     }
 
     public static void method1093(String var0) {
-        if (client.friendsChatSystem != null) {
+        if (client.friendChat != null) {
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KICK_CLANCHANNEL_USER, client.stream.encryptor);
             packet.buffer.p1(Buffer.stringLengthPlusOne(var0));
             packet.buffer.pcstr(var0);

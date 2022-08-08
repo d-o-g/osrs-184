@@ -165,7 +165,7 @@ public abstract class ChatterContext<T extends Chatter> {
         comparator = null;
     }
 
-    public final void setComparator(Comparator comparator) {
+    public final void setComparator(Comparator<T> comparator) {
         if (this.comparator == null) {
             this.comparator = comparator;
         } else if (this.comparator instanceof AssociateComparator) {

@@ -1,6 +1,6 @@
 package jag.game.relationship;
 
-public class Associate extends Chatter {
+public class Associate<T extends Associate<T>> extends Chatter<T> {
 
     public int rank;
     public int world;

@@ -1,6 +1,6 @@
 package jag;
 
-import jag.game.relationship.FriendsChatUser;
+import jag.game.relationship.FriendChatUser;
 import jag.graphics.BaseFont;
 import jag.graphics.Font;
 import jag.graphics.NamedFont;
@@ -32,7 +32,7 @@ public class FontCache {
                 String name = named.name;
                 int group = table.getGroup(name);
                 int file = table.getFile(group, "");
-                Font font = FriendsChatUser.method708(table, table2, group, file);
+                Font font = FriendChatUser.method708(table, table2, group, file);
                 if (font != null) {
                     this.cache.put(named, font);
                     map.put(named, font);

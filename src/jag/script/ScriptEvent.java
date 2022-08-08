@@ -124,12 +124,12 @@ public class ScriptEvent extends Node {
 
     public static int method875(int var0) {
         if (var0 == 3600) {
-            if (client.relationshipSystem.state == 0) {
+            if (client.relationshipManager.mainState == 0) {
                 intStack[++Statics46.anInt442 - 1] = -2;
-            } else if (client.relationshipSystem.state == 1) {
+            } else if (client.relationshipManager.mainState == 1) {
                 intStack[++Statics46.anInt442 - 1] = -1;
             } else {
-                intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.friendListContext.getMemberCount();
+                intStack[++Statics46.anInt442 - 1] = client.relationshipManager.friendListContext.getMemberCount();
             }
 
             return 1;
@@ -137,8 +137,8 @@ public class ScriptEvent extends Node {
         int var3;
         if (var0 == 3601) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.relationshipSystem.isReady() && var3 >= 0 && var3 < client.relationshipSystem.friendListContext.getMemberCount()) {
-                BefriendedPlayer var8 = client.relationshipSystem.friendListContext.getChatter(var3);
+            if (client.relationshipManager.isReady() && var3 >= 0 && var3 < client.relationshipManager.friendListContext.getMemberCount()) {
+                BefriendedPlayer var8 = client.relationshipManager.friendListContext.getChatter(var3);
                 stringStack[++Statics46.anInt441 - 1] = var8.getRawDisplayName();
                 stringStack[++Statics46.anInt441 - 1] = var8.getRawPreviousName();
             } else {
@@ -150,8 +150,8 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3602) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.relationshipSystem.isReady() && var3 >= 0 && var3 < client.relationshipSystem.friendListContext.getMemberCount()) {
-                intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.friendListContext.getChatter(var3).world;
+            if (client.relationshipManager.isReady() && var3 >= 0 && var3 < client.relationshipManager.friendListContext.getMemberCount()) {
+                intStack[++Statics46.anInt442 - 1] = client.relationshipManager.friendListContext.getChatter(var3).world;
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
             }
@@ -160,8 +160,8 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3603) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.relationshipSystem.isReady() && var3 >= 0 && var3 < client.relationshipSystem.friendListContext.getMemberCount()) {
-                intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.friendListContext.getChatter(var3).rank;
+            if (client.relationshipManager.isReady() && var3 >= 0 && var3 < client.relationshipManager.friendListContext.getMemberCount()) {
+                intStack[++Statics46.anInt442 - 1] = client.relationshipManager.friendListContext.getChatter(var3).rank;
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
             }
@@ -177,33 +177,33 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3605) {
             var5 = stringStack[--Statics46.anInt441];
-            client.relationshipSystem.befriend(var5);
+            client.relationshipManager.befriend(var5);
             return 1;
         }
         if (var0 == 3606) {
             var5 = stringStack[--Statics46.anInt441];
-            client.relationshipSystem.unbefriend(var5);
+            client.relationshipManager.unbefriend(var5);
             return 1;
         }
         if (var0 == 3607) {
             var5 = stringStack[--Statics46.anInt441];
-            client.relationshipSystem.ignore(var5);
+            client.relationshipManager.ignore(var5);
             return 1;
         }
         if (var0 == 3608) {
             var5 = stringStack[--Statics46.anInt441];
-            client.relationshipSystem.unignore(var5);
+            client.relationshipManager.unignore(var5);
             return 1;
         }
         if (var0 == 3609) {
             var5 = stringStack[--Statics46.anInt441];
             var5 = PlayerAccountType.getNameExcludingTags(var5);
-            intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.isBefriended(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
+            intStack[++Statics46.anInt442 - 1] = client.relationshipManager.isFriend(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
             return 1;
         }
         if (var0 == 3611) {
-            if (client.friendsChatSystem != null) {
-                stringStack[++Statics46.anInt441 - 1] = client.friendsChatSystem.channelName;
+            if (client.friendChat != null) {
+                stringStack[++Statics46.anInt441 - 1] = client.friendChat.channelName;
             } else {
                 stringStack[++Statics46.anInt441 - 1] = "";
             }
@@ -211,8 +211,8 @@ public class ScriptEvent extends Node {
             return 1;
         }
         if (var0 == 3612) {
-            if (client.friendsChatSystem != null) {
-                intStack[++Statics46.anInt442 - 1] = client.friendsChatSystem.getMemberCount();
+            if (client.friendChat != null) {
+                intStack[++Statics46.anInt442 - 1] = client.friendChat.getMemberCount();
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
             }
@@ -221,8 +221,8 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3613) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.friendsChatSystem != null && var3 < client.friendsChatSystem.getMemberCount()) {
-                stringStack[++Statics46.anInt441 - 1] = client.friendsChatSystem.getChatter(var3).getDisplayName().getRaw();
+            if (client.friendChat != null && var3 < client.friendChat.getMemberCount()) {
+                stringStack[++Statics46.anInt441 - 1] = client.friendChat.getChatter(var3).getDisplayName().getRaw();
             } else {
                 stringStack[++Statics46.anInt441 - 1] = "";
             }
@@ -231,8 +231,8 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3614) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.friendsChatSystem != null && var3 < client.friendsChatSystem.getMemberCount()) {
-                intStack[++Statics46.anInt442 - 1] = client.friendsChatSystem.getChatter(var3).getWorld();
+            if (client.friendChat != null && var3 < client.friendChat.getMemberCount()) {
+                intStack[++Statics46.anInt442 - 1] = client.friendChat.getChatter(var3).getWorld();
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
             }
@@ -241,8 +241,8 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3615) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.friendsChatSystem != null && var3 < client.friendsChatSystem.getMemberCount()) {
-                intStack[++Statics46.anInt442 - 1] = client.friendsChatSystem.getChatter(var3).rank;
+            if (client.friendChat != null && var3 < client.friendChat.getMemberCount()) {
+                intStack[++Statics46.anInt442 - 1] = client.friendChat.getChatter(var3).rank;
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
             }
@@ -250,7 +250,7 @@ public class ScriptEvent extends Node {
             return 1;
         }
         if (var0 == 3616) {
-            intStack[++Statics46.anInt442 - 1] = client.friendsChatSystem != null ? client.friendsChatSystem.channelRank : 0;
+            intStack[++Statics46.anInt442 - 1] = client.friendChat != null ? client.friendChat.channelRank : 0;
             return 1;
         }
         if (var0 == 3617) {
@@ -259,7 +259,7 @@ public class ScriptEvent extends Node {
             return 1;
         }
         if (var0 == 3618) {
-            intStack[++Statics46.anInt442 - 1] = client.friendsChatSystem != null ? client.friendsChatSystem.localPlayerRank : 0;
+            intStack[++Statics46.anInt442 - 1] = client.friendChat != null ? client.friendChat.localPlayerRank : 0;
             return 1;
         }
         if (var0 == 3619) {
@@ -272,18 +272,18 @@ public class ScriptEvent extends Node {
             return 1;
         }
         if (var0 == 3621) {
-            if (!client.relationshipSystem.isReady()) {
+            if (!client.relationshipManager.isReady()) {
                 intStack[++Statics46.anInt442 - 1] = -1;
             } else {
-                intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.ignoreListContext.getMemberCount();
+                intStack[++Statics46.anInt442 - 1] = client.relationshipManager.ignoreListContext.getMemberCount();
             }
 
             return 1;
         }
         if (var0 == 3622) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.relationshipSystem.isReady() && var3 >= 0 && var3 < client.relationshipSystem.ignoreListContext.getMemberCount()) {
-                IgnoredPlayer var4 = client.relationshipSystem.ignoreListContext.getChatter(var3);
+            if (client.relationshipManager.isReady() && var3 >= 0 && var3 < client.relationshipManager.ignoreListContext.getMemberCount()) {
+                IgnoredPlayer var4 = client.relationshipManager.ignoreListContext.getChatter(var3);
                 stringStack[++Statics46.anInt441 - 1] = var4.getRawDisplayName();
                 stringStack[++Statics46.anInt441 - 1] = var4.getRawPreviousName();
             } else {
@@ -296,12 +296,12 @@ public class ScriptEvent extends Node {
         if (var0 == 3623) {
             var5 = stringStack[--Statics46.anInt441];
             var5 = PlayerAccountType.getNameExcludingTags(var5);
-            intStack[++Statics46.anInt442 - 1] = client.relationshipSystem.isIgnoring(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
+            intStack[++Statics46.anInt442 - 1] = client.relationshipManager.isIgnored(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
             return 1;
         }
         if (var0 == 3624) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.friendsChatSystem != null && var3 < client.friendsChatSystem.getMemberCount() && client.friendsChatSystem.getChatter(var3).getDisplayName().equals(PlayerEntity.local.namePair)) {
+            if (client.friendChat != null && var3 < client.friendChat.getMemberCount() && client.friendChat.getChatter(var3).getDisplayName().equals(PlayerEntity.local.namePair)) {
                 intStack[++Statics46.anInt442 - 1] = 1;
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
@@ -310,8 +310,8 @@ public class ScriptEvent extends Node {
             return 1;
         }
         if (var0 == 3625) {
-            if (client.friendsChatSystem != null && client.friendsChatSystem.channelOwner != null) {
-                stringStack[++Statics46.anInt441 - 1] = client.friendsChatSystem.channelOwner;
+            if (client.friendChat != null && client.friendChat.channelOwner != null) {
+                stringStack[++Statics46.anInt441 - 1] = client.friendChat.channelOwner;
             } else {
                 stringStack[++Statics46.anInt441 - 1] = "";
             }
@@ -320,7 +320,7 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3626) {
             var3 = intStack[--Statics46.anInt442];
-            if (client.friendsChatSystem != null && var3 < client.friendsChatSystem.getMemberCount() && client.friendsChatSystem.getChatter(var3).method711()) {
+            if (client.friendChat != null && var3 < client.friendChat.getMemberCount() && client.friendChat.getChatter(var3).method711()) {
                 intStack[++Statics46.anInt442 - 1] = 1;
             } else {
                 intStack[++Statics46.anInt442 - 1] = 0;
@@ -330,185 +330,185 @@ public class ScriptEvent extends Node {
         }
         if (var0 != 3627) {
             if (var0 == 3628) {
-                client.relationshipSystem.friendListContext.unsetComparator();
+                client.relationshipManager.friendListContext.unsetComparator();
                 return 1;
             }
             boolean var7;
             if (var0 == 3629) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new Class223(var7));
+                client.relationshipManager.friendListContext.setComparator(new Class223(var7));
                 return 1;
             }
             if (var0 == 3630) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new Class211(var7));
+                client.relationshipManager.friendListContext.setComparator(new Class211(var7));
                 return 1;
             }
             if (var0 == 3631) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparatorByWorld(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparatorByWorld(var7));
                 return 1;
             }
             if (var0 == 3632) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new Class114(var7));
+                client.relationshipManager.friendListContext.setComparator(new Class114(var7));
                 return 1;
             }
             if (var0 == 3633) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparator_Sub5(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparator_Sub5(var7));
                 return 1;
             }
             if (var0 == 3634) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparatorByName(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparatorByName(var7));
                 return 1;
             }
             if (var0 == 3635) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparator_Sub2(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparator_Sub2(var7));
                 return 1;
             }
             if (var0 == 3636) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparatorByMyWorld(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparatorByMyWorld(var7));
                 return 1;
             }
             if (var0 == 3637) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparatorByWorldAndName(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparatorByWorldAndName(var7));
                 return 1;
             }
             if (var0 == 3638) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparator_Sub4(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparator_Sub4(var7));
                 return 1;
             }
             if (var0 == 3639) {
-                client.relationshipSystem.friendListContext.sort();
+                client.relationshipManager.friendListContext.sort();
                 return 1;
             }
             if (var0 == 3640) {
-                client.relationshipSystem.ignoreListContext.unsetComparator();
+                client.relationshipManager.ignoreListContext.unsetComparator();
                 return 1;
             }
             if (var0 == 3641) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.ignoreListContext.setComparator(new Class223(var7));
+                client.relationshipManager.ignoreListContext.setComparator(new Class223(var7));
                 return 1;
             }
             if (var0 == 3642) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.ignoreListContext.setComparator(new Class211(var7));
+                client.relationshipManager.ignoreListContext.setComparator(new Class211(var7));
                 return 1;
             }
             if (var0 == 3643) {
-                client.relationshipSystem.ignoreListContext.sort();
+                client.relationshipManager.ignoreListContext.sort();
                 return 1;
             }
             if (var0 == 3644) {
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.unsetComparator();
+                if (client.friendChat != null) {
+                    client.friendChat.unsetComparator();
                 }
 
                 return 1;
             }
             if (var0 == 3645) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new Class223(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new Class223(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3646) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new Class211(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new Class211(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3647) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparatorByWorld(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparatorByWorld(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3648) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new Class114(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new Class114(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3649) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparator_Sub5(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparator_Sub5(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3650) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparatorByName(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparatorByName(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3651) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparator_Sub2(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparator_Sub2(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3652) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparatorByMyWorld(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparatorByMyWorld(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3653) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparatorByWorldAndName(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparatorByWorldAndName(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3654) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparator_Sub4(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparator_Sub4(var7));
                 }
 
                 return 1;
             }
             if (var0 == 3655) {
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.sort();
+                if (client.friendChat != null) {
+                    client.friendChat.sort();
                 }
 
                 return 1;
             }
             if (var0 == 3656) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                client.relationshipSystem.friendListContext.setComparator(new AssociateComparatorByRank(var7));
+                client.relationshipManager.friendListContext.setComparator(new AssociateComparatorByRank(var7));
                 return 1;
             }
             if (var0 == 3657) {
                 var7 = intStack[--Statics46.anInt442] == 1;
-                if (client.friendsChatSystem != null) {
-                    client.friendsChatSystem.setComparator(new AssociateComparatorByRank(var7));
+                if (client.friendChat != null) {
+                    client.friendChat.setComparator(new AssociateComparatorByRank(var7));
                 }
 
                 return 1;
@@ -516,7 +516,7 @@ public class ScriptEvent extends Node {
             return 2;
         }
         var3 = intStack[--Statics46.anInt442];
-        if (client.friendsChatSystem != null && var3 < client.friendsChatSystem.getMemberCount() && client.friendsChatSystem.getChatter(var3).method706()) {
+        if (client.friendChat != null && var3 < client.friendChat.getMemberCount() && client.friendChat.getChatter(var3).method706()) {
             intStack[++Statics46.anInt442 - 1] = 1;
         } else {
             intStack[++Statics46.anInt442 - 1] = 0;
@@ -549,57 +549,55 @@ public class ScriptEvent extends Node {
             Statics46.aBoolean439 = false;
 
             try {
-                int var11;
                 try {
                     Statics46.anIntArray447 = new int[script.anInt574];
                     int var9 = 0;
                     URLRequestProcessor.aStringArray794 = new String[script.anInt112];
                     int var10 = 0;
 
-                    int var12;
                     String var13;
-                    for (var11 = 1; var11 < args.length; ++var11) {
-                        if (args[var11] instanceof Integer) {
-                            var12 = (Integer) args[var11];
-                            if (var12 == -2147483647) {
-                                var12 = event.mouseX;
+                    for (int i = 1; i < args.length; ++i) {
+                        if (args[i] instanceof Integer) {
+                            int value = (Integer) args[i];
+                            if (value == -2147483647) {
+                                value = event.mouseX;
                             }
 
-                            if (var12 == -2147483646) {
-                                var12 = event.mouseY;
+                            if (value == -2147483646) {
+                                value = event.mouseY;
                             }
 
-                            if (var12 == -2147483645) {
-                                var12 = event.component != null ? event.component.uid : -1;
+                            if (value == -2147483645) {
+                                value = event.component != null ? event.component.uid : -1;
                             }
 
-                            if (var12 == -2147483644) {
-                                var12 = event.actionIndex;
+                            if (value == -2147483644) {
+                                value = event.actionIndex;
                             }
 
-                            if (var12 == -2147483643) {
-                                var12 = event.component != null ? event.component.subComponentIndex : -1;
+                            if (value == -2147483643) {
+                                value = event.component != null ? event.component.subComponentIndex : -1;
                             }
 
-                            if (var12 == -2147483642) {
-                                var12 = event.dragTarget != null ? event.dragTarget.uid : -1;
+                            if (value == -2147483642) {
+                                value = event.dragTarget != null ? event.dragTarget.uid : -1;
                             }
 
-                            if (var12 == -2147483641) {
-                                var12 = event.dragTarget != null ? event.dragTarget.subComponentIndex : -1;
+                            if (value == -2147483641) {
+                                value = event.dragTarget != null ? event.dragTarget.subComponentIndex : -1;
                             }
 
-                            if (var12 == -2147483640) {
-                                var12 = event.anInt372;
+                            if (value == -2147483640) {
+                                value = event.anInt372;
                             }
 
-                            if (var12 == -2147483639) {
-                                var12 = event.anInt379;
+                            if (value == -2147483639) {
+                                value = event.anInt379;
                             }
 
-                            Statics46.anIntArray447[var9++] = var12;
-                        } else if (args[var11] instanceof String) {
-                            var13 = (String) args[var11];
+                            Statics46.anIntArray447[var9++] = value;
+                        } else if (args[i] instanceof String) {
+                            var13 = (String) args[i];
                             if (var13.equals("event_opbase")) {
                                 var13 = event.opbase;
                             }
@@ -608,7 +606,8 @@ public class ScriptEvent extends Node {
                         }
                     }
 
-                    var11 = 0;
+                    int var11 = 0;
+                    int var12;
                     Statics46.anInt440 = event.anInt368;
 
                     while (true) {
@@ -812,8 +811,8 @@ public class ScriptEvent extends Node {
                     StringBuilder var23 = new StringBuilder(30);
                     var23.append(script.key).append(" ");
 
-                    for (var11 = Statics46.anInt436 - 1; var11 >= 0; --var11) {
-                        var23.append(Statics46.A_RUNE_SCRIPT_FRAME_ARRAY_435[var11].target.key).append(" ");
+                    for (int i = Statics46.anInt436 - 1; i >= 0; --i) {
+                        var23.append(Statics46.A_RUNE_SCRIPT_FRAME_ARRAY_435[i].target.key).append(" ");
                     }
 
                     var23.append(var8);

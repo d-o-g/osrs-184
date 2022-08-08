@@ -296,8 +296,8 @@ public class JagServerProtHandler extends ServerProtHandler {
 
     @Override
     public boolean processFriendsChatUpdate(BitBuffer incoming) {
-        if (client.friendsChatSystem != null) {
-            client.friendsChatSystem.decodeUpdate(incoming);
+        if (client.friendChat != null) {
+            client.friendChat.decodeUpdate(incoming);
         }
 
         client.method865();
@@ -341,7 +341,7 @@ public class JagServerProtHandler extends ServerProtHandler {
 
     @Override
     public boolean processFriendsListUpdate(BitBuffer incoming) {
-        client.relationshipSystem.decodeFriends(incoming, stream.incomingPacketSize);
+        client.relationshipManager.decodeFriends(incoming, stream.incomingPacketSize);
         client.anInt1065 = client.anInt1075;
         stream.currentIncomingPacket = null;
         return true;
@@ -364,7 +364,7 @@ public class JagServerProtHandler extends ServerProtHandler {
             }
         }
 
-        if (accountType.notJagex && client.relationshipSystem.isIgnoring(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+        if (accountType.notJagex && client.relationshipManager.isIgnored(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
             ignored = true;
         }
 

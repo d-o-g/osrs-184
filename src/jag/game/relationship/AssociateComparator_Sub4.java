@@ -4,7 +4,7 @@ import jag.game.client;
 import jag.game.type.EnumDefinition;
 import jag.opcode.Buffer;
 
-public class AssociateComparator_Sub4 extends AssociateComparator {
+public class AssociateComparator_Sub4<T extends Associate<T>> extends AssociateComparator<T> {
 
     public static boolean aBoolean804;
     public static int anInt803;
@@ -29,14 +29,14 @@ public class AssociateComparator_Sub4 extends AssociateComparator {
         return var1;
     }
 
-    int method604(Associate var1, Associate var2) {
+    int method604(T var1, T var2) {
         if (client.currentWorld == var1.world && var2.world == client.currentWorld) {
             return this.aBoolean764 ? var1.index - var2.index : var2.index - var1.index;
         }
         return this.method1135(var1, var2);
     }
 
-    public int compare(Associate var1, Associate var2) {
+    public int compare(T var1, T var2) {
         return this.method604(var1, var2);
     }
 }

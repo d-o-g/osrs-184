@@ -5,7 +5,7 @@ import jag.LocalPlayerNameProvider;
 import jag.commons.crypt.Base37;
 import jag.opcode.Buffer;
 
-public class FriendsChatSystem extends ChatterContext<FriendsChatUser> {
+public class FriendChat extends ChatterContext<FriendChatUser> {
 
     public final LocalPlayerNameProvider localPlayerNameProvider;
     public final ClientParameter gameType;
@@ -18,7 +18,7 @@ public class FriendsChatSystem extends ChatterContext<FriendsChatUser> {
 
     public byte channelRank;
 
-    public FriendsChatSystem(ClientParameter gameType, LocalPlayerNameProvider localPlayerNameProvider) {
+    public FriendChat(ClientParameter gameType, LocalPlayerNameProvider localPlayerNameProvider) {
         super(100);
         this.gameType = gameType;
         this.localPlayerNameProvider = localPlayerNameProvider;
@@ -41,16 +41,16 @@ public class FriendsChatSystem extends ChatterContext<FriendsChatUser> {
         return decoded;
     }
 
-    FriendsChatUser newChatter() {
-        return new FriendsChatUser();
+    FriendChatUser newChatter() {
+        return new FriendChatUser();
     }
 
     public final void setChannelName(String channelName) {
         this.channelName = filterName(channelName);
     }
 
-    FriendsChatUser[] newArray(int size) {
-        return new FriendsChatUser[size];
+    FriendChatUser[] newArray(int size) {
+        return new FriendChatUser[size];
     }
 
     public final void method1392() {
@@ -65,7 +65,7 @@ public class FriendsChatSystem extends ChatterContext<FriendsChatUser> {
         }
     }
 
-    public final void setLocalPlayerRankFrom(FriendsChatUser member) {
+    public final void setLocalPlayerRankFrom(FriendChatUser member) {
         if (member.getDisplayName().equals(localPlayerNameProvider.getNamePair())) {
             localPlayerRank = member.rank;
         }
@@ -75,12 +75,9 @@ public class FriendsChatSystem extends ChatterContext<FriendsChatUser> {
         NamePair name = new NamePair(buffer.gstr(), gameType);
         int world = buffer.g2();
         byte rank = buffer.g1b();
-        boolean var5 = false;
-        if (rank == -128) {
-            var5 = true;
-        }
+        boolean var5 = rank == -128;
 
-        FriendsChatUser member;
+        FriendChatUser member;
         if (var5) {
             if (getMemberCount() == 0) {
                 return;
@@ -144,7 +141,7 @@ public class FriendsChatSystem extends ChatterContext<FriendsChatUser> {
             clear();
 
             for (int i = 0; i < count; ++i) {
-                FriendsChatUser member = addAndCache(new NamePair(buffer.gstr(), gameType));
+                FriendChatUser member = addAndCache(new NamePair(buffer.gstr(), gameType));
                 int world = buffer.g2();
                 member.set(world, ++memberCount - 1);
                 member.rank = buffer.g1b();

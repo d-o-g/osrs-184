@@ -140,7 +140,7 @@ public class WorldMapCacheArea {
             }
 
             var5 = var4.next();
-        } while (!var5.contains(level, x, level));
+        } while (!var5.contains(level, x, y));
 
         return true;
     }

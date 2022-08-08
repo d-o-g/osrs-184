@@ -1,6 +1,6 @@
 package jag.game.relationship;
 
-public class AssociateComparatorByWorld extends AssociateComparator {
+public class AssociateComparatorByWorld<T extends Associate<T>> extends AssociateComparator<T> {
 
     public static int anInt822;
     final boolean aBoolean764;
@@ -79,14 +79,14 @@ public class AssociateComparatorByWorld extends AssociateComparator {
         return var2;
     }
 
-    int compare0(Associate o1, Associate o2) {
+    int compare0(T o1, T o2) {
         if (o2.world != o1.world) {
             return this.aBoolean764 ? o1.world - o2.world : o2.world - o1.world;
         }
         return this.method1135(o1, o2);
     }
 
-    public int compare(Associate o1, Associate o2) {
+    public int compare(T o1, T o2) {
         return this.compare0(o1, o2);
     }
 }

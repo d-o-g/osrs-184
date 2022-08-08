@@ -85,7 +85,7 @@ public class Login {
 
         for (int i = 0; i < count; ++i) {
             if (indices[i] != client.varpControlledInt2 && indices[i] != client.playerIndex) {
-                GPI.loadPlayersIntoScene(client.players[indices[i]], true);
+                GPI.loadPlayerIntoScene(client.players[indices[i]], true);
             }
         }
 

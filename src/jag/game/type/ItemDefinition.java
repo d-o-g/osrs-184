@@ -599,10 +599,7 @@ public class ItemDefinition extends DoublyLinkedNode {
         if (var2 == -1) {
             return true;
         }
-        boolean var4 = true;
-        if (!aReferenceTable722.load(var2, 0)) {
-            var4 = false;
-        }
+        boolean var4 = aReferenceTable722.load(var2, 0);
 
         if (var3 != -1 && !aReferenceTable722.load(var3, 0)) {
             var4 = false;
@@ -669,10 +666,7 @@ public class ItemDefinition extends DoublyLinkedNode {
         if (var2 == -1) {
             return true;
         }
-        boolean var5 = true;
-        if (!aReferenceTable722.load(var2, 0)) {
-            var5 = false;
-        }
+        boolean var5 = aReferenceTable722.load(var2, 0);
 
         if (var3 != -1 && !aReferenceTable722.load(var3, 0)) {
             var5 = false;

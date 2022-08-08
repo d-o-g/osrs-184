@@ -8,7 +8,7 @@ import jag.commons.collection.*;
 import jag.commons.input.Mouse;
 import jag.game.menu.ContextMenu;
 import jag.game.menu.ItemSelection;
-import jag.game.relationship.FriendsChatUser;
+import jag.game.relationship.FriendChatUser;
 import jag.game.scene.SceneGraph;
 import jag.game.scene.SceneOccluder;
 import jag.game.scene.entity.*;
@@ -405,7 +405,7 @@ public class InterfaceComponent extends Node {
                 component.renderCycle = client.engineCycle;
                 if (!component.format || !isExplicitlyHidden(component)) {
                     if (component.clientcode > 0) {
-                        method475(component);
+                        processAppearanceCode(component);
                     }
 
                     int absoluteX = component.relativeX + rootX;
@@ -527,7 +527,7 @@ public class InterfaceComponent extends Node {
                             }
 
                             if (component.clientcode == 1339) {
-                                AudioRunnable.method985(component, absoluteX, absoluteY);
+                                AudioRunnable.renderCompass(component, absoluteX, absoluteY);
                                 JagGraphics.setClip(absoluteX, absoluteY, width, height);
                                 continue;
                             }
@@ -1401,7 +1401,7 @@ public class InterfaceComponent extends Node {
         }
     }
 
-    public static void method475(InterfaceComponent var0) {
+    public static void processAppearanceCode(InterfaceComponent var0) {
         int var1 = var0.clientcode;
         if (var1 == 324) {
             if (client.anInt930 == -1) {
@@ -2284,7 +2284,7 @@ public class InterfaceComponent extends Node {
         if (var1 != null) {
             return var1;
         }
-        var1 = FriendsChatUser.method708(aReferenceTable364, SerializableLong.aReferenceTable645, fontId, 0);
+        var1 = FriendChatUser.method708(aReferenceTable364, SerializableLong.aReferenceTable645, fontId, 0);
         if (var1 != null) {
             fonts.put(var1, fontId);
         } else {
