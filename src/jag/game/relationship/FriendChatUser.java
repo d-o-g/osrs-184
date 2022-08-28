@@ -2,6 +2,7 @@ package jag.game.relationship;
 
 import jag.game.client;
 import jag.graphics.Font;
+import jag.graphics.SpriteProvider;
 import jag.js5.ReferenceTable;
 import jag.statics.Statics50;
 
@@ -16,7 +17,7 @@ public class FriendChatUser extends Associate<FriendChatUser> {
     }
 
     public static Font method708(ReferenceTable var0, ReferenceTable var1, int var2, int var3) {
-        return !ReferenceTable.method534(var0, var2, var3) ? null : Statics50.method221(var1.unpack(var2, var3));
+        return !SpriteProvider.loadSprites(var0, var2, var3) ? null : Statics50.method221(var1.unpack(var2, var3));
     }
 
     public void method709() {

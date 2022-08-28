@@ -1,11 +1,5 @@
 package jag.statics;
 
-import jag.audi.PcmStream_Sub4;
-import jag.commons.Jagexception;
-import jag.game.type.AnimationFrameGroup;
-import jag.opcode.Buffer;
-import jag.opcode.OutgoingPacket;
-
 public final class Statics45 {
 
     public static final int[] anIntArray406 = new int[]{1, 2, 4, 8};
@@ -27,72 +21,6 @@ public final class Statics45 {
     public static int[] anIntArray396;
     public static int[] anIntArray390;
     public static int[] anIntArray389;
-
-    public static void method267(byte[] var0) {
-        Buffer var1 = new Buffer(var0);
-        var1.pos = var0.length - 2;
-        Statics41.anInt1822 = var1.g2();
-        Statics41.anIntArray1821 = new int[Statics41.anInt1822];
-        PcmStream_Sub4.anIntArray1107 = new int[Statics41.anInt1822];
-        Statics41.anIntArray1820 = new int[Statics41.anInt1822];
-        Jagexception.anIntArray1878 = new int[Statics41.anInt1822];
-        OutgoingPacket.aByteArrayArray114 = new byte[Statics41.anInt1822][];
-        var1.pos = var0.length - 7 - Statics41.anInt1822 * 8;
-        Statics41.anInt1824 = var1.g2();
-        AnimationFrameGroup.anInt378 = var1.g2();
-        int var2 = (var1.g1() & 255) + 1;
-
-        int var3;
-        for (var3 = 0; var3 < Statics41.anInt1822; ++var3) {
-            Statics41.anIntArray1821[var3] = var1.g2();
-        }
-
-        for (var3 = 0; var3 < Statics41.anInt1822; ++var3) {
-            PcmStream_Sub4.anIntArray1107[var3] = var1.g2();
-        }
-
-        for (var3 = 0; var3 < Statics41.anInt1822; ++var3) {
-            Statics41.anIntArray1820[var3] = var1.g2();
-        }
-
-        for (var3 = 0; var3 < Statics41.anInt1822; ++var3) {
-            Jagexception.anIntArray1878[var3] = var1.g2();
-        }
-
-        var1.pos = var0.length - 7 - Statics41.anInt1822 * 8 - (var2 - 1) * 3;
-        Statics41.anIntArray1823 = new int[var2];
-
-        for (var3 = 1; var3 < var2; ++var3) {
-            Statics41.anIntArray1823[var3] = var1.g3();
-            if (Statics41.anIntArray1823[var3] == 0) {
-                Statics41.anIntArray1823[var3] = 1;
-            }
-        }
-
-        var1.pos = 0;
-
-        for (var3 = 0; var3 < Statics41.anInt1822; ++var3) {
-            int var4 = Statics41.anIntArray1820[var3];
-            int var5 = Jagexception.anIntArray1878[var3];
-            int var6 = var4 * var5;
-            byte[] var7 = new byte[var6];
-            OutgoingPacket.aByteArrayArray114[var3] = var7;
-            int var8 = var1.g1();
-            int var9;
-            if (var8 == 0) {
-                for (var9 = 0; var9 < var6; ++var9) {
-                    var7[var9] = var1.g1b();
-                }
-            } else if (var8 == 1) {
-                for (var9 = 0; var9 < var4; ++var9) {
-                    for (int var10 = 0; var10 < var5; ++var10) {
-                        var7[var9 + var4 * var10] = var1.g1b();
-                    }
-                }
-            }
-        }
-
-    }
 
     public static void method180(int var0, int var1, int var2, int var3) {
         for (int var4 = var1; var4 <= var3 + var1; ++var4) {

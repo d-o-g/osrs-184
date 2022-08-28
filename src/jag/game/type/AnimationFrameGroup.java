@@ -9,7 +9,6 @@ import jag.js5.ReferenceTable;
 
 public class AnimationFrameGroup extends DoublyLinkedNode {
 
-    public static int anInt378;
     public static InterfaceComponent dragComponent;
     public static IndexedSprite[] aDoublyNode_Sub24_Sub4Array801;
     public static ReferenceTable aReferenceTable1123;

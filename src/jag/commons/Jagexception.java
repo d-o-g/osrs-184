@@ -7,7 +7,6 @@ import java.applet.Applet;
 public class Jagexception extends RuntimeException {
 
     public static Applet applet;
-    public static int[] anIntArray1878;
     public static String localPlayerName;
     public static AudioRunnable anAudioRunnable1880;
 

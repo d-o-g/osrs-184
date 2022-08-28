@@ -782,7 +782,7 @@ public class WorldMapChunkDefinition {
                     var10 = ((WorldMapTileDecor) aLinkedList122.getFirst()).anInt514;
                 }
 
-                var9 &= var5.method911(var10);
+                var9 &= var5.loadGroup(var10);
                 if (var9) {
                     byte[] var11 = var5.unpack(var10);
                     WorldMapElement element;

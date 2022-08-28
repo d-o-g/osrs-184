@@ -884,7 +884,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         Mouse.attachListeners(canvas);
 
         MouseWheel.provider = this.method943();
-        WorldMapTileDecor_Sub2.aResourceCache649 = new ResourceCache(255, BufferedFile.dataFile, BufferedFile.indexFile, 500000);
+        WorldMapTileDecor_Sub2.referenceCache = new ResourceCache(255, BufferedFile.dataFile, BufferedFile.indexFile, 500000);
         preferences = ItemDefinition.method529();
         this.updateClipboard();
         String var4 = WorldMapController.aString264;

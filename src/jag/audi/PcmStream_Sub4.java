@@ -5,8 +5,6 @@ import jag.commons.collection.NodeDeque;
 
 public class PcmStream_Sub4 extends PcmStream {
 
-    public static int[] anIntArray1107;
-
     final PcmStream_Sub1 aClass5_Sub6_Sub1_1153;
     final PcmStream_Sub3 aClass5_Sub6_Sub3_1154;
     final NodeDeque<Node_Sub19> aNodeDeque373;

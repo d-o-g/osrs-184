@@ -9,7 +9,7 @@ import jag.opcode.Buffer;
 
 public class WorldMapTileDecor_Sub2 extends WorldMapTileDecor {
 
-    public static ResourceCache aResourceCache649;
+    public static ResourceCache referenceCache;
     public static BootSprites aBootSprites_647;
     public static IndexedSprite[] aDoublyNode_Sub24_Sub4Array648;
 
