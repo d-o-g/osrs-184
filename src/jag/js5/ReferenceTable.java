@@ -4,31 +4,36 @@ import jag.ByteBufferProvider;
 import jag.game.stockmarket.StockMarketOfferPriceComparator;
 import jag.graphics.BaseFont;
 import jag.opcode.Buffer;
-import jag.statics.Statics45;
 import jag.worldmap.WorldMapTileDecor_Sub2;
 
 import java.util.Arrays;
 
 public abstract class ReferenceTable {
 
-    static final GzipDecompressor gzipdecompressor = new GzipDecompressor();
-    static final int maximumContainerSize = 0;
-
     public int hash;
-    int[] entryIndices;
-    Object[] groups;
-    Object[][] childrenSizes;
-    int[][] childrenIndices;
-    boolean soft;
-    IdentityTable[] children;
-    IdentityTable entry;
-    int[] groupVersions;
-    int[] childrenCounts;
-    boolean shallow;
-    int[] groupCrcs;
+
     int entryCount;
+    int[] entryIndices;
+
+    boolean soft;
+
+    int[] groupCrcs;
     int[] groupNames;
+    int[] groupVersions;
+    Object[] groups;
+
+    int[] childrenCounts;
     int[][] childrenNames;
+    int[][] childrenIndices;
+    Object[][] childrenSizes;
+    IdentityTable[] children;
+
+    IdentityTable entry;
+
+    boolean shallow;
+
+    static final int maximumContainerSize = 0;
+    static final GzipDecompressor gzipdecompressor = new GzipDecompressor();
 
     ReferenceTable(boolean soft, boolean shallow) {
         this.soft = soft;
@@ -63,22 +68,12 @@ public abstract class ReferenceTable {
         return decoded;
     }
 
-    public static Archive get(int var0, boolean var1, boolean var2) {
+    public static Archive get(int idx, boolean soft, boolean shallow) {
         ResourceCache cache = null;
         if (BufferedFile.dataFile != null) {
-            cache = new ResourceCache(var0, BufferedFile.dataFile, BufferedFile.indexes[var0], 1000000);
+            cache = new ResourceCache(idx, BufferedFile.dataFile, BufferedFile.indexes[idx], 1000000);
         }
-
-        return new Archive(cache, WorldMapTileDecor_Sub2.aResourceCache649, var0, var1, var2, true);
-    }
-
-    public static boolean method534(ReferenceTable table, int var1, int var2) {
-        byte[] data = table.unpack(var1, var2);
-        if (data == null) {
-            return false;
-        }
-        Statics45.method267(data);
-        return true;
+        return new Archive(cache, WorldMapTileDecor_Sub2.referenceCache, idx, soft, shallow, true);
     }
 
     public static int djb2(CharSequence var0) {
@@ -155,169 +150,170 @@ public abstract class ReferenceTable {
         return null;
     }
 
-    public boolean load(int var1, int var2) {
-        if (var1 >= 0 && var1 < childrenSizes.length && childrenSizes[var1] != null && var2 >= 0 && var2 < childrenSizes[var1].length) {
-            if (childrenSizes[var1][var2] != null) {
+    public boolean load(int group, int file) {
+        if (group >= 0 && group < childrenSizes.length && childrenSizes[group] != null && file >= 0 && file < childrenSizes[group].length) {
+            if (childrenSizes[group][file] != null) {
                 return true;
             }
-            if (groups[var1] != null) {
+            if (groups[group] != null) {
                 return true;
             }
-            load(var1);
-            return groups[var1] != null;
+            load(group);
+            return groups[group] != null;
         }
         return false;
     }
 
-    void load(int var1) {
+    void load(int i) {
 
     }
 
-    public byte[] method896(int var1) {
+    public byte[] method896(int file) {
         if (childrenSizes.length == 1) {
-            return getFile(0, var1);
+            return getFile(0, file);
         }
-        if (childrenSizes[var1].length == 1) {
-            return getFile(var1, 0);
+        if (childrenSizes[file].length == 1) {
+            return getFile(file, 0);
         }
         throw new RuntimeException();
     }
 
-    public boolean method911(int var1) {
-        if (groups[var1] != null) {
+    public boolean loadGroup(int group) {
+        if (groups[group] != null) {
             return true;
         }
-        load(var1);
-        return groups[var1] != null;
+        load(group);
+        return groups[group] != null;
     }
 
-    public int getFileCount(int var1) {
-        return childrenSizes[var1].length;
+    public int getFileCount(int file) {
+        return childrenSizes[file].length;
     }
 
-    int getLoadingPercent(int var1) {
-        return groups[var1] != null ? 100 : 0;
+    int getLoadingPercent(int group) {
+        return groups[group] != null ? 100 : 0;
     }
 
-    void decode(byte[] var1) {
-        hash = Buffer.crc32(var1, var1.length);
-        Buffer buffer = new Buffer(decodeContainer(var1));
-        int var3 = buffer.g1();
-        if (var3 >= 5 && var3 <= 7) {
-            if (var3 >= 6) {
+    void decode(byte[] payload) {
+        hash = Buffer.crc32(payload, payload.length);
+        Buffer buffer = new Buffer(decodeContainer(payload));
+
+        int var0 = buffer.g1();
+        if (var0 >= 5 && var0 <= 7) {
+            if (var0 >= 6) {
                 buffer.g4();
             }
 
-            int var4 = buffer.g1();
-            if (var3 >= 7) {
+            int var1 = buffer.g1();
+            if (var0 >= 7) {
                 entryCount = buffer.g2else4();
             } else {
                 entryCount = buffer.g2();
             }
 
-            int var5 = 0;
-            int var6 = -1;
-            entryIndices = new int[entryCount];
-            int var7;
-            if (var3 >= 7) {
-                for (var7 = 0; var7 < entryCount; ++var7) {
-                    entryIndices[var7] = var5 += buffer.g2else4();
-                    if (entryIndices[var7] > var6) {
-                        var6 = entryIndices[var7];
+            int var2 = 0;
+            int entryCount = -1;
+            entryIndices = new int[this.entryCount];
+            int entry;
+            if (var0 >= 7) {
+                for (entry = 0; entry < this.entryCount; ++entry) {
+                    entryIndices[entry] = var2 += buffer.g2else4();
+                    if (entryIndices[entry] > entryCount) {
+                        entryCount = entryIndices[entry];
                     }
                 }
             } else {
-                for (var7 = 0; var7 < entryCount; ++var7) {
-                    entryIndices[var7] = var5 += buffer.g2();
-                    if (entryIndices[var7] > var6) {
-                        var6 = entryIndices[var7];
+                for (entry = 0; entry < this.entryCount; ++entry) {
+                    entryIndices[entry] = var2 += buffer.g2();
+                    if (entryIndices[entry] > entryCount) {
+                        entryCount = entryIndices[entry];
                     }
                 }
             }
 
-            groupCrcs = new int[var6 + 1];
-            groupVersions = new int[var6 + 1];
-            childrenCounts = new int[var6 + 1];
-            childrenIndices = new int[var6 + 1][];
-            groups = new Object[var6 + 1];
-            childrenSizes = new Object[var6 + 1][];
-            if (var4 != 0) {
-                groupNames = new int[var6 + 1];
+            groupCrcs = new int[entryCount + 1];
+            groupVersions = new int[entryCount + 1];
+            childrenCounts = new int[entryCount + 1];
+            childrenIndices = new int[entryCount + 1][];
+            groups = new Object[entryCount + 1];
+            childrenSizes = new Object[entryCount + 1][];
+            if (var1 != 0) {
+                groupNames = new int[entryCount + 1];
 
-                for (var7 = 0; var7 < entryCount; ++var7) {
-                    groupNames[entryIndices[var7]] = buffer.g4();
+                for (entry = 0; entry < this.entryCount; ++entry) {
+                    groupNames[entryIndices[entry]] = buffer.g4();
                 }
 
-                entry = new IdentityTable(groupNames);
+                this.entry = new IdentityTable(groupNames);
             }
 
-            for (var7 = 0; var7 < entryCount; ++var7) {
-                groupCrcs[entryIndices[var7]] = buffer.g4();
+            for (entry = 0; entry < this.entryCount; ++entry) {
+                groupCrcs[entryIndices[entry]] = buffer.g4();
             }
 
-            for (var7 = 0; var7 < entryCount; ++var7) {
-                groupVersions[entryIndices[var7]] = buffer.g4();
+            for (entry = 0; entry < this.entryCount; ++entry) {
+                groupVersions[entryIndices[entry]] = buffer.g4();
             }
 
-            for (var7 = 0; var7 < entryCount; ++var7) {
-                childrenCounts[entryIndices[var7]] = buffer.g2();
+            for (entry = 0; entry < this.entryCount; ++entry) {
+                childrenCounts[entryIndices[entry]] = buffer.g2();
             }
 
-            int var8;
-            int var9;
-            int var10;
-            int var11;
+            int entryIdx;
+            int childIndexCount;
+            int childSizeCount;
+            int childIdx;
             int var12;
-            if (var3 >= 7) {
-                for (var7 = 0; var7 < entryCount; ++var7) {
-                    var8 = entryIndices[var7];
-                    var9 = childrenCounts[var8];
-                    var5 = 0;
-                    var10 = -1;
-                    childrenIndices[var8] = new int[var9];
+            if (var0 >= 7) {
+                for (entry = 0; entry < this.entryCount; ++entry) {
+                    entryIdx = entryIndices[entry];
+                    childIndexCount = childrenCounts[entryIdx];
+                    var2 = 0;
+                    childSizeCount = -1;
+                    childrenIndices[entryIdx] = new int[childIndexCount];
 
-                    for (var11 = 0; var11 < var9; ++var11) {
-                        var12 = childrenIndices[var8][var11] = var5 += buffer.g2else4();
-                        if (var12 > var10) {
-                            var10 = var12;
+                    for (childIdx = 0; childIdx < childIndexCount; ++childIdx) {
+                        var12 = childrenIndices[entryIdx][childIdx] = var2 += buffer.g2else4();
+                        if (var12 > childSizeCount) {
+                            childSizeCount = var12;
                         }
                     }
 
-                    childrenSizes[var8] = new Object[var10 + 1];
+                    childrenSizes[entryIdx] = new Object[childSizeCount + 1];
                 }
             } else {
-                for (var7 = 0; var7 < entryCount; ++var7) {
-                    var8 = entryIndices[var7];
-                    var9 = childrenCounts[var8];
-                    var5 = 0;
-                    var10 = -1;
-                    childrenIndices[var8] = new int[var9];
+                for (entry = 0; entry < this.entryCount; ++entry) {
+                    entryIdx = entryIndices[entry];
+                    childIndexCount = childrenCounts[entryIdx];
+                    var2 = 0;
+                    childSizeCount = -1;
+                    childrenIndices[entryIdx] = new int[childIndexCount];
 
-                    for (var11 = 0; var11 < var9; ++var11) {
-                        var12 = childrenIndices[var8][var11] = var5 += buffer.g2();
-                        if (var12 > var10) {
-                            var10 = var12;
+                    for (childIdx = 0; childIdx < childIndexCount; ++childIdx) {
+                        var12 = childrenIndices[entryIdx][childIdx] = var2 += buffer.g2();
+                        if (var12 > childSizeCount) {
+                            childSizeCount = var12;
                         }
                     }
 
-                    childrenSizes[var8] = new Object[var10 + 1];
+                    childrenSizes[entryIdx] = new Object[childSizeCount + 1];
                 }
             }
 
-            if (var4 != 0) {
-                childrenNames = new int[var6 + 1][];
-                children = new IdentityTable[var6 + 1];
+            if (var1 != 0) {
+                childrenNames = new int[entryCount + 1][];
+                children = new IdentityTable[entryCount + 1];
 
-                for (var7 = 0; var7 < entryCount; ++var7) {
-                    var8 = entryIndices[var7];
-                    var9 = childrenCounts[var8];
-                    childrenNames[var8] = new int[childrenSizes[var8].length];
+                for (entry = 0; entry < this.entryCount; ++entry) {
+                    entryIdx = entryIndices[entry];
+                    childIndexCount = childrenCounts[entryIdx];
+                    childrenNames[entryIdx] = new int[childrenSizes[entryIdx].length];
 
-                    for (var10 = 0; var10 < var9; ++var10) {
-                        childrenNames[var8][childrenIndices[var8][var10]] = buffer.g4();
+                    for (childSizeCount = 0; childSizeCount < childIndexCount; ++childSizeCount) {
+                        childrenNames[entryIdx][childrenIndices[entryIdx][childSizeCount]] = buffer.g4();
                     }
 
-                    children[var8] = new IdentityTable(childrenNames[var8]);
+                    children[entryIdx] = new IdentityTable(childrenNames[entryIdx]);
                 }
             }
 
@@ -500,7 +496,7 @@ public abstract class ReferenceTable {
     public boolean method909(String var1) {
         var1 = var1.toLowerCase();
         int var2 = entry.get(djb2(var1));
-        return method911(var2);
+        return loadGroup(var2);
     }
 
     public int method895(String var1) {

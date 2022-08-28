@@ -82,11 +82,11 @@ public class Archive extends ReferenceTable {
 
     }
 
-    void load(int var1) {
-        if (cache != null && valid != null && valid[var1]) {
-            WorldMapCacheArea.method77(var1, cache, this);
+    void load(int i) {
+        if (cache != null && valid != null && valid[i]) {
+            WorldMapCacheArea.method77(i, cache, this);
         } else {
-            Js5Worker.request(this, index, var1, super.groupCrcs[var1], (byte) 2, true);
+            Js5Worker.request(this, index, i, super.groupCrcs[i], (byte) 2, true);
         }
 
     }
@@ -95,15 +95,15 @@ public class Archive extends ReferenceTable {
         return getFileIds(file) != null;
     }
 
-    int getLoadingPercent(int var1) {
-        if (super.groups[var1] != null) {
+    int getLoadingPercent(int group) {
+        if (super.groups[group] != null) {
             return 100;
         }
-        if (valid[var1]) {
+        if (valid[group]) {
             return 100;
         }
         int var2 = index;
-        long var3 = (var2 << 16) + var1;
+        long var3 = (var2 << 16) + group;
         int var5;
         if (Js5Worker.current != null && Js5Worker.current.key == var3) {
             var5 = Js5Worker.archiveBuffer.pos * 99 / (Js5Worker.archiveBuffer.payload.length - Js5Worker.current.padding) + 1;

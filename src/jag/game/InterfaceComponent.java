@@ -1126,7 +1126,7 @@ public class InterfaceComponent extends Node {
         if (valid[group]) {
             return true;
         }
-        if (!aReferenceTable1375.method911(group)) {
+        if (!aReferenceTable1375.loadGroup(group)) {
             return false;
         }
         int componentCount = aReferenceTable1375.getFileCount(group);

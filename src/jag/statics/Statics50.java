@@ -1,11 +1,9 @@
 package jag.statics;
 
 import jag.audi.PcmStream_Sub3;
-import jag.audi.PcmStream_Sub4;
-import jag.commons.Jagexception;
 import jag.game.Server;
 import jag.graphics.Font;
-import jag.opcode.OutgoingPacket;
+import jag.graphics.SpriteProvider;
 import jag.worldmap.WorldMapTileDecor;
 
 import javax.imageio.ImageIO;
@@ -21,13 +19,13 @@ public class Statics50 {
         if (var0 == null) {
             return null;
         }
-        Font var1 = new Font(var0, Statics41.anIntArray1821, PcmStream_Sub4.anIntArray1107, Statics41.anIntArray1820, Jagexception.anIntArray1878, OutgoingPacket.aByteArrayArray114);
-        Statics41.anIntArray1821 = null;
-        PcmStream_Sub4.anIntArray1107 = null;
-        Statics41.anIntArray1820 = null;
-        Jagexception.anIntArray1878 = null;
-        Statics41.anIntArray1823 = null;
-        OutgoingPacket.aByteArrayArray114 = null;
+        Font var1 = new Font(var0, SpriteProvider.offsetsX, SpriteProvider.offsetsY, SpriteProvider.sizesX, SpriteProvider.sizesY, SpriteProvider.pixels);
+        SpriteProvider.offsetsX = null;
+        SpriteProvider.offsetsY = null;
+        SpriteProvider.sizesX = null;
+        SpriteProvider.sizesY = null;
+        SpriteProvider.palette = null;
+        SpriteProvider.pixels = null;
         return var1;
     }
 

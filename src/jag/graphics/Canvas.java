@@ -19,7 +19,7 @@ public final class Canvas extends java.awt.Canvas {
     }
 
     public static Sprite[] method643(ReferenceTable var0, int var1, int var2) {
-        return !ReferenceTable.method534(var0, var1, var2) ? null : Sprite.method194();
+        return !SpriteProvider.loadSprites(var0, var1, var2) ? null : Sprite.method194();
     }
 
     public static void method640(String var0, boolean var1) {

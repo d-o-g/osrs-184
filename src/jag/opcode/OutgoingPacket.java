@@ -6,8 +6,6 @@ public class OutgoingPacket extends Node {
 
     public static final OutgoingPacket[] cache = new OutgoingPacket[300];
 
-    public static byte[][] aByteArrayArray114;
-
     public static int index = 0;
 
     public BitBuffer buffer;

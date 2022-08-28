@@ -1,11 +1,6 @@
 package jag.graphics;
 
-import jag.audi.PcmStream_Sub4;
-import jag.commons.Jagexception;
-import jag.game.type.AnimationFrameGroup;
 import jag.js5.ReferenceTable;
-import jag.opcode.OutgoingPacket;
-import jag.statics.Statics41;
 
 public final class Sprite extends JagGraphics {
 
@@ -20,16 +15,16 @@ public final class Sprite extends JagGraphics {
     public int anInt375;
     public int anInt574;
 
-    public Sprite(int[] var1, int var2, int var3) {
-        this.pixels = var1;
-        this.width = this.anInt112 = var2;
-        this.height = this.anInt375 = var3;
+    public Sprite(int[] pixels, int width, int height) {
+        this.pixels = pixels;
+        this.width = this.anInt112 = width;
+        this.height = this.anInt375 = height;
         this.anInt574 = 0;
         this.anInt377 = 0;
     }
 
-    public Sprite(int var1, int var2) {
-        this(new int[var2 * var1], var1, var2);
+    public Sprite(int width, int height) {
+        this(new int[height * width], width, height);
     }
 
     public Sprite() {
@@ -306,60 +301,60 @@ public final class Sprite extends JagGraphics {
     }
 
     public static Sprite get(ReferenceTable var0, int var1, int var2) {
-        return !ReferenceTable.method534(var0, var1, var2) ? null : method1336();
+        return !SpriteProvider.loadSprites(var0, var1, var2) ? null : method1336();
     }
 
     public static Sprite[] method194() {
-        Sprite[] var0 = new Sprite[Statics41.anInt1822];
+        Sprite[] var0 = new Sprite[SpriteProvider.count];
 
-        for (int var1 = 0; var1 < Statics41.anInt1822; ++var1) {
+        for (int var1 = 0; var1 < SpriteProvider.count; ++var1) {
             Sprite var2 = var0[var1] = new Sprite();
-            var2.anInt112 = Statics41.anInt1824;
-            var2.anInt375 = AnimationFrameGroup.anInt378;
-            var2.anInt377 = Statics41.anIntArray1821[var1];
-            var2.anInt574 = PcmStream_Sub4.anIntArray1107[var1];
-            var2.width = Statics41.anIntArray1820[var1];
-            var2.height = Jagexception.anIntArray1878[var1];
+            var2.anInt112 = SpriteProvider.width;
+            var2.anInt375 = SpriteProvider.height;
+            var2.anInt377 = SpriteProvider.offsetsX[var1];
+            var2.anInt574 = SpriteProvider.offsetsY[var1];
+            var2.width = SpriteProvider.sizesX[var1];
+            var2.height = SpriteProvider.sizesY[var1];
             int var3 = var2.height * var2.width;
-            byte[] var4 = OutgoingPacket.aByteArrayArray114[var1];
+            byte[] var4 = SpriteProvider.pixels[var1];
             var2.pixels = new int[var3];
 
             for (int var5 = 0; var5 < var3; ++var5) {
-                var2.pixels[var5] = Statics41.anIntArray1823[var4[var5] & 255];
+                var2.pixels[var5] = SpriteProvider.palette[var4[var5] & 255];
             }
         }
 
-        Statics41.anIntArray1821 = null;
-        PcmStream_Sub4.anIntArray1107 = null;
-        Statics41.anIntArray1820 = null;
-        Jagexception.anIntArray1878 = null;
-        Statics41.anIntArray1823 = null;
-        OutgoingPacket.aByteArrayArray114 = null;
+        SpriteProvider.offsetsX = null;
+        SpriteProvider.offsetsY = null;
+        SpriteProvider.sizesX = null;
+        SpriteProvider.sizesY = null;
+        SpriteProvider.palette = null;
+        SpriteProvider.pixels = null;
         return var0;
     }
 
     public static Sprite method1336() {
         Sprite var0 = new Sprite();
-        var0.anInt112 = Statics41.anInt1824;
-        var0.anInt375 = AnimationFrameGroup.anInt378;
-        var0.anInt377 = Statics41.anIntArray1821[0];
-        var0.anInt574 = PcmStream_Sub4.anIntArray1107[0];
-        var0.width = Statics41.anIntArray1820[0];
-        var0.height = Jagexception.anIntArray1878[0];
+        var0.anInt112 = SpriteProvider.width;
+        var0.anInt375 = SpriteProvider.height;
+        var0.anInt377 = SpriteProvider.offsetsX[0];
+        var0.anInt574 = SpriteProvider.offsetsY[0];
+        var0.width = SpriteProvider.sizesX[0];
+        var0.height = SpriteProvider.sizesY[0];
         int var1 = var0.height * var0.width;
-        byte[] var2 = OutgoingPacket.aByteArrayArray114[0];
+        byte[] var2 = SpriteProvider.pixels[0];
         var0.pixels = new int[var1];
 
         for (int var3 = 0; var3 < var1; ++var3) {
-            var0.pixels[var3] = Statics41.anIntArray1823[var2[var3] & 255];
+            var0.pixels[var3] = SpriteProvider.palette[var2[var3] & 255];
         }
 
-        Statics41.anIntArray1821 = null;
-        PcmStream_Sub4.anIntArray1107 = null;
-        Statics41.anIntArray1820 = null;
-        Jagexception.anIntArray1878 = null;
-        Statics41.anIntArray1823 = null;
-        OutgoingPacket.aByteArrayArray114 = null;
+        SpriteProvider.offsetsX = null;
+        SpriteProvider.offsetsY = null;
+        SpriteProvider.sizesX = null;
+        SpriteProvider.sizesY = null;
+        SpriteProvider.palette = null;
+        SpriteProvider.pixels = null;
         return var0;
     }
 

@@ -1,12 +1,8 @@
 package jag.worldmap;
 
-import jag.audi.PcmStream_Sub4;
-import jag.commons.Jagexception;
-import jag.game.type.AnimationFrameGroup;
 import jag.graphics.IndexedSprite;
+import jag.graphics.SpriteProvider;
 import jag.js5.ReferenceTable;
-import jag.opcode.OutgoingPacket;
-import jag.statics.Statics41;
 
 public final class WorldMapArea {
 
@@ -25,24 +21,24 @@ public final class WorldMapArea {
         int var3 = var0.getGroup(var1);
         int var4 = var0.getFile(var3, var2);
         IndexedSprite var5;
-        if (!ReferenceTable.method534(var0, var3, var4)) {
+        if (!SpriteProvider.loadSprites(var0, var3, var4)) {
             var5 = null;
         } else {
             IndexedSprite var6 = new IndexedSprite();
-            var6.anInt375 = Statics41.anInt1824;
-            var6.anInt372 = AnimationFrameGroup.anInt378;
-            var6.insetX = Statics41.anIntArray1821[0];
-            var6.insetY = PcmStream_Sub4.anIntArray1107[0];
-            var6.anInt378 = Statics41.anIntArray1820[0];
-            var6.anInt377 = Jagexception.anIntArray1878[0];
-            var6.palette = Statics41.anIntArray1823;
-            var6.indices = OutgoingPacket.aByteArrayArray114[0];
-            Statics41.anIntArray1821 = null;
-            PcmStream_Sub4.anIntArray1107 = null;
-            Statics41.anIntArray1820 = null;
-            Jagexception.anIntArray1878 = null;
-            Statics41.anIntArray1823 = null;
-            OutgoingPacket.aByteArrayArray114 = null;
+            var6.anInt375 = SpriteProvider.width;
+            var6.anInt372 = SpriteProvider.height;
+            var6.insetX = SpriteProvider.offsetsX[0];
+            var6.insetY = SpriteProvider.offsetsY[0];
+            var6.anInt378 = SpriteProvider.sizesX[0];
+            var6.anInt377 = SpriteProvider.sizesY[0];
+            var6.palette = SpriteProvider.palette;
+            var6.indices = SpriteProvider.pixels[0];
+            SpriteProvider.offsetsX = null;
+            SpriteProvider.offsetsY = null;
+            SpriteProvider.sizesX = null;
+            SpriteProvider.sizesY = null;
+            SpriteProvider.palette = null;
+            SpriteProvider.pixels = null;
             var5 = var6;
         }
 

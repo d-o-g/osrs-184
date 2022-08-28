@@ -1,14 +1,8 @@
 package jag.graphics;
 
-import jag.audi.PcmStream_Sub4;
-import jag.commons.Jagexception;
 import jag.commons.collection.Node;
-import jag.game.type.AnimationFrameGroup;
 import jag.js5.ReferenceTable;
 import jag.opcode.Buffer;
-import jag.opcode.OutgoingPacket;
-import jag.statics.Statics41;
-import jag.statics.Statics45;
 
 public class Material extends Node {
 
@@ -87,7 +81,7 @@ public class Material extends Node {
             if (var8 == null) {
                 index = false;
             } else {
-                Statics45.method267(var8);
+                SpriteProvider.loadSprites(var8);
                 index = true;
             }
 
@@ -96,20 +90,20 @@ public class Material extends Node {
                 sprite = null;
             } else {
                 IndexedSprite tmp = new IndexedSprite();
-                tmp.anInt375 = Statics41.anInt1824;
-                tmp.anInt372 = AnimationFrameGroup.anInt378;
-                tmp.insetX = Statics41.anIntArray1821[0];
-                tmp.insetY = PcmStream_Sub4.anIntArray1107[0];
-                tmp.anInt378 = Statics41.anIntArray1820[0];
-                tmp.anInt377 = Jagexception.anIntArray1878[0];
-                tmp.palette = Statics41.anIntArray1823;
-                tmp.indices = OutgoingPacket.aByteArrayArray114[0];
-                Statics41.anIntArray1821 = null;
-                PcmStream_Sub4.anIntArray1107 = null;
-                Statics41.anIntArray1820 = null;
-                Jagexception.anIntArray1878 = null;
-                Statics41.anIntArray1823 = null;
-                OutgoingPacket.aByteArrayArray114 = null;
+                tmp.anInt375 = SpriteProvider.width;
+                tmp.anInt372 = SpriteProvider.height;
+                tmp.insetX = SpriteProvider.offsetsX[0];
+                tmp.insetY = SpriteProvider.offsetsY[0];
+                tmp.anInt378 = SpriteProvider.sizesX[0];
+                tmp.anInt377 = SpriteProvider.sizesY[0];
+                tmp.palette = SpriteProvider.palette;
+                tmp.indices = SpriteProvider.pixels[0];
+                SpriteProvider.offsetsX = null;
+                SpriteProvider.offsetsY = null;
+                SpriteProvider.sizesX = null;
+                SpriteProvider.sizesY = null;
+                SpriteProvider.palette = null;
+                SpriteProvider.pixels = null;
                 sprite = tmp;
             }
 
