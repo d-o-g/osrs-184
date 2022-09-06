@@ -43,11 +43,11 @@ public class StructDefinition extends DoublyLinkedNode {
 
     }
 
-    public String method1096(int var1, String var2) {
+    public String getString(int var1, String var2) {
         return IterableNodeTable.getStringParameter(data, var1, var2);
     }
 
-    public int method1097(int var1, int var2) {
+    public int getInteger(int var1, int var2) {
         return IterableNodeTable.getIntParameter(data, var1, var2);
     }
 

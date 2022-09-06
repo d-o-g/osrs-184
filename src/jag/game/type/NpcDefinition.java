@@ -39,7 +39,7 @@ public class NpcDefinition extends DoublyLinkedNode {
     public boolean interactable;
     public boolean clickable;
     public boolean follower;
-    public IterableNodeTable<? super Node> properties;
+    public IterableNodeTable<? super Node> parameters;
     public int varbitIndex;
     public int[] transformedModelIds;
     public int varpIndex;
@@ -148,7 +148,7 @@ public class NpcDefinition extends DoublyLinkedNode {
     public final NpcDefinition transform() {
         int index = -1;
         if (varbitIndex != -1) {
-            index = Varbit.get(varbitIndex);
+            index = Varbit.getValue(varbitIndex);
         } else if (varpIndex != -1) {
             index = Vars.values[varpIndex];
         }
@@ -246,7 +246,7 @@ public class NpcDefinition extends DoublyLinkedNode {
             } else if (opcode == 111) {
                 follower = true;
             } else if (opcode == 249) {
-                properties = IterableNodeTable.decode(buffer, properties);
+                parameters = IterableNodeTable.decode(buffer, parameters);
             }
         } else {
             varbitIndex = buffer.g2();
@@ -417,7 +417,7 @@ public class NpcDefinition extends DoublyLinkedNode {
         }
         int var1 = -1;
         if (varbitIndex != -1) {
-            var1 = Varbit.get(varbitIndex);
+            var1 = Varbit.getValue(varbitIndex);
         } else if (varpIndex != -1) {
             var1 = Vars.values[varpIndex];
         }
@@ -429,10 +429,10 @@ public class NpcDefinition extends DoublyLinkedNode {
     }
 
     public int method511(int var1, int var2) {
-        return IterableNodeTable.getIntParameter(properties, var1, var2);
+        return IterableNodeTable.getIntParameter(parameters, var1, var2);
     }
 
     public String method504(int var1, String var2) {
-        return IterableNodeTable.getStringParameter(properties, var1, var2);
+        return IterableNodeTable.getStringParameter(parameters, var1, var2);
     }
 }

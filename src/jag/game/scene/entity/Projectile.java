@@ -18,7 +18,7 @@ public final class Projectile extends Entity {
     public final int startCycle;
     public final int slope;
     public final int targetIndex;
-    public final int anInt112;
+    public final int targetHeight;
 
     public boolean inMotion;
 
@@ -36,28 +36,24 @@ public final class Projectile extends Entity {
     public int yRotation;
     public int xRotation;
 
-    public Projectile(int var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8, int var9, int var10, int var11) {
-        inMotion = false;
+    public Projectile(int id, int floorLevel, int startX, int startY, int height, int startCycle, int endCycle, int slope, int targetDistance, int targetIndex, int targetHeight) {
         anInt1659 = 0;
         anInt1661 = 0;
-        id = var1;
-        floorLevel = var2;
-        startX = var3;
-        startY = var4;
-        height = var5;
-        startCycle = var6;
-        endCycle = var7;
-        slope = var8;
-        targetDistance = var9;
-        targetIndex = var10;
-        anInt112 = var11;
+        this.id = id;
+        this.floorLevel = floorLevel;
+        this.startX = startX;
+        this.startY = startY;
+        this.height = height;
+        this.startCycle = startCycle;
+        this.endCycle = endCycle;
+        this.slope = slope;
+        this.targetDistance = targetDistance;
+        this.targetIndex = targetIndex;
+        this.targetHeight = targetHeight;
         inMotion = false;
-        int id = EffectAnimation.get(this.id).animation;
-        if (id != -1) {
-            sequence = AnimationSequence.get(id);
-        } else {
-            sequence = null;
-        }
+
+        int animation = EffectAnimation.get(this.id).animation;
+        sequence = animation != -1 ? AnimationSequence.get(animation) : null;
 
     }
 

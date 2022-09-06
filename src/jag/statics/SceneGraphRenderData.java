@@ -1,6 +1,6 @@
 package jag.statics;
 
-public final class Statics45 {
+public final class SceneGraphRenderData {
 
     public static final int[] anIntArray406 = new int[]{1, 2, 4, 8};
     public static final int[] anIntArray395 = new int[]{16, 32, 64, 128};

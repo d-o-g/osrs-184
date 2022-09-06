@@ -34,7 +34,7 @@ public class DefaultRouteStrategy extends RouteStrategy {
 
     public static String method1502(Buffer buffer) {
         try {
-            int len = buffer.gsmarts();
+            int len = buffer.gSmarts();
             if (len > 32767) {
                 len = 32767;
             }

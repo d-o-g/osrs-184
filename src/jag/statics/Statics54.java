@@ -18,7 +18,7 @@ public class Statics54 {
         int var11 = -1;
 
         while (true) {
-            int var12 = var10.gsmartsseq();
+            int var12 = var10.gSmartsSeq();
             if (var12 == 0) {
                 return;
             }
@@ -27,7 +27,7 @@ public class Statics54 {
             int var13 = 0;
 
             while (true) {
-                int var14 = var10.gsmarts();
+                int var14 = var10.gSmarts();
                 if (var14 == 0) {
                     break;
                 }
@@ -91,7 +91,7 @@ public class Statics54 {
                     var36 = var3 + var37;
                     if (var28 > 0 && var36 > 0 && var28 < 103 && var36 < 103) {
                         int var38 = var1;
-                        if ((Statics45.sceneRenderRules[1][var28][var36] & 2) == 2) {
+                        if ((SceneGraphRenderData.sceneRenderRules[1][var28][var36] & 2) == 2) {
                             var38 = var1 - 1;
                         }
 

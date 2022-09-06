@@ -132,7 +132,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
     public final HitsplatDefinition method1437() {
         int var1 = -1;
         if (varpbitIndex != -1) {
-            var1 = Varbit.get(varpbitIndex);
+            var1 = Varbit.getValue(varpbitIndex);
         } else if (varpIndex != -1) {
             var1 = Vars.values[varpIndex];
         }

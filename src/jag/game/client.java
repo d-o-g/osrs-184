@@ -79,10 +79,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static final int[] anIntArray942 = new int[50];
     public static final int[] inventories = new int[32];
     public static final int[] anIntArray1096 = new int[128];
-    public static final int[] anIntArray899 = new int[50];
-    public static final int[] anIntArray905 = new int[50];
-    public static final int[] anIntArray906 = new int[50];
-    public static final int[] anIntArray902 = new int[50];
+    public static final int[] audioEffectIds = new int[50];
+    public static final int[] audioEffectLoops = new int[50];
+    public static final int[] audioEffectDelays = new int[50];
+    public static final int[] audioEffectPositions = new int[50];
     public static final int[] anIntArray917 = new int[5];
     public static final int[] anIntArray918 = new int[5];
     public static final int[] anIntArray1076 = new int[32];
@@ -364,29 +364,29 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static void processAudioEffects() {
         for (int i = 0; i < audioEffectCount; ++i) {
-            if (anIntArray906[i] >= -10) {
+            if (audioEffectDelays[i] >= -10) {
                 AudioEffect effect = audioEffects[i];
                 if (effect == null) {
-                    effect = AudioEffect.load(Archive.audioEffects, anIntArray899[i], 0);
+                    effect = AudioEffect.load(Archive.audioEffects, audioEffectIds[i], 0);
                     if (effect == null) {
                         continue;
                     }
 
-                    anIntArray906[i] += effect.method1521();
+                    audioEffectDelays[i] += effect.method1521();
                     audioEffects[i] = effect;
                 }
 
-                if (anIntArray906[i] < 0) {
+                if (audioEffectDelays[i] < 0) {
                     int var9;
-                    if (anIntArray902[i] != 0) {
-                        int var3 = (anIntArray902[i] & 255) * 128;
-                        int var4 = anIntArray902[i] >> 16 & 255;
+                    if (audioEffectPositions[i] != 0) {
+                        int var3 = (audioEffectPositions[i] & 255) * 128;
+                        int var4 = audioEffectPositions[i] >> 16 & 255;
                         int var5 = var4 * 128 + 64 - PlayerEntity.local.absoluteX;
                         if (var5 < 0) {
                             var5 = -var5;
                         }
 
-                        int var6 = anIntArray902[i] >> 8 & 255;
+                        int var6 = audioEffectPositions[i] >> 8 & 255;
                         int var7 = var6 * 128 + 64 - PlayerEntity.local.absoluteY;
                         if (var7 < 0) {
                             var7 = -var7;
@@ -394,7 +394,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                         int var8 = var5 + var7 - 128;
                         if (var8 > var3) {
-                            anIntArray906[i] = -100;
+                            audioEffectDelays[i] = -100;
                             continue;
                         }
 
@@ -410,21 +410,21 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     if (var9 > 0) {
                         RawAudioOverride var10 = effect.method1523().resample(Statics46.aClass98_446);
                         PcmStream_Sub2 var11 = PcmStream_Sub2.method598(var10, 100, var9);
-                        var11.method585(anIntArray905[i] - 1);
+                        var11.method585(audioEffectLoops[i] - 1);
                         WorldMapLabelSize.aClass5_Sub6_Sub1_528.method312(var11);
                     }
 
-                    anIntArray906[i] = -100;
+                    audioEffectDelays[i] = -100;
                 }
             } else {
                 --audioEffectCount;
 
                 for (int var1 = i; var1 < audioEffectCount; ++var1) {
-                    anIntArray899[var1] = anIntArray899[var1 + 1];
+                    audioEffectIds[var1] = audioEffectIds[var1 + 1];
                     audioEffects[var1] = audioEffects[var1 + 1];
-                    anIntArray905[var1] = anIntArray905[var1 + 1];
-                    anIntArray906[var1] = anIntArray906[var1 + 1];
-                    anIntArray902[var1] = anIntArray902[var1 + 1];
+                    audioEffectLoops[var1] = audioEffectLoops[var1 + 1];
+                    audioEffectDelays[var1] = audioEffectDelays[var1 + 1];
+                    audioEffectPositions[var1] = audioEffectPositions[var1 + 1];
                 }
 
                 --i;
@@ -452,15 +452,15 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static void processObjectSpawns() {
         for (PendingSpawn spawn = pendingSpawns.head(); spawn != null; spawn = pendingSpawns.next()) {
-            if (spawn.hitpoints > 0) {
-                --spawn.hitpoints;
+            if (spawn.endCycle > 0) {
+                --spawn.endCycle;
             }
 
             int var1;
             int var2;
             ObjectDefinition var3;
             boolean var4;
-            if (spawn.hitpoints == 0) {
+            if (spawn.endCycle == 0) {
                 if (spawn.anInt380 >= 0) {
                     var1 = spawn.anInt380;
                     var2 = spawn.anInt375;
@@ -482,14 +482,14 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 SceneGraph.method404(spawn.floorLevel, spawn.type, spawn.sceneX, spawn.sceneY, spawn.anInt380, spawn.anInt112, spawn.anInt375);
                 spawn.unlink();
             } else {
-                if (spawn.delay > 0) {
-                    --spawn.delay;
+                if (spawn.startCycle > 0) {
+                    --spawn.startCycle;
                 }
 
-                if (spawn.delay == 0 && spawn.sceneX >= 1 && spawn.sceneY >= 1 && spawn.sceneX <= 102 && spawn.sceneY <= 102) {
-                    if (spawn.anInt693 >= 0) {
-                        var1 = spawn.anInt693;
-                        var2 = spawn.anInt564;
+                if (spawn.startCycle == 0 && spawn.sceneX >= 1 && spawn.sceneY >= 1 && spawn.sceneX <= 102 && spawn.sceneY <= 102) {
+                    if (spawn.id >= 0) {
+                        var1 = spawn.id;
+                        var2 = spawn.objectType;
                         var3 = ObjectDefinition.get(var1);
                         if (var2 == 11) {
                             var2 = 10;
@@ -505,11 +505,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
                     }
 
-                    SceneGraph.method404(spawn.floorLevel, spawn.type, spawn.sceneX, spawn.sceneY, spawn.anInt693, spawn.orientation, spawn.anInt564);
-                    spawn.delay = -1;
-                    if (spawn.anInt380 == spawn.anInt693 && spawn.anInt380 == -1) {
+                    SceneGraph.method404(spawn.floorLevel, spawn.type, spawn.sceneX, spawn.sceneY, spawn.id, spawn.orientation, spawn.objectType);
+                    spawn.startCycle = -1;
+                    if (spawn.anInt380 == spawn.id && spawn.anInt380 == -1) {
                         spawn.unlink();
-                    } else if (spawn.anInt693 == spawn.anInt380 && spawn.anInt112 == spawn.orientation && spawn.anInt375 == spawn.anInt564) {
+                    } else if (spawn.id == spawn.anInt380 && spawn.anInt112 == spawn.orientation && spawn.anInt375 == spawn.objectType) {
                         spawn.unlink();
                     }
                 }
@@ -672,11 +672,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static void method884(int var0, int var1, int var2) {
         if (anInt901 != 0 && var1 != 0 && audioEffectCount < 50) {
-            anIntArray899[audioEffectCount] = var0;
-            anIntArray905[audioEffectCount] = var1;
-            anIntArray906[audioEffectCount] = var2;
+            audioEffectIds[audioEffectCount] = var0;
+            audioEffectLoops[audioEffectCount] = var1;
+            audioEffectDelays[audioEffectCount] = var2;
             audioEffects[audioEffectCount] = null;
-            anIntArray902[audioEffectCount] = 0;
+            audioEffectPositions[audioEffectCount] = 0;
             ++audioEffectCount;
         }
 
@@ -690,13 +690,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     int var5 = var4 >> 8;
                     int var6 = var4 >> 4 & 7;
                     int var7 = var4 & 15;
-                    anIntArray899[audioEffectCount] = var5;
-                    anIntArray905[audioEffectCount] = var6;
-                    anIntArray906[audioEffectCount] = 0;
+                    audioEffectIds[audioEffectCount] = var5;
+                    audioEffectLoops[audioEffectCount] = var6;
+                    audioEffectDelays[audioEffectCount] = 0;
                     audioEffects[audioEffectCount] = null;
                     int var8 = (var2 - 64) / 128;
                     int var9 = (var3 - 64) / 128;
-                    anIntArray902[audioEffectCount] = var7 + (var9 << 8) + (var8 << 16);
+                    audioEffectPositions[audioEffectCount] = var7 + (var9 << 8) + (var8 << 16);
                     ++audioEffectCount;
                 }
             }
@@ -771,10 +771,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static void teleport(int var0, int var1, int var2, boolean var3) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TELEPORT, stream.encryptor);
-        packet.buffer.writeByteS(var2);
+        packet.buffer.p1_alt1(var2);
         packet.buffer.ip4(var3 ? anInt1002 : 0);
         packet.buffer.p2(var1);
-        packet.buffer.ip2a(var0);
+        packet.buffer.ip2_alt1(var0);
         stream.writeLater(packet);
     }
 
@@ -885,7 +885,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
         MouseWheel.provider = this.method943();
         WorldMapTileDecor_Sub2.referenceCache = new ResourceCache(255, BufferedFile.dataFile, BufferedFile.indexFile, 500000);
-        preferences = ItemDefinition.method529();
+        preferences = ClientPreferences.create();
         this.updateClipboard();
         String var4 = WorldMapController.aString264;
         GameShell.applet = this;
@@ -1044,8 +1044,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_IF_ANIMATION == stream.currentIncomingPacket) {
-                int animation = incoming.method1067();
-                int uid = incoming.method1011();
+                int animation = incoming.g2_alt2();
+                int uid = incoming.g4_alt1();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
                 if (animation != component.animation || animation == -1) {
                     component.animation = animation;
@@ -1061,7 +1061,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             if (ServerProt.SET_IF_TO_ITEM_MODEL == stream.currentIncomingPacket) {
                 int uid = incoming.g4();
                 int itemStackSize = incoming.ig4();
-                int itemId = incoming.readLEUShortA();
+                int itemId = incoming.g2_le();
                 if (itemId == 65535) {
                     itemId = -1;
                 }
@@ -1110,8 +1110,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_IF_MODEL_TYPE2 == stream.currentIncomingPacket) {
-                int uid = incoming.method1011();
-                int modelId = incoming.method1055();
+                int uid = incoming.g4_alt1();
+                int modelId = incoming.g2_alt4();
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
                 if (component.modelType != 2 || modelId != component.modelId) {
                     component.modelType = 2;
@@ -1185,8 +1185,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_VARP2 == stream.currentIncomingPacket) {
-                int value = incoming.method1019();
-                int index = incoming.readLEUShortA();
+                int value = incoming.g4_alt2();
+                int index = incoming.g2_le();
                 Vars.baseValues[index] = value;
                 if (Vars.values[index] != value) {
                     Vars.values[index] = value;
@@ -1199,7 +1199,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_REGION_CHUNK == stream.currentIncomingPacket) {
-                SceneGraph.regionChunkX = incoming.ig1();
+                SceneGraph.regionChunkX = incoming.ig1_alt1();
                 SceneGraph.regionChunkY = incoming.g1();
                 stream.currentIncomingPacket = null;
                 return true;
@@ -1220,9 +1220,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_PLAYER_ACTION == stream.currentIncomingPacket) {
-                int var6 = incoming.method1074();
+                int var6 = incoming.g1_alt4();
                 StringBuilder action = new StringBuilder(incoming.gstr());
-                int var7 = incoming.method1056();
+                int var7 = incoming.g1_alt3();
                 if (var7 >= 1 && var7 <= 8) {
                     if (action.toString().equalsIgnoreCase("null")) {
                         action = null;
@@ -1339,7 +1339,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_INV_STOP_TRANSIT == stream.currentIncomingPacket) {
-                int key = incoming.method1055();
+                int key = incoming.g2_alt4();
                 Inventory.delete(key);
                 inventories[++anInt1078 - 1 & 31] = key & 32767;
                 stream.currentIncomingPacket = null;
@@ -1347,7 +1347,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.AN_SERVER_PROT_236 == stream.currentIncomingPacket) {
-                int rootInterfaceIndex = incoming.method1055();
+                int rootInterfaceIndex = incoming.g2_alt4();
                 client.rootInterfaceIndex = rootInterfaceIndex;
                 this.updateSize(false);
                 InterfaceComponent.loadAnimable(rootInterfaceIndex);
@@ -1362,7 +1362,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.ADD_CHAT_MESSAGE == stream.currentIncomingPacket) {
-                int type = incoming.gsmarts();
+                int type = incoming.gSmarts();
                 boolean sentByPlayer = incoming.g1() == 1;
                 String name = "";
                 boolean ignored = false;
@@ -1421,7 +1421,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 InterfaceComponent component = uid >= 0 ? InterfaceComponent.lookup(uid) : null;
 
                 while (incoming.pos < stream.incomingPacketSize) {
-                    int var8 = incoming.gsmarts();
+                    int var8 = incoming.gSmarts();
                     int var9 = incoming.g2();
                     int var15 = 0;
                     if (var9 != 0) {
@@ -1449,8 +1449,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.SET_COMPONENT_MODEL_TYPE1 == stream.currentIncomingPacket) {
-                int var6 = incoming.method1019();
-                int var5 = incoming.method1055();
+                int var6 = incoming.g4_alt2();
+                int var5 = incoming.g2_alt4();
                 InterfaceComponent component = InterfaceComponent.lookup(var6);
                 if (component.modelType != 1 || var5 != component.modelId) {
                     component.modelType = 1;
@@ -1481,8 +1481,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (ServerProt.SET_COMPONENT_ZOOM == stream.currentIncomingPacket) {
                 int var6 = incoming.g2();
-                int var5 = incoming.method1055();
-                int var7 = incoming.method1060();
+                int var5 = incoming.g2_alt4();
+                int var7 = incoming.g2s_le();
                 int var8 = incoming.g4();
                 InterfaceComponent var17 = InterfaceComponent.lookup(var8);
                 if (var5 != var17.xRotation || var7 != var17.zRotation || var6 != var17.modelZoom) {
@@ -1497,17 +1497,17 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_CHAT_MODE == stream.currentIncomingPacket) {
-                tradeChatMode = incoming.method1074();
-                publicChatMode = incoming.method1056();
+                tradeChatMode = incoming.g1_alt4();
+                publicChatMode = incoming.g1_alt3();
                 stream.currentIncomingPacket = null;
                 return true;
             }
 
             if (ServerProt.UPDATE_STATS == stream.currentIncomingPacket) {
                 SubInterface.process();
-                int experience = incoming.method1019();
-                int index = incoming.method1056();
-                int level = incoming.method1074();
+                int experience = incoming.g4_alt2();
+                int index = incoming.g1_alt3();
+                int level = incoming.g1_alt4();
                 experiences[index] = experience;
                 currentLevels[index] = level;
                 levels[index] = 1;
@@ -1530,9 +1530,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.AN_SERVER_PROT_245 == stream.currentIncomingPacket) {
-                int var6 = incoming.method1055();
-                int var5 = incoming.method1011();
-                int var7 = incoming.method1060();
+                int var6 = incoming.g2_alt4();
+                int var5 = incoming.g4_alt1();
+                int var7 = incoming.g2s_le();
                 InterfaceComponent var47 = InterfaceComponent.lookup(var5);
                 var47.rotationKey = var6 + (var7 << 16);
                 stream.currentIncomingPacket = null;
@@ -1620,7 +1620,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_VARP == stream.currentIncomingPacket) {
-                int index = incoming.method1055();
+                int index = incoming.g2_alt4();
                 byte value = incoming.g1b();
                 Vars.baseValues[index] = value;
                 if (Vars.values[index] != value) {
@@ -1652,8 +1652,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.RESET_REGION_CHUNK == stream.currentIncomingPacket) {
-                SceneGraph.regionChunkY = incoming.method1074();
-                SceneGraph.regionChunkX = incoming.ig1();
+                SceneGraph.regionChunkY = incoming.g1_alt4();
+                SceneGraph.regionChunkX = incoming.ig1_alt1();
 
                 for (int x = SceneGraph.regionChunkX; x < SceneGraph.regionChunkX + 8; ++x) {
                     for (int y = SceneGraph.regionChunkY; y < SceneGraph.regionChunkY + 8; ++y) {
@@ -1666,7 +1666,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 for (PendingSpawn spawn = pendingSpawns.head(); spawn != null; spawn = pendingSpawns.next()) {
                     if (spawn.sceneX >= SceneGraph.regionChunkX && spawn.sceneX < SceneGraph.regionChunkX + 8 && spawn.sceneY >= SceneGraph.regionChunkY && spawn.sceneY < SceneGraph.regionChunkY + 8 && spawn.floorLevel == SceneGraph.floorLevel) {
-                        spawn.hitpoints = 0;
+                        spawn.endCycle = 0;
                     }
                 }
 
@@ -1738,12 +1738,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_AUDIOTRACKS == stream.currentIncomingPacket) {
-                int var6 = incoming.method1060();
+                int var6 = incoming.g2s_le();
                 if (var6 == 65535) {
                     var6 = -1;
                 }
 
-                int var5 = incoming.method1017();
+                int var5 = incoming.p3_alt1();
                 ClientProt.method5(var6);
                 stream.currentIncomingPacket = null;
                 return true;
@@ -1863,7 +1863,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.UPDATE_REGION_CHUNK == stream.currentIncomingPacket) {
-                SceneGraph.regionChunkX = incoming.ig1();
+                SceneGraph.regionChunkX = incoming.ig1_alt1();
                 SceneGraph.regionChunkY = incoming.g1();
 
                 while (incoming.pos < stream.incomingPacketSize) {
@@ -1915,7 +1915,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (ServerProt.INIT_WORLDMAP_HEATMAP == stream.currentIncomingPacket) {
-                boolean var42 = incoming.gbool();
+                boolean var42 = incoming.gBit();
                 if (var42) {
                     if (WorldMap.heatmap == null) {
                         WorldMap.heatmap = new WorldMapHeatMap();
@@ -1930,7 +1930,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             if (ServerProt.SET_IF_SCROLL == stream.currentIncomingPacket) {
                 int var6 = incoming.ig4();
-                int var5 = incoming.method1060();
+                int var5 = incoming.g2s_le();
                 InterfaceComponent var14 = InterfaceComponent.lookup(var6);
                 if (var14 != null && var14.type == 0) {
                     if (var5 > var14.viewportHeight - var14.height) {
@@ -2626,7 +2626,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                                         }
 
                                                                         OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.DRAG_ITEM, stream.encryptor);
-                                                                        outgoing.buffer.pirf4(AnimationFrameGroup.dragComponent.uid);
+                                                                        outgoing.buffer.p4_alt2(AnimationFrameGroup.dragComponent.uid);
                                                                         outgoing.buffer.p2(draggingComponentIndex);
                                                                         outgoing.buffer.p1(var35);
                                                                         outgoing.buffer.ip2(draggingComponentSourceIndex);
@@ -2651,7 +2651,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                             int var7 = SceneGraph.pendingDestinationY;
                                                             OutgoingPacket outgoing = OutgoingPacket.prepare(ClientProt.PROCESS_MOVEMENT, stream.encryptor);
                                                             outgoing.buffer.p1(5);
-                                                            outgoing.buffer.ip2a(baseX + var6);
+                                                            outgoing.buffer.ip2_alt1(baseX + var6);
                                                             outgoing.buffer.ip2(baseY + var7);
                                                             outgoing.buffer.p1n(Keyboard.heldKeys[82] ? (Keyboard.heldKeys[81] ? 2 : 1) : 0);
                                                             stream.writeLater(outgoing);
@@ -2719,11 +2719,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                                                 for (int x = oculusX - 4; x <= oculusX + 4; ++x) {
                                                                     for (int y = oculusY - 4; y <= oculusY + 4; ++y) {
                                                                         int z = SceneGraph.floorLevel;
-                                                                        if (z < 3 && (Statics45.sceneRenderRules[1][x][y] & 2) == 2) {
+                                                                        if (z < 3 && (SceneGraphRenderData.sceneRenderRules[1][x][y] & 2) == 2) {
                                                                             ++z;
                                                                         }
 
-                                                                        int var26 = baseHeight - Statics45.tileHeights[z][x][y];
+                                                                        int var26 = baseHeight - SceneGraphRenderData.tileHeights[z][x][y];
                                                                         if (var26 > var11) {
                                                                             var11 = var26;
                                                                         }
@@ -3046,7 +3046,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 if (input.pos == 8) {
                     input.pos = 0;
-                    Statics45.aLong403 = input.g8();
+                    SceneGraphRenderData.aLong403 = input.g8();
                     loginStage = 5;
                 }
             }
@@ -3062,7 +3062,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 buffer.p4(seed[1]);
                 buffer.p4(seed[2]);
                 buffer.p4(seed[3]);
-                buffer.p8(Statics45.aLong403);
+                buffer.p8(SceneGraphRenderData.aLong403);
                 if (gameState == 40) {
                     buffer.p4(DirectByteBufferProvider.anIntArray1136[0]);
                     buffer.p4(DirectByteBufferProvider.anIntArray1136[1]);
@@ -3073,7 +3073,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     switch (loginStep.anInt619) {
                         case 0:
                         case 1:
-                            buffer.p3(ZoneProt.parsedTotp);
+                            buffer.p3(Login.parsedTotp);
                             ++buffer.pos;
                             break;
                         case 2:
@@ -3087,7 +3087,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     buffer.pcstr(Login.password);
                 }
 
-                buffer.prsa(Statics51.rsaExponent, Statics51.rsaModulus);
+                buffer.pRsa(Statics51.rsaExponent, Statics51.rsaModulus);
                 DirectByteBufferProvider.anIntArray1136 = seed;
                 OutgoingPacket packet = OutgoingPacket.prepareLoginPacket();
                 packet.buffer.pos = 0;
@@ -3102,7 +3102,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 packet.buffer.p4(184);
                 packet.buffer.p4(1);
                 packet.buffer.p1(anInt923);
-                packet.buffer.p(buffer.payload, 0, buffer.pos);
+                packet.buffer.pdata(buffer.payload, 0, buffer.pos);
                 int offset = packet.buffer.pos;
                 packet.buffer.pcstr(Login.username);
                 packet.buffer.p1((resizableMode ? 1 : 0) << 1 | (lowMemory ? 1 : 0));
@@ -3110,7 +3110,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 packet.buffer.p2(canvasHeight);
                 int var12;
                 if (random != null) {
-                    packet.buffer.p(random, 0, random.length);
+                    packet.buffer.pdata(random, 0, random.length);
                 } else {
                     byte[] var11 = new byte[24];
 
@@ -3132,14 +3132,14 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
                     }
 
-                    packet.buffer.p(var11, 0, var11.length);
+                    packet.buffer.pdata(var11, 0, var11.length);
                 }
 
                 packet.buffer.pcstr(Statics57.aString1162);
                 packet.buffer.p4(WorldMapCacheArea.anInt130);
                 Buffer var15 = new Buffer(operatingSystemNode.getPayloadSize());
                 operatingSystemNode.writeTo(var15);
-                packet.buffer.p(var15.payload, 0, var15.payload.length);
+                packet.buffer.pdata(var15.payload, 0, var15.payload.length);
                 packet.buffer.p1(anInt923);
                 packet.buffer.p4(0);
                 packet.buffer.p4(Archive.skeletons.hash);
@@ -3163,8 +3163,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 packet.buffer.p4(Archive.mapscene.hash);
                 packet.buffer.p4(Archive.worldmap.hash);
                 packet.buffer.p4(Archive.mapland.hash);
-                packet.buffer.tinyenc2(seed, offset, packet.buffer.pos);
-                packet.buffer.psize2(packet.buffer.pos - var8);
+                packet.buffer.tinyKeyEncrypt2(seed, offset, packet.buffer.pos);
+                packet.buffer.pSize2(packet.buffer.pos - var8);
                 stream.writeLater(packet);
                 stream.flush();
                 stream.encryptor = new IsaacCipher(seed);
@@ -3714,11 +3714,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                     if (draggedSpecialComponent != null && InterfaceComponent.getTopLevelComponent(draggedComponent) != null) {
                         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DRAGGED_COMPONENT, stream.encryptor);
-                        packet.buffer.ip2a(draggedSpecialComponent.subComponentIndex);
-                        packet.buffer.ip2a(draggedSpecialComponent.itemId);
+                        packet.buffer.ip2_alt1(draggedSpecialComponent.subComponentIndex);
+                        packet.buffer.ip2_alt1(draggedSpecialComponent.itemId);
                         packet.buffer.ip2(draggedComponent.subComponentIndex);
-                        packet.buffer.pirf4(draggedSpecialComponent.uid);
-                        packet.buffer.p2a(draggedComponent.itemId);
+                        packet.buffer.p4_alt2(draggedSpecialComponent.uid);
+                        packet.buffer.p2_alt1(draggedComponent.itemId);
                         packet.buffer.p4(draggedComponent.uid);
                         stream.writeLater(packet);
                     }

@@ -8,6 +8,7 @@ import jag.opcode.Buffer;
 public class VarcInteger extends DoublyLinkedNode {
 
     public static final ReferenceCache<VarcInteger> cache = new ReferenceCache<>(64);
+
     public static ReferenceTable table;
 
     public boolean persists;

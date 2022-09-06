@@ -7,31 +7,44 @@ import jag.commons.collection.ReferenceCache;
 import jag.game.InterfaceComponent;
 import jag.game.client;
 import jag.game.menu.ContextMenuBuilder;
-import jag.game.option.ClientPreferences;
 import jag.game.scene.entity.Model;
 import jag.game.scene.entity.UnlitModel;
 import jag.graphics.Font;
 import jag.graphics.JagGraphics;
 import jag.graphics.JagGraphics3D;
 import jag.graphics.Sprite;
-import jag.js5.DiskFile;
 import jag.js5.ReferenceTable;
 import jag.opcode.Buffer;
 import jag.statics.Statics5;
-
-import java.io.IOException;
 
 public class ItemDefinition extends DoublyLinkedNode {
 
     public static final ReferenceCache<Sprite> sprites = new ReferenceCache<>(200);
     public static final ReferenceCache<ItemDefinition> cache = new ReferenceCache<>(64);
     public static final ReferenceCache<Model> models = new ReferenceCache<>(50);
+
     public static ReferenceTable aReferenceTable722;
     public static ReferenceTable aReferenceTable721;
+
     public static boolean loadMembersItemDefinitions;
 
+    public String[] groundActions;
     public String[] actions;
     public String name;
+
+    public IterableNodeTable<? super Node> parameters;
+
+    public boolean members;
+    public boolean stockMarketable;
+
+    public int[] variantIds;
+    public int[] variantStackSizes;
+
+    public short[] aShortArray723;
+    public short[] aShortArray724;
+    public short[] aShortArray718;
+    public short[] aShortArray719;
+
     public int spriteScale;
     public int id;
     public int spritePitch;
@@ -40,12 +53,9 @@ public class ItemDefinition extends DoublyLinkedNode {
     public int stackable;
     public int spriteTranslateY;
     public int spriteYaw;
-    public boolean members;
     public int value;
     public int noteTemplateId;
-    public String[] groundActions;
     public int noteId;
-    public boolean stockMarketable;
     public int anInt712;
     public int ambient;
     public int anInt715;
@@ -54,28 +64,21 @@ public class ItemDefinition extends DoublyLinkedNode {
     public int maleHeadModel;
     public int anInt579;
     public int modelId;
-    public int[] variantIds;
     public int shiftClickActionIndex;
-    public IterableNodeTable<? super Node> properties;
     public int maleHeadModel2;
     public int maleModel1;
     public int maleModel2;
     public int femaleHeadModel;
     public int femaleHeadModel2;
     public int anInt709;
-    public int[] variantStackSizes;
     public int femaleModel1;
     public int femaleModel2;
     public int resizeX;
     public int resizeY;
     public int resizeZ;
-    public short[] aShortArray723;
     public int anInt711;
-    public short[] aShortArray724;
-    public short[] aShortArray718;
     public int anInt714;
     public int anInt710;
-    public short[] aShortArray719;
     public int anInt713;
 
     public ItemDefinition() {
@@ -119,36 +122,6 @@ public class ItemDefinition extends DoublyLinkedNode {
         anInt712 = -1;
     }
 
-    public static ClientPreferences method529() {
-        DiskFile var0 = null;
-        ClientPreferences var1 = new ClientPreferences();
-
-        try {
-            var0 = ClientPreferences.getFile("", client.gameType.name, false);
-            byte[] var2 = new byte[(int) var0.length()];
-
-            int var4;
-            for (int var3 = 0; var3 < var2.length; var3 += var4) {
-                var4 = var0.read(var2, var3, var2.length - var3);
-                if (var4 == -1) {
-                    throw new IOException();
-                }
-            }
-
-            var1 = new ClientPreferences(new Buffer(var2));
-        } catch (Exception ignored) {
-        }
-
-        try {
-            if (var0 != null) {
-                var0.close();
-            }
-        } catch (Exception ignored) {
-        }
-
-        return var1;
-    }
-
     public static ItemDefinition get(int id) {
         ItemDefinition def = cache.get(id);
         if (def != null) {
@@ -158,7 +131,7 @@ public class ItemDefinition extends DoublyLinkedNode {
         def = new ItemDefinition();
         def.id = id;
         if (var3 != null) {
-            def.method528(new Buffer(var3));
+            def.decode(new Buffer(var3));
         }
 
         def.method23();
@@ -181,10 +154,10 @@ public class ItemDefinition extends DoublyLinkedNode {
             def.actions = null;
             def.shiftClickActionIndex = -1;
             def.team = 0;
-            if (def.properties != null) {
+            if (def.parameters != null) {
                 boolean var4 = false;
 
-                for (Node param = def.properties.first(); param != null; param = def.properties.next()) {
+                for (Node param = def.parameters.first(); param != null; param = def.parameters.next()) {
                     ParameterDefinition var6 = ParameterDefinition.get((int) param.key);
                     if (var6.disableOnUse) {
                         param.unlink();
@@ -194,7 +167,7 @@ public class ItemDefinition extends DoublyLinkedNode {
                 }
 
                 if (!var4) {
-                    def.properties = null;
+                    def.parameters = null;
                 }
             }
         }
@@ -378,7 +351,7 @@ public class ItemDefinition extends DoublyLinkedNode {
 
     }
 
-    public void method526(Buffer var1, int var2) {
+    public void decode(Buffer var1, int var2) {
         if (var2 == 1) {
             modelId = var1.g2();
         } else if (var2 == 2) {
@@ -494,7 +467,7 @@ public class ItemDefinition extends DoublyLinkedNode {
             } else if (var2 == 149) {
                 anInt712 = var1.g2();
             } else if (var2 == 249) {
-                properties = IterableNodeTable.decode(var1, properties);
+                parameters = IterableNodeTable.decode(var1, parameters);
             }
         }
 
@@ -608,14 +581,14 @@ public class ItemDefinition extends DoublyLinkedNode {
         return var4;
     }
 
-    public void method528(Buffer var1) {
+    public void decode(Buffer var1) {
         while (true) {
             int var2 = var1.g1();
             if (var2 == 0) {
                 return;
             }
 
-            method526(var1, var2);
+            decode(var1, var2);
         }
     }
 
@@ -831,10 +804,10 @@ public class ItemDefinition extends DoublyLinkedNode {
     }
 
     public int method527(int var1, int var2) {
-        return IterableNodeTable.getIntParameter(properties, var1, var2);
+        return IterableNodeTable.getIntParameter(parameters, var1, var2);
     }
 
     public String method520(int var1, String var2) {
-        return IterableNodeTable.getStringParameter(properties, var1, var2);
+        return IterableNodeTable.getStringParameter(parameters, var1, var2);
     }
 }

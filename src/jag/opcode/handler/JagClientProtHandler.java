@@ -195,10 +195,10 @@ public class JagClientProtHandler extends ClientProtHandler {
 
                 client.timeOfPreviousKeyPress = time;
                 packet.buffer.ip3((int) timeOffset);
-                packet.buffer.writeByteS(Keyboard.pressedKeyIndices[i]);
+                packet.buffer.p1_alt1(Keyboard.pressedKeyIndices[i]);
             }
 
-            packet.buffer.psize2(packet.buffer.pos - startOffset);
+            packet.buffer.pSize2(packet.buffer.pos - startOffset);
             stream.writeLater(packet);
         }
     }
@@ -218,7 +218,7 @@ public class JagClientProtHandler extends ClientProtHandler {
             Camera.emitPackets = false;
 
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.CAMERA_INFO, stream.encryptor);
-            packet.buffer.ip2a(Camera.minimumPitch);
+            packet.buffer.ip2_alt1(Camera.minimumPitch);
             packet.buffer.ip2(Camera.yOffset);
             stream.writeLater(packet);
         }

@@ -8,6 +8,7 @@ import jag.opcode.Buffer;
 public class InventoryDefinition extends DoublyLinkedNode {
 
     public static final ReferenceCache<InventoryDefinition> cache = new ReferenceCache<>(64);
+
     public static ReferenceTable table;
 
     public int capacity;

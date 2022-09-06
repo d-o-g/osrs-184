@@ -33,6 +33,6 @@ public class Statics17 {
             return SceneGraph.floorLevel;
         }
         int var0 = SceneGraph.getTileHeight(Camera.x, Camera.y, SceneGraph.floorLevel);
-        return var0 - Camera.z < 800 && (Statics45.sceneRenderRules[SceneGraph.floorLevel][Camera.x >> 7][Camera.y >> 7] & 4) != 0 ? SceneGraph.floorLevel : 3;
+        return var0 - Camera.z < 800 && (SceneGraphRenderData.sceneRenderRules[SceneGraph.floorLevel][Camera.x >> 7][Camera.y >> 7] & 4) != 0 ? SceneGraph.floorLevel : 3;
     }
 }

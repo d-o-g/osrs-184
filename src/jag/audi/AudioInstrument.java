@@ -100,18 +100,18 @@ public class AudioInstrument {
         }
 
         for (int var3 = 0; var3 < 10; ++var3) {
-            int var4 = var1.gsmarts();
+            int var4 = var1.gSmarts();
             if (var4 == 0) {
                 break;
             }
 
             this.anIntArray1792[var3] = var4;
-            this.oscillatorPitch[var3] = var1.gsmart();
-            this.anIntArray1772[var3] = var1.gsmarts();
+            this.oscillatorPitch[var3] = var1.gSmart();
+            this.anIntArray1772[var3] = var1.gSmarts();
         }
 
-        this.anInt1771 = var1.gsmarts();
-        this.anInt1783 = var1.gsmarts();
+        this.anInt1771 = var1.gSmarts();
+        this.anInt1783 = var1.gSmarts();
         this.anInt1790 = var1.g2();
         this.anInt1787 = var1.g2();
         this.aAudioFilter_1770 = new AudioFilter();

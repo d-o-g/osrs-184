@@ -47,8 +47,8 @@ public enum PlayerAccountType implements EnumType {
         client.dynamicScene = dynamicScene;
 
         if (!client.dynamicScene) {
-            int var3 = buffer.method1060();
-            int var4 = buffer.readLEUShortA();
+            int var3 = buffer.g2s_le();
+            int var4 = buffer.g2_le();
             int count = buffer.g2();
             SceneGraph.xteaKeys = new int[count][4];
 
@@ -86,8 +86,8 @@ public enum PlayerAccountType implements EnumType {
             SceneGraph.method1187(var3, var4, true);
         } else {
             int var3 = buffer.g2();
-            boolean var16 = buffer.method1074() == 1;
-            int var5 = buffer.method1060();
+            boolean var16 = buffer.g1_alt4() == 1;
+            int var5 = buffer.g2s_le();
             int var6 = buffer.g2();
             buffer.bitAccess();
 

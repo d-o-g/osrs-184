@@ -16,7 +16,7 @@ import jag.game.type.ParameterDefinition;
 import jag.game.type.ObjectDefinition;
 import jag.js5.Archive;
 import jag.opcode.Buffer;
-import jag.statics.Statics45;
+import jag.statics.SceneGraphRenderData;
 import jag.statics.Statics46;
 import jag.worldmap.WorldMapChunkDefinition;
 import jag.worldmap.WorldMapLabelSize;
@@ -177,7 +177,7 @@ public class SerializableProcessor implements EnumType {
             startY = y + 1;
         }
 
-        int[][] heights = Statics45.tileHeights[var1];
+        int[][] heights = SceneGraphRenderData.tileHeights[var1];
         int var17 = heights[startX][startY] + heights[endX][endY] + heights[startX][endY] + heights[endX][startY] >> 2;
         int var18 = (x << 7) + (width << 6);
         int var19 = (y << 7) + (height << 6);
@@ -190,7 +190,7 @@ public class SerializableProcessor implements EnumType {
         Entity var23;
         if (type == 22) {
             if (def.animation == -1 && def.transformIds == null) {
-                var23 = def.method1103(22, orientation, heights, var18, var17, var19);
+                var23 = def.getLitModel(22, orientation, heights, var18, var17, var19);
             } else {
                 var23 = new DynamicObject(id, 22, orientation, var1, x, y, def.animation, true, null);
             }
@@ -203,7 +203,7 @@ public class SerializableProcessor implements EnumType {
         } else if (type != 10 && type != 11) {
             if (type >= 12) {
                 if (def.animation == -1 && def.transformIds == null) {
-                    var23 = def.method1103(type, orientation, heights, var18, var17, var19);
+                    var23 = def.getLitModel(type, orientation, heights, var18, var17, var19);
                 } else {
                     var23 = new DynamicObject(id, type, orientation, var1, x, y, def.animation, true, null);
                 }
@@ -215,24 +215,24 @@ public class SerializableProcessor implements EnumType {
 
             } else if (type == 0) {
                 if (def.animation == -1 && def.transformIds == null) {
-                    var23 = def.method1103(0, orientation, heights, var18, var17, var19);
+                    var23 = def.getLitModel(0, orientation, heights, var18, var17, var19);
                 } else {
                     var23 = new DynamicObject(id, 0, orientation, var1, x, y, def.animation, true, null);
                 }
 
-                scene.addBoundary(var0, x, y, var17, var23, null, Statics45.anIntArray406[orientation], 0, uid, var22);
+                scene.addBoundary(var0, x, y, var17, var23, null, SceneGraphRenderData.anIntArray406[orientation], 0, uid, var22);
                 if (def.anInt791 != 0) {
                     map.method154(x, y, type, orientation, def.impenetrable);
                 }
 
             } else if (type == 1) {
                 if (def.animation == -1 && def.transformIds == null) {
-                    var23 = def.method1103(1, orientation, heights, var18, var17, var19);
+                    var23 = def.getLitModel(1, orientation, heights, var18, var17, var19);
                 } else {
                     var23 = new DynamicObject(id, 1, orientation, var1, x, y, def.animation, true, null);
                 }
 
-                scene.addBoundary(var0, x, y, var17, var23, null, Statics45.anIntArray395[orientation], 0, uid, var22);
+                scene.addBoundary(var0, x, y, var17, var23, null, SceneGraphRenderData.anIntArray395[orientation], 0, uid, var22);
                 if (def.anInt791 != 0) {
                     map.method154(x, y, type, orientation, def.impenetrable);
                 }
@@ -244,33 +244,33 @@ public class SerializableProcessor implements EnumType {
                     Entity var25;
                     Entity var26;
                     if (def.animation == -1 && def.transformIds == null) {
-                        var25 = def.method1103(2, orientation + 4, heights, var18, var17, var19);
-                        var26 = def.method1103(2, var24, heights, var18, var17, var19);
+                        var25 = def.getLitModel(2, orientation + 4, heights, var18, var17, var19);
+                        var26 = def.getLitModel(2, var24, heights, var18, var17, var19);
                     } else {
                         var25 = new DynamicObject(id, 2, orientation + 4, var1, x, y, def.animation, true, null);
                         var26 = new DynamicObject(id, 2, var24, var1, x, y, def.animation, true, null);
                     }
 
-                    scene.addBoundary(var0, x, y, var17, var25, var26, Statics45.anIntArray406[orientation], Statics45.anIntArray406[var24], uid, var22);
+                    scene.addBoundary(var0, x, y, var17, var25, var26, SceneGraphRenderData.anIntArray406[orientation], SceneGraphRenderData.anIntArray406[var24], uid, var22);
                     if (def.anInt791 != 0) {
                         map.method154(x, y, type, orientation, def.impenetrable);
                     }
 
                 } else if (type == 3) {
                     if (def.animation == -1 && def.transformIds == null) {
-                        var23 = def.method1103(3, orientation, heights, var18, var17, var19);
+                        var23 = def.getLitModel(3, orientation, heights, var18, var17, var19);
                     } else {
                         var23 = new DynamicObject(id, 3, orientation, var1, x, y, def.animation, true, null);
                     }
 
-                    scene.addBoundary(var0, x, y, var17, var23, null, Statics45.anIntArray395[orientation], 0, uid, var22);
+                    scene.addBoundary(var0, x, y, var17, var23, null, SceneGraphRenderData.anIntArray395[orientation], 0, uid, var22);
                     if (def.anInt791 != 0) {
                         map.method154(x, y, type, orientation, def.impenetrable);
                     }
 
                 } else if (type == 9) {
                     if (def.animation == -1 && def.transformIds == null) {
-                        var23 = def.method1103(type, orientation, heights, var18, var17, var19);
+                        var23 = def.getLitModel(type, orientation, heights, var18, var17, var19);
                     } else {
                         var23 = new DynamicObject(id, type, orientation, var1, x, y, def.animation, true, null);
                     }
@@ -282,12 +282,12 @@ public class SerializableProcessor implements EnumType {
 
                 } else if (type == 4) {
                     if (def.animation == -1 && def.transformIds == null) {
-                        var23 = def.method1103(4, orientation, heights, var18, var17, var19);
+                        var23 = def.getLitModel(4, orientation, heights, var18, var17, var19);
                     } else {
                         var23 = new DynamicObject(id, 4, orientation, var1, x, y, def.animation, true, null);
                     }
 
-                    scene.addBoundaryDecor(var0, x, y, var17, var23, null, Statics45.anIntArray406[orientation], 0, 0, 0, uid, var22);
+                    scene.addBoundaryDecor(var0, x, y, var17, var23, null, SceneGraphRenderData.anIntArray406[orientation], 0, 0, 0, uid, var22);
                 } else {
                     long var27;
                     Entity var29;
@@ -299,12 +299,12 @@ public class SerializableProcessor implements EnumType {
                         }
 
                         if (def.animation == -1 && def.transformIds == null) {
-                            var29 = def.method1103(4, orientation, heights, var18, var17, var19);
+                            var29 = def.getLitModel(4, orientation, heights, var18, var17, var19);
                         } else {
                             var29 = new DynamicObject(id, 4, orientation, var1, x, y, def.animation, true, null);
                         }
 
-                        scene.addBoundaryDecor(var0, x, y, var17, var29, null, Statics45.anIntArray406[orientation], 0, var24 * Statics45.anIntArray402[orientation], var24 * Statics45.anIntArray394[orientation], uid, var22);
+                        scene.addBoundaryDecor(var0, x, y, var17, var29, null, SceneGraphRenderData.anIntArray406[orientation], 0, var24 * SceneGraphRenderData.anIntArray402[orientation], var24 * SceneGraphRenderData.anIntArray394[orientation], uid, var22);
                     } else if (type == 6) {
                         var24 = 8;
                         var27 = scene.getBoundaryUidAt(var0, x, y);
@@ -313,16 +313,16 @@ public class SerializableProcessor implements EnumType {
                         }
 
                         if (def.animation == -1 && def.transformIds == null) {
-                            var29 = def.method1103(4, orientation + 4, heights, var18, var17, var19);
+                            var29 = def.getLitModel(4, orientation + 4, heights, var18, var17, var19);
                         } else {
                             var29 = new DynamicObject(id, 4, orientation + 4, var1, x, y, def.animation, true, null);
                         }
 
-                        scene.addBoundaryDecor(var0, x, y, var17, var29, null, 256, orientation, var24 * Statics45.anIntArray397[orientation], var24 * Statics45.anIntArray392[orientation], uid, var22);
+                        scene.addBoundaryDecor(var0, x, y, var17, var29, null, 256, orientation, var24 * SceneGraphRenderData.anIntArray397[orientation], var24 * SceneGraphRenderData.anIntArray392[orientation], uid, var22);
                     } else if (type == 7) {
                         int var30 = orientation + 2 & 3;
                         if (def.animation == -1 && def.transformIds == null) {
-                            var23 = def.method1103(4, var30 + 4, heights, var18, var17, var19);
+                            var23 = def.getLitModel(4, var30 + 4, heights, var18, var17, var19);
                         } else {
                             var23 = new DynamicObject(id, 4, var30 + 4, var1, x, y, def.animation, true, null);
                         }
@@ -338,20 +338,20 @@ public class SerializableProcessor implements EnumType {
                         int var31 = orientation + 2 & 3;
                         Entity var32;
                         if (def.animation == -1 && def.transformIds == null) {
-                            var29 = def.method1103(4, orientation + 4, heights, var18, var17, var19);
-                            var32 = def.method1103(4, var31 + 4, heights, var18, var17, var19);
+                            var29 = def.getLitModel(4, orientation + 4, heights, var18, var17, var19);
+                            var32 = def.getLitModel(4, var31 + 4, heights, var18, var17, var19);
                         } else {
                             var29 = new DynamicObject(id, 4, orientation + 4, var1, x, y, def.animation, true, null);
                             var32 = new DynamicObject(id, 4, var31 + 4, var1, x, y, def.animation, true, null);
                         }
 
-                        scene.addBoundaryDecor(var0, x, y, var17, var29, var32, 256, orientation, var24 * Statics45.anIntArray397[orientation], var24 * Statics45.anIntArray392[orientation], uid, var22);
+                        scene.addBoundaryDecor(var0, x, y, var17, var29, var32, 256, orientation, var24 * SceneGraphRenderData.anIntArray397[orientation], var24 * SceneGraphRenderData.anIntArray392[orientation], uid, var22);
                     }
                 }
             }
         } else {
             if (def.animation == -1 && def.transformIds == null) {
-                var23 = def.method1103(10, orientation, heights, var18, var17, var19);
+                var23 = def.getLitModel(10, orientation, heights, var18, var17, var19);
             } else {
                 var23 = new DynamicObject(id, 10, orientation, var1, x, y, def.animation, true, null);
             }

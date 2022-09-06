@@ -327,14 +327,14 @@ public class SceneGraph {
         int var4 = var1 >> 7;
         if (var3 >= 0 && var4 >= 0 && var3 <= 103 && var4 <= 103) {
             int var5 = baseFloorLevel;
-            if (baseFloorLevel < 3 && (Statics45.sceneRenderRules[1][var3][var4] & 2) == 2) {
+            if (baseFloorLevel < 3 && (SceneGraphRenderData.sceneRenderRules[1][var3][var4] & 2) == 2) {
                 var5 = baseFloorLevel + 1;
             }
 
             int var6 = var0 & 127;
             int var7 = var1 & 127;
-            int var8 = (128 - var6) * Statics45.tileHeights[var5][var3][var4] + var6 * Statics45.tileHeights[var5][var3 + 1][var4] >> 7;
-            int var9 = var6 * Statics45.tileHeights[var5][var3 + 1][var4 + 1] + Statics45.tileHeights[var5][var3][var4 + 1] * (128 - var6) >> 7;
+            int var8 = (128 - var6) * SceneGraphRenderData.tileHeights[var5][var3][var4] + var6 * SceneGraphRenderData.tileHeights[var5][var3 + 1][var4] >> 7;
+            int var9 = var6 * SceneGraphRenderData.tileHeights[var5][var3 + 1][var4 + 1] + SceneGraphRenderData.tileHeights[var5][var3][var4 + 1] * (128 - var6) >> 7;
             return var9 * var7 + var8 * (128 - var7) >> 7;
         }
         return 0;
@@ -630,10 +630,10 @@ public class SceneGraph {
     }
 
     public static int method800(int var0, int var1, int var2) {
-        if ((Statics45.sceneRenderRules[var0][var1][var2] & 8) != 0) {
+        if ((SceneGraphRenderData.sceneRenderRules[var0][var1][var2] & 8) != 0) {
             return 0;
         }
-        return var0 > 0 && (Statics45.sceneRenderRules[1][var1][var2] & 2) != 0 ? var0 - 1 : var0;
+        return var0 > 0 && (SceneGraphRenderData.sceneRenderRules[1][var1][var2] & 2) != 0 ? var0 - 1 : var0;
     }
 
     public static boolean method257(Model var0, int var1, int var2, int var3) {
@@ -768,7 +768,7 @@ public class SceneGraph {
 
                     label1329:
                     while (true) {
-                        var9 = var7.gsmartsseq();
+                        var9 = var7.gSmartsSeq();
                         if (var9 == 0) {
                             var0 &= var6;
                             break;
@@ -780,7 +780,7 @@ public class SceneGraph {
 
                         while (true) {
                             while (!var12) {
-                                var13 = var7.gsmarts();
+                                var13 = var7.gSmarts();
                                 if (var13 == 0) {
                                     continue label1329;
                                 }
@@ -804,7 +804,7 @@ public class SceneGraph {
                                 }
                             }
 
-                            var13 = var7.gsmarts();
+                            var13 = var7.gSmarts();
                             if (var13 == 0) {
                                 break;
                             }
@@ -833,7 +833,7 @@ public class SceneGraph {
                 for (var1 = 0; var1 < 4; ++var1) {
                     for (var20 = 0; var20 < 104; ++var20) {
                         for (var3 = 0; var3 < 104; ++var3) {
-                            Statics45.sceneRenderRules[var1][var20][var3] = 0;
+                            SceneGraphRenderData.sceneRenderRules[var1][var20][var3] = 0;
                         }
                     }
                 }
@@ -866,7 +866,7 @@ public class SceneGraph {
                         var21 = WorldMapObjectIcon.aByteArrayArray493[var20];
                         if (var21 == null && Node_Sub19.anInt1191 < 800) {
                             AudioSystem.process();
-                            Statics45.method180(var3, var4, 64, 64);
+                            SceneGraphRenderData.method180(var3, var4, 64, 64);
                         }
                     }
 
@@ -884,7 +884,7 @@ public class SceneGraph {
                             var8 = -1;
 
                             while (true) {
-                                var9 = var7.gsmartsseq();
+                                var9 = var7.gSmartsSeq();
                                 if (var9 == 0) {
                                     break;
                                 }
@@ -893,7 +893,7 @@ public class SceneGraph {
                                 var11 = 0;
 
                                 while (true) {
-                                    var66 = var7.gsmarts();
+                                    var66 = var7.gSmarts();
                                     if (var66 == 0) {
                                         break;
                                     }
@@ -909,7 +909,7 @@ public class SceneGraph {
                                     var26 = var5 + var13;
                                     if (var25 > 0 && var26 > 0 && var25 < 103 && var26 < 103) {
                                         var30 = var15;
-                                        if ((Statics45.sceneRenderRules[1][var25][var26] & 2) == 2) {
+                                        if ((SceneGraphRenderData.sceneRenderRules[1][var25][var26] & 2) == 2) {
                                             var30 = var15 - 1;
                                         }
 
@@ -1020,7 +1020,7 @@ public class SceneGraph {
                                 }
 
                                 if (!var64) {
-                                    Statics45.method189(var20, var3 * 8, var4 * 8);
+                                    SceneGraphRenderData.method189(var20, var3 * 8, var4 * 8);
                                 }
                             }
                         }
@@ -1030,7 +1030,7 @@ public class SceneGraph {
                         for (var3 = 0; var3 < 13; ++var3) {
                             var4 = client.dynamicSceneData[0][var20][var3];
                             if (var4 == -1) {
-                                Statics45.method180(var20 * 8, var3 * 8, 8, 8);
+                                SceneGraphRenderData.method180(var20 * 8, var3 * 8, 8, 8);
                             }
                         }
                     }
@@ -1070,9 +1070,9 @@ public class SceneGraph {
                 for (var4 = 0; var4 < 4; ++var4) {
                     for (var5 = 0; var5 < 104; ++var5) {
                         for (var10 = 0; var10 < 104; ++var10) {
-                            if ((Statics45.sceneRenderRules[var4][var5][var10] & 1) == 1) {
+                            if ((SceneGraphRenderData.sceneRenderRules[var4][var5][var10] & 1) == 1) {
                                 var65 = var4;
-                                if ((Statics45.sceneRenderRules[1][var5][var10] & 2) == 2) {
+                                if ((SceneGraphRenderData.sceneRenderRules[1][var5][var10] & 2) == 2) {
                                     var65 = var4 - 1;
                                 }
 
@@ -1084,33 +1084,33 @@ public class SceneGraph {
                     }
                 }
 
-                Statics45.tileHueOffset += (int) (Math.random() * 5.0D) - 2;
-                if (Statics45.tileHueOffset < -8) {
-                    Statics45.tileHueOffset = -8;
+                SceneGraphRenderData.tileHueOffset += (int) (Math.random() * 5.0D) - 2;
+                if (SceneGraphRenderData.tileHueOffset < -8) {
+                    SceneGraphRenderData.tileHueOffset = -8;
                 }
 
-                if (Statics45.tileHueOffset > 8) {
-                    Statics45.tileHueOffset = 8;
+                if (SceneGraphRenderData.tileHueOffset > 8) {
+                    SceneGraphRenderData.tileHueOffset = 8;
                 }
 
-                Statics45.tileLightnessOffset += (int) (Math.random() * 5.0D) - 2;
-                if (Statics45.tileLightnessOffset < -16) {
-                    Statics45.tileLightnessOffset = -16;
+                SceneGraphRenderData.tileLightnessOffset += (int) (Math.random() * 5.0D) - 2;
+                if (SceneGraphRenderData.tileLightnessOffset < -16) {
+                    SceneGraphRenderData.tileLightnessOffset = -16;
                 }
 
-                if (Statics45.tileLightnessOffset > 16) {
-                    Statics45.tileLightnessOffset = 16;
+                if (SceneGraphRenderData.tileLightnessOffset > 16) {
+                    SceneGraphRenderData.tileLightnessOffset = 16;
                 }
 
                 for (var4 = 0; var4 < 4; ++var4) {
-                    byte[][] var69 = Statics45.aByteArrayArrayArray400[var4];
+                    byte[][] var69 = SceneGraphRenderData.aByteArrayArrayArray400[var4];
                     var11 = (int) Math.sqrt(5100.0D);
                     var66 = var11 * 768 >> 8;
 
                     for (var13 = 1; var13 < 103; ++var13) {
                         for (var14 = 1; var14 < 103; ++var14) {
-                            var15 = Statics45.tileHeights[var4][var14 + 1][var13] - Statics45.tileHeights[var4][var14 - 1][var13];
-                            var16 = Statics45.tileHeights[var4][var14][var13 + 1] - Statics45.tileHeights[var4][var14][var13 - 1];
+                            var15 = SceneGraphRenderData.tileHeights[var4][var14 + 1][var13] - SceneGraphRenderData.tileHeights[var4][var14 - 1][var13];
+                            var16 = SceneGraphRenderData.tileHeights[var4][var14][var13 + 1] - SceneGraphRenderData.tileHeights[var4][var14][var13 - 1];
                             var17 = (int) Math.sqrt(var16 * var16 + var15 * var15 + 65536);
                             var18 = (var15 << 8) / var17;
                             var25 = 65536 / var17;
@@ -1122,11 +1122,11 @@ public class SceneGraph {
                     }
 
                     for (var13 = 0; var13 < 104; ++var13) {
-                        Statics45.anIntArray396[var13] = 0;
+                        SceneGraphRenderData.anIntArray396[var13] = 0;
                         LoadedArchive.anIntArray426[var13] = 0;
-                        Statics45.anIntArray390[var13] = 0;
+                        SceneGraphRenderData.anIntArray390[var13] = 0;
                         NamedFont.anIntArray1626[var13] = 0;
-                        Statics45.anIntArray389[var13] = 0;
+                        SceneGraphRenderData.anIntArray389[var13] = 0;
                     }
 
                     for (var13 = -5; var13 < 109; ++var13) {
@@ -1134,35 +1134,35 @@ public class SceneGraph {
                             var15 = var13 + 5;
                             int var10002;
                             if (var15 >= 0 && var15 < 104) {
-                                var16 = Statics45.aByteArrayArrayArray404[var4][var15][var14] & 255;
+                                var16 = SceneGraphRenderData.aByteArrayArrayArray404[var4][var15][var14] & 255;
                                 if (var16 > 0) {
                                     TileUnderlay var48 = TileUnderlay.get(var16 - 1);
-                                    var10000 = Statics45.anIntArray396;
+                                    var10000 = SceneGraphRenderData.anIntArray396;
                                     var10000[var14] += var48.blendHue;
                                     var10000 = LoadedArchive.anIntArray426;
                                     var10000[var14] += var48.blendSaturation;
-                                    var10000 = Statics45.anIntArray390;
+                                    var10000 = SceneGraphRenderData.anIntArray390;
                                     var10000[var14] += var48.blendLightness;
                                     var10000 = NamedFont.anIntArray1626;
                                     var10000[var14] += var48.blendHueWeight;
-                                    var10002 = Statics45.anIntArray389[var14]++;
+                                    var10002 = SceneGraphRenderData.anIntArray389[var14]++;
                                 }
                             }
 
                             var16 = var13 - 5;
                             if (var16 >= 0 && var16 < 104) {
-                                var17 = Statics45.aByteArrayArrayArray404[var4][var16][var14] & 255;
+                                var17 = SceneGraphRenderData.aByteArrayArrayArray404[var4][var16][var14] & 255;
                                 if (var17 > 0) {
                                     TileUnderlay var72 = TileUnderlay.get(var17 - 1);
-                                    var10000 = Statics45.anIntArray396;
+                                    var10000 = SceneGraphRenderData.anIntArray396;
                                     var10000[var14] -= var72.blendHue;
                                     var10000 = LoadedArchive.anIntArray426;
                                     var10000[var14] -= var72.blendSaturation;
-                                    var10000 = Statics45.anIntArray390;
+                                    var10000 = SceneGraphRenderData.anIntArray390;
                                     var10000[var14] -= var72.blendLightness;
                                     var10000 = NamedFont.anIntArray1626;
                                     var10000[var14] -= var72.blendHueWeight;
-                                    var10002 = Statics45.anIntArray389[var14]--;
+                                    var10002 = SceneGraphRenderData.anIntArray389[var14]--;
                                 }
                             }
                         }
@@ -1177,34 +1177,34 @@ public class SceneGraph {
                             for (var25 = -5; var25 < 109; ++var25) {
                                 var26 = var25 + 5;
                                 if (var26 >= 0 && var26 < 104) {
-                                    var14 += Statics45.anIntArray396[var26];
+                                    var14 += SceneGraphRenderData.anIntArray396[var26];
                                     var15 += LoadedArchive.anIntArray426[var26];
-                                    var16 += Statics45.anIntArray390[var26];
+                                    var16 += SceneGraphRenderData.anIntArray390[var26];
                                     var17 += NamedFont.anIntArray1626[var26];
-                                    var18 += Statics45.anIntArray389[var26];
+                                    var18 += SceneGraphRenderData.anIntArray389[var26];
                                 }
 
                                 var30 = var25 - 5;
                                 if (var30 >= 0 && var30 < 104) {
-                                    var14 -= Statics45.anIntArray396[var30];
+                                    var14 -= SceneGraphRenderData.anIntArray396[var30];
                                     var15 -= LoadedArchive.anIntArray426[var30];
-                                    var16 -= Statics45.anIntArray390[var30];
+                                    var16 -= SceneGraphRenderData.anIntArray390[var30];
                                     var17 -= NamedFont.anIntArray1626[var30];
-                                    var18 -= Statics45.anIntArray389[var30];
+                                    var18 -= SceneGraphRenderData.anIntArray389[var30];
                                 }
 
-                                if (var25 >= 1 && var25 < 103 && (!client.lowMemory || (Statics45.sceneRenderRules[0][var13][var25] & 2) != 0 || (Statics45.sceneRenderRules[var4][var13][var25] & 16) == 0)) {
-                                    if (var4 < Statics45.anInt405) {
-                                        Statics45.anInt405 = var4;
+                                if (var25 >= 1 && var25 < 103 && (!client.lowMemory || (SceneGraphRenderData.sceneRenderRules[0][var13][var25] & 2) != 0 || (SceneGraphRenderData.sceneRenderRules[var4][var13][var25] & 16) == 0)) {
+                                    if (var4 < SceneGraphRenderData.anInt405) {
+                                        SceneGraphRenderData.anInt405 = var4;
                                     }
 
-                                    var31 = Statics45.aByteArrayArrayArray404[var4][var13][var25] & 255;
-                                    int var49 = Statics45.aByteArrayArrayArray401[var4][var13][var25] & 255;
+                                    var31 = SceneGraphRenderData.aByteArrayArrayArray404[var4][var13][var25] & 255;
+                                    int var49 = SceneGraphRenderData.aByteArrayArrayArray401[var4][var13][var25] & 255;
                                     if (var31 > 0 || var49 > 0) {
-                                        int var33 = Statics45.tileHeights[var4][var13][var25];
-                                        int var34 = Statics45.tileHeights[var4][var13 + 1][var25];
-                                        var38 = Statics45.tileHeights[var4][var13 + 1][var25 + 1];
-                                        var35 = Statics45.tileHeights[var4][var13][var25 + 1];
+                                        int var33 = SceneGraphRenderData.tileHeights[var4][var13][var25];
+                                        int var34 = SceneGraphRenderData.tileHeights[var4][var13 + 1][var25];
+                                        var38 = SceneGraphRenderData.tileHeights[var4][var13 + 1][var25 + 1];
+                                        var35 = SceneGraphRenderData.tileHeights[var4][var13][var25 + 1];
                                         var36 = DefaultAudioSystemProvider.anIntArrayArray146[var13][var25];
                                         var37 = DefaultAudioSystemProvider.anIntArrayArray146[var13 + 1][var25];
                                         int var50 = DefaultAudioSystemProvider.anIntArrayArray146[var13 + 1][var25 + 1];
@@ -1216,8 +1216,8 @@ public class SceneGraph {
                                             var43 = var15 / var18;
                                             var44 = var16 / var18;
                                             var41 = StockMarketOfferLifetimeComparator.method412(var46, var43, var44);
-                                            var46 = var46 + Statics45.tileHueOffset & 255;
-                                            var44 += Statics45.tileLightnessOffset;
+                                            var46 = var46 + SceneGraphRenderData.tileHueOffset & 255;
+                                            var44 += SceneGraphRenderData.tileLightnessOffset;
                                             if (var44 < 0) {
                                                 var44 = 0;
                                             } else if (var44 > 255) {
@@ -1256,7 +1256,7 @@ public class SceneGraph {
                                             }
 
                                             if (var75 && var33 == var34 && var33 == var38 && var35 == var33) {
-                                                var10000 = Statics45.anIntArrayArrayArray393[var4][var13];
+                                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var4][var13];
                                                 var10000[var25] |= 2340;
                                             }
                                         }
@@ -1299,8 +1299,8 @@ public class SceneGraph {
                                                 var56 = -2;
                                             } else {
                                                 var57 = StockMarketOfferLifetimeComparator.method412(var51.hue, var51.saturation, var51.lightness);
-                                                var58 = var51.hue + Statics45.tileHueOffset & 255;
-                                                var59 = var51.lightness + Statics45.tileLightnessOffset;
+                                                var58 = var51.hue + SceneGraphRenderData.tileHueOffset & 255;
+                                                var59 = var51.lightness + SceneGraphRenderData.tileLightnessOffset;
                                                 if (var59 < 0) {
                                                     var59 = 0;
                                                 } else if (var59 > 255) {
@@ -1316,8 +1316,8 @@ public class SceneGraph {
                                             }
 
                                             if (var51.secondaryRgb != -1) {
-                                                var59 = var51.secondaryHue + Statics45.tileHueOffset & 255;
-                                                int var60 = var51.secondaryLightness + Statics45.tileLightnessOffset;
+                                                var59 = var51.secondaryHue + SceneGraphRenderData.tileHueOffset & 255;
+                                                int var60 = var51.secondaryLightness + SceneGraphRenderData.tileLightnessOffset;
                                                 if (var60 < 0) {
                                                     var60 = 0;
                                                 } else if (var60 > 255) {
@@ -1342,18 +1342,18 @@ public class SceneGraph {
                         }
                     }
 
-                    Statics45.aByteArrayArrayArray404[var4] = null;
-                    Statics45.aByteArrayArrayArray401[var4] = null;
+                    SceneGraphRenderData.aByteArrayArrayArray404[var4] = null;
+                    SceneGraphRenderData.aByteArrayArrayArray401[var4] = null;
                     DefaultAudioSystemProvider.aByteArrayArrayArray141[var4] = null;
                     Statics35.aByteArrayArrayArray1615[var4] = null;
-                    Statics45.aByteArrayArrayArray400[var4] = null;
+                    SceneGraphRenderData.aByteArrayArrayArray400[var4] = null;
                 }
 
                 var63.setLightAt(-50, -10, -50);
 
                 for (var4 = 0; var4 < 104; ++var4) {
                     for (var5 = 0; var5 < 104; ++var5) {
-                        if ((Statics45.sceneRenderRules[1][var4][var5] & 2) == 2) {
+                        if ((SceneGraphRenderData.sceneRenderRules[1][var4][var5] & 2) == 2) {
                             var63.method1484(var4, var5);
                         }
                     }
@@ -1374,22 +1374,22 @@ public class SceneGraph {
                         for (var8 = 0; var8 <= 104; ++var8) {
                             for (var9 = 0; var9 <= 104; ++var9) {
                                 short var68;
-                                if ((Statics45.anIntArrayArrayArray393[var22][var9][var8] & var4) != 0) {
+                                if ((SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var8] & var4) != 0) {
                                     var11 = var8;
                                     var66 = var8;
                                     var13 = var22;
 
-                                    for (var14 = var22; var11 > 0 && (Statics45.anIntArrayArrayArray393[var22][var9][var11 - 1] & var4) != 0; --var11) {
+                                    for (var14 = var22; var11 > 0 && (SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var11 - 1] & var4) != 0; --var11) {
                                     }
 
-                                    while (var66 < 104 && (Statics45.anIntArrayArrayArray393[var22][var9][var66 + 1] & var4) != 0) {
+                                    while (var66 < 104 && (SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var66 + 1] & var4) != 0) {
                                         ++var66;
                                     }
 
                                     label901:
                                     while (var13 > 0) {
                                         for (var15 = var11; var15 <= var66; ++var15) {
-                                            if ((Statics45.anIntArrayArrayArray393[var13 - 1][var9][var15] & var4) == 0) {
+                                            if ((SceneGraphRenderData.anIntArrayArrayArray393[var13 - 1][var9][var15] & var4) == 0) {
                                                 break label901;
                                             }
                                         }
@@ -1400,7 +1400,7 @@ public class SceneGraph {
                                     label890:
                                     while (var14 < var65) {
                                         for (var15 = var11; var15 <= var66; ++var15) {
-                                            if ((Statics45.anIntArrayArrayArray393[var14 + 1][var9][var15] & var4) == 0) {
+                                            if ((SceneGraphRenderData.anIntArrayArrayArray393[var14 + 1][var9][var15] & var4) == 0) {
                                                 break label890;
                                             }
                                         }
@@ -1411,35 +1411,35 @@ public class SceneGraph {
                                     var15 = (var66 - var11 + 1) * (var14 + 1 - var13);
                                     if (var15 >= 8) {
                                         var68 = 240;
-                                        var17 = Statics45.tileHeights[var14][var9][var11] - var68;
-                                        var18 = Statics45.tileHeights[var13][var9][var11];
+                                        var17 = SceneGraphRenderData.tileHeights[var14][var9][var11] - var68;
+                                        var18 = SceneGraphRenderData.tileHeights[var13][var9][var11];
                                         occlude(var65, 1, var9 * 128, var9 * 128, var11 * 128, var66 * 128 + 128, var17, var18);
 
                                         for (var25 = var13; var25 <= var14; ++var25) {
                                             for (var26 = var11; var26 <= var66; ++var26) {
-                                                var10000 = Statics45.anIntArrayArrayArray393[var25][var9];
+                                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var25][var9];
                                                 var10000[var26] &= ~var4;
                                             }
                                         }
                                     }
                                 }
 
-                                if ((Statics45.anIntArrayArrayArray393[var22][var9][var8] & var5) != 0) {
+                                if ((SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var8] & var5) != 0) {
                                     var11 = var9;
                                     var66 = var9;
                                     var13 = var22;
 
-                                    for (var14 = var22; var11 > 0 && (Statics45.anIntArrayArrayArray393[var22][var11 - 1][var8] & var5) != 0; --var11) {
+                                    for (var14 = var22; var11 > 0 && (SceneGraphRenderData.anIntArrayArrayArray393[var22][var11 - 1][var8] & var5) != 0; --var11) {
                                     }
 
-                                    while (var66 < 104 && (Statics45.anIntArrayArrayArray393[var22][var66 + 1][var8] & var5) != 0) {
+                                    while (var66 < 104 && (SceneGraphRenderData.anIntArrayArrayArray393[var22][var66 + 1][var8] & var5) != 0) {
                                         ++var66;
                                     }
 
                                     label954:
                                     while (var13 > 0) {
                                         for (var15 = var11; var15 <= var66; ++var15) {
-                                            if ((Statics45.anIntArrayArrayArray393[var13 - 1][var15][var8] & var5) == 0) {
+                                            if ((SceneGraphRenderData.anIntArrayArrayArray393[var13 - 1][var15][var8] & var5) == 0) {
                                                 break label954;
                                             }
                                         }
@@ -1450,7 +1450,7 @@ public class SceneGraph {
                                     label943:
                                     while (var14 < var65) {
                                         for (var15 = var11; var15 <= var66; ++var15) {
-                                            if ((Statics45.anIntArrayArrayArray393[var14 + 1][var15][var8] & var5) == 0) {
+                                            if ((SceneGraphRenderData.anIntArrayArrayArray393[var14 + 1][var15][var8] & var5) == 0) {
                                                 break label943;
                                             }
                                         }
@@ -1461,35 +1461,35 @@ public class SceneGraph {
                                     var15 = (var14 + 1 - var13) * (var66 - var11 + 1);
                                     if (var15 >= 8) {
                                         var68 = 240;
-                                        var17 = Statics45.tileHeights[var14][var11][var8] - var68;
-                                        var18 = Statics45.tileHeights[var13][var11][var8];
+                                        var17 = SceneGraphRenderData.tileHeights[var14][var11][var8] - var68;
+                                        var18 = SceneGraphRenderData.tileHeights[var13][var11][var8];
                                         occlude(var65, 2, var11 * 128, var66 * 128 + 128, var8 * 128, var8 * 128, var17, var18);
 
                                         for (var25 = var13; var25 <= var14; ++var25) {
                                             for (var26 = var11; var26 <= var66; ++var26) {
-                                                var10000 = Statics45.anIntArrayArrayArray393[var25][var26];
+                                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var25][var26];
                                                 var10000[var8] &= ~var5;
                                             }
                                         }
                                     }
                                 }
 
-                                if ((Statics45.anIntArrayArrayArray393[var22][var9][var8] & var10) != 0) {
+                                if ((SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var8] & var10) != 0) {
                                     var11 = var9;
                                     var66 = var9;
                                     var13 = var8;
 
-                                    for (var14 = var8; var13 > 0 && (Statics45.anIntArrayArrayArray393[var22][var9][var13 - 1] & var10) != 0; --var13) {
+                                    for (var14 = var8; var13 > 0 && (SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var13 - 1] & var10) != 0; --var13) {
                                     }
 
-                                    while (var14 < 104 && (Statics45.anIntArrayArrayArray393[var22][var9][var14 + 1] & var10) != 0) {
+                                    while (var14 < 104 && (SceneGraphRenderData.anIntArrayArrayArray393[var22][var9][var14 + 1] & var10) != 0) {
                                         ++var14;
                                     }
 
                                     label1007:
                                     while (var11 > 0) {
                                         for (var15 = var13; var15 <= var14; ++var15) {
-                                            if ((Statics45.anIntArrayArrayArray393[var22][var11 - 1][var15] & var10) == 0) {
+                                            if ((SceneGraphRenderData.anIntArrayArrayArray393[var22][var11 - 1][var15] & var10) == 0) {
                                                 break label1007;
                                             }
                                         }
@@ -1500,7 +1500,7 @@ public class SceneGraph {
                                     label996:
                                     while (var66 < 104) {
                                         for (var15 = var13; var15 <= var14; ++var15) {
-                                            if ((Statics45.anIntArrayArrayArray393[var22][var66 + 1][var15] & var10) == 0) {
+                                            if ((SceneGraphRenderData.anIntArrayArrayArray393[var22][var66 + 1][var15] & var10) == 0) {
                                                 break label996;
                                             }
                                         }
@@ -1509,12 +1509,12 @@ public class SceneGraph {
                                     }
 
                                     if ((var14 - var13 + 1) * (var66 - var11 + 1) >= 4) {
-                                        var15 = Statics45.tileHeights[var22][var11][var13];
+                                        var15 = SceneGraphRenderData.tileHeights[var22][var11][var13];
                                         occlude(var65, 4, var11 * 128, var66 * 128 + 128, var13 * 128, var14 * 128 + 128, var15, var15);
 
                                         for (var16 = var11; var16 <= var66; ++var16) {
                                             for (var17 = var13; var17 <= var14; ++var17) {
-                                                var10000 = Statics45.anIntArrayArrayArray393[var22][var16];
+                                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var22][var16];
                                                 var10000[var17] &= ~var10;
                                             }
                                         }
@@ -1526,7 +1526,7 @@ public class SceneGraph {
                 }
 
                 StockMarketOffer.method231(true);
-                var4 = Statics45.anInt405;
+                var4 = SceneGraphRenderData.anInt405;
                 if (var4 > floorLevel) {
                     var4 = floorLevel;
                 }
@@ -1535,7 +1535,7 @@ public class SceneGraph {
                 }
 
                 if (client.lowMemory) {
-                    client.sceneGraph.method1478(Statics45.anInt405);
+                    client.sceneGraph.method1478(SceneGraphRenderData.anInt405);
                 } else {
                     client.sceneGraph.method1478(0);
                 }
@@ -1549,8 +1549,8 @@ public class SceneGraph {
                 AudioSystem.process();
 
                 for (PendingSpawn spawn = client.pendingSpawns.head(); spawn != null; spawn = client.pendingSpawns.next()) {
-                    if (spawn.hitpoints == -1) {
-                        spawn.delay = 0;
+                    if (spawn.endCycle == -1) {
+                        spawn.startCycle = 0;
                         StockMarketEvent.method388(spawn);
                     } else {
                         spawn.unlink();
@@ -1709,33 +1709,33 @@ public class SceneGraph {
     }
 
     public static void method1517() {
-        Statics45.anInt405 = 99;
-        Statics45.aByteArrayArrayArray404 = new byte[4][104][104];
-        Statics45.aByteArrayArrayArray401 = new byte[4][104][104];
+        SceneGraphRenderData.anInt405 = 99;
+        SceneGraphRenderData.aByteArrayArrayArray404 = new byte[4][104][104];
+        SceneGraphRenderData.aByteArrayArrayArray401 = new byte[4][104][104];
         DefaultAudioSystemProvider.aByteArrayArrayArray141 = new byte[4][104][104];
         Statics35.aByteArrayArrayArray1615 = new byte[4][104][104];
-        Statics45.anIntArrayArrayArray393 = new int[4][105][105];
-        Statics45.aByteArrayArrayArray400 = new byte[4][105][105];
+        SceneGraphRenderData.anIntArrayArrayArray393 = new int[4][105][105];
+        SceneGraphRenderData.aByteArrayArrayArray400 = new byte[4][105][105];
         DefaultAudioSystemProvider.anIntArrayArray146 = new int[105][105];
-        Statics45.anIntArray396 = new int[104];
+        SceneGraphRenderData.anIntArray396 = new int[104];
         LoadedArchive.anIntArray426 = new int[104];
-        Statics45.anIntArray390 = new int[104];
+        SceneGraphRenderData.anIntArray390 = new int[104];
         NamedFont.anIntArray1626 = new int[104];
-        Statics45.anIntArray389 = new int[104];
+        SceneGraphRenderData.anIntArray389 = new int[104];
     }
 
     public static void method416(Buffer var0, int var1, int var2, int var3, int var4, int var5, int var6) {
         int var7;
         if (var2 >= 0 && var2 < 104 && var3 >= 0 && var3 < 104) {
-            Statics45.sceneRenderRules[var1][var2][var3] = 0;
+            SceneGraphRenderData.sceneRenderRules[var1][var2][var3] = 0;
 
             while (true) {
                 var7 = var0.g1();
                 if (var7 == 0) {
                     if (var1 == 0) {
-                        Statics45.tileHeights[0][var2][var3] = -WorldMapDecor.method378(var2 + 932731 + var4, var5 + var3 + 556238) * 8;
+                        SceneGraphRenderData.tileHeights[0][var2][var3] = -WorldMapDecor.method378(var2 + 932731 + var4, var5 + var3 + 556238) * 8;
                     } else {
-                        Statics45.tileHeights[var1][var2][var3] = Statics45.tileHeights[var1 - 1][var2][var3] - 240;
+                        SceneGraphRenderData.tileHeights[var1][var2][var3] = SceneGraphRenderData.tileHeights[var1 - 1][var2][var3] - 240;
                     }
                     break;
                 }
@@ -1747,21 +1747,21 @@ public class SceneGraph {
                     }
 
                     if (var1 == 0) {
-                        Statics45.tileHeights[0][var2][var3] = -var8 * 8;
+                        SceneGraphRenderData.tileHeights[0][var2][var3] = -var8 * 8;
                     } else {
-                        Statics45.tileHeights[var1][var2][var3] = Statics45.tileHeights[var1 - 1][var2][var3] - var8 * 8;
+                        SceneGraphRenderData.tileHeights[var1][var2][var3] = SceneGraphRenderData.tileHeights[var1 - 1][var2][var3] - var8 * 8;
                     }
                     break;
                 }
 
                 if (var7 <= 49) {
-                    Statics45.aByteArrayArrayArray401[var1][var2][var3] = var0.g1b();
+                    SceneGraphRenderData.aByteArrayArrayArray401[var1][var2][var3] = var0.g1b();
                     DefaultAudioSystemProvider.aByteArrayArrayArray141[var1][var2][var3] = (byte) ((var7 - 2) / 4);
                     Statics35.aByteArrayArrayArray1615[var1][var2][var3] = (byte) (var7 - 2 + var6 & 3);
                 } else if (var7 <= 81) {
-                    Statics45.sceneRenderRules[var1][var2][var3] = (byte) (var7 - 49);
+                    SceneGraphRenderData.sceneRenderRules[var1][var2][var3] = (byte) (var7 - 49);
                 } else {
-                    Statics45.aByteArrayArrayArray404[var1][var2][var3] = (byte) (var7 - 81);
+                    SceneGraphRenderData.aByteArrayArrayArray404[var1][var2][var3] = (byte) (var7 - 81);
                 }
             }
         } else {
@@ -1961,7 +1961,7 @@ public class SceneGraph {
 
             if (var4 >= 0) {
                 var12 = var0;
-                if (var0 < 3 && (Statics45.sceneRenderRules[1][x][y] & 2) == 2) {
+                if (var0 < 3 && (SceneGraphRenderData.sceneRenderRules[1][x][y] & 2) == 2) {
                     var12 = var0 + 1;
                 }
 
@@ -2067,7 +2067,7 @@ public class SceneGraph {
                             break label409;
                         }
 
-                        if ((Statics45.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
+                        if ((SceneGraphRenderData.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
                             var7 = floorLevel;
                         }
 
@@ -2094,7 +2094,7 @@ public class SceneGraph {
                                     --var10;
                                 }
 
-                                if ((Statics45.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
+                                if ((SceneGraphRenderData.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
                                     var7 = floorLevel;
                                 }
 
@@ -2107,7 +2107,7 @@ public class SceneGraph {
                                         --var11;
                                     }
 
-                                    if ((Statics45.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
+                                    if ((SceneGraphRenderData.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
                                         var7 = floorLevel;
                                     }
                                 }
@@ -2123,7 +2123,7 @@ public class SceneGraph {
                                     --var11;
                                 }
 
-                                if ((Statics45.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
+                                if ((SceneGraphRenderData.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
                                     var7 = floorLevel;
                                 }
 
@@ -2136,7 +2136,7 @@ public class SceneGraph {
                                         --var10;
                                     }
 
-                                    if ((Statics45.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
+                                    if ((SceneGraphRenderData.sceneRenderRules[floorLevel][var10][var11] & 4) != 0) {
                                         var7 = floorLevel;
                                     }
                                 }
@@ -2145,7 +2145,7 @@ public class SceneGraph {
                     }
 
                     if (PlayerEntity.local.absoluteX >= 0 && PlayerEntity.local.absoluteY >= 0 && PlayerEntity.local.absoluteX < 13312 && PlayerEntity.local.absoluteY < 13312) {
-                        if ((Statics45.sceneRenderRules[floorLevel][PlayerEntity.local.absoluteX >> 7][PlayerEntity.local.absoluteY >> 7] & 4) != 0) {
+                        if ((SceneGraphRenderData.sceneRenderRules[floorLevel][PlayerEntity.local.absoluteX >> 7][PlayerEntity.local.absoluteY >> 7] & 4) != 0) {
                             var7 = floorLevel;
                         }
 

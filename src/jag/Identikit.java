@@ -58,19 +58,19 @@ public class Identikit {
                 }
 
                 if ((var9 & 1) != 0) {
-                    anIntArray1331[var7] = buff2.gsmart();
+                    anIntArray1331[var7] = buff2.gSmart();
                 } else {
                     anIntArray1331[var7] = var11;
                 }
 
                 if ((var9 & 2) != 0) {
-                    anIntArray1325[var7] = buff2.gsmart();
+                    anIntArray1325[var7] = buff2.gSmart();
                 } else {
                     anIntArray1325[var7] = var11;
                 }
 
                 if ((var9 & 4) != 0) {
-                    anIntArray1324[var7] = buff2.gsmart();
+                    anIntArray1324[var7] = buff2.gSmart();
                 } else {
                     anIntArray1324[var7] = var11;
                 }

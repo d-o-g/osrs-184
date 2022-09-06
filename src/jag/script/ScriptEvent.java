@@ -679,10 +679,10 @@ public class ScriptEvent extends Node {
                             URLRequestProcessor.aStringArray794 = var33.stringStack;
                         } else if (var29 == 25) {
                             var12 = var7[id];
-                            intStack[++Statics46.anInt442 - 1] = Varbit.get(var12);
+                            intStack[++Statics46.anInt442 - 1] = Varbit.getValue(var12);
                         } else if (var29 == 27) {
                             var12 = var7[id];
-                            Varbit.set(var12, intStack[--Statics46.anInt442]);
+                            Varbit.setValue(var12, intStack[--Statics46.anInt442]);
                         } else if (var29 == 31) {
                             Statics46.anInt442 -= 2;
                             if (intStack[Statics46.anInt442] <= intStack[Statics46.anInt442 + 1]) {
@@ -1061,9 +1061,9 @@ public class ScriptEvent extends Node {
                 var7 = intStack[Statics46.anInt442 + 1];
                 var9 = ParameterDefinition.get(var7);
                 if (var9.isString()) {
-                    stringStack[++Statics46.anInt441 - 1] = StructDefinition.get(var4).method1096(var7, var9.defaultString);
+                    stringStack[++Statics46.anInt441 - 1] = StructDefinition.get(var4).getString(var7, var9.defaultString);
                 } else {
-                    intStack[++Statics46.anInt442 - 1] = StructDefinition.get(var4).method1097(var7, var9.defaultInteger);
+                    intStack[++Statics46.anInt442 - 1] = StructDefinition.get(var4).getInteger(var7, var9.defaultInteger);
                 }
 
                 return 1;
@@ -1531,7 +1531,7 @@ public class ScriptEvent extends Node {
             int var10 = packet.buffer.pos;
             packet.buffer.pcstr(var3);
             ResourceCache.method1491(packet.buffer, var9);
-            packet.buffer.psize2(packet.buffer.pos - var10);
+            packet.buffer.pSize2(packet.buffer.pos - var10);
             client.stream.writeLater(packet);
             return 1;
         }
@@ -2267,19 +2267,19 @@ public class ScriptEvent extends Node {
             var3 = intStack[Statics46.anInt442];
             var4 = intStack[Statics46.anInt442 + 1];
             EnumDefinition var5 = AssociateComparator_Sub4.method664(var3);
-            if (var5.aChar1444 != 's') {
+            if (var5.output != 's') {
             }
 
-            for (var6 = 0; var6 < var5.anInt375; ++var6) {
-                if (var4 == var5.anIntArray692[var6]) {
-                    stringStack[++Statics46.anInt441 - 1] = var5.aStringArray1446[var6];
+            for (var6 = 0; var6 < var5.outputSize; ++var6) {
+                if (var4 == var5.keys[var6]) {
+                    stringStack[++Statics46.anInt441 - 1] = var5.stringValues[var6];
                     var5 = null;
                     break;
                 }
             }
 
             if (var5 != null) {
-                stringStack[++Statics46.anInt441 - 1] = var5.aString1442;
+                stringStack[++Statics46.anInt441 - 1] = var5.defaultString;
             }
 
             return 1;
@@ -2288,7 +2288,7 @@ public class ScriptEvent extends Node {
             if (var0 == 3411) {
                 var3 = intStack[--Statics46.anInt442];
                 EnumDefinition var9 = AssociateComparator_Sub4.method664(var3);
-                intStack[++Statics46.anInt442 - 1] = var9.method987();
+                intStack[++Statics46.anInt442 - 1] = var9.size();
                 return 1;
             }
             return 2;
@@ -2299,13 +2299,13 @@ public class ScriptEvent extends Node {
         int var7 = intStack[Statics46.anInt442 + 2];
         var6 = intStack[Statics46.anInt442 + 3];
         EnumDefinition var8 = AssociateComparator_Sub4.method664(var7);
-        if (var3 == var8.aChar1445 && var4 == var8.aChar1444) {
-            for (int var10 = 0; var10 < var8.anInt375; ++var10) {
-                if (var6 == var8.anIntArray692[var10]) {
+        if (var3 == var8.input && var4 == var8.output) {
+            for (int var10 = 0; var10 < var8.outputSize; ++var10) {
+                if (var6 == var8.keys[var10]) {
                     if (var4 == 115) {
-                        stringStack[++Statics46.anInt441 - 1] = var8.aStringArray1446[var10];
+                        stringStack[++Statics46.anInt441 - 1] = var8.stringValues[var10];
                     } else {
-                        intStack[++Statics46.anInt442 - 1] = var8.anIntArray691[var10];
+                        intStack[++Statics46.anInt442 - 1] = var8.intValues[var10];
                     }
 
                     var8 = null;
@@ -2315,9 +2315,9 @@ public class ScriptEvent extends Node {
 
             if (var8 != null) {
                 if (var4 == 115) {
-                    stringStack[++Statics46.anInt441 - 1] = var8.aString1442;
+                    stringStack[++Statics46.anInt441 - 1] = var8.defaultString;
                 } else {
-                    intStack[++Statics46.anInt442 - 1] = var8.anInt112;
+                    intStack[++Statics46.anInt442 - 1] = var8.defaultInteger;
                 }
             }
 

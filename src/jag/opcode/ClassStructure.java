@@ -222,7 +222,7 @@ public class ClassStructure extends Node {
                 }
             }
 
-            var0.pcrc(var3);
+            var0.pCrc(var3);
             var2.unlink();
         }
     }

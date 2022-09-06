@@ -106,7 +106,7 @@ public final class NpcEntity extends PathingEntity {
                     var7 = -1;
                 }
 
-                var8 = buffer.method1074();
+                var8 = buffer.g1_alt4();
                 if (var7 == var5.animation && var7 != -1) {
                     var9 = AnimationSequence.get(var7).replayMode;
                     if (var9 == 1) {
@@ -130,7 +130,7 @@ public final class NpcEntity extends PathingEntity {
             }
 
             if ((var6 & 1) != 0) {
-                var7 = buffer.ig1();
+                var7 = buffer.ig1_alt1();
                 int var11;
                 int var12;
                 int var13;
@@ -139,32 +139,32 @@ public final class NpcEntity extends PathingEntity {
                         var10 = -1;
                         var11 = -1;
                         var12 = -1;
-                        var9 = buffer.gsmarts();
+                        var9 = buffer.gSmarts();
                         if (var9 == 32767) {
-                            var9 = buffer.gsmarts();
-                            var11 = buffer.gsmarts();
-                            var10 = buffer.gsmarts();
-                            var12 = buffer.gsmarts();
+                            var9 = buffer.gSmarts();
+                            var11 = buffer.gSmarts();
+                            var10 = buffer.gSmarts();
+                            var12 = buffer.gSmarts();
                         } else if (var9 != 32766) {
-                            var11 = buffer.gsmarts();
+                            var11 = buffer.gSmarts();
                         } else {
                             var9 = -1;
                         }
 
-                        var13 = buffer.gsmarts();
+                        var13 = buffer.gSmarts();
                         var5.addHitSplat(var9, var11, var10, var12, client.engineCycle, var13);
                     }
                 }
 
-                var8 = buffer.method1074();
+                var8 = buffer.g1_alt4();
                 if (var8 > 0) {
                     for (var9 = 0; var9 < var8; ++var9) {
-                        var10 = buffer.gsmarts();
-                        var11 = buffer.gsmarts();
+                        var10 = buffer.gSmarts();
+                        var11 = buffer.gSmarts();
                         if (var11 != 32767) {
-                            var12 = buffer.gsmarts();
-                            var13 = buffer.ig1();
-                            int var14 = var11 > 0 ? buffer.ig1() : var13;
+                            var12 = buffer.gSmarts();
+                            var13 = buffer.ig1_alt1();
+                            int var14 = var11 > 0 ? buffer.ig1_alt1() : var13;
                             var5.updateHealthBar(var10, client.engineCycle, var11, var12, var13, var14);
                         } else {
                             var5.method1503(var10);
@@ -174,14 +174,14 @@ public final class NpcEntity extends PathingEntity {
             }
 
             if ((var6 & 2) != 0) {
-                var5.targetIndex = buffer.method1055();
+                var5.targetIndex = buffer.g2_alt4();
                 if (var5.targetIndex == 65535) {
                     var5.targetIndex = -1;
                 }
             }
 
             if ((var6 & 32) != 0) {
-                var5.definition = NpcDefinition.get(buffer.method1060());
+                var5.definition = NpcDefinition.get(buffer.g2s_le());
                 var5.boundSize = var5.definition.size;
                 var5.rotation = var5.definition.rotation;
                 var5.walkStance = var5.definition.walkStance;
@@ -194,8 +194,8 @@ public final class NpcEntity extends PathingEntity {
             }
 
             if ((var6 & 4) != 0) {
-                var7 = buffer.method1055();
-                var8 = buffer.method1060();
+                var7 = buffer.g2_alt4();
+                var8 = buffer.g2s_le();
                 var9 = var5.absoluteX - (var7 - client.baseX - client.baseX) * 64;
                 var10 = var5.absoluteY - (var8 - client.baseY - client.baseY) * 64;
                 if (var9 != 0 || var10 != 0) {
@@ -204,8 +204,8 @@ public final class NpcEntity extends PathingEntity {
             }
 
             if ((var6 & 8) != 0) {
-                var5.effect = buffer.method1060();
-                var7 = buffer.method1019();
+                var5.effect = buffer.g2s_le();
+                var7 = buffer.g4_alt2();
                 var5.anInt2014 = var7 >> 16;
                 var5.effectDelay = (var7 & 65535) + client.engineCycle;
                 var5.effectFrame = 0;

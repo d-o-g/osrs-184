@@ -63,10 +63,10 @@ public class ParameterDefinition extends DoublyLinkedNode {
         } else if (var2 == 5) {
             defaultString = var1.gstr();
         }
-
     }
 
     public void onDecode() {
+
     }
 
     public void decode(Buffer buffer) {

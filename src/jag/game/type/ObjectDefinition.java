@@ -43,7 +43,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
     public boolean clipped;
     public int mapSceneId;
     public boolean aBoolean1507;
-    public IterableNodeTable<? super Node> properties;
+    public IterableNodeTable<? super Node> parameters;
     public int varpbitIndex;
     public int[] anIntArray690;
     public int[] modelIds;
@@ -126,7 +126,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
     public final ObjectDefinition transform() {
         int var1 = -1;
         if (varpbitIndex != -1) {
-            var1 = Varbit.get(varpbitIndex);
+            var1 = Varbit.getValue(varpbitIndex);
         } else if (varpIndex != -1) {
             var1 = Vars.values[varpIndex];
         }
@@ -273,7 +273,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
             } else if (var2 == 82) {
                 mapFunction = var1.g2();
             } else if (var2 == 249) {
-                properties = IterableNodeTable.decode(var1, properties);
+                parameters = IterableNodeTable.decode(var1, parameters);
             }
         } else {
             varpbitIndex = var1.g2();
@@ -503,7 +503,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
         return var11;
     }
 
-    public final Model method1103(int var1, int var2, int[][] var3, int var4, int var5, int var6) {
+    public final Model getLitModel(int var1, int var2, int[][] var3, int var4, int var5, int var6) {
         long var7;
         if (modelIds == null) {
             var7 = var2 + (id << 10);
@@ -568,11 +568,11 @@ public class ObjectDefinition extends DoublyLinkedNode {
     }
 
     public int method1100(int var1, int var2) {
-        return IterableNodeTable.getIntParameter(properties, var1, var2);
+        return IterableNodeTable.getIntParameter(parameters, var1, var2);
     }
 
     public String method1104(int var1, String var2) {
-        return IterableNodeTable.getStringParameter(properties, var1, var2);
+        return IterableNodeTable.getStringParameter(parameters, var1, var2);
     }
 
     public boolean method1099() {

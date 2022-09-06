@@ -13,69 +13,65 @@ public class EnumDefinition extends DoublyLinkedNode {
     public static ReferenceTable table;
     public static WorldMapScriptEvent aWorldMapScriptEvent_1443;
 
-    public int anInt375;
-    public String aString1442;
-    public char aChar1445;
-    public char aChar1444;
-    public int anInt112;
-    public int[] anIntArray692;
-    public String[] aStringArray1446;
-    public int[] anIntArray691;
+    public int outputSize;
+    public String defaultString;
+    public char input;
+    public char output;
+    public int defaultInteger;
+    public int[] keys;
+    public String[] stringValues;
+    public int[] intValues;
 
     public EnumDefinition() {
-        aString1442 = "null";
-        anInt375 = 0;
+        defaultString = "null";
+        outputSize = 0;
     }
 
     public static void sendFullIgnoreListMessage() {
         ChatHistory.messageReceived(30, "", "Your ignore list is full. Max of 100 for free users, and 400 for members");
     }
 
-    void decode(Buffer var1, int var2) {
-        if (var2 == 1) {
-            aChar1445 = (char) var1.g1();
-        } else if (var2 == 2) {
-            aChar1444 = (char) var1.g1();
-        } else if (var2 == 3) {
-            aString1442 = var1.gstr();
-        } else if (var2 == 4) {
-            anInt112 = var1.g4();
+    void decode(Buffer buffer, int opcode) {
+        if (opcode == 1) {
+            input = (char) buffer.g1();
+        } else if (opcode == 2) {
+            output = (char) buffer.g1();
+        } else if (opcode == 3) {
+            defaultString = buffer.gstr();
+        } else if (opcode == 4) {
+            defaultInteger = buffer.g4();
         } else {
-            int var3;
-            if (var2 == 5) {
-                anInt375 = var1.g2();
-                anIntArray692 = new int[anInt375];
-                aStringArray1446 = new String[anInt375];
-
-                for (var3 = 0; var3 < anInt375; ++var3) {
-                    anIntArray692[var3] = var1.g4();
-                    aStringArray1446[var3] = var1.gstr();
+            if (opcode == 5) {
+                outputSize = buffer.g2();
+                keys = new int[outputSize];
+                stringValues = new String[outputSize];
+                for (int i = 0; i < outputSize; ++i) {
+                    keys[i] = buffer.g4();
+                    stringValues[i] = buffer.gstr();
                 }
-            } else if (var2 == 6) {
-                anInt375 = var1.g2();
-                anIntArray692 = new int[anInt375];
-                anIntArray691 = new int[anInt375];
-
-                for (var3 = 0; var3 < anInt375; ++var3) {
-                    anIntArray692[var3] = var1.g4();
-                    anIntArray691[var3] = var1.g4();
+            } else if (opcode == 6) {
+                outputSize = buffer.g2();
+                keys = new int[outputSize];
+                intValues = new int[outputSize];
+                for (int i = 0; i < outputSize; ++i) {
+                    keys[i] = buffer.g4();
+                    intValues[i] = buffer.g4();
                 }
             }
         }
-
     }
 
-    public int method987() {
-        return anInt375;
+    public int size() {
+        return outputSize;
     }
 
-    public void decode(Buffer var1) {
+    public void decode(Buffer buffer) {
         while (true) {
-            int var2 = var1.g1();
-            if (var2 == 0) {
+            int opcode = buffer.g1();
+            if (opcode == 0) {
                 return;
             }
-            decode(var1, var2);
+            decode(buffer, opcode);
         }
     }
 }

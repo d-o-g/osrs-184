@@ -10,12 +10,14 @@ import java.awt.*;
 public class TileOverlay extends DoublyLinkedNode {
 
     public static final ReferenceCache<TileOverlay> cache = new ReferenceCache<>(64);
+
     public static ReferenceTable table;
     public static FontMetrics aFontMetrics1467;
 
+    public boolean hideUnderlay;
+
     public int secondaryRgb;
     public int rgb;
-    public boolean hideUnderlay;
     public int texture;
     public int hue;
     public int secondaryHue;

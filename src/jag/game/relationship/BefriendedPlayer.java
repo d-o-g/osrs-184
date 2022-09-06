@@ -15,18 +15,18 @@ public class BefriendedPlayer extends Associate<BefriendedPlayer> {
     }
 
     public static void method555() {
-        Statics45.aByteArrayArrayArray404 = null;
-        Statics45.aByteArrayArrayArray401 = null;
+        SceneGraphRenderData.aByteArrayArrayArray404 = null;
+        SceneGraphRenderData.aByteArrayArrayArray401 = null;
         DefaultAudioSystemProvider.aByteArrayArrayArray141 = null;
         Statics35.aByteArrayArrayArray1615 = null;
-        Statics45.anIntArrayArrayArray393 = null;
-        Statics45.aByteArrayArrayArray400 = null;
+        SceneGraphRenderData.anIntArrayArrayArray393 = null;
+        SceneGraphRenderData.aByteArrayArrayArray400 = null;
         DefaultAudioSystemProvider.anIntArrayArray146 = null;
-        Statics45.anIntArray396 = null;
+        SceneGraphRenderData.anIntArray396 = null;
         LoadedArchive.anIntArray426 = null;
-        Statics45.anIntArray390 = null;
+        SceneGraphRenderData.anIntArray390 = null;
         NamedFont.anIntArray1626 = null;
-        Statics45.anIntArray389 = null;
+        SceneGraphRenderData.anIntArray389 = null;
     }
 
     int compare(BefriendedPlayer friend) {

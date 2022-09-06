@@ -1659,7 +1659,7 @@ public class InterfaceComponent extends Node {
 
                     if (opcode == 14) {
                         int varbitIndex = opcodes[ptr++];
-                        value = Varbit.get(varbitIndex);
+                        value = Varbit.getValue(varbitIndex);
                     }
 
                     if (opcode == 15) {

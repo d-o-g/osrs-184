@@ -206,7 +206,7 @@ public abstract class ReferenceTable {
 
             int var1 = buffer.g1();
             if (var0 >= 7) {
-                entryCount = buffer.g2else4();
+                entryCount = buffer.g2or4();
             } else {
                 entryCount = buffer.g2();
             }
@@ -217,7 +217,7 @@ public abstract class ReferenceTable {
             int entry;
             if (var0 >= 7) {
                 for (entry = 0; entry < this.entryCount; ++entry) {
-                    entryIndices[entry] = var2 += buffer.g2else4();
+                    entryIndices[entry] = var2 += buffer.g2or4();
                     if (entryIndices[entry] > entryCount) {
                         entryCount = entryIndices[entry];
                     }
@@ -273,7 +273,7 @@ public abstract class ReferenceTable {
                     childrenIndices[entryIdx] = new int[childIndexCount];
 
                     for (childIdx = 0; childIdx < childIndexCount; ++childIdx) {
-                        var12 = childrenIndices[entryIdx][childIdx] = var2 += buffer.g2else4();
+                        var12 = childrenIndices[entryIdx][childIdx] = var2 += buffer.g2or4();
                         if (var12 > childSizeCount) {
                             childSizeCount = var12;
                         }
@@ -389,7 +389,7 @@ public abstract class ReferenceTable {
         if (xtea != null && (xtea[0] != 0 || xtea[1] != 0 || xtea[2] != 0 || xtea[3] != 0)) {
             data = StockMarketOfferPriceComparator.method333(groups[group], true);
             Buffer buffer = new Buffer(data);
-            buffer.tinyenc(xtea, 5, buffer.payload.length);
+            buffer.tinyKeyEncrypt(xtea, 5, buffer.payload.length);
         } else {
             data = StockMarketOfferPriceComparator.method333(groups[group], false);
         }

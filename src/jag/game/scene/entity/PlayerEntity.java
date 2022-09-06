@@ -301,7 +301,7 @@ public final class PlayerEntity extends PathingEntity {
             }
 
             if ((var6 & 0x8) != 0) {
-                var7 = packet.ig1();
+                var7 = packet.ig1_alt1();
                 byte[] var11 = new byte[var7];
                 Buffer var12 = new Buffer(var11);
                 packet.igdataa(var11, 0, var7);
@@ -315,8 +315,8 @@ public final class PlayerEntity extends PathingEntity {
             if ((var6 & 0x80) != 0) {
                 var7 = packet.g2();
                 PlayerAccountType var20 = (PlayerAccountType) EnumType.getByOrdinal(PlayerAccountType.getValues(), packet.g1());
-                boolean var13 = packet.ig1() == 1;
-                var14 = packet.ig1();
+                boolean var13 = packet.ig1_alt1() == 1;
+                var14 = packet.ig1_alt1();
                 var15 = packet.pos;
                 if (player.namePair != null && player.model != null) {
                     boolean var16 = var20.notJagex && client.relationshipManager.isIgnored(player.namePair);
@@ -354,7 +354,7 @@ public final class PlayerEntity extends PathingEntity {
             }
 
             if ((var6 & 0x10) != 0) {
-                var7 = packet.method1060();
+                var7 = packet.g2s_le();
                 if (var7 == 65535) {
                     var7 = -1;
                 }
@@ -368,13 +368,13 @@ public final class PlayerEntity extends PathingEntity {
             }
 
             if ((var6 & 0x400) != 0) {
-                player.startX = packet.method1063();
-                player.startY = packet.method1059();
-                player.endX = packet.method1063();
-                player.endY = packet.method1063();
+                player.startX = packet.g1_alt2();
+                player.startY = packet.g1_alt1();
+                player.endX = packet.g1_alt2();
+                player.endY = packet.g1_alt2();
                 player.forceMovementStartCycle = packet.g2() + client.engineCycle;
-                player.forceMovementEndCycle = packet.method1060() + client.engineCycle;
-                player.anInt2019 = packet.method1055();
+                player.forceMovementEndCycle = packet.g2s_le() + client.engineCycle;
+                player.anInt2019 = packet.g2_alt4();
                 if (player.aBoolean1904) {
                     player.startX += player.updateX;
                     player.startY += player.updateY;
@@ -393,7 +393,7 @@ public final class PlayerEntity extends PathingEntity {
             }
 
             if ((var6 & 0x4) != 0) {
-                var7 = packet.method1056();
+                var7 = packet.g1_alt3();
                 int var19;
                 int var22;
                 int var23;
@@ -402,32 +402,32 @@ public final class PlayerEntity extends PathingEntity {
                         var14 = -1;
                         var15 = -1;
                         var23 = -1;
-                        var22 = packet.gsmarts();
+                        var22 = packet.gSmarts();
                         if (var22 == 32767) {
-                            var22 = packet.gsmarts();
-                            var15 = packet.gsmarts();
-                            var14 = packet.gsmarts();
-                            var23 = packet.gsmarts();
+                            var22 = packet.gSmarts();
+                            var15 = packet.gSmarts();
+                            var14 = packet.gSmarts();
+                            var23 = packet.gSmarts();
                         } else if (var22 != 32766) {
-                            var15 = packet.gsmarts();
+                            var15 = packet.gSmarts();
                         } else {
                             var22 = -1;
                         }
 
-                        var19 = packet.gsmarts();
+                        var19 = packet.gSmarts();
                         player.addHitSplat(var22, var15, var14, var23, client.engineCycle, var19);
                     }
                 }
 
-                var8 = packet.method1074();
+                var8 = packet.g1_alt4();
                 if (var8 > 0) {
                     for (var22 = 0; var22 < var8; ++var22) {
-                        var14 = packet.gsmarts();
-                        var15 = packet.gsmarts();
+                        var14 = packet.gSmarts();
+                        var15 = packet.gSmarts();
                         if (var15 != 32767) {
-                            var23 = packet.gsmarts();
-                            var19 = packet.method1056();
-                            var18 = var15 > 0 ? packet.method1056() : var19;
+                            var23 = packet.gSmarts();
+                            var19 = packet.g1_alt3();
+                            var18 = var15 > 0 ? packet.g1_alt3() : var19;
                             player.updateHealthBar(var14, client.engineCycle, var15, var23, var19, var18);
                         } else {
                             player.method1503(var14);
@@ -437,7 +437,7 @@ public final class PlayerEntity extends PathingEntity {
             }
 
             if ((var6 & 0x40) != 0) {
-                player.targetIndex = packet.method1060();
+                player.targetIndex = packet.g2s_le();
                 if (player.targetIndex == 65535) {
                     player.targetIndex = -1;
                 }

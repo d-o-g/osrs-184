@@ -12,61 +12,53 @@ public class Varbit extends DoublyLinkedNode {
     public static ReferenceTable table;
 
     public int parent;
-    public int lower;
-    public int upper;
+    public int left;
+    public int right;
 
-    public static void set(int var0, int var1) {
-        Varbit var2 = cache.get(var0);
-        Varbit var3;
-        if (var2 == null) {
-            byte[] var8 = table.unpack(14, var0);
-            var2 = new Varbit();
-            if (var8 != null) {
-                var2.decode(new Buffer(var8));
+    public static Varbit computeIfAbsent(int index) {
+        Varbit varbit = cache.get(index);
+        if (varbit == null) {
+            byte[] buffer = table.unpack(14, index);
+            varbit = new Varbit();
+            if (buffer != null) {
+                varbit.decode(new Buffer(buffer));
             }
 
-            cache.put(var2, var0);
-        }
-        var3 = var2;
-
-        int var4 = var3.parent;
-        int var5 = var3.lower;
-        int var6 = var3.upper;
-        int var7 = Vars.masks[var6 - var5];
-        if (var1 < 0 || var1 > var7) {
-            var1 = 0;
+            cache.put(varbit, index);
         }
 
-        var7 <<= var5;
-        Vars.values[var4] = Vars.values[var4] & ~var7 | var1 << var5 & var7;
+        return varbit;
     }
 
-    public static int get(int id) {
-        Varbit bit = cache.get(id);
-        if (bit == null) {
-            byte[] payload = table.unpack(14, id);
-            bit = new Varbit();
-            if (payload != null) {
-                bit.decode(new Buffer(payload));
-            }
-
-            cache.put(bit, id);
+    public static void setValue(int index, int value) {
+        Varbit varbit = computeIfAbsent(index);
+        int varp = varbit.parent;
+        int left = varbit.left;
+        int right = varbit.right;
+        int mask = Vars.masks[right - left];
+        if (value < 0 || value > mask) {
+            value = 0;
         }
 
-        int varp = bit.parent;
-        int lower = bit.lower;
-        int upper = bit.upper;
-        int mask = Vars.masks[upper - lower];
-        return Vars.values[varp] >> lower & mask;
+        mask <<= left;
+        Vars.values[varp] = Vars.values[varp] & ~mask | value << left & mask;
+    }
+
+    public static int getValue(int index) {
+        Varbit varbit = computeIfAbsent(index);
+        int varp = varbit.parent;
+        int left = varbit.left;
+        int right = varbit.right;
+        int mask = Vars.masks[right - left];
+        return Vars.values[varp] >> left & mask;
     }
 
     public void decode(Buffer buffer, int opcode) {
         if (opcode == 1) {
             parent = buffer.g2();
-            lower = buffer.g1();
-            upper = buffer.g1();
+            left = buffer.g1();
+            right = buffer.g1();
         }
-
     }
 
     public void decode(Buffer buffer) {

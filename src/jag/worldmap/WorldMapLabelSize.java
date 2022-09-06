@@ -45,23 +45,23 @@ public class WorldMapLabelSize {
                 OutgoingPacket packet;
                 if (var0 == 1) {
                     packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_0, client.stream.encryptor);
-                    packet.buffer.p2a(var3[var6]);
-                    packet.buffer.p1a(0);
+                    packet.buffer.p2_alt1(var3[var6]);
+                    packet.buffer.p1_alt2(0);
                     client.stream.writeLater(packet);
                 } else if (var0 == 4) {
                     packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_3, client.stream.encryptor);
-                    packet.buffer.ip2a(var3[var6]);
+                    packet.buffer.ip2_alt1(var3[var6]);
                     packet.buffer.p1n(0);
                     client.stream.writeLater(packet);
                 } else if (var0 == 6) {
                     packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_5, client.stream.encryptor);
                     packet.buffer.p2(var3[var6]);
-                    packet.buffer.p1a(0);
+                    packet.buffer.p1_alt2(0);
                     client.stream.writeLater(packet);
                 } else if (var0 == 7) {
                     packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_6, client.stream.encryptor);
                     packet.buffer.ip2(var3[var6]);
-                    packet.buffer.p1a(0);
+                    packet.buffer.p1_alt2(0);
                     client.stream.writeLater(packet);
                 }
 

@@ -8,12 +8,14 @@ import jag.opcode.Buffer;
 public class TileUnderlay extends DoublyLinkedNode {
 
     public static final ReferenceCache<TileUnderlay> cache = new ReferenceCache<>(64);
+
     public static ReferenceTable table;
 
     public int blendSaturation;
     public int blendLightness;
     public int blendHueWeight;
     public int blendHue;
+
     int rgb;
 
     public TileUnderlay() {

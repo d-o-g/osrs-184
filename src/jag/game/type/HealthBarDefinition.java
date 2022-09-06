@@ -10,6 +10,7 @@ public class HealthBarDefinition extends DoublyLinkedNode {
 
     public static final ReferenceCache<HealthBarDefinition> cache = new ReferenceCache<>(64);
     public static final ReferenceCache<Sprite> sprites = new ReferenceCache<>(64);
+
     public static ReferenceTable table;
     public static ReferenceTable aReferenceTable697;
 

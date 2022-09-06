@@ -32,7 +32,7 @@ public final class ResourceCache {
     public static int method1491(Buffer var0, String var1) {
         int var2 = var0.pos;
         byte[] var3 = AssociateComparatorByWorld.method680(var1);
-        var0.psmart(var3.length);
+        var0.pSmart2or3(var3.length);
         var0.pos += Huffman.instance.compress(var3, 0, var3.length, var0.payload, var0.pos);
         return var0.pos - var2;
     }

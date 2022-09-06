@@ -75,7 +75,7 @@ public class AsyncOutputStream implements Runnable {
             int sceneY = PlayerEntity.local.absoluteY - dy >> 7;
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.WALK_MAP, client.stream.encryptor);
             packet.buffer.p1(18);
-            packet.buffer.ip2a(client.baseX + sceneX);
+            packet.buffer.ip2_alt1(client.baseX + sceneX);
             packet.buffer.ip2(client.baseY + sceneY);
             packet.buffer.p1n(Keyboard.heldKeys[82] ? (Keyboard.heldKeys[81] ? 2 : 1) : 0);
             packet.buffer.p1(relativeX);

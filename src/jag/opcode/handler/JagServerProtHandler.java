@@ -89,7 +89,7 @@ public class JagServerProtHandler extends ServerProtHandler {
 
     @Override
     public boolean processComponentConfigUpdate(BitBuffer incoming) {
-        int start = incoming.readLEUShortA();
+        int start = incoming.g2_le();
         if (start == 65535) {
             start = -1;
         }
@@ -148,8 +148,8 @@ public class JagServerProtHandler extends ServerProtHandler {
 
         int size = incoming.g2();
         for (int index = 0; index < size; ++index) {
-            int id = incoming.readLEUShortA();
-            int stack = incoming.method1056();
+            int id = incoming.g2_le();
+            int stack = incoming.g1_alt3();
             if (stack == 255) {
                 stack = incoming.ig4();
             }
@@ -198,8 +198,8 @@ public class JagServerProtHandler extends ServerProtHandler {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.GARBAGE_COLLECTOR, stream.encryptor);
         packet.buffer.p1n(time);
         packet.buffer.p4(var6);
-        packet.buffer.pif4(var5);
-        packet.buffer.writeByteS(client.anInt1292);
+        packet.buffer.p4_alt1(var5);
+        packet.buffer.p1_alt1(client.anInt1292);
         stream.writeLater(packet);
         stream.currentIncomingPacket = null;
         return true;
@@ -230,8 +230,8 @@ public class JagServerProtHandler extends ServerProtHandler {
 
     @Override
     public boolean setIfPosition(BitBuffer incoming) {
-        int yMargin = incoming.method1070();
-        int xMargin = incoming.method1070();
+        int yMargin = incoming.g2_alt3();
+        int xMargin = incoming.g2_alt3();
         int uid = incoming.ig4();
         InterfaceComponent component = InterfaceComponent.lookup(uid);
         if (xMargin != component.xMargin || yMargin != component.yMargin || component.xLayout != 0 || component.yLayout != 0) {
@@ -252,7 +252,7 @@ public class JagServerProtHandler extends ServerProtHandler {
 
     @Override
     public boolean setUpdateTimer(BitBuffer incoming) {
-        client.updateTimer = incoming.readLEUShortA() * 30;
+        client.updateTimer = incoming.g2_le() * 30;
         client.anInt1074 = client.anInt1075;
         stream.currentIncomingPacket = null;
         return true;

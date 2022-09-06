@@ -259,7 +259,7 @@ public class Buffer extends Node {
         }
     }
 
-    public boolean gbool() {
+    public boolean gBit() {
         return (g1() & 1) == 1;
     }
 
@@ -303,30 +303,30 @@ public class Buffer extends Node {
         return b + (a << 32);
     }
 
-    public int gsmartsseq() {
+    public int gSmartsSeq() {
         int v = 0;
 
-        int inc = gsmarts();
+        int inc = gSmarts();
         while (inc == 32767) {
             v += 32767;
-            inc = gsmarts();
+            inc = gSmarts();
         }
 
         v += inc;
         return v;
     }
 
-    public int gsmarts() {
+    public int gSmarts() {
         int ubyte = payload[pos] & 0xff;
         return ubyte >= 128 ? g2() - 32768 : g1();
     }
 
-    public int gsmart() {
+    public int gSmart() {
         int ubyte = payload[pos] & 0xff;
         return ubyte < 128 ? g1() - 64 : g2() - 49152;
     }
 
-    public void pbool(boolean v) {
+    public void pBit(boolean v) {
         p1(v ? 1 : 0);
     }
 
@@ -448,19 +448,19 @@ public class Buffer extends Node {
         }
     }
 
-    public int method1060() {
+    public int g2s_le() {
         return (payload[pos++] - 128 & 0xff) + ((payload[pos++] & 0xff) << 8);
     }
 
-    public int readLEUShortA() {
+    public int g2_le() {
         return (payload[pos++] & 0xff) + ((payload[pos++] & 0xff) << 8);
     }
 
-    public int method1074() {
+    public int g1_alt4() {
         return 128 - payload[pos++] & 0xff;
     }
 
-    public void pflag(int flag) {
+    public void pFlag(int flag) {
         if ((flag & -128) != 0) {
             if ((flag & -16384) != 0) {
                 if ((flag & -2097152) != 0) {
@@ -476,23 +476,23 @@ public class Buffer extends Node {
         p1(flag & 127);
     }
 
-    public int pcrc(int v) {
+    public int pCrc(int v) {
         int crc = crc32(payload, v, pos);
         p4(crc);
         return crc;
     }
 
-    public void p(byte[] data, int src, int offset) {
+    public void pdata(byte[] data, int src, int offset) {
         for (int i = src; i < offset + src; ++i) {
             payload[pos++] = data[i];
         }
     }
 
-    public int g2else4() {
+    public int g2or4() {
         return payload[pos] < 0 ? g4() & Integer.MAX_VALUE : g2();
     }
 
-    public void tinyenc(int[] keys, int start, int end) {
+    public void tinyKeyEncrypt(int[] keys, int start, int end) {
         int src = pos;
         pos = start;
         int dst = (end - start) / 8;
@@ -516,7 +516,7 @@ public class Buffer extends Node {
         pos = src;
     }
 
-    public void ip2a(int v) {
+    public void ip2_alt1(int v) {
         payload[pos++] = (byte) (v + 128);
         payload[pos++] = (byte) (v >> 8);
     }
@@ -529,11 +529,11 @@ public class Buffer extends Node {
         payload = null;
     }
 
-    public int ig1() {
+    public int ig1_alt1() {
         return 0 - payload[pos++] & 0xff;
     }
 
-    public int method1055() {
+    public int g2_alt4() {
         return ((payload[pos++] & 0xff) << 8) + (payload[pos++] - 128 & 0xff);
     }
 
@@ -547,14 +547,14 @@ public class Buffer extends Node {
         payload[pos++] = 0;
     }
 
-    public void pirf4(int v) {
+    public void p4_alt2(int v) {
         payload[pos++] = (byte) (v >> 8);
         payload[pos++] = (byte) v;
         payload[pos++] = (byte) (v >> 24);
         payload[pos++] = (byte) (v >> 16);
     }
 
-    public void pif4(int v) {
+    public void p4_alt1(int v) {
         payload[pos++] = (byte) (v >> 16);
         payload[pos++] = (byte) (v >> 24);
         payload[pos++] = (byte) v;
@@ -569,7 +569,7 @@ public class Buffer extends Node {
         }
     }
 
-    public int method1070() {
+    public int g2_alt3() {
         int v = (payload[pos++] - 128 & 0xff) + ((payload[pos++] & 0xff) << 8);
         if (v > 32767) {
             v -= 65536;
@@ -585,32 +585,32 @@ public class Buffer extends Node {
                 + ((payload[pos++] & 0xff) << 24);
     }
 
-    public int method1056() {
+    public int g1_alt3() {
         return payload[pos++] - 128 & 0xff;
     }
 
-    public void p2a(int v) {
+    public void p2_alt1(int v) {
         payload[pos++] = (byte) (v >> 8);
         payload[pos++] = (byte) (v + 128);
     }
 
-    public byte method1075() {
+    public byte ig1() {
         return (byte) (0 - payload[pos++]);
     }
 
-    public void p1a(int v) {
+    public void p1_alt2(int v) {
         payload[pos++] = (byte) (v + 128);
     }
 
-    public void writeByteS(int v) {
+    public void p1_alt1(int v) {
         payload[pos++] = (byte) (128 - v);
     }
 
-    public byte method1063() {
+    public byte g1_alt2() {
         return (byte) (payload[pos++] - 128);
     }
 
-    public int method1019() {
+    public int g4_alt2() {
         return ((payload[pos++] & 0xff) << 8)
                 + (payload[pos++] & 0xff)
                 + ((payload[pos++] & 0xff) << 24)
@@ -624,7 +624,7 @@ public class Buffer extends Node {
         return r == l;
     }
 
-    public int method1067() {
+    public int g2_alt2() {
         int v = ((payload[pos++] & 0xff) << 8) + (payload[pos++] - 128 & 0xff);
         if (v > 32767) {
             v -= 65536;
@@ -633,7 +633,7 @@ public class Buffer extends Node {
         return v;
     }
 
-    public int method1011() {
+    public int g4_alt1() {
         return ((payload[pos++] & 0xff) << 16)
                 + ((payload[pos++] & 0xff) << 24)
                 + (payload[pos++] & 0xff)
@@ -654,11 +654,11 @@ public class Buffer extends Node {
         return str;
     }
 
-    public byte method1059() {
+    public byte g1_alt1() {
         return (byte) (128 - payload[pos++]);
     }
 
-    public void psize2(int v) {
+    public void pSize2(int v) {
         if (v >= 0 && v <= 65535) {
             payload[pos - v - 2] = (byte) (v >> 8);
             payload[pos - v - 1] = (byte) v;
@@ -667,7 +667,7 @@ public class Buffer extends Node {
         }
     }
 
-    public void prsa(BigInteger exponent, BigInteger modulus) {
+    public void pRsa(BigInteger exponent, BigInteger modulus) {
         int var3 = pos;
         pos = 0;
         byte[] var4 = new byte[var3];
@@ -677,7 +677,7 @@ public class Buffer extends Node {
         byte[] var7 = var6.toByteArray();
         pos = 0;
         p2(var7.length);
-        p(var7, 0, var7.length);
+        pdata(var7, 0, var7.length);
     }
 
     public void ip3(int v) {
@@ -686,7 +686,7 @@ public class Buffer extends Node {
         payload[pos++] = (byte) (v >> 16);
     }
 
-    public int method1078() {
+    public int g2_alt1() {
         int v = (payload[pos++] & 0xff) + ((payload[pos++] & 0xff) << 8);
         if (v > 32767) {
             v -= 65536;
@@ -698,11 +698,11 @@ public class Buffer extends Node {
     public void method1052(CharSequence seq) {
         int flag = Strings.method702(seq);
         payload[pos++] = 0;
-        pflag(flag);
+        pFlag(flag);
         pos += WorldMapIcon.method202(payload, pos, seq);
     }
 
-    public void psize4(int v) {
+    public void pSize4(int v) {
         if (v < 0) {
             throw new IllegalArgumentException();
         }
@@ -712,7 +712,7 @@ public class Buffer extends Node {
         payload[pos - v - 1] = (byte) v;
     }
 
-    public void psmart(int v) {
+    public void pSmart2or3(int v) {
         if (v >= 0 && v < 128) {
             p1(v);
         } else if (v >= 0 && v < 32768) {
@@ -722,7 +722,7 @@ public class Buffer extends Node {
         }
     }
 
-    public void p48(long v) {
+    public void p6(long v) {
         payload[pos++] = (byte) ((int) (v >> 40));
         payload[pos++] = (byte) ((int) (v >> 32));
         payload[pos++] = (byte) ((int) (v >> 24));
@@ -731,13 +731,13 @@ public class Buffer extends Node {
         payload[pos++] = (byte) ((int) v);
     }
 
-    public int method1017() {
+    public int p3_alt1() {
         return (payload[pos++] & 0xff)
                 + ((payload[pos++] & 0xff) << 8)
                 + ((payload[pos++] & 0xff) << 16);
     }
 
-    public void tinyenc(int[] keys) {
+    public void tinyKeyEncrypt(int[] keys) {
         int var2 = pos / 8;
         pos = 0;
 
@@ -759,7 +759,7 @@ public class Buffer extends Node {
 
     }
 
-    public void tinyenc2(int[] var1, int var2, int var3) {
+    public void tinyKeyEncrypt2(int[] var1, int var2, int var3) {
         int var4 = pos;
         pos = var2;
         int var5 = (var3 - var2) / 8;
@@ -783,7 +783,7 @@ public class Buffer extends Node {
         pos = var4;
     }
 
-    public void tinydec(int[] var1) {
+    public void tinyKeyDecrypt(int[] var1) {
         int var2 = pos / 8;
         pos = 0;
 
@@ -802,20 +802,17 @@ public class Buffer extends Node {
             p4(var4);
             p4(var5);
         }
-
     }
 
-    public void igdataa(byte[] var1, int var2, int var3) {
-        for (int var4 = var3 + var2 - 1; var4 >= var2; --var4) {
-            var1[var4] = (byte) (payload[pos++] - 128);
+    public void igdataa(byte[] data, int var2, int var3) {
+        for (int i = var3 + var2 - 1; i >= var2; --i) {
+            data[i] = (byte) (payload[pos++] - 128);
         }
-
     }
 
-    public void igdata(byte[] var1, int var2, int var3) {
-        for (int var4 = var2; var4 < var3 + var2; ++var4) {
-            var1[var4] = (byte) (payload[pos++] - 128);
+    public void igdata(byte[] data, int var2, int var3) {
+        for (int i = var2; i < var3 + var2; ++i) {
+            data[i] = (byte) (payload[pos++] - 128);
         }
-
     }
 }

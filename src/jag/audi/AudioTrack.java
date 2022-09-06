@@ -197,7 +197,7 @@ public class AudioTrack extends Node {
             while (true) {
                 while (true) {
                     int var63 = var1.method1044();
-                    var51.pflag(var63);
+                    var51.pFlag(var63);
                     int var64 = var1.payload[var29++] & 255;
                     boolean var65 = var64 != var62;
                     var62 = var64 & 15;
@@ -208,7 +208,7 @@ public class AudioTrack extends Node {
 
                         var51.p1(47);
                         var51.p1(0);
-                        var51.psize4(var51.pos - var61);
+                        var51.pSize4(var51.pos - var61);
                         continue label221;
                     }
 

@@ -76,7 +76,7 @@ public class ClientStream {
                     break;
                 }
 
-                outbuffer.p(packet.buffer.payload, 0, packet.size);
+                outbuffer.pdata(packet.buffer.payload, 0, packet.size);
                 buffered -= packet.size;
                 packet.unlink();
                 packet.buffer.cache();

@@ -708,17 +708,17 @@ public class UnlitModel extends Entity {
             var39 = var4.g1();
             var40 = 0;
             if ((var39 & 1) != 0) {
-                var40 = var5.gsmart();
+                var40 = var5.gSmart();
             }
 
             var41 = 0;
             if ((var39 & 2) != 0) {
-                var41 = var6.gsmart();
+                var41 = var6.gSmart();
             }
 
             var42 = 0;
             if ((var39 & 4) != 0) {
-                var42 = var7.gsmart();
+                var42 = var7.gSmart();
             }
 
             xVertices[var38] = var35 + var40;
@@ -787,9 +787,9 @@ public class UnlitModel extends Entity {
         for (var42 = 0; var42 < var10; ++var42) {
             var43 = var5.g1();
             if (var43 == 1) {
-                var38 = var4.gsmart() + var41;
-                var39 = var4.gsmart() + var38;
-                var40 = var4.gsmart() + var39;
+                var38 = var4.gSmart() + var41;
+                var39 = var4.gSmart() + var38;
+                var40 = var4.gSmart() + var39;
                 var41 = var40;
                 xTriangles[var42] = var38;
                 yTriangles[var42] = var39;
@@ -798,7 +798,7 @@ public class UnlitModel extends Entity {
 
             if (var43 == 2) {
                 var39 = var40;
-                var40 = var4.gsmart() + var41;
+                var40 = var4.gSmart() + var41;
                 var41 = var40;
                 xTriangles[var42] = var38;
                 yTriangles[var42] = var39;
@@ -807,7 +807,7 @@ public class UnlitModel extends Entity {
 
             if (var43 == 3) {
                 var38 = var40;
-                var40 = var4.gsmart() + var41;
+                var40 = var4.gSmart() + var41;
                 var41 = var40;
                 xTriangles[var42] = var38;
                 yTriangles[var42] = var39;
@@ -818,7 +818,7 @@ public class UnlitModel extends Entity {
                 var44 = var38;
                 var38 = var39;
                 var39 = var44;
-                var40 = var4.gsmart() + var41;
+                var40 = var4.gSmart() + var41;
                 var41 = var40;
                 xTriangles[var42] = var38;
                 yTriangles[var42] = var44;
@@ -1225,17 +1225,17 @@ public class UnlitModel extends Entity {
             var52 = var2.g1();
             var53 = 0;
             if ((var52 & 1) != 0) {
-                var53 = var3.gsmart();
+                var53 = var3.gSmart();
             }
 
             var54 = 0;
             if ((var52 & 2) != 0) {
-                var54 = var4.gsmart();
+                var54 = var4.gSmart();
             }
 
             var55 = 0;
             if ((var52 & 4) != 0) {
-                var55 = var5.gsmart();
+                var55 = var5.gSmart();
             }
 
             xVertices[var51] = var48 + var53;
@@ -1295,9 +1295,9 @@ public class UnlitModel extends Entity {
         for (var55 = 0; var55 < var10; ++var55) {
             var56 = var3.g1();
             if (var56 == 1) {
-                var51 = var2.gsmart() + var54;
-                var52 = var2.gsmart() + var51;
-                var53 = var2.gsmart() + var52;
+                var51 = var2.gSmart() + var54;
+                var52 = var2.gSmart() + var51;
+                var53 = var2.gSmart() + var52;
                 var54 = var53;
                 xTriangles[var55] = var51;
                 yTriangles[var55] = var52;
@@ -1306,7 +1306,7 @@ public class UnlitModel extends Entity {
 
             if (var56 == 2) {
                 var52 = var53;
-                var53 = var2.gsmart() + var54;
+                var53 = var2.gSmart() + var54;
                 var54 = var53;
                 xTriangles[var55] = var51;
                 yTriangles[var55] = var52;
@@ -1315,7 +1315,7 @@ public class UnlitModel extends Entity {
 
             if (var56 == 3) {
                 var51 = var53;
-                var53 = var2.gsmart() + var54;
+                var53 = var2.gSmart() + var54;
                 var54 = var53;
                 xTriangles[var55] = var51;
                 yTriangles[var55] = var52;
@@ -1326,7 +1326,7 @@ public class UnlitModel extends Entity {
                 int var57 = var51;
                 var51 = var52;
                 var52 = var57;
-                var53 = var2.gsmart() + var54;
+                var53 = var2.gSmart() + var54;
                 var54 = var53;
                 xTriangles[var55] = var51;
                 yTriangles[var55] = var57;

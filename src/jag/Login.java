@@ -72,6 +72,7 @@ public class Login {
 
     public static Sprite leftTitleSprite;
     public static Sprite rightTitleSprite;
+    public static int parsedTotp;
 
     static {
         paddingX = 0;
@@ -766,7 +767,7 @@ public class Login {
     public static void processLoadingScreen() {
         int var0;
         if (client.bootState == 0) {
-            client.sceneGraph = new SceneGraph(4, 104, 104, Statics45.tileHeights);
+            client.sceneGraph = new SceneGraph(4, 104, 104, SceneGraphRenderData.tileHeights);
 
             for (var0 = 0; var0 < 4; ++var0) {
                 client.collisionMaps[var0] = new CollisionMap(104, 104);
@@ -1563,7 +1564,7 @@ public class Login {
                                     step = 0;
                                     username = "";
                                     password = "";
-                                    ZoneProt.parsedTotp = 0;
+                                    parsedTotp = 0;
                                     totp = "";
                                     aBoolean462 = true;
                                 }
@@ -1612,7 +1613,7 @@ public class Login {
                                             step = 0;
                                             username = "";
                                             password = "";
-                                            ZoneProt.parsedTotp = 0;
+                                            parsedTotp = 0;
                                             totp = "";
                                             aBoolean462 = true;
                                         } else if (anInt461 == 0) {
@@ -1688,7 +1689,7 @@ public class Login {
                                             return;
                                         }
 
-                                        ZoneProt.parsedTotp = Integer.parseInt(totp);
+                                        parsedTotp = Integer.parseInt(totp);
                                         totp = "";
                                         PlayerAccountType.method918(true);
                                         setMessages("", "Connecting to server...", "");
@@ -1709,7 +1710,7 @@ public class Login {
                                         step = 0;
                                         username = "";
                                         password = "";
-                                        ZoneProt.parsedTotp = 0;
+                                        parsedTotp = 0;
                                         totp = "";
                                     }
 
@@ -1727,7 +1728,7 @@ public class Login {
                                             step = 0;
                                             username = "";
                                             password = "";
-                                            ZoneProt.parsedTotp = 0;
+                                            parsedTotp = 0;
                                             totp = "";
                                         } else {
                                             if (SecureRandomService.anInt457 == 85 && totp.length() > 0) {
@@ -1741,7 +1742,7 @@ public class Login {
                                                     return;
                                                 }
 
-                                                ZoneProt.parsedTotp = Integer.parseInt(totp);
+                                                parsedTotp = Integer.parseInt(totp);
                                                 totp = "";
                                                 PlayerAccountType.method918(true);
                                                 setMessages("", "Connecting to server...", "");
@@ -1941,7 +1942,7 @@ public class Login {
                 password = "";
             }
 
-            ZoneProt.parsedTotp = 0;
+            parsedTotp = 0;
             totp = "";
             aBoolean462 = true;
             worldSelectorOpen = false;

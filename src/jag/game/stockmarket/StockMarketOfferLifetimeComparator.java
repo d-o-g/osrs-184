@@ -19,7 +19,7 @@ import jag.js5.CacheRequestWorker;
 import jag.opcode.Buffer;
 import jag.commons.crypt.Base64;
 import jag.statics.Statics24;
-import jag.statics.Statics45;
+import jag.statics.SceneGraphRenderData;
 import jag.statics.Statics54;
 
 import java.io.IOException;
@@ -96,7 +96,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                     var13.p4(var48.nextInt());
                 }
 
-                var13.prsa(Statics54.aBigInteger628, Statics54.aBigInteger626);
+                var13.pRsa(Statics54.aBigInteger628, Statics54.aBigInteger626);
                 var14.p1(10);
 
                 for (var16 = 0; var16 < 3; ++var16) {
@@ -104,9 +104,9 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                 }
 
                 var14.p8(var48.nextLong());
-                var14.p48(var48.nextLong());
+                var14.p6(var48.nextLong());
                 if (client.random != null) {
-                    var14.p(client.random, 0, client.random.length);
+                    var14.pdata(client.random, 0, client.random.length);
                 } else {
                     byte[] var17 = new byte[24];
 
@@ -127,11 +127,11 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         }
                     }
 
-                    var14.p(var17, 0, var17.length);
+                    var14.pdata(var17, 0, var17.length);
                 }
 
                 var14.p8(var48.nextLong());
-                var14.prsa(Statics54.aBigInteger628, Statics54.aBigInteger626);
+                var14.pRsa(Statics54.aBigInteger628, Statics54.aBigInteger626);
                 var16 = Buffer.stringLengthPlusOne(var47);
                 if (var16 % 8 != 0) {
                     var16 += 8 - var16 % 8;
@@ -140,15 +140,15 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                 Buffer var49 = new Buffer(var16);
                 var49.pcstr(var47);
                 var49.pos = var16;
-                var49.tinyenc(var15);
+                var49.tinyKeyEncrypt(var15);
                 Buffer var19 = new Buffer(var49.pos + var13.pos + var14.pos + 5);
                 var19.p1(2);
                 var19.p1(var13.pos);
-                var19.p(var13.payload, 0, var13.pos);
+                var19.pdata(var13.payload, 0, var13.pos);
                 var19.p1(var14.pos);
-                var19.p(var14.payload, 0, var14.pos);
+                var19.pdata(var14.payload, 0, var14.pos);
                 var19.p2(var49.pos);
-                var19.p(var49.payload, 0, var49.pos);
+                var19.pdata(var49.payload, 0, var49.pos);
                 byte[] var22 = var19.payload;
 
                 byte var43;
@@ -243,7 +243,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                             } else if (var53.startsWith("Not permitted for social network accounts.")) {
                                 var43 = 6;
                             } else {
-                                var19.tinydec(var15);
+                                var19.tinyKeyDecrypt(var15);
 
                                 while (var19.pos > 0 && var19.payload[var19.pos - 1] == 0) {
                                     --var19.pos;
@@ -297,9 +297,9 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
     }
 
     public static void method414(int var0, int var1, int var2, int var3, int var4, int var5, SceneGraph var6, CollisionMap var7) {
-        if (!client.lowMemory || (Statics45.sceneRenderRules[0][var1][var2] & 2) != 0 || (Statics45.sceneRenderRules[var0][var1][var2] & 16) == 0) {
-            if (var0 < Statics45.anInt405) {
-                Statics45.anInt405 = var0;
+        if (!client.lowMemory || (SceneGraphRenderData.sceneRenderRules[0][var1][var2] & 2) != 0 || (SceneGraphRenderData.sceneRenderRules[var0][var1][var2] & 16) == 0) {
+            if (var0 < SceneGraphRenderData.anInt405) {
+                SceneGraphRenderData.anInt405 = var0;
             }
 
             ObjectDefinition var8 = ObjectDefinition.get(var3);
@@ -333,7 +333,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                 var14 = var2 + 1;
             }
 
-            int[][] var15 = Statics45.tileHeights[var0];
+            int[][] var15 = SceneGraphRenderData.tileHeights[var0];
             int var16 = var15[var12][var13] + var15[var11][var13] + var15[var11][var14] + var15[var12][var14] >> 2;
             int var17 = (var1 << 7) + (var9 << 6);
             int var18 = (var2 << 7) + (var10 << 6);
@@ -401,7 +401,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
 
                     var6.method1470(var0, var1, var2, var16, 1, 1, var34, 0, var19, var21);
                     if (var5 >= 12 && var5 <= 17 && var5 != 13 && var0 > 0) {
-                        var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                        var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                         var10000[var2] |= 2340;
                     }
 
@@ -416,45 +416,45 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         var34 = new DynamicObject(var3, 0, var4, var0, var1, var2, var8.animation, true, null);
                     }
 
-                    var6.addBoundary(var0, var1, var2, var16, var34, null, Statics45.anIntArray406[var4], 0, var19, var21);
+                    var6.addBoundary(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray406[var4], 0, var19, var21);
                     if (var4 == 0) {
                         if (var8.clipped) {
-                            Statics45.aByteArrayArrayArray400[var0][var1][var2] = 50;
-                            Statics45.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
                         }
 
                         if (var8.projectileClipped) {
-                            var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                            var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                             var10000[var2] |= 585;
                         }
                     } else if (var4 == 1) {
                         if (var8.clipped) {
-                            Statics45.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
-                            Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
                         }
 
                         if (var8.projectileClipped) {
-                            var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                            var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                             var10000[var2 + 1] |= 1170;
                         }
                     } else if (var4 == 2) {
                         if (var8.clipped) {
-                            Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
-                            Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
                         }
 
                         if (var8.projectileClipped) {
-                            var10000 = Statics45.anIntArrayArrayArray393[var0][var1 + 1];
+                            var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1 + 1];
                             var10000[var2] |= 585;
                         }
                     } else if (var4 == 3) {
                         if (var8.clipped) {
-                            Statics45.aByteArrayArrayArray400[var0][var1][var2] = 50;
-                            Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
                         }
 
                         if (var8.projectileClipped) {
-                            var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                            var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                             var10000[var2] |= 1170;
                         }
                     }
@@ -474,16 +474,16 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         var34 = new DynamicObject(var3, 1, var4, var0, var1, var2, var8.animation, true, null);
                     }
 
-                    var6.addBoundary(var0, var1, var2, var16, var34, null, Statics45.anIntArray395[var4], 0, var19, var21);
+                    var6.addBoundary(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray395[var4], 0, var19, var21);
                     if (var8.clipped) {
                         if (var4 == 0) {
-                            Statics45.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
                         } else if (var4 == 1) {
-                            Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
                         } else if (var4 == 2) {
-                            Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
                         } else if (var4 == 3) {
-                            Statics45.aByteArrayArrayArray400[var0][var1][var2] = 50;
+                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
                         }
                     }
 
@@ -505,27 +505,27 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                             var28 = new DynamicObject(var3, 2, var26, var0, var1, var2, var8.animation, true, null);
                         }
 
-                        var6.addBoundary(var0, var1, var2, var16, var27, var28, Statics45.anIntArray406[var4], Statics45.anIntArray406[var26], var19, var21);
+                        var6.addBoundary(var0, var1, var2, var16, var27, var28, SceneGraphRenderData.anIntArray406[var4], SceneGraphRenderData.anIntArray406[var26], var19, var21);
                         if (var8.projectileClipped) {
                             if (var4 == 0) {
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                                 var10000[var2] |= 585;
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                                 var10000[1 + var2] |= 1170;
                             } else if (var4 == 1) {
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                                 var10000[var2 + 1] |= 1170;
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1 + 1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1 + 1];
                                 var10000[var2] |= 585;
                             } else if (var4 == 2) {
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1 + 1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1 + 1];
                                 var10000[var2] |= 585;
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                                 var10000[var2] |= 1170;
                             } else if (var4 == 3) {
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                                 var10000[var2] |= 1170;
-                                var10000 = Statics45.anIntArrayArrayArray393[var0][var1];
+                                var10000 = SceneGraphRenderData.anIntArrayArrayArray393[var0][var1];
                                 var10000[var2] |= 585;
                             }
                         }
@@ -545,16 +545,16 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                             var34 = new DynamicObject(var3, 3, var4, var0, var1, var2, var8.animation, true, null);
                         }
 
-                        var6.addBoundary(var0, var1, var2, var16, var34, null, Statics45.anIntArray395[var4], 0, var19, var21);
+                        var6.addBoundary(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray395[var4], 0, var19, var21);
                         if (var8.clipped) {
                             if (var4 == 0) {
-                                Statics45.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
                             } else if (var4 == 1) {
-                                Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
                             } else if (var4 == 2) {
-                                Statics45.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
                             } else if (var4 == 3) {
-                                Statics45.aByteArrayArrayArray400[var0][var1][var2] = 50;
+                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
                             }
                         }
 
@@ -585,7 +585,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                             var34 = new DynamicObject(var3, 4, var4, var0, var1, var2, var8.animation, true, null);
                         }
 
-                        var6.addBoundaryDecor(var0, var1, var2, var16, var34, null, Statics45.anIntArray406[var4], 0, 0, 0, var19, var21);
+                        var6.addBoundaryDecor(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray406[var4], 0, 0, 0, var19, var21);
                     } else {
                         long var29;
                         Entity var31;
@@ -602,7 +602,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                                 var31 = new DynamicObject(var3, 4, var4, var0, var1, var2, var8.animation, true, null);
                             }
 
-                            var6.addBoundaryDecor(var0, var1, var2, var16, var31, null, Statics45.anIntArray406[var4], 0, var26 * Statics45.anIntArray402[var4], var26 * Statics45.anIntArray394[var4], var19, var21);
+                            var6.addBoundaryDecor(var0, var1, var2, var16, var31, null, SceneGraphRenderData.anIntArray406[var4], 0, var26 * SceneGraphRenderData.anIntArray402[var4], var26 * SceneGraphRenderData.anIntArray394[var4], var19, var21);
                         } else if (var5 == 6) {
                             var26 = 8;
                             var29 = var6.getBoundaryUidAt(var0, var1, var2);
@@ -616,7 +616,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                                 var31 = new DynamicObject(var3, 4, var4 + 4, var0, var1, var2, var8.animation, true, null);
                             }
 
-                            var6.addBoundaryDecor(var0, var1, var2, var16, var31, null, 256, var4, var26 * Statics45.anIntArray397[var4], var26 * Statics45.anIntArray392[var4], var19, var21);
+                            var6.addBoundaryDecor(var0, var1, var2, var16, var31, null, 256, var4, var26 * SceneGraphRenderData.anIntArray397[var4], var26 * SceneGraphRenderData.anIntArray392[var4], var19, var21);
                         } else if (var5 == 7) {
                             var23 = var4 + 2 & 3;
                             if (var8.animation == -1 && var8.transformIds == null) {
@@ -643,7 +643,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                                 var33 = new DynamicObject(var3, 4, var32 + 4, var0, var1, var2, var8.animation, true, null);
                             }
 
-                            var6.addBoundaryDecor(var0, var1, var2, var16, var31, var33, 256, var4, var26 * Statics45.anIntArray397[var4], var26 * Statics45.anIntArray392[var4], var19, var21);
+                            var6.addBoundaryDecor(var0, var1, var2, var16, var31, var33, 256, var4, var26 * SceneGraphRenderData.anIntArray397[var4], var26 * SceneGraphRenderData.anIntArray392[var4], var19, var21);
                         }
                     }
                 }
@@ -665,8 +665,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
 
                     for (var24 = 0; var24 <= var9; ++var24) {
                         for (int var25 = 0; var25 <= var10; ++var25) {
-                            if (var23 > Statics45.aByteArrayArrayArray400[var0][var24 + var1][var25 + var2]) {
-                                Statics45.aByteArrayArrayArray400[var0][var24 + var1][var25 + var2] = (byte) var23;
+                            if (var23 > SceneGraphRenderData.aByteArrayArrayArray400[var0][var24 + var1][var25 + var2]) {
+                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var24 + var1][var25 + var2] = (byte) var23;
                             }
                         }
                     }

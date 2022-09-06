@@ -11,14 +11,18 @@ import jag.opcode.Buffer;
 public class IdentikitDefinition extends DoublyLinkedNode {
 
     public static final ReferenceCache<IdentikitDefinition> cache = new ReferenceCache<>(64);
+
     public static ReferenceTable table;
 
     public static InterfaceComponent anInterfaceComponent1518;
 
     public int index;
+
     public boolean hidden;
+
     int[] anIntArray747;
     int[] models;
+
     short[] aShortArray1516;
     short[] aShortArray1462;
     short[] aShortArray1461;

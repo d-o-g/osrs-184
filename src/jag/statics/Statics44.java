@@ -26,11 +26,11 @@ public class Statics44 {
                 int var4 = (103 - var3) * 2048 + 24628;
 
                 for (int var5 = 1; var5 < 103; ++var5) {
-                    if ((Statics45.sceneRenderRules[var0][var5][var3] & 24) == 0) {
+                    if ((SceneGraphRenderData.sceneRenderRules[var0][var5][var3] & 24) == 0) {
                         client.sceneGraph.drawMinimapTile(var1, var4, 512, var0, var5, var3);
                     }
 
-                    if (var0 < 3 && (Statics45.sceneRenderRules[var0 + 1][var5][var3] & 8) != 0) {
+                    if (var0 < 3 && (SceneGraphRenderData.sceneRenderRules[var0 + 1][var5][var3] & 8) != 0) {
                         client.sceneGraph.drawMinimapTile(var1, var4, 512, var0 + 1, var5, var3);
 
                     }
@@ -46,11 +46,11 @@ public class Statics44 {
 
             for (int var5 = 1; var5 < 103; ++var5) {
                 for (int var6 = 1; var6 < 103; ++var6) {
-                    if ((Statics45.sceneRenderRules[var0][var6][var5] & 24) == 0) {
+                    if ((SceneGraphRenderData.sceneRenderRules[var0][var6][var5] & 24) == 0) {
                         SceneGraph.drawMinimapObjects(var0, var6, var5, var3, var4);
                     }
 
-                    if (var0 < 3 && (Statics45.sceneRenderRules[var0 + 1][var6][var5] & 8) != 0) {
+                    if (var0 < 3 && (SceneGraphRenderData.sceneRenderRules[var0 + 1][var6][var5] & 8) != 0) {
                         SceneGraph.drawMinimapObjects(var0 + 1, var6, var5, var3, var4);
                     }
                 }

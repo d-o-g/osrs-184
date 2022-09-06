@@ -7,7 +7,7 @@ import jag.game.scene.SceneGraph;
 import jag.game.type.AnimationSequence;
 import jag.game.type.ObjectDefinition;
 import jag.opcode.ClientProt;
-import jag.statics.Statics45;
+import jag.statics.SceneGraphRenderData;
 
 public class DynamicObject extends Entity {
 
@@ -87,13 +87,14 @@ public class DynamicObject extends Entity {
     }
 
     public static void loadProjectilesIntoScene() {
-        for (Projectile projectile = client.projectiles.head(); projectile != null; projectile = client.projectiles.next()) {
+        Projectile projectile = client.projectiles.head();
+        while (projectile != null) {
             if (projectile.floorLevel == SceneGraph.floorLevel && client.engineCycle <= projectile.endCycle) {
                 if (client.engineCycle >= projectile.startCycle) {
                     if (projectile.targetIndex > 0) {
                         NpcEntity npc = client.npcs[projectile.targetIndex - 1];
                         if (npc != null && npc.absoluteX >= 0 && npc.absoluteX < 13312 && npc.absoluteY >= 0 && npc.absoluteY < 13312) {
-                            projectile.target(npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.anInt112, client.engineCycle);
+                            projectile.target(npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.engineCycle);
                         }
                     }
 
@@ -107,7 +108,7 @@ public class DynamicObject extends Entity {
                         }
 
                         if (player != null && player.absoluteX >= 0 && player.absoluteX < 13312 && player.absoluteY >= 0 && player.absoluteY < 13312) {
-                            projectile.target(player.absoluteX, player.absoluteY, SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.anInt112, client.engineCycle);
+                            projectile.target(player.absoluteX, player.absoluteY, SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.engineCycle);
                         }
                     }
 
@@ -117,6 +118,7 @@ public class DynamicObject extends Entity {
             } else {
                 projectile.unlink();
             }
+            projectile = client.projectiles.next();
         }
 
     }
@@ -171,7 +173,7 @@ public class DynamicObject extends Entity {
         int var6 = (var3 + 1 >> 1) + sceneX;
         int var7 = (var4 >> 1) + sceneY;
         int var8 = (var4 + 1 >> 1) + sceneY;
-        int[][] var9 = Statics45.tileHeights[floorLevel];
+        int[][] var9 = SceneGraphRenderData.tileHeights[floorLevel];
         int var10 = var9[var6][var7] + var9[var5][var7] + var9[var5][var8] + var9[var6][var8] >> 2;
         int var11 = (sceneX << 7) + (var3 << 6);
         int var12 = (sceneY << 7) + (var4 << 6);

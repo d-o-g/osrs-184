@@ -151,10 +151,10 @@ public class ContextMenu {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_OBJECT, client.stream.encryptor);
         packet.buffer.ip2(client.baseX + sceneX);
         packet.buffer.p2(client.baseY + sceneY);
-        packet.buffer.p2a(ItemSelection.index);
-        packet.buffer.pirf4(ItemSelection.uid);
+        packet.buffer.p2_alt1(ItemSelection.index);
+        packet.buffer.p4_alt2(ItemSelection.uid);
         packet.buffer.p2(ItemSelection.id);
-        packet.buffer.ip2a(id);
+        packet.buffer.ip2_alt1(id);
         packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
         client.stream.writeLater(packet);
     }
@@ -164,9 +164,9 @@ public class ContextMenu {
         packet.buffer.p4(ComponentSelection.uid);
         packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2(client.baseY + sceneY);
-        packet.buffer.ip2a(id);
+        packet.buffer.ip2_alt1(id);
         packet.buffer.p2(client.baseX + sceneX);
-        packet.buffer.p2a(ComponentSelection.index);
+        packet.buffer.p2_alt1(ComponentSelection.index);
         client.stream.writeLater(packet);
     }
 
@@ -174,26 +174,26 @@ public class ContextMenu {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_0, client.stream.encryptor);
         packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.p2(id);
-        packet.buffer.p2a(client.baseY + sceneY);
-        packet.buffer.ip2a(client.baseX + sceneX);
+        packet.buffer.p2_alt1(client.baseY + sceneY);
+        packet.buffer.ip2_alt1(client.baseX + sceneX);
         client.stream.writeLater(packet);
     }
 
     private static void doObjectAction1(int id, int sceneX, int sceneY) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_1, client.stream.encryptor);
-        packet.buffer.ip2a(id);
+        packet.buffer.ip2_alt1(id);
         packet.buffer.p2(client.baseX + sceneX);
-        packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
-        packet.buffer.p2a(client.baseY + sceneY);
+        packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
+        packet.buffer.p2_alt1(client.baseY + sceneY);
         client.stream.writeLater(packet);
     }
 
     private static void doObjectAction2(int id, int sceneX, int sceneY) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_2, client.stream.encryptor);
         packet.buffer.p2(id);
-        packet.buffer.p2a(client.baseX + sceneX);
-        packet.buffer.ip2a(client.baseY + sceneY);
-        packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
+        packet.buffer.p2_alt1(client.baseX + sceneX);
+        packet.buffer.ip2_alt1(client.baseY + sceneY);
+        packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
         client.stream.writeLater(packet);
     }
 
@@ -201,8 +201,8 @@ public class ContextMenu {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.OBJECT_ACTION_3, client.stream.encryptor);
         packet.buffer.p2(client.baseX + sceneX);
         packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
-        packet.buffer.p2a(id);
-        packet.buffer.p2a(client.baseY + sceneY);
+        packet.buffer.p2_alt1(id);
+        packet.buffer.p2_alt1(client.baseY + sceneY);
         client.stream.writeLater(packet);
     }
 
@@ -211,10 +211,10 @@ public class ContextMenu {
     private static void processItemOnNpc(int idx) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_NPC, client.stream.encryptor);
         packet.buffer.ip4(ItemSelection.uid);
-        packet.buffer.ip2a(ItemSelection.index);
-        packet.buffer.p2a(idx);
-        packet.buffer.ip2a(ItemSelection.id);
-        packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+        packet.buffer.ip2_alt1(ItemSelection.index);
+        packet.buffer.p2_alt1(idx);
+        packet.buffer.ip2_alt1(ItemSelection.id);
+        packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
         client.stream.writeLater(packet);
     }
 
@@ -229,15 +229,15 @@ public class ContextMenu {
 
     private static void doNpcAction0(int idx) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_0, client.stream.encryptor);
-        packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+        packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.ip2(idx);
         client.stream.writeLater(packet);
     }
 
     private static void doNpcAction1(int idx) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_1, client.stream.encryptor);
-        packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
-        packet.buffer.p2a(idx);
+        packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
+        packet.buffer.p2_alt1(idx);
         client.stream.writeLater(packet);
     }
 
@@ -257,7 +257,7 @@ public class ContextMenu {
 
     private static void doNpcAction4(int idx) {
         OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.NPC_ACTION_4, client.stream.encryptor);
-        packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+        packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
         packet.buffer.ip2(idx);
         client.stream.writeLater(packet);
     }
@@ -407,8 +407,8 @@ public class ContextMenu {
                     client.destinationX = secondary;
                     client.destinationY = tertiary;
                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_PLAYER, client.stream.encryptor);
-                    packet.buffer.ip2a(primary);
-                    packet.buffer.pirf4(ItemSelection.uid);
+                    packet.buffer.ip2_alt1(primary);
+                    packet.buffer.p4_alt2(ItemSelection.uid);
                     packet.buffer.p2(ItemSelection.index);
                     packet.buffer.ip2(ItemSelection.id);
                     packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
@@ -425,9 +425,9 @@ public class ContextMenu {
                     client.destinationY = tertiary;
                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_PLAYER, client.stream.encryptor);
                     packet.buffer.ip2(primary);
-                    packet.buffer.p2a(ComponentSelection.index);
+                    packet.buffer.p2_alt1(ComponentSelection.index);
                     packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
-                    packet.buffer.pif4(ComponentSelection.uid);
+                    packet.buffer.p4_alt1(ComponentSelection.uid);
                     client.stream.writeLater(packet);
                 }
             } else if (opcode == 16) {
@@ -438,13 +438,13 @@ public class ContextMenu {
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_PICKABLE, client.stream.encryptor);
-                packet.buffer.ip2a(primary);
+                packet.buffer.ip2_alt1(primary);
                 packet.buffer.p4(ItemSelection.uid);
-                packet.buffer.p2a(ItemSelection.id);
-                packet.buffer.ip2a(client.baseY + tertiary);
-                packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
-                packet.buffer.p2a(client.baseX + secondary);
-                packet.buffer.p2a(ItemSelection.index);
+                packet.buffer.p2_alt1(ItemSelection.id);
+                packet.buffer.ip2_alt1(client.baseY + tertiary);
+                packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
+                packet.buffer.p2_alt1(client.baseX + secondary);
+                packet.buffer.p2_alt1(ItemSelection.index);
                 client.stream.writeLater(packet);
             } else if (opcode == 17) {
                 Crosshair.x = crossX;
@@ -454,12 +454,12 @@ public class ContextMenu {
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_PICKABLE, client.stream.encryptor);
-                packet.buffer.p2a(client.baseY + tertiary);
+                packet.buffer.p2_alt1(client.baseY + tertiary);
                 packet.buffer.ip4(ComponentSelection.uid);
-                packet.buffer.ip2a(primary);
-                packet.buffer.p2a(ComponentSelection.index);
+                packet.buffer.ip2_alt1(primary);
+                packet.buffer.p2_alt1(ComponentSelection.index);
                 packet.buffer.ip2(client.baseX + secondary);
-                packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
+                packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
                 client.stream.writeLater(packet);
             } else if (opcode == 18) {
                 Crosshair.x = crossX;
@@ -469,10 +469,10 @@ public class ContextMenu {
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_0, client.stream.encryptor);
-                packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+                packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.ip2(client.baseY + tertiary);
-                packet.buffer.p2a(client.baseX + secondary);
-                packet.buffer.ip2a(primary);
+                packet.buffer.p2_alt1(client.baseX + secondary);
+                packet.buffer.ip2_alt1(primary);
                 client.stream.writeLater(packet);
             } else if (opcode == 19) {
                 Crosshair.x = crossX;
@@ -482,10 +482,10 @@ public class ContextMenu {
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_1, client.stream.encryptor);
-                packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                packet.buffer.p2a(client.baseX + secondary);
-                packet.buffer.p2a(primary);
-                packet.buffer.p2a(client.baseY + tertiary);
+                packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
+                packet.buffer.p2_alt1(client.baseX + secondary);
+                packet.buffer.p2_alt1(primary);
+                packet.buffer.p2_alt1(client.baseY + tertiary);
                 client.stream.writeLater(packet);
             } else if (opcode == 20) {
                 Crosshair.x = crossX;
@@ -496,8 +496,8 @@ public class ContextMenu {
                 client.destinationY = tertiary;
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_2, client.stream.encryptor);
                 packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
-                packet.buffer.ip2a(client.baseX + secondary);
-                packet.buffer.p2a(client.baseY + tertiary);
+                packet.buffer.ip2_alt1(client.baseX + secondary);
+                packet.buffer.p2_alt1(client.baseY + tertiary);
                 packet.buffer.ip2(primary);
                 client.stream.writeLater(packet);
             } else if (opcode == 21) {
@@ -508,9 +508,9 @@ public class ContextMenu {
                 client.destinationX = secondary;
                 client.destinationY = tertiary;
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_3, client.stream.encryptor);
-                packet.buffer.ip2a(client.baseX + secondary);
-                packet.buffer.p2a(client.baseY + tertiary);
-                packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+                packet.buffer.ip2_alt1(client.baseX + secondary);
+                packet.buffer.p2_alt1(client.baseY + tertiary);
+                packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
                 packet.buffer.p2(primary);
                 client.stream.writeLater(packet);
             } else if (opcode == 22) {
@@ -523,8 +523,8 @@ public class ContextMenu {
                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PICKABLE_ACTION_4, client.stream.encryptor);
                 packet.buffer.ip2(client.baseX + secondary);
                 packet.buffer.ip2(client.baseY + tertiary);
-                packet.buffer.ip2a(primary);
-                packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+                packet.buffer.ip2_alt1(primary);
+                packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
                 client.stream.writeLater(packet);
             } else if (opcode == 23) {
                 if (open) {
@@ -600,8 +600,8 @@ public class ContextMenu {
                             }
                         } else if (opcode == 31) {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_ITEM, client.stream.encryptor);
-                            packet.buffer.pirf4(tertiary);
-                            packet.buffer.ip2a(ItemSelection.id);
+                            packet.buffer.p4_alt2(tertiary);
+                            packet.buffer.ip2_alt1(ItemSelection.id);
                             packet.buffer.p4(ItemSelection.uid);
                             packet.buffer.p2(ItemSelection.index);
                             packet.buffer.p2(secondary);
@@ -612,11 +612,11 @@ public class ContextMenu {
                             client.anInt1015 = secondary;
                         } else if (opcode == 32) {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_ITEM, client.stream.encryptor);
-                            packet.buffer.ip2a(ComponentSelection.index);
+                            packet.buffer.ip2_alt1(ComponentSelection.index);
                             packet.buffer.ip2(secondary);
                             packet.buffer.ip2(primary);
-                            packet.buffer.pirf4(tertiary);
-                            packet.buffer.pif4(ComponentSelection.uid);
+                            packet.buffer.p4_alt2(tertiary);
+                            packet.buffer.p4_alt1(ComponentSelection.uid);
                             client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
@@ -634,7 +634,7 @@ public class ContextMenu {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_1, client.stream.encryptor);
                             packet.buffer.p4(tertiary);
                             packet.buffer.ip2(secondary);
-                            packet.buffer.p2a(primary);
+                            packet.buffer.p2_alt1(primary);
                             client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
@@ -650,18 +650,18 @@ public class ContextMenu {
                             client.anInt1015 = secondary;
                         } else if (opcode == 36) {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_3, client.stream.encryptor);
-                            packet.buffer.ip2a(primary);
+                            packet.buffer.ip2_alt1(primary);
                             packet.buffer.ip2(secondary);
-                            packet.buffer.pirf4(tertiary);
+                            packet.buffer.p4_alt2(tertiary);
                             client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                             client.anInt1015 = secondary;
                         } else if (opcode == 37) {
                             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_4, client.stream.encryptor);
-                            packet.buffer.p2a(secondary);
-                            packet.buffer.pirf4(tertiary);
-                            packet.buffer.p2a(primary);
+                            packet.buffer.p2_alt1(secondary);
+                            packet.buffer.p4_alt2(tertiary);
+                            packet.buffer.p2_alt1(primary);
                             client.stream.writeLater(packet);
                             client.anInt1018 = 0;
                             StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
@@ -685,18 +685,18 @@ public class ContextMenu {
 
                             if (opcode == 39) {
                                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_0, client.stream.encryptor);
-                                packet.buffer.p2a(secondary);
+                                packet.buffer.p2_alt1(secondary);
                                 packet.buffer.p2(primary);
-                                packet.buffer.pif4(tertiary);
+                                packet.buffer.p4_alt1(tertiary);
                                 client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
                                 client.anInt1015 = secondary;
                             } else if (opcode == 40) {
                                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_1, client.stream.encryptor);
-                                packet.buffer.pirf4(tertiary);
-                                packet.buffer.p2a(secondary);
-                                packet.buffer.ip2a(primary);
+                                packet.buffer.p4_alt2(tertiary);
+                                packet.buffer.p2_alt1(secondary);
+                                packet.buffer.ip2_alt1(primary);
                                 client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
@@ -704,7 +704,7 @@ public class ContextMenu {
                             } else if (opcode == 41) {
                                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_2, client.stream.encryptor);
                                 packet.buffer.ip2(secondary);
-                                packet.buffer.pif4(tertiary);
+                                packet.buffer.p4_alt1(tertiary);
                                 packet.buffer.ip2(primary);
                                 client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
@@ -714,7 +714,7 @@ public class ContextMenu {
                                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_3, client.stream.encryptor);
                                 packet.buffer.p2(primary);
                                 packet.buffer.p2(secondary);
-                                packet.buffer.pirf4(tertiary);
+                                packet.buffer.p4_alt2(tertiary);
                                 client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
                                 StockMarketOfferWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
@@ -722,7 +722,7 @@ public class ContextMenu {
                             } else if (opcode == 43) {
                                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_4, client.stream.encryptor);
                                 packet.buffer.p2(primary);
-                                packet.buffer.pif4(tertiary);
+                                packet.buffer.p4_alt1(tertiary);
                                 packet.buffer.p2(secondary);
                                 client.stream.writeLater(packet);
                                 client.anInt1018 = 0;
@@ -738,8 +738,8 @@ public class ContextMenu {
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_0, client.stream.encryptor);
-                                    packet.buffer.p2a(primary);
-                                    packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
+                                    packet.buffer.p2_alt1(primary);
+                                    packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
                                     client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 45) {
@@ -752,7 +752,7 @@ public class ContextMenu {
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_1, client.stream.encryptor);
-                                    packet.buffer.ip2a(primary);
+                                    packet.buffer.ip2_alt1(primary);
                                     packet.buffer.p1(Keyboard.heldKeys[82] ? 1 : 0);
                                     client.stream.writeLater(packet);
                                 }
@@ -766,7 +766,7 @@ public class ContextMenu {
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_2, client.stream.encryptor);
-                                    packet.buffer.writeByteS(Keyboard.heldKeys[82] ? 1 : 0);
+                                    packet.buffer.p1_alt1(Keyboard.heldKeys[82] ? 1 : 0);
                                     packet.buffer.ip2(primary);
                                     client.stream.writeLater(packet);
                                 }
@@ -780,7 +780,7 @@ public class ContextMenu {
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_3, client.stream.encryptor);
-                                    packet.buffer.ip2a(primary);
+                                    packet.buffer.ip2_alt1(primary);
                                     packet.buffer.p1n(Keyboard.heldKeys[82] ? 1 : 0);
                                     client.stream.writeLater(packet);
                                 }
@@ -809,7 +809,7 @@ public class ContextMenu {
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_5, client.stream.encryptor);
                                     packet.buffer.p2(primary);
-                                    packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
+                                    packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
                                     client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 50) {
@@ -823,7 +823,7 @@ public class ContextMenu {
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_6, client.stream.encryptor);
                                     packet.buffer.ip2(primary);
-                                    packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
+                                    packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
                                     client.stream.writeLater(packet);
                                 }
                             } else if (opcode == 51) {
@@ -836,8 +836,8 @@ public class ContextMenu {
                                     client.destinationX = secondary;
                                     client.destinationY = tertiary;
                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PLAYER_ACTION_7, client.stream.encryptor);
-                                    packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
-                                    packet.buffer.p2a(primary);
+                                    packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
+                                    packet.buffer.p2_alt1(primary);
                                     client.stream.writeLater(packet);
                                 }
                             } else {
@@ -848,12 +848,12 @@ public class ContextMenu {
                                             InterfaceComponent component = InterfaceComponent.lookup(tertiary, secondary);
                                             if (component != null) {
                                                 OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_COMPONENT, client.stream.encryptor);
-                                                packet.buffer.pirf4(tertiary);
+                                                packet.buffer.p4_alt2(tertiary);
                                                 packet.buffer.p2(component.itemId);
                                                 packet.buffer.ip4(ComponentSelection.uid);
-                                                packet.buffer.ip2a(secondary);
-                                                packet.buffer.p2a(ComponentSelection.index);
-                                                packet.buffer.p2a(ComponentSelection.target);
+                                                packet.buffer.ip2_alt1(secondary);
+                                                packet.buffer.p2_alt1(ComponentSelection.index);
+                                                packet.buffer.p2_alt1(ComponentSelection.target);
                                                 client.stream.writeLater(packet);
                                             }
                                             break label960;
@@ -870,7 +870,7 @@ public class ContextMenu {
                                             packet.buffer.p2(client.baseY + tertiary);
                                             packet.buffer.p2(client.baseX + secondary);
                                             packet.buffer.p2(primary);
-                                            packet.buffer.p1a(Keyboard.heldKeys[82] ? 1 : 0);
+                                            packet.buffer.p1_alt2(Keyboard.heldKeys[82] ? 1 : 0);
                                             client.stream.writeLater(packet);
                                             break label960;
                                         }
@@ -900,7 +900,7 @@ public class ContextMenu {
 
                                                 if (definition != null) {
                                                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.EXAMINE_NPC, client.stream.encryptor);
-                                                    packet.buffer.p2a(definition.id);
+                                                    packet.buffer.p2_alt1(definition.id);
                                                     client.stream.writeLater(packet);
                                                 }
                                             }
