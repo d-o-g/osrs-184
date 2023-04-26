@@ -1,13 +1,7 @@
 package jag.game.stockmarket;
 
-import jag.audi.AudioSystem;
 import jag.game.InterfaceComponent;
-import jag.game.client;
 import jag.opcode.Buffer;
-import jag.opcode.OutgoingPacket;
-import jag.opcode.ClientProt;
-
-import java.io.IOException;
 
 public class StockMarketOffer {
 
@@ -35,25 +29,6 @@ public class StockMarketOffer {
         this.itemQuantity = var1.g4();
         this.transferred = var1.g4();
         this.spent = var1.g4();
-    }
-
-    public static void method231(boolean var0) {
-        AudioSystem.process();
-        ++client.stream.idleWriteTicks;
-        if (client.stream.idleWriteTicks >= 50 || var0) {
-            client.stream.idleWriteTicks = 0;
-            if (!client.pendingDisconnect && client.stream.unwrap() != null) {
-                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, client.stream.encryptor);
-                client.stream.writeLater(packet);
-
-                try {
-                    client.stream.flush();
-                } catch (IOException var3) {
-                    client.pendingDisconnect = true;
-                }
-            }
-
-        }
     }
 
     public void method228() {

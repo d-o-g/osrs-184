@@ -69,11 +69,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static final int[] processedNpcIndices = new int[250];
     public static final int[] interfacePositionsX = new int[100];
     public static final int[] interfaceWidths = new int[100];
-    public static final int[] currentLevels = new int[25];
     public static final int[] interfaceHeights = new int[100];
-    public static final int[] levels = new int[25];
     public static final int[] interfacePositionsY = new int[100];
-    public static final int[] experiences = new int[25];
     public static final int[] pathingEntityOrientations = new int[]{768, 1024, 1280, 512, 1536, 256, 0, 1792};
     public static final int[] anIntArray945 = new int[50];
     public static final int[] anIntArray942 = new int[50];
@@ -176,7 +173,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int build;
     public static int canvasWidth;
     public static int canvasHeight;
-    public static int engineCycle = 0;
+    public static int ticks = 0;
     public static int npcCount2 = 0;
     public static int updateTimer = 0;
     public static int rootInterfaceIndex = -1;
@@ -220,12 +217,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int anInt972 = 0;
     public static int anInt1059 = -1;
     public static int viewportWidth = 0;
-    public static int loadingDrawState = 0;
+    public static int loadingMessageDrawState = 0;
     public static int viewportScale = 0;
-    public static int loadingIndicator1 = 0;
+    public static int missingRegionsCount = 0;
     public static int componentDragCycles = 0;
     public static int loadingIndicator2 = 1;
-    public static int loadingIndicator3 = 0;
+    public static int missingObjectsCount = 0;
     public static int viewportHeight = 0;
     public static int loadingIndicator4 = 1;
     public static int draggingComponentX = 0;
@@ -346,7 +343,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static GameType gameType;
 
-    private static final ClientProtHandler clientProtHandler = new JagClientProtHandler(stream);
+    public static final ClientProtHandler clientProtHandler = new JagClientProtHandler(stream);
 
     private static final ServerProtHandler serverProtHandler = new JagServerProtHandler(stream);
 
@@ -579,10 +576,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (gameState == 25) {
-                loadingDrawState = 0;
-                loadingIndicator1 = 0;
+                loadingMessageDrawState = 0;
+                missingRegionsCount = 0;
                 loadingIndicator2 = 1;
-                loadingIndicator3 = 0;
+                missingObjectsCount = 0;
                 loadingIndicator4 = 1;
             }
 
@@ -781,6 +778,59 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static void method865() {
         anInt1061 = anInt1075;
         StockMarketOfferLifetimeComparator.inFriendsChat = true;
+    }
+
+    public static void drawLoadingMessage(String var0, boolean var1) {
+        if (displayLoadingMessages) {
+            byte var2 = 4;
+            int var3 = var2 + 6;
+            int var4 = var2 + 6;
+            int var5 = Font.p12full.method1144(var0, 250);
+            int var6 = Font.p12full.method1150(var0, 250) * 13;
+            JagGraphics.fillRect(var3 - var2, var4 - var2, var2 + var5 + var2, var2 + var6 + var2, 0);
+            JagGraphics.method1372(var3 - var2, var4 - var2, var2 + var5 + var2, var2 + var2 + var6, 16777215);
+            Font.p12full.method1149(var0, var3, var4, var5, var6, 16777215, -1, 1, 1, 0);
+            int var7 = var3 - var2;
+            int var8 = var4 - var2;
+            int var9 = var5 + var2 + var2;
+            int var10 = var2 + var6 + var2;
+
+            for (int var11 = 0; var11 < renderedComponentCount; ++var11) {
+                if (interfacePositionsX[var11] + interfaceWidths[var11] > var7 && interfacePositionsX[var11] < var9 + var7 && interfaceHeights[var11] + interfacePositionsY[var11] > var8 && interfacePositionsY[var11] < var8 + var10) {
+                    renderedComponents[var11] = true;
+                }
+            }
+
+            if (var1) {
+                graphicsProvider.drawGame(0, 0);
+            } else {
+                for (int var15 = 0; var15 < renderedComponentCount; ++var15) {
+                    if (interfacePositionsX[var15] + interfaceWidths[var15] > var3 && interfacePositionsX[var15] < var3 + var5 && interfacePositionsY[var15] + interfaceHeights[var15] > var4 && interfacePositionsY[var15] < var6 + var4) {
+                        aBooleanArray1087[var15] = true;
+                    }
+                }
+            }
+
+        }
+    }
+
+    public static void writeKeepAlivePacket(boolean force) {
+        AudioSystem.process();
+        ++stream.idleWriteTicks;
+        if (stream.idleWriteTicks >= 50 || force) {
+            stream.idleWriteTicks = 0;
+            if (!pendingDisconnect && stream.unwrap() != null) {
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEEP_ALIVE, stream.encryptor);
+                stream.writeLater(packet);
+
+                try {
+                    stream.flush();
+                } catch (IOException e) {
+                    pendingDisconnect = true;
+                }
+            }
+
+        }
     }
 
     public void method741() {
@@ -1067,7 +1117,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
 
                 InterfaceComponent component = InterfaceComponent.lookup(uid);
-                if (!component.format) {
+                if (!component.if3) {
                     if (itemId == -1) {
                         component.modelType = 0;
                         stream.currentIncomingPacket = null;
@@ -1411,7 +1461,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 return true;
             }
 
-            if (ServerProt.UPDATE_ITEM_TABLE == stream.currentIncomingPacket) {
+            if (ServerProt.UPDATE_INVENTORY == stream.currentIncomingPacket) {
                 int uid = incoming.g4();
                 int key = incoming.g2();
                 if (uid < -70000) {
@@ -1508,13 +1558,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 int experience = incoming.g4_alt2();
                 int index = incoming.g1_alt3();
                 int level = incoming.g1_alt4();
-                experiences[index] = experience;
-                currentLevels[index] = level;
-                levels[index] = 1;
+                Skills.experiences[index] = experience;
+                Skills.currentLevels[index] = level;
+                Skills.levels[index] = 1;
 
                 for (int i = 0; i < 98; ++i) {
                     if (experience >= Skills.EXP_TABLE[i]) {
-                        levels[index] = i + 2;
+                        Skills.levels[index] = i + 2;
                     }
                 }
 
@@ -2056,7 +2106,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     protected void cycle() {
-        ++engineCycle;
+        ++ticks;
         this.method741();
 
         while (true) {
@@ -2188,7 +2238,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             renderedComponents[i] = false;
         }
 
-        anInt1084 = engineCycle;
+        anInt1084 = ticks;
         anInt1039 = -1;
         anInt1038 = -1;
         DefaultAudioSystemProvider.processingItemComponent = null;
@@ -2227,7 +2277,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         var4 = var4 + getColorTags(16777215) + " " + '/' + " " + (ContextMenu.rowCount - 2) + " more options";
                     }
 
-                    Font.b12full.method1142(var4, var1 + 4, var2 + 15, 16777215, 0, engineCycle / 1000);
+                    Font.b12full.method1142(var4, var1 + 4, var2 + 15, 16777215, 0, ticks / 1000);
                 }
             }
         } else {
@@ -2344,29 +2394,29 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             if (gameState == 20) {
                 Login.draw(Font.b12full, Font.p11, Font.p12full);
             } else if (gameState == 25) {
-                if (loadingDrawState == 1) {
-                    if (loadingIndicator1 > loadingIndicator2) {
-                        loadingIndicator2 = loadingIndicator1;
+                if (loadingMessageDrawState == 1) {
+                    if (missingRegionsCount > loadingIndicator2) {
+                        loadingIndicator2 = missingRegionsCount;
                     }
 
-                    var5 = (loadingIndicator2 * 50 - loadingIndicator1 * 50) / loadingIndicator2;
-                    WorldMapElement.method242("Loading - please wait." + "<br>" + " (" + var5 + "%" + ")", false);
-                } else if (loadingDrawState == 2) {
-                    if (loadingIndicator3 > loadingIndicator4) {
-                        loadingIndicator4 = loadingIndicator3;
+                    var5 = (loadingIndicator2 * 50 - missingRegionsCount * 50) / loadingIndicator2;
+                    drawLoadingMessage("Loading - please wait." + "<br>" + " (" + var5 + "%" + ")", false);
+                } else if (loadingMessageDrawState == 2) {
+                    if (missingObjectsCount > loadingIndicator4) {
+                        loadingIndicator4 = missingObjectsCount;
                     }
 
-                    var5 = (loadingIndicator4 * 50 - loadingIndicator3 * 50) / loadingIndicator4 + 50;
-                    WorldMapElement.method242("Loading - please wait." + "<br>" + " (" + var5 + "%" + ")", false);
+                    var5 = (loadingIndicator4 * 50 - missingObjectsCount * 50) / loadingIndicator4 + 50;
+                    drawLoadingMessage("Loading - please wait." + "<br>" + " (" + var5 + "%" + ")", false);
                 } else {
-                    WorldMapElement.method242("Loading - please wait.", false);
+                    drawLoadingMessage("Loading - please wait.", false);
                 }
             } else if (gameState == 30) {
                 this.method729();
             } else if (gameState == 40) {
-                WorldMapElement.method242("Connection lost" + "<br>" + "Please wait - attempting to reestablish", false);
+                drawLoadingMessage("Connection lost" + "<br>" + "Please wait - attempting to reestablish", false);
             } else if (gameState == 45) {
-                WorldMapElement.method242("Please wait...", false);
+                drawLoadingMessage("Please wait...", false);
             }
         } else {
             Login.draw(Font.b12full, Font.p11, Font.p12full);
@@ -2548,7 +2598,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
 
                         if (floor != PlayerEntity.local.floorLevel) {
-                            teleport(PlayerEntity.local.pathXQueue[0] + baseX, PlayerEntity.local.pathYQueue[0] + baseY, floor, false);
+                            clientProtHandler.processTeleport(PlayerEntity.local.pathXQueue[0] + baseX, PlayerEntity.local.pathYQueue[0] + baseY, floor, false);
                         }
 
                         mouseWheelPtr = 0;
@@ -3116,7 +3166,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                     try {
                         BufferedFile.random.seek(0L);
-                        BufferedFile.random.read(var11);
+                        BufferedFile.random.readFully(var11);
 
                         var12 = 0;
                         while (var12 < 24 && var11[var12] == 0) {
@@ -3137,9 +3187,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                 packet.buffer.pcstr(Statics57.aString1162);
                 packet.buffer.p4(WorldMapCacheArea.anInt130);
-                Buffer var15 = new Buffer(operatingSystemNode.getPayloadSize());
-                operatingSystemNode.writeTo(var15);
-                packet.buffer.pdata(var15.payload, 0, var15.payload.length);
+                Buffer osbuffer = new Buffer(operatingSystemNode.getPayloadSize());
+                operatingSystemNode.writeTo(osbuffer);
+                packet.buffer.pdata(osbuffer.payload, 0, osbuffer.payload.length);
                 packet.buffer.p1(anInt923);
                 packet.buffer.p4(0);
                 packet.buffer.p4(Archive.skeletons.hash);
@@ -3396,7 +3446,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                         StockMarketOffer.mediator = null;
                         PlayerEntity.update(input);
-                        ServerProt.anInt206 = -1;
+                        ServerProt.chunkX = -1;
                         PlayerAccountType.onSceneXTEAKeyChange(false, input);
                         stream.currentIncomingPacket = null;
                     }

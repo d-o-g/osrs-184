@@ -54,7 +54,7 @@ public class ClientProt implements OutgoingPacketProtocol {
     public static final ClientProt PLAYER_ACTION_2 = new ClientProt(61, 3);
     public static final ClientProt USE_ITEM_ON_NPC = new ClientProt(11, 11);
     public static final ClientProt ITEM_ACTION_3 = new ClientProt(14, 8);
-    public static final ClientProt WORLD_MAP_DRAG = new ClientProt(69, 4);
+    public static final ClientProt JMOD_WORLDMAP_SELECTION = new ClientProt(69, 4);
     public static final ClientProt NPC_ACTION_3 = new ClientProt(79, 3);
     public static final ClientProt PICKABLE_ACTION_3 = new ClientProt(63, 7);
     public static final ClientProt USE_SPELL_ON_COMPONENT = new ClientProt(64, 16);
@@ -123,15 +123,15 @@ public class ClientProt implements OutgoingPacketProtocol {
     }
 
     public static void method4() {
-        for (ObjectSound var0 = ObjectSound.OBJECT_SOUNDS.head(); var0 != null; var0 = ObjectSound.OBJECT_SOUNDS.next()) {
-            if (var0.aClass5_Sub6_Sub2_370 != null) {
-                WorldMapLabelSize.aClass5_Sub6_Sub1_528.removeDelegate(var0.aClass5_Sub6_Sub2_370);
-                var0.aClass5_Sub6_Sub2_370 = null;
+        for (ObjectSound sound = ObjectSound.OBJECT_SOUNDS.head(); sound != null; sound = ObjectSound.OBJECT_SOUNDS.next()) {
+            if (sound.aClass5_Sub6_Sub2_370 != null) {
+                WorldMapLabelSize.aClass5_Sub6_Sub1_528.removeDelegate(sound.aClass5_Sub6_Sub2_370);
+                sound.aClass5_Sub6_Sub2_370 = null;
             }
 
-            if (var0.aClass5_Sub6_Sub2_369 != null) {
-                WorldMapLabelSize.aClass5_Sub6_Sub1_528.removeDelegate(var0.aClass5_Sub6_Sub2_369);
-                var0.aClass5_Sub6_Sub2_369 = null;
+            if (sound.aClass5_Sub6_Sub2_369 != null) {
+                WorldMapLabelSize.aClass5_Sub6_Sub1_528.removeDelegate(sound.aClass5_Sub6_Sub2_369);
+                sound.aClass5_Sub6_Sub2_369 = null;
             }
         }
 

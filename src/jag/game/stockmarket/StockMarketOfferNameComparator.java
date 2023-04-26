@@ -1,63 +1,13 @@
 package jag.game.stockmarket;
 
-import jag.Login;
-import jag.URLRequest;
-import jag.audi.AudioRunnable;
-import jag.audi.AudioSystem;
-import jag.commons.Jagexception;
 import jag.game.type.Varbit;
 import jag.js5.ReferenceTable;
 
 import java.util.Comparator;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public final class StockMarketOfferNameComparator implements Comparator<StockMarketEvent> {
 
     public static ReferenceTable aReferenceTable480;
-
-    public static AudioSystem method329(int var1, int var2) {
-        if (URLRequest.audioSampleRate == 0) {
-            throw new IllegalStateException();
-        }
-
-        if (var1 >= 0 && var1 < 2) {
-            if (var2 < 256) {
-                var2 = 256;
-            }
-
-            try {
-                AudioSystem var3 = AudioSystem.provider.provide();
-                var3.samples = new int[256 * (AudioSystem.useTwoChannels ? 2 : 1)];
-                var3.anInt1847 = var2;
-                var3.method1089();
-                var3.anInt1834 = (var2 & -1024) + 1024;
-                if (var3.anInt1834 > 16384) {
-                    var3.anInt1834 = 16384;
-                }
-
-                var3.method1090(var3.anInt1834);
-                if (Login.anInt603 > 0 && Jagexception.anAudioRunnable1880 == null) {
-                    Jagexception.anAudioRunnable1880 = new AudioRunnable();
-                    AudioSystem.service = Executors.newScheduledThreadPool(1);
-                    AudioSystem.service.scheduleAtFixedRate(Jagexception.anAudioRunnable1880, 0L, 10L, TimeUnit.MILLISECONDS);
-                }
-
-                if (Jagexception.anAudioRunnable1880 != null) {
-                    if (Jagexception.anAudioRunnable1880.systems[var1] != null) {
-                        throw new IllegalArgumentException();
-                    }
-
-                    Jagexception.anAudioRunnable1880.systems[var1] = var3;
-                }
-
-                return var3;
-            } catch (Throwable var4) {
-                return new AudioSystem();
-            }
-        }
-        throw new IllegalArgumentException();
-    }
 
     public static void method327(ReferenceTable var0) {
         Varbit.table = var0;

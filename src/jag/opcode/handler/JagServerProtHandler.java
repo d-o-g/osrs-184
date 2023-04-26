@@ -387,7 +387,7 @@ public class JagServerProtHandler extends ServerProtHandler {
     public boolean processRandomDatUpdate(BitBuffer incoming) {
         incoming.pos += 28;
         if (incoming.matchCrcs()) {
-            ResourceCache.method1489(incoming, incoming.pos - 28);
+            ResourceCache.createRandom(incoming, incoming.pos - 28);
         }
 
         stream.currentIncomingPacket = null;

@@ -22,7 +22,7 @@ public class SubInterface extends Node {
                 InterfaceComponent[] group = client.interfaces[groupIndex];
                 for (InterfaceComponent component : group) {
                     if (component != null) {
-                        format = component.format;
+                        format = component.if3;
                         break;
                     }
                 }

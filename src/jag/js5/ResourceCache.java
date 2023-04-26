@@ -24,9 +24,9 @@ public final class ResourceCache {
         this.caret = caret;
     }
 
-    public static void method1489(Buffer buffer, int var1) {
+    public static void createRandom(Buffer buffer, int var1) {
         BufferedFile.createRandom(buffer.payload, var1);
-        AudioRunnable.method986(buffer, var1);
+        AudioRunnable.writeRandom(buffer, var1);
     }
 
     public static int method1491(Buffer var0, String var1) {

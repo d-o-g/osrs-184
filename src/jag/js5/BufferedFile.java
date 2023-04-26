@@ -95,74 +95,74 @@ public class BufferedFile {
         }
     }
 
-    public static void createRandom(byte[] var0, int var1) {
+    public static void createRandom(byte[] payload, int var1) {
         if (client.random == null) {
             client.random = new byte[24];
         }
 
-        Statics31.method1140(var0, var1, client.random, 0, 24);
+        Statics31.generateRandom(payload, var1, client.random, 0, 24);
     }
 
-    public void read(byte[] var1, int var2, int var3) throws IOException {
+    public void read(byte[] buffer, int offset, int length) throws IOException {
         try {
-            if (var3 + var2 > var1.length) {
-                throw new ArrayIndexOutOfBoundsException(var3 + var2 - var1.length);
+            if (length + offset > buffer.length) {
+                throw new ArrayIndexOutOfBoundsException(length + offset - buffer.length);
             }
 
-            if (aLong1894 != -1L && caret >= aLong1894 && (long) var3 + caret <= (long) anInt1902 + aLong1894) {
-                System.arraycopy(aByteArray1893, (int) (caret - aLong1894), var1, var2, var3);
-                caret += var3;
+            if (aLong1894 != -1L && caret >= aLong1894 && (long) length + caret <= (long) anInt1902 + aLong1894) {
+                System.arraycopy(aByteArray1893, (int) (caret - aLong1894), buffer, offset, length);
+                caret += length;
                 return;
             }
 
             long var4 = caret;
-            int var7 = var3;
+            int var7 = length;
             int var8;
             if (caret >= aLong1898 && caret < aLong1898 + (long) anInt1895) {
                 var8 = (int) ((long) anInt1895 - (caret - aLong1898));
-                if (var8 > var3) {
-                    var8 = var3;
+                if (var8 > length) {
+                    var8 = length;
                 }
 
-                System.arraycopy(aByteArray1899, (int) (caret - aLong1898), var1, var2, var8);
+                System.arraycopy(aByteArray1899, (int) (caret - aLong1898), buffer, offset, var8);
                 caret += var8;
-                var2 += var8;
-                var3 -= var8;
+                offset += var8;
+                length -= var8;
             }
 
-            if (var3 > aByteArray1899.length) {
+            if (length > aByteArray1899.length) {
                 file.seek(caret);
 
-                for (aLong1896 = caret; var3 > 0; var3 -= var8) {
-                    var8 = file.read(var1, var2, var3);
+                for (aLong1896 = caret; length > 0; length -= var8) {
+                    var8 = file.read(buffer, offset, length);
                     if (var8 == -1) {
                         break;
                     }
 
                     aLong1896 += var8;
                     caret += var8;
-                    var2 += var8;
+                    offset += var8;
                 }
-            } else if (var3 > 0) {
+            } else if (length > 0) {
                 method1405();
-                var8 = Math.min(var3, anInt1895);
+                var8 = Math.min(length, anInt1895);
 
-                System.arraycopy(aByteArray1899, 0, var1, var2, var8);
-                var2 += var8;
-                var3 -= var8;
+                System.arraycopy(aByteArray1899, 0, buffer, offset, var8);
+                offset += var8;
+                length -= var8;
                 caret += var8;
             }
 
             if (aLong1894 != -1L) {
-                if (aLong1894 > caret && var3 > 0) {
-                    var8 = var2 + (int) (aLong1894 - caret);
-                    if (var8 > var3 + var2) {
-                        var8 = var3 + var2;
+                if (aLong1894 > caret && length > 0) {
+                    var8 = offset + (int) (aLong1894 - caret);
+                    if (var8 > length + offset) {
+                        var8 = length + offset;
                     }
 
-                    while (var2 < var8) {
-                        var1[var2++] = 0;
-                        --var3;
+                    while (offset < var8) {
+                        buffer[offset++] = 0;
+                        --length;
                         ++caret;
                     }
                 }
@@ -183,9 +183,9 @@ public class BufferedFile {
 
                 if (var9 > -1L && var11 > var9) {
                     int var13 = (int) (var11 - var9);
-                    System.arraycopy(aByteArray1893, (int) (var9 - aLong1894), var1, (int) (var9 - var4) + var2, var13);
+                    System.arraycopy(aByteArray1893, (int) (var9 - aLong1894), buffer, (int) (var9 - var4) + offset, var13);
                     if (var11 > caret) {
-                        var3 = (int) ((long) var3 - (var11 - caret));
+                        length = (int) ((long) length - (var11 - caret));
                         caret = var11;
                     }
                 }
@@ -195,7 +195,7 @@ public class BufferedFile {
             throw var15;
         }
 
-        if (var3 > 0) {
+        if (length > 0) {
             throw new EOFException();
         }
     }
@@ -350,7 +350,7 @@ public class BufferedFile {
         file.close();
     }
 
-    public void read(byte[] var1) throws IOException {
-        read(var1, 0, var1.length);
+    public void readFully(byte[] buffer) throws IOException {
+        read(buffer, 0, buffer.length);
     }
 }

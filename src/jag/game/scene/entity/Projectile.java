@@ -124,25 +124,25 @@ public final class Projectile extends Entity {
         }
     }
 
-    public void target(int var1, int var2, int var3, int var4) {
+    public void target(int x, int y, int height, int cycle) {
         double var5;
         if (!inMotion) {
-            var5 = var1 - startX;
-            double var7 = var2 - startY;
+            var5 = x - startX;
+            double var7 = y - startY;
             double var9 = Math.sqrt(var7 * var7 + var5 * var5);
             absoluteX = (double) targetDistance * var5 / var9 + (double) startX;
             absoluteY = (double) targetDistance * var7 / var9 + (double) startY;
-            aDouble1660 = height;
+            aDouble1660 = this.height;
         }
 
-        var5 = endCycle + 1 - var4;
-        speedX = ((double) var1 - absoluteX) / var5;
-        speedY = ((double) var2 - absoluteY) / var5;
+        var5 = endCycle + 1 - cycle;
+        speedX = ((double) x - absoluteX) / var5;
+        speedY = ((double) y - absoluteY) / var5;
         speed = Math.sqrt(speedX * speedX + speedY * speedY);
         if (!inMotion) {
             speedZ = -speed * Math.tan(0.02454369D * (double) slope);
         }
 
-        heightOffset = 2.0D * ((double) var3 - aDouble1660 - var5 * speedZ) / (var5 * var5);
+        heightOffset = 2.0D * ((double) height - aDouble1660 - var5 * speedZ) / (var5 * var5);
     }
 }

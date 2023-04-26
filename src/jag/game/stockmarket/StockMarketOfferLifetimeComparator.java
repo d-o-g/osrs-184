@@ -112,7 +112,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
 
                     try {
                         BufferedFile.random.seek(0L);
-                        BufferedFile.random.read(var17);
+                        BufferedFile.random.readFully(var17);
 
                         int var18;
                         for (var18 = 0; var18 < 24 && var17[var18] == 0; ++var18) {
@@ -298,8 +298,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
 
     public static void method414(int var0, int var1, int var2, int var3, int var4, int var5, SceneGraph var6, CollisionMap var7) {
         if (!client.lowMemory || (SceneGraphRenderData.sceneRenderRules[0][var1][var2] & 2) != 0 || (SceneGraphRenderData.sceneRenderRules[var0][var1][var2] & 16) == 0) {
-            if (var0 < SceneGraphRenderData.anInt405) {
-                SceneGraphRenderData.anInt405 = var0;
+            if (var0 < SceneGraphRenderData.minimumFloorLevel) {
+                SceneGraphRenderData.minimumFloorLevel = var0;
             }
 
             ObjectDefinition var8 = ObjectDefinition.get(var3);
@@ -419,8 +419,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                     var6.addBoundary(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray406[var4], 0, var19, var21);
                     if (var4 == 0) {
                         if (var8.clipped) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                            SceneGraphRenderData.shadows[var0][var1][var2] = 50;
+                            SceneGraphRenderData.shadows[var0][var1][var2 + 1] = 50;
                         }
 
                         if (var8.projectileClipped) {
@@ -429,8 +429,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         }
                     } else if (var4 == 1) {
                         if (var8.clipped) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                            SceneGraphRenderData.shadows[var0][var1][var2 + 1] = 50;
+                            SceneGraphRenderData.shadows[var0][var1 + 1][var2 + 1] = 50;
                         }
 
                         if (var8.projectileClipped) {
@@ -439,8 +439,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         }
                     } else if (var4 == 2) {
                         if (var8.clipped) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                            SceneGraphRenderData.shadows[var0][var1 + 1][var2] = 50;
+                            SceneGraphRenderData.shadows[var0][var1 + 1][var2 + 1] = 50;
                         }
 
                         if (var8.projectileClipped) {
@@ -449,8 +449,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         }
                     } else if (var4 == 3) {
                         if (var8.clipped) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                            SceneGraphRenderData.shadows[var0][var1][var2] = 50;
+                            SceneGraphRenderData.shadows[var0][var1 + 1][var2] = 50;
                         }
 
                         if (var8.projectileClipped) {
@@ -477,13 +477,13 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                     var6.addBoundary(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray395[var4], 0, var19, var21);
                     if (var8.clipped) {
                         if (var4 == 0) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                            SceneGraphRenderData.shadows[var0][var1][var2 + 1] = 50;
                         } else if (var4 == 1) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                            SceneGraphRenderData.shadows[var0][var1 + 1][var2 + 1] = 50;
                         } else if (var4 == 2) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                            SceneGraphRenderData.shadows[var0][var1 + 1][var2] = 50;
                         } else if (var4 == 3) {
-                            SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
+                            SceneGraphRenderData.shadows[var0][var1][var2] = 50;
                         }
                     }
 
@@ -548,13 +548,13 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                         var6.addBoundary(var0, var1, var2, var16, var34, null, SceneGraphRenderData.anIntArray395[var4], 0, var19, var21);
                         if (var8.clipped) {
                             if (var4 == 0) {
-                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2 + 1] = 50;
+                                SceneGraphRenderData.shadows[var0][var1][var2 + 1] = 50;
                             } else if (var4 == 1) {
-                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2 + 1] = 50;
+                                SceneGraphRenderData.shadows[var0][var1 + 1][var2 + 1] = 50;
                             } else if (var4 == 2) {
-                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1 + 1][var2] = 50;
+                                SceneGraphRenderData.shadows[var0][var1 + 1][var2] = 50;
                             } else if (var4 == 3) {
-                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var1][var2] = 50;
+                                SceneGraphRenderData.shadows[var0][var1][var2] = 50;
                             }
                         }
 
@@ -665,8 +665,8 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
 
                     for (var24 = 0; var24 <= var9; ++var24) {
                         for (int var25 = 0; var25 <= var10; ++var25) {
-                            if (var23 > SceneGraphRenderData.aByteArrayArrayArray400[var0][var24 + var1][var25 + var2]) {
-                                SceneGraphRenderData.aByteArrayArrayArray400[var0][var24 + var1][var25 + var2] = (byte) var23;
+                            if (var23 > SceneGraphRenderData.shadows[var0][var24 + var1][var25 + var2]) {
+                                SceneGraphRenderData.shadows[var0][var24 + var1][var25 + var2] = (byte) var23;
                             }
                         }
                     }

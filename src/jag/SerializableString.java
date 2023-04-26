@@ -72,7 +72,7 @@ public final class SerializableString implements Serializable {
                     }
 
                     long uid = EntityUID.build(0, 0, 1, !npc.definition.interactable, client.npcIndices[i]);
-                    npc.renderCycle = client.engineCycle;
+                    npc.renderCycle = client.ticks;
                     client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.boundSize - 64 + npc.absoluteX, npc.boundSize - 64 + npc.absoluteY, SceneGraph.floorLevel), npc.boundSize - 64 + 60, npc, npc.turnOrientation, uid, npc.stretch);
                 }
             }

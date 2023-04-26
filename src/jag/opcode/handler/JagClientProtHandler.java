@@ -242,4 +242,14 @@ public class JagClientProtHandler extends ClientProtHandler {
             stream.writeLater(packet);
         }
     }
+
+    @Override
+    public void processTeleport(int x, int y, int floor, boolean bool) {
+        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TELEPORT, stream.encryptor);
+        packet.buffer.p1_alt1(floor);
+        packet.buffer.ip4(bool ? client.anInt1002 : 0);
+        packet.buffer.p2(y);
+        packet.buffer.ip2_alt1(y);
+        stream.writeLater(packet);
+    }
 }

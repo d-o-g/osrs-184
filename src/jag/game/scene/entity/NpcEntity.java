@@ -7,6 +7,7 @@ import jag.game.type.NpcDefinition;
 import jag.opcode.BitBuffer;
 
 public final class NpcEntity extends PathingEntity {
+
     public static int port;
     public NpcDefinition definition;
 
@@ -40,7 +41,7 @@ public final class NpcEntity extends PathingEntity {
 
             var5 = client.npcs[var3];
             client.npcIndices[++client.npcCount - 1] = var3;
-            var5.npcUpdateCycle = client.engineCycle;
+            var5.npcUpdateCycle = client.ticks;
             if (var0) {
                 var6 = buffer.g(8);
                 if (var6 > 127) {
@@ -152,7 +153,7 @@ public final class NpcEntity extends PathingEntity {
                         }
 
                         var13 = buffer.gSmarts();
-                        var5.addHitSplat(var9, var11, var10, var12, client.engineCycle, var13);
+                        var5.addHitSplat(var9, var11, var10, var12, client.ticks, var13);
                     }
                 }
 
@@ -165,7 +166,7 @@ public final class NpcEntity extends PathingEntity {
                             var12 = buffer.gSmarts();
                             var13 = buffer.ig1_alt1();
                             int var14 = var11 > 0 ? buffer.ig1_alt1() : var13;
-                            var5.updateHealthBar(var10, client.engineCycle, var11, var12, var13, var14);
+                            var5.updateHealthBar(var10, client.ticks, var11, var12, var13, var14);
                         } else {
                             var5.method1503(var10);
                         }
@@ -207,10 +208,10 @@ public final class NpcEntity extends PathingEntity {
                 var5.effect = buffer.g2s_le();
                 var7 = buffer.g4_alt2();
                 var5.anInt2014 = var7 >> 16;
-                var5.effectDelay = (var7 & 65535) + client.engineCycle;
+                var5.effectDelay = (var7 & 65535) + client.ticks;
                 var5.effectFrame = 0;
                 var5.effectFrameCycle = 0;
-                if (var5.effectDelay > client.engineCycle) {
+                if (var5.effectDelay > client.ticks) {
                     var5.effectFrame = -1;
                 }
 
@@ -227,7 +228,7 @@ public final class NpcEntity extends PathingEntity {
 
         for (var3 = 0; var3 < client.npcCount2; ++var3) {
             var15 = client.npcIndices2[var3];
-            if (client.npcs[var15].npcUpdateCycle != client.engineCycle) {
+            if (client.npcs[var15].npcUpdateCycle != client.ticks) {
                 client.npcs[var15].definition = null;
                 client.npcs[var15] = null;
             }
@@ -266,19 +267,19 @@ public final class NpcEntity extends PathingEntity {
             int var5 = var0.g(1);
             if (var5 == 0) {
                 client.npcIndices[++client.npcCount - 1] = var3;
-                var4.npcUpdateCycle = client.engineCycle;
+                var4.npcUpdateCycle = client.ticks;
             } else {
                 int var6 = var0.g(2);
                 if (var6 == 0) {
                     client.npcIndices[++client.npcCount - 1] = var3;
-                    var4.npcUpdateCycle = client.engineCycle;
+                    var4.npcUpdateCycle = client.ticks;
                     client.processedNpcIndices[++client.npcUpdateCount - 1] = var3;
                 } else {
                     int var7;
                     int var8;
                     if (var6 == 1) {
                         client.npcIndices[++client.npcCount - 1] = var3;
-                        var4.npcUpdateCycle = client.engineCycle;
+                        var4.npcUpdateCycle = client.ticks;
                         var7 = var0.g(3);
                         var4.method682(var7, (byte) 1);
                         var8 = var0.g(1);
@@ -287,7 +288,7 @@ public final class NpcEntity extends PathingEntity {
                         }
                     } else if (var6 == 2) {
                         client.npcIndices[++client.npcCount - 1] = var3;
-                        var4.npcUpdateCycle = client.engineCycle;
+                        var4.npcUpdateCycle = client.ticks;
                         var7 = var0.g(3);
                         var4.method682(var7, (byte) 2);
                         var8 = var0.g(3);

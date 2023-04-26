@@ -1,6 +1,5 @@
 package jag.statics;
 
-import jag.audi.ObjectSound;
 import jag.game.client;
 import jag.game.scene.SceneGraph;
 import jag.game.scene.entity.EntityUID;
@@ -9,13 +8,13 @@ import jag.worldmap.WorldMapFunction;
 
 public class Statics44 {
 
-    public static int[] anIntArray352;
+    public static int[] objectFileIds;
 
     public static void updateMinimapFloorLevel() {
         if (client.minimapFloorLevel != SceneGraph.floorLevel) {
             client.minimapFloorLevel = SceneGraph.floorLevel;
             int var0 = SceneGraph.floorLevel;
-            int[] var1 = ObjectSound.minimapSprite.pixels;
+            int[] var1 = SceneGraph.minimapSprite.pixels;
             int var2 = var1.length;
 
             for (int var3 = 0; var3 < var2; ++var3) {
@@ -42,7 +41,7 @@ public class Statics44 {
 
             int var3 = (238 + (int) (Math.random() * 20.0D) - 10 << 16) + (238 + (int) (Math.random() * 20.0D) - 10 << 8) + (238 + (int) (Math.random() * 20.0D) - 10);
             int var4 = 238 + (int) (Math.random() * 20.0D) - 10 << 16;
-            ObjectSound.minimapSprite.method23();
+            SceneGraph.minimapSprite.method23();
 
             for (int var5 = 1; var5 < 103; ++var5) {
                 for (int var6 = 1; var6 < 103; ++var6) {

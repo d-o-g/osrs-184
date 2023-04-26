@@ -80,7 +80,7 @@ public class NpcDefinition extends DoublyLinkedNode {
         follower = false;
     }
 
-    public static void method505(int var0, int var1, int var2, int var3, int var4, int var5, int var6) {
+    public static void method505(int renderX, int renderZ, int renderY, int renderPitch, int renderYaw, int var5, int var6) {
         int var7 = var6 - 334;
         if (var7 < 0) {
             var7 = 0;
@@ -90,40 +90,42 @@ public class NpcDefinition extends DoublyLinkedNode {
 
         int var8 = (client.aShort920 - client.aShort913) * var7 / 100 + client.aShort913;
         int var9 = var5 * var8 / 256;
-        var7 = 2048 - var3 & 2047;
-        var8 = 2048 - var4 & 2047;
-        int var10 = 0;
-        int var11 = 0;
-        int var12 = var9;
-        int var13;
-        int var14;
-        int var15;
+        var7 = 2048 - renderPitch & 2047;
+        var8 = 2048 - renderYaw & 2047;
+        int offsetX = 0;
+        int offsetZ = 0;
+        int offsetY = var9;
         if (var7 != 0) {
-            var13 = JagGraphics3D.SIN_TABLE[var7];
-            var14 = JagGraphics3D.COS_TABLE[var7];
-            var15 = var11 * var14 - var9 * var13 >> 16;
-            var12 = var14 * var9 + var13 * var11 >> 16;
-            var11 = var15;
+            int sin = JagGraphics3D.SIN_TABLE[var7];
+            int cos = JagGraphics3D.COS_TABLE[var7];
+            int var15 = -var9 * sin >> 16;
+            offsetY = cos * var9 >> 16;
+            offsetZ = var15;
         }
 
         if (var8 != 0) {
-            var13 = JagGraphics3D.SIN_TABLE[var8];
-            var14 = JagGraphics3D.COS_TABLE[var8];
-            var15 = var10 * var14 + var13 * var12 >> 16;
-            var12 = var12 * var14 - var10 * var13 >> 16;
-            var10 = var15;
+            int sin = JagGraphics3D.SIN_TABLE[var8];
+            int cos = JagGraphics3D.COS_TABLE[var8];
+            int var15 = sin * offsetY >> 16;
+            offsetY = offsetY * cos >> 16;
+            offsetX = var15;
         }
 
-        Camera.x = var0 - var10;
-        Camera.z = var1 - var11;
-        Camera.y = var2 - var12;
-        Camera.pitch = var3;
-        Camera.yaw = var4;
-        if (Camera.oculusOrbMode == 1 && client.rights >= 2 && client.engineCycle % 50 == 0 && (Camera.oculusOrbAbsoluteX >> 7 != PlayerEntity.local.absoluteX >> 7 || Camera.oculusOrbAbsoluteY >> 7 != PlayerEntity.local.absoluteY >> 7)) {
-            var13 = PlayerEntity.local.floorLevel;
-            var14 = client.baseX + (Camera.oculusOrbAbsoluteX >> 7);
-            var15 = client.baseY + (Camera.oculusOrbAbsoluteY >> 7);
-            client.teleport(var14, var15, var13, true);
+        Camera.x = renderX - offsetX;
+        Camera.z = renderZ - offsetZ;
+        Camera.y = renderY - offsetY;
+        Camera.pitch = renderPitch;
+        Camera.yaw = renderYaw;
+
+        if (Camera.oculusOrbMode == 1
+            && client.rights >= 2
+            && client.ticks % 50 == 0
+            && (Camera.oculusOrbAbsoluteX >> 7 != PlayerEntity.local.absoluteX >> 7
+                || Camera.oculusOrbAbsoluteY >> 7 != PlayerEntity.local.absoluteY >> 7)) {
+            int level = PlayerEntity.local.floorLevel;
+            int x = client.baseX + (Camera.oculusOrbAbsoluteX >> 7);
+            int y = client.baseY + (Camera.oculusOrbAbsoluteY >> 7);
+            client.clientProtHandler.processTeleport(x, y, level, true);
         }
 
     }

@@ -17,56 +17,56 @@ public class Statics31 {
         }
     }
 
-    public static void method1140(byte[] array, int var1, byte[] var2, int var3, int length) {
-        if (var2 == array) {
-            if (var3 == var1) {
+    public static void generateRandom(byte[] payload, int offset, byte[] random, int start, int length) {
+        if (random == payload) {
+            if (start == offset) {
                 return;
             }
 
-            if (var3 > var1 && var3 < length + var1) {
+            if (start > offset && start < length + offset) {
                 --length;
-                var1 += length;
-                var3 += length;
-                length = var1 - length;
+                offset += length;
+                start += length;
+                length = offset - length;
 
                 length += 7;
-                while (var1 >= length) {
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
-                    var2[var3--] = array[var1--];
+                while (offset >= length) {
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
+                    random[start--] = payload[offset--];
                 }
 
                 length -= 7;
-                while (var1 >= length) {
-                    var2[var3--] = array[var1--];
+                while (offset >= length) {
+                    random[start--] = payload[offset--];
                 }
 
                 return;
             }
         }
 
-        length += var1;
+        length += offset;
 
         length -= 7;
-        while (var1 < length) {
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
-            var2[var3++] = array[var1++];
+        while (offset < length) {
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
+            random[start++] = payload[offset++];
         }
 
         length += 7;
-        while (var1 < length) {
-            var2[var3++] = array[var1++];
+        while (offset < length) {
+            random[start++] = payload[offset++];
         }
 
     }

@@ -5,7 +5,7 @@ import jag.opcode.OldConnectionTaskProcessor;
 public class Statics35 {
 
     public static final char[] cp1252AsciiExtension = new char[]{'€', '\u0000', '‚', 'ƒ', '„', '…', '†', '‡', 'ˆ', '‰', 'Š', '‹', 'Œ', '\u0000', 'Ž', '\u0000', '\u0000', '‘', '’', '“', '”', '•', '–', '—', '˜', '™', 'š', '›', 'œ', '\u0000', 'ž', 'Ÿ'};
-    public static byte[][][] aByteArrayArrayArray1615;
+    public static byte[][][] overlayOrientations;
 
     public static double[] method1172(double var0, double var2, int var4) {
         int var5 = var4 * 2 + 1;

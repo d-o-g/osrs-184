@@ -12,7 +12,7 @@ public class StructDefinition extends DoublyLinkedNode {
 
     public static final ReferenceCache<StructDefinition> cache = new ReferenceCache<>(64);
     public static ReferenceTable table;
-    public static Sprite[] prayerIconSprites;
+    public static Sprite[] skullIconSprites;
 
     IterableNodeTable<? super Node> data;
 

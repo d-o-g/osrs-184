@@ -34,7 +34,7 @@ public class ChatLine extends DoublyLinkedNode {
 
     public void set(int type, String channel, String source, String message) {
         this.index = ++Statics53.chatLineCount - 1;
-        this.cycle = client.engineCycle;
+        this.cycle = client.ticks;
         this.type = type;
         this.channel = channel;
         this.method886();

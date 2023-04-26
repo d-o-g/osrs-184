@@ -183,7 +183,7 @@ public class ContextMenuBuilder {
             }
         }
 
-        if (component.format) {
+        if (component.if3) {
             if (ComponentSelection.state) {
                 int cfg = InterfaceComponent.getConfig(component);
                 boolean var24 = (cfg >> 21 & 1) != 0;

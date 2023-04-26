@@ -133,97 +133,92 @@ public class ClassStructure extends Node {
         list.pushBack(struc);
     }
 
-    public static void process(BitBuffer var0) {
-        ClassStructure var2 = list.head();
-        if (var2 != null) {
-            int var3 = var0.pos;
-            var0.p4(var2.size);
+    public static void process(BitBuffer buffer) {
+        ClassStructure cls = list.head();
+        if (cls != null) {
+            int offset = buffer.pos;
+            buffer.p4(cls.size);
 
-            for (int var4 = 0; var4 < var2.elementCount; ++var4) {
-                if (var2.errors[var4] != 0) {
-                    var0.p1(var2.errors[var4]);
+            for (int i = 0; i < cls.elementCount; ++i) {
+                if (cls.errors[i] != 0) {
+                    buffer.p1(cls.errors[i]);
                 } else {
                     try {
-                        int var5 = var2.types[var4];
-                        Field var6;
-                        int var7;
-                        if (var5 == 0) {
-                            var6 = var2.fields[var4];
-                            var7 = var6.getInt(null);
-                            var0.p1(0);
-                            var0.p4(var7);
-                        } else if (var5 == 1) {
-                            var6 = var2.fields[var4];
-                            var6.setInt(null, var2.fieldIntValues[var4]);
-                            var0.p1(0);
-                        } else if (var5 == 2) {
-                            var6 = var2.fields[var4];
-                            var7 = var6.getModifiers();
-                            var0.p1(0);
-                            var0.p4(var7);
+                        int type = cls.types[i];
+                        if (type == 0) {
+                            Field field = cls.fields[i];
+                            int value = field.getInt(null);
+                            buffer.p1(0);
+                            buffer.p4(value);
+                        } else if (type == 1) {
+                            Field field = cls.fields[i];
+                            field.setInt(null, cls.fieldIntValues[i]);
+                            buffer.p1(0);
+                        } else if (type == 2) {
+                            Field field = cls.fields[i];
+                            int access = field.getModifiers();
+                            buffer.p1(0);
+                            buffer.p4(access);
                         }
 
-                        Method var26;
-                        if (var5 != 3) {
-                            if (var5 == 4) {
-                                var26 = var2.methods[var4];
-                                var7 = var26.getModifiers();
-                                var0.p1(0);
-                                var0.p4(var7);
-                            }
-                        } else {
-                            var26 = var2.methods[var4];
-                            byte[][] var8 = var2.methodArgs[var4];
-                            Object[] var9 = new Object[var8.length];
+                        if (type == 3) {
+                            Method method = cls.methods[i];
+                            byte[][] args = cls.methodArgs[i];
+                            Object[] params = new Object[args.length];
 
-                            for (int var10 = 0; var10 < var8.length; ++var10) {
-                                ObjectInputStream var11 = new ObjectInputStream(new ByteArrayInputStream(var8[var10]));
-                                var9[var10] = var11.readObject();
+                            for (int j = 0; j < args.length; ++j) {
+                                ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(args[j]));
+                                params[j] = stream.readObject();
                             }
 
-                            Object var12 = var26.invoke(null, var9);
-                            if (var12 == null) {
-                                var0.p1(0);
-                            } else if (var12 instanceof Number) {
-                                var0.p1(1);
-                                var0.p8(((Number) var12).longValue());
-                            } else if (var12 instanceof String) {
-                                var0.p1(2);
-                                var0.pcstr((String) var12);
+                            Object returned = method.invoke(null, params);
+                            if (returned == null) {
+                                buffer.p1(0);
+                            } else if (returned instanceof Number) {
+                                buffer.p1(1);
+                                buffer.p8(((Number) returned).longValue());
+                            } else if (returned instanceof String) {
+                                buffer.p1(2);
+                                buffer.pcstr((String) returned);
                             } else {
-                                var0.p1(4);
+                                buffer.p1(4);
                             }
+                        } else if (type == 4) {
+                            Method method = cls.methods[i];
+                            int access = method.getModifiers();
+                            buffer.p1(0);
+                            buffer.p4(access);
                         }
-                    } catch (ClassNotFoundException var14) {
-                        var0.p1(-10);
-                    } catch (InvalidClassException var15) {
-                        var0.p1(-11);
-                    } catch (StreamCorruptedException var16) {
-                        var0.p1(-12);
-                    } catch (OptionalDataException var17) {
-                        var0.p1(-13);
-                    } catch (IllegalAccessException var18) {
-                        var0.p1(-14);
-                    } catch (IllegalArgumentException var19) {
-                        var0.p1(-15);
-                    } catch (InvocationTargetException var20) {
-                        var0.p1(-16);
-                    } catch (SecurityException var21) {
-                        var0.p1(-17);
-                    } catch (IOException var22) {
-                        var0.p1(-18);
-                    } catch (NullPointerException var23) {
-                        var0.p1(-19);
-                    } catch (Exception var24) {
-                        var0.p1(-20);
-                    } catch (Throwable var25) {
-                        var0.p1(-21);
+                    } catch (ClassNotFoundException e) {
+                        buffer.p1(-10);
+                    } catch (InvalidClassException e) {
+                        buffer.p1(-11);
+                    } catch (StreamCorruptedException e) {
+                        buffer.p1(-12);
+                    } catch (OptionalDataException e) {
+                        buffer.p1(-13);
+                    } catch (IllegalAccessException e) {
+                        buffer.p1(-14);
+                    } catch (IllegalArgumentException e) {
+                        buffer.p1(-15);
+                    } catch (InvocationTargetException e) {
+                        buffer.p1(-16);
+                    } catch (SecurityException e) {
+                        buffer.p1(-17);
+                    } catch (IOException e) {
+                        buffer.p1(-18);
+                    } catch (NullPointerException e) {
+                        buffer.p1(-19);
+                    } catch (Exception e) {
+                        buffer.p1(-20);
+                    } catch (Throwable e) {
+                        buffer.p1(-21);
                     }
                 }
             }
 
-            var0.pCrc(var3);
-            var2.unlink();
+            buffer.pCrc(offset);
+            cls.unlink();
         }
     }
 

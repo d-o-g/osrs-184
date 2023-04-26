@@ -5,7 +5,7 @@ import jag.graphics.Sprite;
 
 public class WorldMapObjectIcon extends WorldMapIcon {
     public static boolean mouseCameraEnabled;
-    public static byte[][] aByteArrayArray493;
+    public static byte[][] mapFiles;
     public final int objectId;
     public final WorldMapChunkDefinition definition;
     public int height;

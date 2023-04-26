@@ -8,9 +8,9 @@ import jag.graphics.Sprite;
 //TODO name
 public class LoadedArchive {
 
-    public static byte[][] aByteArrayArray425;
+    public static byte[][] objectFiles;
     public static Sprite[] aSpriteArray429;
-    public static int[] anIntArray426;
+    public static int[] tileBlendSaturation;
 
     public final int entryCount;
     public final Archive archive;
@@ -34,7 +34,7 @@ public class LoadedArchive {
         return var5 ? -var7 : var7;
     }
 
-    public static void addArchive(Archive archive) {
+    public static void add(Archive archive) {
         LoadedArchive var2 = new LoadedArchive(archive);
         client.archives.add(var2);
         client.archiveEntryCount += var2.entryCount;

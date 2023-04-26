@@ -7,7 +7,7 @@ public class DefaultOperatingSystemProvider implements OperatingSystemProvider {
 
     int javaMajorVersion;
     int javaMinorVersion;
-    int javaVersion;
+    int javaPatchVersion;
 
     void parseOldVersion(String var1) {
         String[] var2 = var1.split("\\.");
@@ -16,7 +16,7 @@ public class DefaultOperatingSystemProvider implements OperatingSystemProvider {
             javaMajorVersion = Integer.parseInt(var2[1]);
             var2 = var2[2].split("_");
             javaMinorVersion = Integer.parseInt(var2[0]);
-            javaVersion = Integer.parseInt(var2[1]);
+            javaPatchVersion = Integer.parseInt(var2[1]);
         } catch (Exception ignored) {
 
         }
@@ -28,7 +28,7 @@ public class DefaultOperatingSystemProvider implements OperatingSystemProvider {
         try {
             javaMajorVersion = Integer.parseInt(var2[0]);
             javaMinorVersion = Integer.parseInt(var2[1]);
-            javaVersion = Integer.parseInt(var2[2]);
+            javaPatchVersion = Integer.parseInt(var2[2]);
         } catch (Exception ignored) {
 
         }
@@ -143,17 +143,24 @@ public class DefaultOperatingSystemProvider implements OperatingSystemProvider {
 
         parseVersion(javaVersion);
 
-        int packedMemory = (int) (Runtime.getRuntime().maxMemory() >> 20) + 1;
+        int heapSize = (int) (Runtime.getRuntime().maxMemory() >> 20) + 1;
         int processorCount = javaMajorVersion > 3 ? Runtime.getRuntime().availableProcessors() : 0;
 
-        byte var12 = 0;
-        String var13 = "";
-        String var14 = "";
-        String var15 = "";
-        String var16 = "";
-        String var17 = "";
-        String var18 = "";
+        //these are all unused but i've named them as what they should be
+        byte processorInfoInt = 0;
+        String szDescription = "";
+        String unusedString = "";
+        String directXVersion = "";
+        String unusedString2 = "";
+        String processorInfoString = "";
+        String processorInfoString2 = "";
         int[] cpuInfo = new int[3];
-        return new OperatingSystemNode(osType, x64, osVersionType, javaVendorType, javaMajorVersion, javaMinorVersion, this.javaVersion, packedMemory, processorCount, var12, var13, var14, var15, var16, var17, var18, cpuInfo);
+        return new OperatingSystemNode(
+                osType, x64, osVersionType,
+                javaVendorType, javaMajorVersion, javaMinorVersion, javaPatchVersion,
+                heapSize, processorCount, processorInfoInt,
+                szDescription, unusedString, directXVersion, unusedString2,
+                processorInfoString, processorInfoString2, cpuInfo
+        );
     }
 }

@@ -1,13 +1,11 @@
 package jag.game.relationship;
 
-import jag.FontCache;
 import jag.game.Server;
 import jag.graphics.IndexedSprite;
 
 public class AssociateComparator_Sub2<T extends Associate<T>> extends AssociateComparator<T> {
 
     public static IndexedSprite[] titleMuteSprites;
-    public static FontCache aFontCache_766;
     public final boolean aBoolean764;
 
     public AssociateComparator_Sub2(boolean var1) {

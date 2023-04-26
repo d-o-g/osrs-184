@@ -70,7 +70,7 @@ public class Archive extends ReferenceTable {
 
     public static void method485() {
         if (WorldMap.heatmap != null) {
-            client.anInt929 = client.engineCycle;
+            client.anInt929 = client.ticks;
             WorldMap.heatmap.method993();
 
             for (int var0 = 0; var0 < client.players.length; ++var0) {

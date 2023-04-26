@@ -18,8 +18,8 @@ public class ObjectDefinition extends DoublyLinkedNode {
     public static final ReferenceCache<UnlitModel> rawmodels = new ReferenceCache<>(500);
     public static final UnlitModel[] anUnlitModelArray1512 = new UnlitModel[4];
     public static boolean aBoolean792 = false;
-    public static ReferenceTable aReferenceTable1515;
-    public static ReferenceTable aReferenceTable697;
+    public static ReferenceTable modelsTable;
+    public static ReferenceTable configTable;
 
     public int mapDoorFlag;
     public int[] transformIds;
@@ -45,7 +45,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
     public boolean aBoolean1507;
     public IterableNodeTable<? super Node> parameters;
     public int varpbitIndex;
-    public int[] anIntArray690;
+    public int[] baseModels;
     public int[] modelIds;
     public int varpIndex;
     public boolean rotated;
@@ -106,7 +106,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
         if (var2 != null) {
             return var2;
         }
-        byte[] var3 = aReferenceTable697.unpack(6, var0);
+        byte[] var3 = configTable.unpack(6, var0);
         var2 = new ObjectDefinition();
         var2.id = var0;
         if (var3 != null) {
@@ -124,21 +124,21 @@ public class ObjectDefinition extends DoublyLinkedNode {
     }
 
     public final ObjectDefinition transform() {
-        int var1 = -1;
+        int transformIndex = -1;
         if (varpbitIndex != -1) {
-            var1 = Varbit.getValue(varpbitIndex);
+            transformIndex = Varbit.getValue(varpbitIndex);
         } else if (varpIndex != -1) {
-            var1 = Vars.values[varpIndex];
+            transformIndex = Vars.values[varpIndex];
         }
 
-        int var2;
-        if (var1 >= 0 && var1 < transformIds.length - 1) {
-            var2 = transformIds[var1];
+        int transformedId;
+        if (transformIndex >= 0 && transformIndex < transformIds.length - 1) {
+            transformedId = transformIds[transformIndex];
         } else {
-            var2 = transformIds[transformIds.length - 1];
+            transformedId = transformIds[transformIds.length - 1];
         }
 
-        return var2 != -1 ? get(var2) : null;
+        return transformedId != -1 ? get(transformedId) : null;
     }
 
     public void method259(Buffer var1, int var2) {
@@ -147,14 +147,14 @@ public class ObjectDefinition extends DoublyLinkedNode {
         if (var2 == 1) {
             var3 = var1.g1();
             if (var3 > 0) {
-                if (anIntArray690 != null && !aBoolean792) {
+                if (baseModels != null && !aBoolean792) {
                     var1.pos += 3 * var3;
                 } else {
                     modelIds = new int[var3];
-                    anIntArray690 = new int[var3];
+                    baseModels = new int[var3];
 
                     for (var4 = 0; var4 < var3; ++var4) {
-                        anIntArray690[var4] = var1.g2();
+                        baseModels[var4] = var1.g2();
                         modelIds[var4] = var1.g1();
                     }
                 }
@@ -164,14 +164,14 @@ public class ObjectDefinition extends DoublyLinkedNode {
         } else if (var2 == 5) {
             var3 = var1.g1();
             if (var3 > 0) {
-                if (anIntArray690 != null && !aBoolean792) {
+                if (baseModels != null && !aBoolean792) {
                     var1.pos += var3 * 2;
                 } else {
                     modelIds = null;
-                    anIntArray690 = new int[var3];
+                    baseModels = new int[var3];
 
                     for (var4 = 0; var4 < var3; ++var4) {
-                        anIntArray690[var4] = var1.g2();
+                        baseModels[var4] = var1.g2();
                     }
                 }
             }
@@ -319,7 +319,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
                 return null;
             }
 
-            if (anIntArray690 == null) {
+            if (baseModels == null) {
                 return null;
             }
 
@@ -328,17 +328,17 @@ public class ObjectDefinition extends DoublyLinkedNode {
                 var4 = !var4;
             }
 
-            var5 = anIntArray690.length;
+            var5 = baseModels.length;
 
             for (int var6 = 0; var6 < var5; ++var6) {
-                var7 = anIntArray690[var6];
+                var7 = baseModels[var6];
                 if (var4) {
                     var7 += 65536;
                 }
 
                 var3 = rawmodels.get(var7);
                 if (var3 == null) {
-                    var3 = UnlitModel.method982(aReferenceTable1515, var7 & 65535, 0);
+                    var3 = UnlitModel.method982(modelsTable, var7 & 65535, 0);
                     if (var3 == null) {
                         return null;
                     }
@@ -372,7 +372,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
                 return null;
             }
 
-            var5 = anIntArray690[var9];
+            var5 = baseModels[var9];
             boolean var10 = rotated ^ var2 > 3;
             if (var10) {
                 var5 += 65536;
@@ -380,7 +380,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
 
             var3 = rawmodels.get(var5);
             if (var3 == null) {
-                var3 = UnlitModel.method982(aReferenceTable1515, var5 & 65535, 0);
+                var3 = UnlitModel.method982(modelsTable, var5 & 65535, 0);
                 if (var3 == null) {
                     return null;
                 }
@@ -439,7 +439,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
     public void method254() {
         if (mapDoorFlag == -1) {
             mapDoorFlag = 0;
-            if (anIntArray690 != null && (modelIds == null || modelIds[0] == 10)) {
+            if (baseModels != null && (modelIds == null || modelIds[0] == 10)) {
                 mapDoorFlag = 1;
             }
 
@@ -529,30 +529,30 @@ public class ObjectDefinition extends DoublyLinkedNode {
         return var9;
     }
 
-    public final boolean method882() {
-        if (anIntArray690 == null) {
+    public final boolean isValid() {
+        if (baseModels == null) {
             return true;
         }
-        boolean var1 = true;
 
-        for (int anAnIntArray690 : anIntArray690) {
-            var1 &= aReferenceTable1515.load(anAnIntArray690 & 65535, 0);
+        boolean loaded = true;
+        for (int model : baseModels) {
+            loaded &= modelsTable.load(model & 65535, 0);
         }
 
-        return var1;
+        return loaded;
     }
 
     public final boolean method1106(int var1) {
         if (modelIds != null) {
             for (int var4 = 0; var4 < modelIds.length; ++var4) {
                 if (modelIds[var4] == var1) {
-                    return aReferenceTable1515.load(anIntArray690[var4] & 65535, 0);
+                    return modelsTable.load(baseModels[var4] & 65535, 0);
                 }
             }
 
             return true;
         }
-        if (anIntArray690 == null) {
+        if (baseModels == null) {
             return true;
         }
         if (var1 != 10) {
@@ -560,8 +560,8 @@ public class ObjectDefinition extends DoublyLinkedNode {
         }
         boolean var2 = true;
 
-        for (int anAnIntArray690 : anIntArray690) {
-            var2 &= aReferenceTable1515.load(anAnIntArray690 & 65535, 0);
+        for (int anAnIntArray690 : baseModels) {
+            var2 &= modelsTable.load(anAnIntArray690 & 65535, 0);
         }
 
         return var2;

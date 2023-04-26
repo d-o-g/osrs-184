@@ -6,9 +6,7 @@ import jag.game.client;
 import jag.game.menu.ContextMenuBuilder;
 import jag.graphics.*;
 import jag.js5.ReferenceTable;
-import jag.opcode.Buffer;
-import jag.opcode.OutgoingPacket;
-import jag.opcode.ClientProt;
+import jag.opcode.*;
 import jag.script.ScriptEvent;
 
 import java.util.*;
@@ -265,36 +263,38 @@ public class WorldMap {
     }
 
     void method1276(int var1, int var2, boolean var3, long var4) {
-        if (activeArea != null) {
-            int var6 = (int) ((float) centerX + ((float) (var1 - panelX) - (float) getPanelWidth() * zoom / 2.0F) / zoom);
-            int var7 = (int) ((float) centerY - ((float) (var2 - panelY) - (float) getPanelHeight() * zoom / 2.0F) / zoom);
-            mouseOver = activeArea.getPosition(var6 + activeArea.getMinRegionX() * 64, var7 + activeArea.getMinRegionY() * 64);
-            if (mouseOver != null && var3) {
-                boolean jmod = client.rights >= 2;
-                if (jmod && Keyboard.heldKeys[82] && Keyboard.heldKeys[81]) {
-                    client.teleport(mouseOver.x, mouseOver.y, mouseOver.floorLevel, false);
-                } else {
-                    boolean var9 = true;
-                    if (aBoolean1689) {
-                        int var10 = var1 - anInt1680;
-                        int var11 = var2 - anInt1674;
-                        if (var4 - aLong1684 > 500L || var10 < -25 || var10 > 25 || var11 < -25 || var11 > 25) {
-                            var9 = false;
-                        }
-                    }
-
-                    if (var9) {
-                        OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.WORLD_MAP_DRAG, client.stream.encryptor);
-                        packet.buffer.p4(mouseOver.getHash());
-                        client.stream.writeLater(packet);
-                        aLong1684 = 0L;
-                    }
-                }
-            }
-        } else {
+        if (activeArea == null) {
             mouseOver = null;
+            return;
         }
 
+        int var6 = (int) ((float) centerX + ((float) (var1 - panelX) - (float) getPanelWidth() * zoom / 2.0F) / zoom);
+        int var7 = (int) ((float) centerY - ((float) (var2 - panelY) - (float) getPanelHeight() * zoom / 2.0F) / zoom);
+        mouseOver = activeArea.getPosition(var6 + activeArea.getMinRegionX() * 64, var7 + activeArea.getMinRegionY() * 64);
+        if (mouseOver != null && var3) {
+            boolean jmod = client.rights >= 2;
+            if (jmod && Keyboard.heldKeys[Keyboard.Code.CTRL] && Keyboard.heldKeys[Keyboard.Code.SHIFT]) {
+                client.clientProtHandler.processTeleport(mouseOver.x, mouseOver.y, mouseOver.floorLevel, false);
+                return;
+            }
+
+            //check double click
+            boolean clicked = true;
+            if (aBoolean1689) {
+                int var10 = var1 - anInt1680;
+                int var11 = var2 - anInt1674;
+                if (var4 - aLong1684 > 500L || var10 < -25 || var10 > 25 || var11 < -25 || var11 > 25) {
+                    clicked = false;
+                }
+            }
+
+            if (clicked) {
+                OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.JMOD_WORLDMAP_SELECTION, client.stream.encryptor);
+                packet.buffer.p4(mouseOver.getHash());
+                client.stream.writeLater(packet);
+                aLong1684 = 0L;
+            }
+        }
     }
 
     final void setPosition(int var1, int var2, boolean var3) {

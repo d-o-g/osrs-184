@@ -273,10 +273,10 @@ public final class PlayerEntity extends PathingEntity {
                 player.effect = packet.g2();
                 var7 = packet.g4();
                 player.anInt2014 = var7 >> 16;
-                player.effectDelay = (var7 & 65535) + client.engineCycle;
+                player.effectDelay = (var7 & 65535) + client.ticks;
                 player.effectFrame = 0;
                 player.effectFrameCycle = 0;
-                if (player.effectDelay > client.engineCycle) {
+                if (player.effectDelay > client.ticks) {
                     player.effectFrame = -1;
                 }
 
@@ -372,8 +372,8 @@ public final class PlayerEntity extends PathingEntity {
                 player.startY = packet.g1_alt1();
                 player.endX = packet.g1_alt2();
                 player.endY = packet.g1_alt2();
-                player.forceMovementStartCycle = packet.g2() + client.engineCycle;
-                player.forceMovementEndCycle = packet.g2s_le() + client.engineCycle;
+                player.forceMovementStartCycle = packet.g2() + client.ticks;
+                player.forceMovementEndCycle = packet.g2s_le() + client.ticks;
                 player.anInt2019 = packet.g2_alt4();
                 if (player.aBoolean1904) {
                     player.startX += player.updateX;
@@ -415,7 +415,7 @@ public final class PlayerEntity extends PathingEntity {
                         }
 
                         var19 = packet.gSmarts();
-                        player.addHitSplat(var22, var15, var14, var23, client.engineCycle, var19);
+                        player.addHitSplat(var22, var15, var14, var23, client.ticks, var19);
                     }
                 }
 
@@ -428,7 +428,7 @@ public final class PlayerEntity extends PathingEntity {
                             var23 = packet.gSmarts();
                             var19 = packet.g1_alt3();
                             var18 = var15 > 0 ? packet.g1_alt3() : var19;
-                            player.updateHealthBar(var14, client.engineCycle, var15, var23, var19, var18);
+                            player.updateHealthBar(var14, client.ticks, var15, var23, var19, var18);
                         } else {
                             player.method1503(var14);
                         }
@@ -596,11 +596,11 @@ public final class PlayerEntity extends PathingEntity {
         }
 
         if (!aBoolean1905 && transformedNpcModel != null) {
-            if (client.engineCycle >= animationEndCycle) {
+            if (client.ticks >= animationEndCycle) {
                 transformedNpcModel = null;
             }
 
-            if (client.engineCycle >= animationStartCycle && client.engineCycle < animationEndCycle) {
+            if (client.ticks >= animationStartCycle && client.ticks < animationEndCycle) {
                 var4 = transformedNpcModel;
                 var4.offsetBy(maxX * super.absoluteX, baseTileHeight - tileHeight, maxY * super.absoluteY);
                 if (super.orientation == 512) {

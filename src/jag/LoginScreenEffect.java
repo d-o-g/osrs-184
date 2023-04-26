@@ -263,7 +263,7 @@ public class LoginScreenEffect {
             ++anInt415;
         }
 
-        var7 = ((client.engineCycle & 1) + alpha) / 2;
+        var7 = ((client.ticks & 1) + alpha) / 2;
 
         if (var7 > 0) {
             short var16 = 128;

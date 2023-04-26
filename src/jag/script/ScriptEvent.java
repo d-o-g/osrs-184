@@ -3,6 +3,7 @@ package jag.script;
 import jag.*;
 import jag.audi.AudioOverrideEffect;
 import jag.audi.DefaultAudioSystemProvider;
+import jag.commons.Skills;
 import jag.commons.Strings;
 import jag.commons.collection.*;
 import jag.commons.time.Clock;
@@ -542,17 +543,17 @@ public class ScriptEvent extends Node {
             Statics46.anInt442 = 0;
             Statics46.anInt441 = 0;
             id = -1;
-            int[] var6 = script.anIntArray1574;
-            int[] var7 = script.anIntArray749;
+            int[] var6 = script.opcodes;
+            int[] var7 = script.intOperands;
             byte var8 = -1;
             Statics46.anInt436 = 0;
             Statics46.aBoolean439 = false;
 
             try {
                 try {
-                    Statics46.anIntArray447 = new int[script.anInt574];
+                    Statics46.anIntArray447 = new int[script.intLocals];
                     int var9 = 0;
-                    URLRequestProcessor.aStringArray794 = new String[script.anInt112];
+                    URLRequestProcessor.aStringArray794 = new String[script.stringLocals];
                     int var10 = 0;
 
                     String var13;
@@ -620,7 +621,7 @@ public class ScriptEvent extends Node {
                         int var29 = var6[id];
                         int var19;
                         if (var29 >= 100) {
-                            boolean var34 = script.anIntArray749[id] == 1;
+                            boolean var34 = script.intOperands[id] == 1;
 
                             var19 = process(var29, var34);
                             switch (var19) {
@@ -642,7 +643,7 @@ public class ScriptEvent extends Node {
                             Vars.values[var12] = intStack[--Statics46.anInt442];
                             OldConnection.processOptionVarps(var12);
                         } else if (var29 == 3) {
-                            stringStack[++Statics46.anInt441 - 1] = script.aStringArray1645[id];
+                            stringStack[++Statics46.anInt441 - 1] = script.stringOperands[id];
                         } else if (var29 == 6) {
                             id += var7[id];
                         } else if (var29 == 7) {
@@ -672,11 +673,11 @@ public class ScriptEvent extends Node {
 
                             ClientScriptFrame var33 = Statics46.A_RUNE_SCRIPT_FRAME_ARRAY_435[--Statics46.anInt436];
                             script = var33.target;
-                            var6 = script.anIntArray1574;
-                            var7 = script.anIntArray749;
-                            id = var33.targetId;
-                            Statics46.anIntArray447 = var33.intStack;
-                            URLRequestProcessor.aStringArray794 = var33.stringStack;
+                            var6 = script.opcodes;
+                            var7 = script.intOperands;
+                            id = var33.instructionIndex;
+                            Statics46.anIntArray447 = var33.intLocals;
+                            URLRequestProcessor.aStringArray794 = var33.stringLocals;
                         } else if (var29 == 25) {
                             var12 = var7[id];
                             intStack[++Statics46.anInt442 - 1] = Varbit.getValue(var12);
@@ -779,28 +780,28 @@ public class ScriptEvent extends Node {
                             } else {
                                 var12 = var7[id];
                                 ClientScript var14 = ClientScript.decode(var12);
-                                int[] var15 = new int[var14.anInt574];
-                                String[] var16 = new String[var14.anInt112];
+                                int[] var15 = new int[var14.intLocals];
+                                String[] var16 = new String[var14.stringLocals];
 
-                                for (var17 = 0; var17 < var14.anInt375; ++var17) {
-                                    var15[var17] = intStack[var17 + (Statics46.anInt442 - var14.anInt375)];
+                                for (var17 = 0; var17 < var14.intArgs; ++var17) {
+                                    var15[var17] = intStack[var17 + (Statics46.anInt442 - var14.intArgs)];
                                 }
 
-                                for (var17 = 0; var17 < var14.anInt372; ++var17) {
-                                    var16[var17] = stringStack[var17 + (Statics46.anInt441 - var14.anInt372)];
+                                for (var17 = 0; var17 < var14.stringArgs; ++var17) {
+                                    var16[var17] = stringStack[var17 + (Statics46.anInt441 - var14.stringArgs)];
                                 }
 
-                                Statics46.anInt442 -= var14.anInt375;
-                                Statics46.anInt441 -= var14.anInt372;
+                                Statics46.anInt442 -= var14.intArgs;
+                                Statics46.anInt441 -= var14.stringArgs;
                                 ClientScriptFrame var18 = new ClientScriptFrame();
                                 var18.target = script;
-                                var18.targetId = id;
-                                var18.intStack = Statics46.anIntArray447;
-                                var18.stringStack = URLRequestProcessor.aStringArray794;
+                                var18.instructionIndex = id;
+                                var18.intLocals = Statics46.anIntArray447;
+                                var18.stringLocals = URLRequestProcessor.aStringArray794;
                                 Statics46.A_RUNE_SCRIPT_FRAME_ARRAY_435[++Statics46.anInt436 - 1] = var18;
                                 script = var14;
-                                var6 = var14.anIntArray1574;
-                                var7 = var14.anIntArray749;
+                                var6 = var14.opcodes;
+                                var7 = var14.intOperands;
                                 id = -1;
                                 Statics46.anIntArray447 = var15;
                                 URLRequestProcessor.aStringArray794 = var16;
@@ -861,7 +862,7 @@ public class ScriptEvent extends Node {
             var12.type = var4;
             var12.parentUid = var12.uid = var8.uid;
             var12.subComponentIndex = var5;
-            var12.format = true;
+            var12.if3 = true;
             var8.subcomponents[var5] = var12;
             if (var2) {
                 StockMarketOfferLifetimeComparator.anInterfaceComponent585 = var12;
@@ -2334,7 +2335,7 @@ public class ScriptEvent extends Node {
 
     static int method132(int var0) {
         if (var0 == 3300) {
-            intStack[++Statics46.anInt442 - 1] = client.engineCycle;
+            intStack[++Statics46.anInt442 - 1] = client.ticks;
             return 1;
         }
         int var3;
@@ -2367,17 +2368,17 @@ public class ScriptEvent extends Node {
         }
         if (var0 == 3305) {
             var3 = intStack[--Statics46.anInt442];
-            intStack[++Statics46.anInt442 - 1] = client.currentLevels[var3];
+            intStack[++Statics46.anInt442 - 1] = Skills.currentLevels[var3];
             return 1;
         }
         if (var0 == 3306) {
             var3 = intStack[--Statics46.anInt442];
-            intStack[++Statics46.anInt442 - 1] = client.levels[var3];
+            intStack[++Statics46.anInt442 - 1] = Skills.levels[var3];
             return 1;
         }
         if (var0 == 3307) {
             var3 = intStack[--Statics46.anInt442];
-            intStack[++Statics46.anInt442 - 1] = client.experiences[var3];
+            intStack[++Statics46.anInt442 - 1] = Skills.experiences[var3];
             return 1;
         }
         int var5;

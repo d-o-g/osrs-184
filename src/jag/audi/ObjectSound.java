@@ -3,13 +3,11 @@ package jag.audi;
 import jag.commons.collection.Node;
 import jag.commons.collection.NodeDeque;
 import jag.game.type.ObjectDefinition;
-import jag.graphics.Sprite;
 import jag.worldmap.WorldMapLabelSize;
 
 public final class ObjectSound extends Node {
 
     public static final NodeDeque<ObjectSound> OBJECT_SOUNDS = new NodeDeque<>();
-    public static Sprite minimapSprite;
 
     public ObjectDefinition definition;
     public PcmStream_Sub2 aClass5_Sub6_Sub2_370;

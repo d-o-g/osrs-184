@@ -469,7 +469,7 @@ public class Login {
                         var15 = var15.substring(1);
                     }
 
-                    var0.drawString(BaseFont.processGtLt(var15) + (anInt461 == 0 & client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 70, var41, 16777215, 0);
+                    var0.drawString(BaseFont.processGtLt(var15) + (anInt461 == 0 & client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 70, var41, 16777215, 0);
                     var41 += 15;
                     var9 = "Password: ";
                     var17 = password;
@@ -481,7 +481,7 @@ public class Login {
                     }
 
                     var43 = new String(var18);
-                    var0.drawString(var9 + var43 + (anInt461 == 1 & client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 108, var41, 16777215, 0);
+                    var0.drawString(var9 + var43 + (anInt461 == 1 & client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 108, var41, 16777215, 0);
                     var40 = 277;
                     var23 = credentialsBoxCenterX + -117;
                     IndexedSprite var34 = ClientProt.method6(client.rememberUsername, aBoolean477);
@@ -548,7 +548,7 @@ public class Login {
                         }
 
                         var9 = new String(var46);
-                        var0.drawString(var16 + var9 + (client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 108, var41, 16777215, 0);
+                        var0.drawString(var16 + var9 + (client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 108, var41, 16777215, 0);
                         var41 -= 8;
                         var0.drawString("Trust this computer", credentialsBoxX + 180 - 9, var41, 16776960, 0);
                         var41 += 15;
@@ -604,7 +604,7 @@ public class Login {
                                 var15 = var15.substring(1);
                             }
 
-                            var0.drawString(BaseFont.processGtLt(var15) + (client.engineCycle % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 34, var41, 16777215, 0);
+                            var0.drawString(BaseFont.processGtLt(var15) + (client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 34, var41, 16777215, 0);
                             var20 = credentialsBoxX + 180 - 80;
                             var49 = 321;
                             GraphicsProvider.titlebuttonSprite.renderAt(var20 - 73, var49 - 20);
@@ -707,8 +707,8 @@ public class Login {
                 JagGraphics.method1366(var6);
 
                 JagGraphics.setClip(paddingX, 0, paddingX + 765, client.canvasHeight);
-                AsyncOutputStream.loginScreenEffect.render(paddingX - 22, client.engineCycle);
-                AsyncOutputStream.loginScreenEffect.render(paddingX + 22 + 765 - 128, client.engineCycle);
+                AsyncOutputStream.loginScreenEffect.render(paddingX - 22, client.ticks);
+                AsyncOutputStream.loginScreenEffect.render(paddingX + 22 + 765 - 128, client.ticks);
                 JagGraphics.method1373(var6);
             }
 
@@ -765,15 +765,14 @@ public class Login {
     }
 
     public static void processLoadingScreen() {
-        int var0;
         if (client.bootState == 0) {
             client.sceneGraph = new SceneGraph(4, 104, 104, SceneGraphRenderData.tileHeights);
 
-            for (var0 = 0; var0 < 4; ++var0) {
+            for (int var0 = 0; var0 < 4; ++var0) {
                 client.collisionMaps[var0] = new CollisionMap(104, 104);
             }
 
-            ObjectSound.minimapSprite = new Sprite(512, 512);
+            SceneGraph.minimapSprite = new Sprite(512, 512);
             loadingStateText = "Starting game engine...";
             anInt473 = 5;
             client.bootState = 20;
@@ -807,372 +806,356 @@ public class Login {
             client.bootState = 40;
         } else if (client.bootState == 40) {
             byte var30 = 0;
-            var0 = var30 + Archive.skeletons.method494() * 4 / 100;
-            var0 += Archive.skins.method494() * 4 / 100;
-            var0 += Archive.config.method494() * 2 / 100;
-            var0 += Archive.interfaces.method494() * 2 / 100;
-            var0 += Archive.audioEffects.method494() * 6 / 100;
-            var0 += Archive.landscape.method494() * 4 / 100;
-            var0 += Archive.audioTracks.method494() * 2 / 100;
-            var0 += Archive.models.method494() * 56 / 100;
-            var0 += Archive.sprites.method494() * 2 / 100;
-            var0 += Archive.textures.method494() * 2 / 100;
-            var0 += Archive.huffman.method494() * 2 / 100;
-            var0 += Archive.audioTracks2.method494() * 2 / 100;
-            var0 += Archive.cs2.method494() * 2 / 100;
-            var0 += Archive.fonts.method494() * 2 / 100;
-            var0 += Archive.audioEffects2.method494() * 2 / 100;
-            var0 += Archive.audioEffects3.method494() * 2 / 100;
-            var0 += Archive.worldmap.method494() / 100;
-            var0 += Archive.mapscene.method494() / 100;
-            var0 += Archive.mapland.method494() / 100;
-            var0 += Archive.bootSprites.isLoaded() && Archive.bootSprites.method908() ? 1 : 0;
-            if (var0 != 100) {
-                if (var0 != 0) {
-                    loadingStateText = "Checking for updates - " + var0 + "%";
+            int progress = var30 + Archive.skeletons.method494() * 4 / 100;
+            progress += Archive.skins.method494() * 4 / 100;
+            progress += Archive.config.method494() * 2 / 100;
+            progress += Archive.interfaces.method494() * 2 / 100;
+            progress += Archive.audioEffects.method494() * 6 / 100;
+            progress += Archive.landscape.method494() * 4 / 100;
+            progress += Archive.audioTracks.method494() * 2 / 100;
+            progress += Archive.models.method494() * 56 / 100;
+            progress += Archive.sprites.method494() * 2 / 100;
+            progress += Archive.textures.method494() * 2 / 100;
+            progress += Archive.huffman.method494() * 2 / 100;
+            progress += Archive.audioTracks2.method494() * 2 / 100;
+            progress += Archive.cs2.method494() * 2 / 100;
+            progress += Archive.fonts.method494() * 2 / 100;
+            progress += Archive.audioEffects2.method494() * 2 / 100;
+            progress += Archive.audioEffects3.method494() * 2 / 100;
+            progress += Archive.worldmap.method494() / 100;
+            progress += Archive.mapscene.method494() / 100;
+            progress += Archive.mapland.method494() / 100;
+            progress += Archive.bootSprites.isLoaded() && Archive.bootSprites.method908() ? 1 : 0;
+            if (progress != 100) {
+                if (progress != 0) {
+                    loadingStateText = "Checking for updates - " + progress + "%";
                 }
 
                 anInt473 = 30;
             } else {
-                LoadedArchive.addArchive(Archive.skeletons);
-                LoadedArchive.addArchive(Archive.skins);
-                LoadedArchive.addArchive(Archive.audioEffects);
-                LoadedArchive.addArchive(Archive.landscape);
-                LoadedArchive.addArchive(Archive.audioTracks);
-                LoadedArchive.addArchive(Archive.models);
-                LoadedArchive.addArchive(Archive.sprites);
-                LoadedArchive.addArchive(Archive.audioTracks2);
-                LoadedArchive.addArchive(Archive.audioEffects2);
-                LoadedArchive.addArchive(Archive.audioEffects3);
-                LoadedArchive.addArchive(Archive.worldmap);
-                LoadedArchive.addArchive(Archive.mapscene);
-                LoadedArchive.addArchive(Archive.mapland);
+                LoadedArchive.add(Archive.skeletons);
+                LoadedArchive.add(Archive.skins);
+                LoadedArchive.add(Archive.audioEffects);
+                LoadedArchive.add(Archive.landscape);
+                LoadedArchive.add(Archive.audioTracks);
+                LoadedArchive.add(Archive.models);
+                LoadedArchive.add(Archive.sprites);
+                LoadedArchive.add(Archive.audioTracks2);
+                LoadedArchive.add(Archive.audioEffects2);
+                LoadedArchive.add(Archive.audioEffects3);
+                LoadedArchive.add(Archive.worldmap);
+                LoadedArchive.add(Archive.mapscene);
+                LoadedArchive.add(Archive.mapland);
                 WorldMapTileDecor_Sub2.aBootSprites_647 = new BootSprites();
                 WorldMapTileDecor_Sub2.aBootSprites_647.decode(Archive.bootSprites);
                 loadingStateText = "Loaded update list";
                 anInt473 = 30;
                 client.bootState = 45;
             }
-        } else {
-            Archive var2;
-            Archive var3;
-            Archive var4;
-            if (client.bootState == 45) {
-                boolean var28 = !client.lowMemory;
-                URLRequest.audioSampleRate = 22050;
-                AudioSystem.useTwoChannels = var28;
-                anInt603 = 2;
-                PcmStream_Sub3 var26 = new PcmStream_Sub3();
-                var26.method575(9, 128);
-                AudioSystem.anAudioSystem1236 = StockMarketOfferNameComparator.method329(0, 22050);
-                AudioSystem.anAudioSystem1236.method1330(var26);
-                var2 = Archive.audioEffects3;
-                var3 = Archive.audioEffects2;
-                var4 = Archive.audioEffects;
-                Statics57.aReferenceTable1160 = var2;
-                SecureRandomCallable.aReferenceTable382 = var3;
-                Statics57.aReferenceTable1159 = var4;
-                Statics50.aClass5_Sub6_Sub3_326 = var26;
-                AudioSystem.anAudioSystem599 = StockMarketOfferNameComparator.method329(1, 2048);
-                WorldMapLabelSize.aClass5_Sub6_Sub1_528 = new PcmStream_Sub1();
-                AudioSystem.anAudioSystem599.method1330(WorldMapLabelSize.aClass5_Sub6_Sub1_528);
-                Statics46.aClass98_446 = new Decimator(22050, URLRequest.audioSampleRate);
-                loadingStateText = "Prepared sound engine";
-                anInt473 = 35;
-                client.bootState = 50;
-                AssociateComparator_Sub2.aFontCache_766 = new FontCache(Archive.sprites, Archive.fonts);
-            } else if (client.bootState == 50) {
-                var0 = NamedFont.values().length;
-                client.fonts = AssociateComparator_Sub2.aFontCache_766.lookup(NamedFont.values());
-                if (client.fonts.size() < var0) {
-                    loadingStateText = "Loading fonts - " + client.fonts.size() * 100 / var0 + "%";
-                    anInt473 = 40;
-                } else {
-                    Font.p11 = (Font) client.fonts.get(NamedFont.P11);
-                    Font.p12full = (Font) client.fonts.get(NamedFont.P12);
-                    Font.b12full = (Font) client.fonts.get(NamedFont.B12);
-                    client.operatingSystemNode = client.operatingSystemProvider.provide();
-                    loadingStateText = "Loaded fonts";
-                    anInt473 = 40;
-                    client.bootState = 60;
-                }
+        } else if (client.bootState == 45) {
+            boolean var28 = !client.lowMemory;
+            URLRequest.audioSampleRate = 22050;
+            AudioSystem.useTwoChannels = var28;
+            anInt603 = 2;
+            PcmStream_Sub3 pcmstream = new PcmStream_Sub3();
+            pcmstream.init(9, 128);
+            AudioSystem.anAudioSystem1236 = AudioSystem.create(0, 22050);
+            AudioSystem.anAudioSystem1236.method1330(pcmstream);
+            Archive eff3 = Archive.audioEffects3;
+            Archive eff2 = Archive.audioEffects2;
+            Archive eff = Archive.audioEffects;
+            Statics57.aReferenceTable1160 = eff3;
+            SecureRandomCallable.aReferenceTable382 = eff2;
+            Statics57.aReferenceTable1159 = eff;
+            Statics50.aClass5_Sub6_Sub3_326 = pcmstream;
+            AudioSystem.anAudioSystem599 = AudioSystem.create(1, 2048);
+            WorldMapLabelSize.aClass5_Sub6_Sub1_528 = new PcmStream_Sub1();
+            AudioSystem.anAudioSystem599.method1330(WorldMapLabelSize.aClass5_Sub6_Sub1_528);
+            Statics46.aClass98_446 = new Decimator(22050, URLRequest.audioSampleRate);
+            loadingStateText = "Prepared sound engine";
+            anInt473 = 35;
+            client.bootState = 50;
+            NamedFont.cache = new FontCache(Archive.sprites, Archive.fonts);
+        } else if (client.bootState == 50) {
+            int expectedFontCount = NamedFont.values().length;
+            client.fonts = NamedFont.cache.lookup(NamedFont.values());
+            if (client.fonts.size() < expectedFontCount) {
+                loadingStateText = "Loading fonts - " + client.fonts.size() * 100 / expectedFontCount + "%";
+                anInt473 = 40;
             } else {
-                Archive var1;
-                int var5;
-                if (client.bootState == 60) {
-                    var1 = Archive.huffman;
-                    var2 = Archive.sprites;
-                    var5 = 0;
-                    if (var1.load("title.jpg", "")) {
-                        ++var5;
-                    }
+                Font.p11 = (Font) client.fonts.get(NamedFont.P11);
+                Font.p12full = (Font) client.fonts.get(NamedFont.P12);
+                Font.b12full = (Font) client.fonts.get(NamedFont.B12);
+                client.operatingSystemNode = client.operatingSystemProvider.provide();
+                loadingStateText = "Loaded fonts";
+                anInt473 = 40;
+                client.bootState = 60;
+            }
+        } else {
+            if (client.bootState == 60) {
+                Archive huffman = Archive.huffman;
+                Archive sprites = Archive.sprites;
+                int spritesLoaded = 0;
+                if (huffman.load("title.jpg", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("logo", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("logo", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("logo_deadman_mode", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("logo_deadman_mode", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("titlebox", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("titlebox", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("titlebutton", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("titlebutton", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("runes", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("runes", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("title_mute", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("title_mute", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("options_radio_buttons,0", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("options_radio_buttons,0", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("options_radio_buttons,2", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("options_radio_buttons,2", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("options_radio_buttons,4", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("options_radio_buttons,4", "")) {
+                    ++spritesLoaded;
+                }
 
-                    if (var2.load("options_radio_buttons,6", "")) {
-                        ++var5;
-                    }
+                if (sprites.load("options_radio_buttons,6", "")) {
+                    ++spritesLoaded;
+                }
 
-                    var2.load("sl_back", "");
-                    var2.load("sl_flags", "");
-                    var2.load("sl_arrows", "");
-                    var2.load("sl_stars", "");
-                    var2.load("sl_button", "");
-                    byte var27 = 11;
-                    if (var5 < var27) {
-                        loadingStateText = "Loading title screen - " + var5 * 100 / var27 + "%";
-                        anInt473 = 50;
-                    } else {
-                        loadingStateText = "Loaded title screen";
-                        anInt473 = 50;
-                        client.setGameState(5);
-                        client.bootState = 70;
-                    }
-                } else if (client.bootState == 70) {
-                    if (!Archive.config.method908()) {
-                        loadingStateText = "Loading config - " + Archive.config.method489() + "%";
-                        anInt473 = 60;
-                    } else {
-                        TileOverlay.table = Archive.config;
-                        var1 = Archive.config;
-                        TileUnderlay.table = var1;
-                        var2 = Archive.config;
-                        var3 = Archive.models;
-                        IdentikitDefinition.table = var2;
-                        StockMarketOfferWorldComparator.aReferenceTable350 = var3;
-                        PlayerModel.identikitCount = IdentikitDefinition.table.getFileCount(3);
-                        var4 = Archive.config;
-                        Archive var9 = Archive.models;
-                        boolean var10 = client.lowMemory;
-                        ObjectDefinition.aReferenceTable697 = var4;
-                        ObjectDefinition.aReferenceTable1515 = var9;
-                        ObjectDefinition.aBoolean792 = var10;
-                        Archive var11 = Archive.config;
-                        Archive var12 = Archive.models;
-                        NpcDefinition.table = var11;
-                        NpcDefinition.modelTable = var12;
-                        StructDefinition.table = Archive.config;
-                        ItemDefinition.method240(Archive.config, Archive.models, client.membersWorld, Font.p11);
-                        AnimationSequence.method1202(Archive.config, Archive.skeletons, Archive.skins);
-                        Archive var14 = Archive.config;
-                        Archive var15 = Archive.models;
-                        Statics52.aReferenceTable500 = var14;
-                        EffectAnimation.table = var15;
-                        StockMarketOfferNameComparator.method327(Archive.config);
-                        VarDefinition.table = Archive.config;
-                        VarDefinition.count = VarDefinition.table.getFileCount(16);
-                        MouseRecorder.method263(Archive.interfaces, Archive.models, Archive.sprites, Archive.fonts);
-                        InventoryDefinition.setTable(Archive.config);
-                        EnumDefinition.table = Archive.config;
-                        VarcInteger.table = Archive.config;
-                        ParameterDefinition.table = Archive.config;
-                        client.varcs = new Varcs();
-                        WorldMapCacheArea.method88(Archive.config, Archive.sprites, Archive.fonts);
-                        HealthBarDefinition.method296(Archive.config, Archive.sprites);
-                        Archive var20 = Archive.config;
-                        WorldMapFunction.table = Archive.sprites;
-                        if (var20.method908()) {
-                            WorldMapFunction.count = var20.getFileCount(35);
-                            WorldMapFunction.aDoublyNode_Sub15Array1475 = new WorldMapFunction[WorldMapFunction.count];
-
-                            for (int var22 = 0; var22 < WorldMapFunction.count; ++var22) {
-                                byte[] var23 = var20.unpack(35, var22);
-                                WorldMapFunction.aDoublyNode_Sub15Array1475[var22] = new WorldMapFunction(var22);
-                                if (var23 != null) {
-                                    WorldMapFunction.aDoublyNode_Sub15Array1475[var22].decode(new Buffer(var23));
-                                    WorldMapFunction.aDoublyNode_Sub15Array1475[var22].method775();
-                                }
+                sprites.load("sl_back", "");
+                sprites.load("sl_flags", "");
+                sprites.load("sl_arrows", "");
+                sprites.load("sl_stars", "");
+                sprites.load("sl_button", "");
+                byte expectedSpriteCount = 11;
+                if (spritesLoaded < expectedSpriteCount) {
+                    loadingStateText = "Loading title screen - " + spritesLoaded * 100 / expectedSpriteCount + "%";
+                    anInt473 = 50;
+                } else {
+                    loadingStateText = "Loaded title screen";
+                    anInt473 = 50;
+                    client.setGameState(5);
+                    client.bootState = 70;
+                }
+            } else if (client.bootState == 70) {
+                if (!Archive.config.method908()) {
+                    loadingStateText = "Loading config - " + Archive.config.method489() + "%";
+                    anInt473 = 60;
+                } else {
+                    TileOverlay.table = Archive.config;
+                    TileUnderlay.table = Archive.config;
+                    Archive cfg = Archive.config;
+                    Archive models = Archive.models;
+                    IdentikitDefinition.table = cfg;
+                    StockMarketOfferWorldComparator.aReferenceTable350 = models;
+                    PlayerModel.identikitCount = IdentikitDefinition.table.getFileCount(3);
+                    boolean lowMemory = client.lowMemory;
+                    ObjectDefinition.configTable = cfg;
+                    ObjectDefinition.modelsTable = models;
+                    ObjectDefinition.aBoolean792 = lowMemory;
+                    NpcDefinition.table = cfg;
+                    NpcDefinition.modelTable = models;
+                    StructDefinition.table = Archive.config;
+                    ItemDefinition.method240(Archive.config, Archive.models, client.membersWorld, Font.p11);
+                    AnimationSequence.method1202(Archive.config, Archive.skeletons, Archive.skins);
+                    Statics52.aReferenceTable500 = cfg;
+                    EffectAnimation.table = models;
+                    StockMarketOfferNameComparator.method327(Archive.config);
+                    VarDefinition.table = Archive.config;
+                    VarDefinition.count = VarDefinition.table.getFileCount(16);
+                    MouseRecorder.method263(Archive.interfaces, Archive.models, Archive.sprites, Archive.fonts);
+                    InventoryDefinition.setTable(Archive.config);
+                    EnumDefinition.table = Archive.config;
+                    VarcInteger.table = Archive.config;
+                    ParameterDefinition.table = Archive.config;
+                    client.varcs = new Varcs();
+                    WorldMapCacheArea.method88(Archive.config, Archive.sprites, Archive.fonts);
+                    HealthBarDefinition.method296(Archive.config, Archive.sprites);
+                    WorldMapFunction.table = Archive.sprites;
+                    if (cfg.method908()) {
+                        WorldMapFunction.count = cfg.getFileCount(35);
+                        WorldMapFunction.loaded = new WorldMapFunction[WorldMapFunction.count];
+                        for (int i = 0; i < WorldMapFunction.count; ++i) {
+                            byte[] data = cfg.unpack(35, i);
+                            WorldMapFunction.loaded[i] = new WorldMapFunction(i);
+                            if (data != null) {
+                                WorldMapFunction.loaded[i].decode(new Buffer(data));
+                                WorldMapFunction.loaded[i].method775();
                             }
                         }
-
-                        loadingStateText = "Loaded config";
-                        anInt473 = 60;
-                        client.bootState = 80;
-                    }
-                } else if (client.bootState == 80) {
-                    var0 = 0;
-                    if (AttackOptionPriority.compass == null) {
-                        AttackOptionPriority.compass = Sprite.get(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.compass, 0);
-                    } else {
-                        ++var0;
                     }
 
-                    if (PendingSpawn.mapedge == null) {
-                        PendingSpawn.mapedge = Sprite.get(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1658, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (Statics52.mapscene == null) {
-                        Statics52.mapscene = Statics38.method1194(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.mapScenes, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (StructDefinition.prayerIconSprites == null) {
-                        StructDefinition.prayerIconSprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.skullIcons, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (WorldMapChunkDefinition.skullIconSprites == null) {
-                        WorldMapChunkDefinition.skullIconSprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.prayerIcons, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (HintArrow.overheadSprites == null) {
-                        HintArrow.overheadSprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1648, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (Sprite.mapfunctions == null) {
-                        Sprite.mapfunctions = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1649, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (HintArrow.sprites == null) {
-                        HintArrow.sprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1657, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (Statics47.mapmarkers == null) {
-                        Statics47.mapmarkers = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1654, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (SerializableString.scrollbars == null) {
-                        SerializableString.scrollbars = Statics38.method1194(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1655, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (WorldMapTileDecor_Sub2.aDoublyNode_Sub24_Sub4Array648 == null) {
-                        WorldMapTileDecor_Sub2.aDoublyNode_Sub24_Sub4Array648 = Statics38.method1194(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1651, 0);
-                    } else {
-                        ++var0;
-                    }
-
-                    if (var0 < 11) {
-                        loadingStateText = "Loading sprites - " + var0 * 100 / 12 + "%";
-                        anInt473 = 70;
-                    } else {
-                        BaseFont.aDoublyNode_Sub24_Sub4Array1573 = WorldMapTileDecor_Sub2.aDoublyNode_Sub24_Sub4Array648;
-                        PendingSpawn.mapedge.method775();
-                        int var24 = (int) (Math.random() * 21.0D) - 10;
-                        int var25 = (int) (Math.random() * 21.0D) - 10;
-                        var5 = (int) (Math.random() * 21.0D) - 10;
-                        int var6 = (int) (Math.random() * 41.0D) - 20;
-                        Statics52.mapscene[0].method1325(var6 + var24, var6 + var25, var6 + var5);
-                        loadingStateText = "Loaded sprites";
-                        anInt473 = 70;
-                        client.bootState = 90;
-                    }
-                } else if (client.bootState == 90) {
-                    if (!Archive.textures.method908()) {
-                        loadingStateText = "Loading textures - " + "0%";
-                        anInt473 = 90;
-                    } else {
-                        Archive.materialProvider = new DefaultMaterialProvider(Archive.textures, Archive.sprites, 20, 0.8D, client.lowMemory ? 64 : 128);
-                        JagGraphics3D.method636(Archive.materialProvider);
-                        JagGraphics3D.method634(0.8D);
-                        client.bootState = 100;
-                    }
-                } else if (client.bootState == 100) {
-                    var0 = Archive.materialProvider.loadPercent();
-                    if (var0 < 100) {
-                        loadingStateText = "Loading textures - " + var0 + "%";
-                        anInt473 = 90;
-                    } else {
-                        loadingStateText = "Loaded textures";
-                        anInt473 = 90;
-                        client.bootState = 110;
-                    }
-                } else if (client.bootState == 110) {
-                    client.mouseRecorder = new MouseRecorder();
-                    client.taskProcessor.method697(client.mouseRecorder, 10);
-                    loadingStateText = "Loaded input handler";
-                    anInt473 = 92;
-                    client.bootState = 120;
-                } else if (client.bootState == 120) {
-                    if (!Archive.huffman.load("huffman", "")) {
-                        loadingStateText = "Loading wordpack - " + 0 + "%";
-                        anInt473 = 94;
-                    } else {
-                        Huffman.instance = new Huffman(Archive.huffman.unpack("huffman", ""));
-                        loadingStateText = "Loaded wordpack";
-                        anInt473 = 94;
-                        client.bootState = 130;
-                    }
-                } else if (client.bootState == 130) {
-                    if (!Archive.interfaces.method908()) {
-                        loadingStateText = "Loading interfaces - " + Archive.interfaces.method489() * 4 / 5 + "%";
-                        anInt473 = 96;
-                    } else if (!Archive.cs2.method908()) {
-                        loadingStateText = "Loading interfaces - " + (80 + Archive.cs2.method489() / 6) + "%";
-                        anInt473 = 96;
-                    } else if (!Archive.fonts.method908()) {
-                        loadingStateText = "Loading interfaces - " + (96 + Archive.fonts.method489() / 50) + "%";
-                        anInt473 = 96;
-                    } else {
-                        loadingStateText = "Loaded interfaces";
-                        anInt473 = 98;
-                        client.bootState = 140;
-                    }
-                } else if (client.bootState == 140) {
-                    anInt473 = 100;
-                    if (!Archive.worldmap.method909(WorldMapCacheFeature.DETAILS.name)) {
-                        loadingStateText = "Loading world map - " + Archive.worldmap.method895(WorldMapCacheFeature.DETAILS.name) / 10 + "%";
-                    } else {
-                        if (client.worldMap == null) {
-                            client.worldMap = new WorldMap();
-                            client.worldMap.initialize(Archive.worldmap, Archive.mapscene, Archive.mapland, Font.b12full, client.fonts, Statics52.mapscene);
-                        }
-
-                        loadingStateText = "Loaded world map";
-                        client.bootState = 150;
-                    }
-                } else if (client.bootState == 150) {
-                    client.setGameState(10);
+                    loadingStateText = "Loaded config";
+                    anInt473 = 60;
+                    client.bootState = 80;
                 }
+            } else if (client.bootState == 80) {
+                int loadedSprites = 0;
+                if (AttackOptionPriority.compass == null) {
+                    AttackOptionPriority.compass = Sprite.get(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.compass, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (PendingSpawn.mapedge == null) {
+                    PendingSpawn.mapedge = Sprite.get(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1658, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (Statics52.mapscene == null) {
+                    Statics52.mapscene = Statics38.method1194(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.mapScenes, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (StructDefinition.skullIconSprites == null) {
+                    StructDefinition.skullIconSprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.skullIcons, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (WorldMapChunkDefinition.prayerIconSprites == null) {
+                    WorldMapChunkDefinition.prayerIconSprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.prayerIcons, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (HintArrow.overheadSprites == null) {
+                    HintArrow.overheadSprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1648, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (Sprite.mapfunctions == null) {
+                    Sprite.mapfunctions = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1649, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (HintArrow.sprites == null) {
+                    HintArrow.sprites = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1657, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (Statics47.mapmarkers == null) {
+                    Statics47.mapmarkers = Canvas.method643(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1654, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (SerializableString.scrollbars == null) {
+                    SerializableString.scrollbars = Statics38.method1194(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1655, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (WorldMapTileDecor_Sub2.aDoublyNode_Sub24_Sub4Array648 == null) {
+                    WorldMapTileDecor_Sub2.aDoublyNode_Sub24_Sub4Array648 = Statics38.method1194(Archive.sprites, WorldMapTileDecor_Sub2.aBootSprites_647.anInt1651, 0);
+                } else {
+                    ++loadedSprites;
+                }
+
+                if (loadedSprites < 11) {
+                    loadingStateText = "Loading sprites - " + loadedSprites * 100 / 12 + "%";
+                    anInt473 = 70;
+                } else {
+                    BaseFont.aDoublyNode_Sub24_Sub4Array1573 = WorldMapTileDecor_Sub2.aDoublyNode_Sub24_Sub4Array648;
+                    PendingSpawn.mapedge.method775();
+                    int var24 = (int) (Math.random() * 21.0D) - 10;
+                    int var25 = (int) (Math.random() * 21.0D) - 10;
+                    int var5 = (int) (Math.random() * 21.0D) - 10;
+                    int var6 = (int) (Math.random() * 41.0D) - 20;
+                    Statics52.mapscene[0].method1325(var6 + var24, var6 + var25, var6 + var5);
+                    loadingStateText = "Loaded sprites";
+                    anInt473 = 70;
+                    client.bootState = 90;
+                }
+            } else if (client.bootState == 90) {
+                if (!Archive.textures.method908()) {
+                    loadingStateText = "Loading textures - " + "0%";
+                    anInt473 = 90;
+                } else {
+                    Archive.materialProvider = new DefaultMaterialProvider(Archive.textures, Archive.sprites, 20, 0.8D, client.lowMemory ? 64 : 128);
+                    JagGraphics3D.method636(Archive.materialProvider);
+                    JagGraphics3D.method634(0.8D);
+                    client.bootState = 100;
+                }
+            } else if (client.bootState == 100) {
+                int perc = Archive.materialProvider.loadPercent();
+                if (perc < 100) {
+                    loadingStateText = "Loading textures - " + perc + "%";
+                    anInt473 = 90;
+                } else {
+                    loadingStateText = "Loaded textures";
+                    anInt473 = 90;
+                    client.bootState = 110;
+                }
+            } else if (client.bootState == 110) {
+                client.mouseRecorder = new MouseRecorder();
+                client.taskProcessor.method697(client.mouseRecorder, 10);
+                loadingStateText = "Loaded input handler";
+                anInt473 = 92;
+                client.bootState = 120;
+            } else if (client.bootState == 120) {
+                if (!Archive.huffman.load("huffman", "")) {
+                    loadingStateText = "Loading wordpack - " + 0 + "%";
+                    anInt473 = 94;
+                } else {
+                    Huffman.instance = new Huffman(Archive.huffman.unpack("huffman", ""));
+                    loadingStateText = "Loaded wordpack";
+                    anInt473 = 94;
+                    client.bootState = 130;
+                }
+            } else if (client.bootState == 130) {
+                if (!Archive.interfaces.method908()) {
+                    loadingStateText = "Loading interfaces - " + Archive.interfaces.method489() * 4 / 5 + "%";
+                    anInt473 = 96;
+                } else if (!Archive.cs2.method908()) {
+                    loadingStateText = "Loading interfaces - " + (80 + Archive.cs2.method489() / 6) + "%";
+                    anInt473 = 96;
+                } else if (!Archive.fonts.method908()) {
+                    loadingStateText = "Loading interfaces - " + (96 + Archive.fonts.method489() / 50) + "%";
+                    anInt473 = 96;
+                } else {
+                    loadingStateText = "Loaded interfaces";
+                    anInt473 = 98;
+                    client.bootState = 140;
+                }
+            } else if (client.bootState == 140) {
+                anInt473 = 100;
+                if (!Archive.worldmap.method909(WorldMapCacheFeature.DETAILS.name)) {
+                    loadingStateText = "Loading world map - " + Archive.worldmap.method895(WorldMapCacheFeature.DETAILS.name) / 10 + "%";
+                } else {
+                    if (client.worldMap == null) {
+                        client.worldMap = new WorldMap();
+                        client.worldMap.initialize(Archive.worldmap, Archive.mapscene, Archive.mapland, Font.b12full, client.fonts, Statics52.mapscene);
+                    }
+
+                    loadingStateText = "Loaded world map";
+                    client.bootState = 150;
+                }
+            } else if (client.bootState == 150) {
+                client.setGameState(10);
             }
         }
     }

@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 public class WorldMapChunkDefinition {
 
     public static final ReferenceNodeTable A_REFERENCE_NODE_TABLE___118 = new ReferenceNodeTable(37748736, 256);
-    public static Sprite[] skullIconSprites;
+    public static Sprite[] prayerIconSprites;
 
     final HashMap aHashMap117;
     List aList119;
@@ -182,8 +182,8 @@ public class WorldMapChunkDefinition {
                 byte var15;
                 int var16;
                 int var18;
-                if (var11.texture >= 0) {
-                    var14 = JagGraphics3D.materialProvider.rgb(var11.texture);
+                if (var11.material >= 0) {
+                    var14 = JagGraphics3D.materialProvider.rgb(var11.material);
                     var15 = 96;
                     if (var14 == -2) {
                         var16 = 12345678;
@@ -390,8 +390,8 @@ public class WorldMapChunkDefinition {
                     byte var14;
                     int var15;
                     int var17;
-                    if (var9.texture >= 0) {
-                        var13 = JagGraphics3D.materialProvider.rgb(var9.texture);
+                    if (var9.material >= 0) {
+                        var13 = JagGraphics3D.materialProvider.rgb(var9.material);
                         var14 = 96;
                         if (var13 == -2) {
                             var15 = 12345678;

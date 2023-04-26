@@ -1,6 +1,5 @@
 package jag.worldmap;
 
-import jag.game.client;
 import jag.game.scene.CollisionMap;
 import jag.game.scene.SceneGraph;
 import jag.graphics.JagGraphics;
@@ -39,7 +38,7 @@ public class WorldMapRenderRules {
         return new Sprite(0, 0);
     }
 
-    public static void method126(byte[] var0, int var1, int var2, int var3, int var4, CollisionMap[] collision) {
+    public static void loadTile(byte[] var0, int var1, int var2, int var3, int var4, CollisionMap[] collision) {
         for (int level = 0; level < 4; ++level) {
             for (int x = 0; x < 64; ++x) {
                 for (int y = 0; y < 64; ++y) {

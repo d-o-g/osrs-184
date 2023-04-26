@@ -23,4 +23,6 @@ public abstract class ClientProtHandler {
     public abstract void processCameraInfo();
 
     public abstract void processFocusInfo();
+
+    public abstract void processTeleport(int x, int y, int floor, boolean bool);
 }

@@ -10,7 +10,7 @@ import jag.opcode.Buffer;
 public class WorldMapFunction extends DoublyLinkedNode {
 
     public static final ReferenceCache cache = new ReferenceCache(256);
-    public static WorldMapFunction[] aDoublyNode_Sub15Array1475;
+    public static WorldMapFunction[] loaded;
     public static int count;
     public static ReferenceTable table;
 
@@ -49,7 +49,7 @@ public class WorldMapFunction extends DoublyLinkedNode {
     }
 
     public static WorldMapFunction get(int var0) {
-        return var0 >= 0 && var0 < aDoublyNode_Sub15Array1475.length && aDoublyNode_Sub15Array1475[var0] != null ? aDoublyNode_Sub15Array1475[var0] : new WorldMapFunction(var0);
+        return var0 >= 0 && var0 < loaded.length && loaded[var0] != null ? loaded[var0] : new WorldMapFunction(var0);
     }
 
     public Sprite getSprite() {

@@ -2,8 +2,6 @@ package jag.game;
 
 import jag.commons.collection.LinkedList;
 import jag.commons.collection.Node;
-import jag.game.scene.entity.PathingEntity;
-import jag.game.type.AnimationSequence;
 import jag.game.type.HealthBarDefinition;
 
 public class HealthBar extends Node {
@@ -49,26 +47,6 @@ public class HealthBar extends Node {
             return var3;
         }
         return Integer.toString(var0);
-    }
-
-    public static void method694(PathingEntity entity) {
-        if (entity.forceMovementEndCycle == client.engineCycle
-                || entity.animation == -1
-                || entity.animationDelay != 0
-                || entity.animationFrameCycle + 1 > AnimationSequence.get(entity.animation).frameLengths[entity.animationFrame]) {
-            int var1 = entity.forceMovementEndCycle - entity.forceMovementStartCycle;
-            int var2 = client.engineCycle - entity.forceMovementStartCycle;
-            int var3 = entity.boundSize + entity.startX * 128;
-            int var4 = entity.boundSize + entity.startY * 128;
-            int var5 = entity.boundSize + entity.endX * 128;
-            int var6 = entity.boundSize + entity.endY * 128;
-            entity.absoluteX = (var2 * var5 + var3 * (var1 - var2)) / var1;
-            entity.absoluteY = (var6 * var2 + var4 * (var1 - var2)) / var1;
-        }
-
-        entity.anInt2022 = 0;
-        entity.orientation = entity.anInt2019;
-        entity.turnOrientation = entity.orientation;
     }
 
     public void update(int cycle, int width, int currWidth, int currCycle) {
@@ -119,6 +97,6 @@ public class HealthBar extends Node {
     }
 
     public boolean method693() {
-        return hitsplats._isEmpty();
+        return hitsplats.isEmpty();
     }
 }

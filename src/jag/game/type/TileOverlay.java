@@ -18,7 +18,7 @@ public class TileOverlay extends DoublyLinkedNode {
 
     public int secondaryRgb;
     public int rgb;
-    public int texture;
+    public int material;
     public int hue;
     public int secondaryHue;
     public int saturation;
@@ -28,7 +28,7 @@ public class TileOverlay extends DoublyLinkedNode {
 
     public TileOverlay() {
         rgb = 0;
-        texture = -1;
+        material = -1;
         hideUnderlay = true;
         secondaryRgb = -1;
     }
@@ -71,7 +71,7 @@ public class TileOverlay extends DoublyLinkedNode {
         if (var2 == 1) {
             rgb = var1.g3();
         } else if (var2 == 2) {
-            texture = var1.g1();
+            material = var1.g1();
         } else if (var2 == 5) {
             hideUnderlay = false;
         } else if (var2 == 7) {

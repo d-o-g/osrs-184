@@ -59,10 +59,10 @@ public enum PlayerAccountType implements EnumType {
             }
 
             Mouse.mapRegions = new int[count];
-            Statics57.anIntArray1156 = new int[count];
-            Statics44.anIntArray352 = new int[count];
-            WorldMapObjectIcon.aByteArrayArray493 = new byte[count][];
-            LoadedArchive.aByteArrayArray425 = new byte[count][];
+            Statics57.mapFileIds = new int[count];
+            Statics44.objectFileIds = new int[count];
+            WorldMapObjectIcon.mapFiles = new byte[count][];
+            LoadedArchive.objectFiles = new byte[count][];
             boolean var17 = (var3 / 8 == 48 || var3 / 8 == 49) && var4 / 8 == 48;
 
             if (var3 / 8 == 48 && var4 / 8 == 148) {
@@ -76,8 +76,8 @@ public enum PlayerAccountType implements EnumType {
                     int var9 = var8 + (var7 << 8);
                     if (!var17 || var8 != 49 && var8 != 149 && var8 != 147 && var7 != 50 && (var7 != 49 || var8 != 47)) {
                         Mouse.mapRegions[count] = var9;
-                        Statics57.anIntArray1156[count] = Archive.landscape.getGroup("m" + var7 + "_" + var8);
-                        Statics44.anIntArray352[count] = Archive.landscape.getGroup("l" + var7 + "_" + var8);
+                        Statics57.mapFileIds[count] = Archive.landscape.getGroup("m" + var7 + "_" + var8);
+                        Statics44.objectFileIds[count] = Archive.landscape.getGroup("l" + var7 + "_" + var8);
                         ++count;
                     }
                 }
@@ -114,10 +114,10 @@ public enum PlayerAccountType implements EnumType {
             }
 
             Mouse.mapRegions = new int[var6];
-            Statics57.anIntArray1156 = new int[var6];
-            Statics44.anIntArray352 = new int[var6];
-            WorldMapObjectIcon.aByteArrayArray493 = new byte[var6][];
-            LoadedArchive.aByteArrayArray425 = new byte[var6][];
+            Statics57.mapFileIds = new int[var6];
+            Statics44.objectFileIds = new int[var6];
+            WorldMapObjectIcon.mapFiles = new byte[var6][];
+            LoadedArchive.objectFiles = new byte[var6][];
             var6 = 0;
 
             for (int var7 = 0; var7 < 4; ++var7) {
@@ -141,8 +141,8 @@ public enum PlayerAccountType implements EnumType {
                                 Mouse.mapRegions[var6] = var13;
                                 var14 = var13 >> 8 & 255;
                                 int var15 = var13 & 255;
-                                Statics57.anIntArray1156[var6] = Archive.landscape.getGroup("m" + var14 + "_" + var15);
-                                Statics44.anIntArray352[var6] = Archive.landscape.getGroup("l" + var14 + "_" + var15);
+                                Statics57.mapFileIds[var6] = Archive.landscape.getGroup("m" + var14 + "_" + var15);
+                                Statics44.objectFileIds[var6] = Archive.landscape.getGroup("l" + var14 + "_" + var15);
                                 ++var6;
                             }
                         }

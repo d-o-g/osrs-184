@@ -33,7 +33,7 @@ public class DynamicObject extends Entity {
         if (animationId != -1) {
             sequence = AnimationSequence.get(animationId);
             anInt372 = 0;
-            anInt379 = client.engineCycle - 1;
+            anInt379 = client.ticks - 1;
             if (sequence.replayMode == 0 && var9 instanceof DynamicObject) {
                 DynamicObject var10 = (DynamicObject) var9;
                 if (var10.sequence == sequence) {
@@ -54,7 +54,7 @@ public class DynamicObject extends Entity {
     public static void gc() {
         client.stream.stop();
         client.gc();
-        client.sceneGraph.init();
+        client.sceneGraph.initialize();
 
         for (int var0 = 0; var0 < 4; ++var0) {
             client.collisionMaps[var0].initialize();
@@ -89,12 +89,12 @@ public class DynamicObject extends Entity {
     public static void loadProjectilesIntoScene() {
         Projectile projectile = client.projectiles.head();
         while (projectile != null) {
-            if (projectile.floorLevel == SceneGraph.floorLevel && client.engineCycle <= projectile.endCycle) {
-                if (client.engineCycle >= projectile.startCycle) {
+            if (projectile.floorLevel == SceneGraph.floorLevel && client.ticks <= projectile.endCycle) {
+                if (client.ticks >= projectile.startCycle) {
                     if (projectile.targetIndex > 0) {
                         NpcEntity npc = client.npcs[projectile.targetIndex - 1];
                         if (npc != null && npc.absoluteX >= 0 && npc.absoluteX < 13312 && npc.absoluteY >= 0 && npc.absoluteY < 13312) {
-                            projectile.target(npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.engineCycle);
+                            projectile.target(npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
                         }
                     }
 
@@ -108,7 +108,7 @@ public class DynamicObject extends Entity {
                         }
 
                         if (player != null && player.absoluteX >= 0 && player.absoluteX < 13312 && player.absoluteY >= 0 && player.absoluteY < 13312) {
-                            projectile.target(player.absoluteX, player.absoluteY, SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.engineCycle);
+                            projectile.target(player.absoluteX, player.absoluteY, SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
                         }
                     }
 
@@ -125,7 +125,7 @@ public class DynamicObject extends Entity {
 
     protected final Model getModel() {
         if (sequence != null) {
-            int var1 = client.engineCycle - anInt379;
+            int var1 = client.ticks - anInt379;
             if (var1 > 100 && sequence.loopOffset > 0) {
                 var1 = 100;
             }
@@ -148,7 +148,7 @@ public class DynamicObject extends Entity {
                 sequence = null;
             }
 
-            anInt379 = client.engineCycle - var1;
+            anInt379 = client.ticks - var1;
         }
 
         ObjectDefinition var2 = ObjectDefinition.get(id);

@@ -9,7 +9,7 @@ public class Statics57 {
     public static ReferenceTable aReferenceTable1159;
     public static ReferenceTable aReferenceTable1160;
     public static String aString1162;
-    public static int[] anIntArray1156;
+    public static int[] mapFileIds;
 
     static {
         AudioSystem.state = 0;

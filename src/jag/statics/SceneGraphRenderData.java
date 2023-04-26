@@ -10,23 +10,23 @@ public final class SceneGraphRenderData {
     public static final int[] anIntArray392 = new int[]{-1, -1, 1, 1};
     public static final int[][][] tileHeights = new int[4][105][105];
     public static final byte[][][] sceneRenderRules = new byte[4][104][104];
-    public static int anInt405 = 99;
+    public static int minimumFloorLevel = 99;
     public static int tileHueOffset = (int) (Math.random() * 17.0D) - 8;
     public static int tileLightnessOffset = (int) (Math.random() * 33.0D) - 16;
     public static long aLong403;
-    public static byte[][][] aByteArrayArrayArray404;
-    public static byte[][][] aByteArrayArrayArray401;
+    public static byte[][][] underlays;
+    public static byte[][][] overlays;
     public static int[][][] anIntArrayArrayArray393;
-    public static byte[][][] aByteArrayArrayArray400;
-    public static int[] anIntArray396;
-    public static int[] anIntArray390;
-    public static int[] anIntArray389;
+    public static byte[][][] shadows;
+    public static int[] blendHue;
+    public static int[] blendLightness;
+    public static int[] blendColorCount;
 
-    public static void method180(int var0, int var1, int var2, int var3) {
+    public static void initializeTileHeights(int var0, int var1, int var2, int var3) {
         for (int var4 = var1; var4 <= var3 + var1; ++var4) {
             for (int var5 = var0; var5 <= var0 + var2; ++var5) {
                 if (var5 >= 0 && var5 < 104 && var4 >= 0 && var4 < 104) {
-                    aByteArrayArrayArray400[0][var5][var4] = 127;
+                    shadows[0][var5][var4] = 127;
                     if (var0 == var5 && var5 > 0) {
                         tileHeights[0][var5][var4] = tileHeights[0][var5 - 1][var4];
                     }

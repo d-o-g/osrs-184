@@ -1,5 +1,6 @@
 package jag.graphics;
 
+import jag.FontCache;
 import jag.commons.collection.NodeTable;
 import jag.game.Inventory;
 
@@ -12,7 +13,8 @@ public class NamedFont {
     public static final NamedFont P12 = new NamedFont("p12_full");
     public static final NamedFont B12 = new NamedFont("b12_full");
 
-    public static int[] anIntArray1626;
+    public static int[] tileBlendHueWeight;
+    public static FontCache cache;
 
     public String name;
 

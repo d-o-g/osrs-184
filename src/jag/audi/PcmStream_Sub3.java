@@ -811,7 +811,7 @@ public class PcmStream_Sub3 extends PcmStream {
         return var2 < 8192 ? var2 * var1.anInt372 + 32 >> 6 : 16384 - ((128 - var1.anInt372) * (16384 - var2) + 32 >> 6);
     }
 
-    public synchronized void method575(int var1, int var2) {
+    public synchronized void init(int var1, int var2) {
         method759(var1, var2);
     }
 

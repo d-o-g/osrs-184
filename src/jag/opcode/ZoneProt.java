@@ -73,8 +73,8 @@ public class ZoneProt {
                 Model model = def.getLitModel(objectType, orientation, heights, modelX, modelZ, modelY);
                 if (model != null) {
                     PendingSpawn.pushLater(SceneGraph.floorLevel, x, y, stubType, -1, 0, 0, startCycle + 1, endCycle + 1);
-                    player.animationStartCycle = startCycle + client.engineCycle;
-                    player.animationEndCycle = endCycle + client.engineCycle;
+                    player.animationStartCycle = startCycle + client.ticks;
+                    player.animationEndCycle = endCycle + client.ticks;
                     player.transformedNpcModel = model;
                     player.maxX = x * 128 + width * 64;
                     player.maxY = y * 128 + height * 64;
@@ -274,10 +274,10 @@ public class ZoneProt {
                 Projectile proj = new Projectile(
                         id,
                         SceneGraph.floorLevel, startX, startY, SceneGraph.getTileHeight(startX, startY, SceneGraph.floorLevel) - height,
-                        startCycle + client.engineCycle, endCycle + client.engineCycle,
+                        startCycle + client.ticks, endCycle + client.ticks,
                         slope, targetDistance, targetIndex, targetHeight
                 );
-                proj.target(targetX, targetY, SceneGraph.getTileHeight(targetX, targetY, SceneGraph.floorLevel) - targetHeight, startCycle + client.engineCycle);
+                proj.target(targetX, targetY, SceneGraph.getTileHeight(targetX, targetY, SceneGraph.floorLevel) - targetHeight, startCycle + client.ticks);
                 client.projectiles.add(proj);
             }
 
@@ -312,7 +312,7 @@ public class ZoneProt {
             if (x >= 0 && y >= 0 && x < 104 && y < 104) {
                 x = x * 128 + 64;
                 y = y * 128 + 64;
-                EffectObject effect = new EffectObject(id, SceneGraph.floorLevel, x, y, SceneGraph.getTileHeight(x, y, SceneGraph.floorLevel) - height, endCycle, client.engineCycle);
+                EffectObject effect = new EffectObject(id, SceneGraph.floorLevel, x, y, SceneGraph.getTileHeight(x, y, SceneGraph.floorLevel) - height, endCycle, client.ticks);
                 client.effectObjects.add(effect);
             }
         }

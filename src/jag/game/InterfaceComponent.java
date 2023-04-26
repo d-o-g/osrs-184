@@ -105,7 +105,7 @@ public class InterfaceComponent extends Node {
     public String text;
     public String enabledText;
 
-    public boolean format;
+    public boolean if3;
     public boolean decodedObjects;
     public boolean flippedVertically;
     public boolean flippedHorizontally;
@@ -198,7 +198,7 @@ public class InterfaceComponent extends Node {
     int enabledModelId;
 
     public InterfaceComponent() {
-        format = false;
+        if3 = false;
         uid = -1;
         subComponentIndex = -1;
         buttonType = 0;
@@ -389,7 +389,7 @@ public class InterfaceComponent extends Node {
         JagGraphics3D.method499();
 
         for (InterfaceComponent component : components) {
-            if (component != null && (component.parentUid == uid || uid == -1412584499 && component == client.draggedComponent)) {
+            if (component != null && (component.parentUid == uid || uid == 0xabcdabcd && component == client.draggedComponent)) {
                 int nextBoundsIndex;
                 if (boundsIndex == -1) {
                     client.interfacePositionsX[client.renderedComponentCount] = component.relativeX + rootX;
@@ -402,8 +402,8 @@ public class InterfaceComponent extends Node {
                 }
 
                 component.boundsIndex = nextBoundsIndex;
-                component.renderCycle = client.engineCycle;
-                if (!component.format || !isExplicitlyHidden(component)) {
+                component.renderCycle = client.ticks;
+                if (!component.if3 || !isExplicitlyHidden(component)) {
                     if (component.clientcode > 0) {
                         processAppearanceCode(component);
                     }
@@ -414,7 +414,7 @@ public class InterfaceComponent extends Node {
                     int var15;
                     int var16;
                     if (component == client.draggedComponent) {
-                        if (uid != -1412584499 && !component.scrollBar) {
+                        if (uid != 0xabcdabcd && !component.scrollBar) {
                             StockMarketOffer.draggingInterface = components;
                             anInt1342 = rootX;
                             SceneOccluder.anInt1913 = rootY;
@@ -492,7 +492,7 @@ public class InterfaceComponent extends Node {
                         var18 = Math.min(var20, height);
                     }
 
-                    if (!component.format || var15 < var17 && var16 < var18) {
+                    if (!component.if3 || var15 < var17 && var16 < var18) {
                         if (component.clientcode != 0) {
                             if (component.clientcode == 1336) {
                                 if (client.displayFps) {
@@ -533,7 +533,7 @@ public class InterfaceComponent extends Node {
                             }
 
                             if (component.clientcode == 1400) {
-                                client.worldMap.method1268(absoluteX, absoluteY, component.width, component.height, client.engineCycle);
+                                client.worldMap.method1268(absoluteX, absoluteY, component.width, component.height, client.ticks);
                             }
 
                             if (component.clientcode == 1401) {
@@ -541,16 +541,16 @@ public class InterfaceComponent extends Node {
                             }
 
                             if (component.clientcode == 1402) {
-                                AsyncOutputStream.loginScreenEffect.render(absoluteX, client.engineCycle);
+                                AsyncOutputStream.loginScreenEffect.render(absoluteX, client.ticks);
                             }
                         }
 
                         if (component.type == 0) {
-                            if (!component.format && isExplicitlyHidden(component) && component != OldConnection.hoveredComponent) {
+                            if (!component.if3 && isExplicitlyHidden(component) && component != OldConnection.hoveredComponent) {
                                 continue;
                             }
 
-                            if (!component.format) {
+                            if (!component.if3) {
                                 if (component.insetY > component.viewportHeight - component.height) {
                                     component.insetY = component.viewportHeight - component.height;
                                 }
@@ -575,7 +575,7 @@ public class InterfaceComponent extends Node {
                         }
 
                         if (client.resizableMode || client.aBooleanArray1083[nextBoundsIndex] || client.redrawMode > 1) {
-                            if (component.type == 0 && !component.format && component.viewportHeight > component.height) {
+                            if (component.type == 0 && !component.if3 && component.viewportHeight > component.height) {
                                 GameShell.drawScrollbar(absoluteX + component.width, absoluteY, component.insetY, component.height, component.viewportHeight);
                             }
 
@@ -741,7 +741,7 @@ public class InterfaceComponent extends Node {
                                                 }
                                             }
 
-                                            if (component.format && component.itemId != -1) {
+                                            if (component.if3 && component.itemId != -1) {
                                                 ItemDefinition var46 = ItemDefinition.get(component.itemId);
                                                 var45 = var46.name;
                                                 if (var45 == null) {
@@ -758,7 +758,7 @@ public class InterfaceComponent extends Node {
                                                 var20 = component.foreground;
                                             }
 
-                                            if (!component.format) {
+                                            if (!component.if3) {
                                                 var45 = method1005(var45, component);
                                             }
 
@@ -766,7 +766,7 @@ public class InterfaceComponent extends Node {
                                         }
                                     } else if (component.type == 5) {
                                         Sprite var38;
-                                        if (!component.format) {
+                                        if (!component.if3) {
                                             var38 = component.method958(Projectile.method1192(component));
                                             if (var38 != null) {
                                                 var38.renderAlphaAt(absoluteX, absoluteY);
@@ -866,7 +866,7 @@ public class InterfaceComponent extends Node {
                                             var23 = JagGraphics3D.SIN_TABLE[component.xRotation] * component.modelZoom >> 16;
                                             var25 = JagGraphics3D.COS_TABLE[component.xRotation] * component.modelZoom >> 16;
                                             if (var42 != null) {
-                                                if (!component.format) {
+                                                if (!component.if3) {
                                                     var42.method1289(0, component.zRotation, 0, component.xRotation, 0, var23, var25);
                                                 } else {
                                                     var42.computeBounds();
@@ -1034,10 +1034,10 @@ public class InterfaceComponent extends Node {
     public static void method513(InterfaceComponent[] group, int parentUid) {
         for (InterfaceComponent component : group) {
             if (component != null && component.parentUid == parentUid
-                    && (!component.format || !isExplicitlyHidden(component))) {
+                    && (!component.if3 || !isExplicitlyHidden(component))) {
                 int animationId;
                 if (component.type == 0) {
-                    if (!component.format && isExplicitlyHidden(component) && component != OldConnection.hoveredComponent) {
+                    if (!component.if3 && isExplicitlyHidden(component) && component != OldConnection.hoveredComponent) {
                         continue;
                     }
 
@@ -1080,7 +1080,7 @@ public class InterfaceComponent extends Node {
                         }
                     }
 
-                    if (component.rotationKey != 0 && !component.format) {
+                    if (component.rotationKey != 0 && !component.if3) {
                         int var8 = component.rotationKey >> 16;
                         animationId = component.rotationKey << 16 >> 16;
                         var8 *= client.anInt972;
@@ -1429,12 +1429,12 @@ public class InterfaceComponent extends Node {
 
         } else if (var1 == 327) {
             var0.xRotation = 150;
-            var0.zRotation = (int) (Math.sin((double) client.engineCycle / 40.0D) * 256.0D) & 2047;
+            var0.zRotation = (int) (Math.sin((double) client.ticks / 40.0D) * 256.0D) & 2047;
             var0.modelType = 5;
             var0.modelId = 0;
         } else if (var1 == 328) {
             var0.xRotation = 150;
-            var0.zRotation = (int) (Math.sin((double) client.engineCycle / 40.0D) * 256.0D) & 2047;
+            var0.zRotation = (int) (Math.sin((double) client.ticks / 40.0D) * 256.0D) & 2047;
             var0.modelType = 5;
             var0.modelId = 1;
         }
@@ -1579,15 +1579,15 @@ public class InterfaceComponent extends Node {
                     }
 
                     if (opcode == 1) {
-                        value = client.currentLevels[opcodes[ptr++]];
+                        value = Skills.currentLevels[opcodes[ptr++]];
                     }
 
                     if (opcode == 2) {
-                        value = client.levels[opcodes[ptr++]];
+                        value = Skills.levels[opcodes[ptr++]];
                     }
 
                     if (opcode == 3) {
-                        value = client.experiences[opcodes[ptr++]];
+                        value = Skills.experiences[opcodes[ptr++]];
                     }
 
                     if (opcode == 4) {
@@ -1609,7 +1609,7 @@ public class InterfaceComponent extends Node {
                     }
 
                     if (opcode == 6) {
-                        value = Skills.EXP_TABLE[client.levels[opcodes[ptr++]] - 1];
+                        value = Skills.EXP_TABLE[Skills.levels[opcodes[ptr++]] - 1];
                     }
 
                     if (opcode == 7) {
@@ -1623,7 +1623,7 @@ public class InterfaceComponent extends Node {
                     if (opcode == 9) {
                         for (int i = 0; i < 25; ++i) {
                             if (Skills.ENABLED[i]) {
-                                value += client.levels[i];
+                                value += Skills.levels[i];
                             }
                         }
                     }
@@ -1845,7 +1845,7 @@ public class InterfaceComponent extends Node {
     }
 
     public void decodeOldFormat(Buffer buffer) {
-        format = false;
+        if3 = false;
         type = buffer.g1();
         buttonType = buffer.g1();
         clientcode = buffer.g2();
@@ -2089,7 +2089,7 @@ public class InterfaceComponent extends Node {
 
     public void decode(Buffer buffer) {
         buffer.g1();
-        format = true;
+        if3 = true;
         type = buffer.g1();
         clientcode = buffer.g2();
         xMargin = buffer.g2b();

@@ -7,8 +7,8 @@ import jag.graphics.JagGraphics3D;
 public class DefaultAudioSystemProvider implements AudioSystemProvider {
     public static short[][] aShortArrayArray145;
     public static InterfaceComponent processingItemComponent;
-    public static byte[][][] aByteArrayArrayArray141;
-    public static int[][] anIntArrayArray146;
+    public static byte[][][] overlayShapes;
+    public static int[][] tileLighting;
     public static int anInt142;
 
     public DefaultAudioSystemProvider() {

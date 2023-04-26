@@ -33,6 +33,11 @@ public final class Keyboard implements KeyListener, FocusListener {
     public Keyboard() {
     }
 
+    public class Code {
+        public static final int SHIFT = 81;
+        public static final int CTRL = 82;
+    }
+
     public static void method100() {
         for (ChatLine line : Statics53.CHAT_LINE_TABLE) {
             line.method254();

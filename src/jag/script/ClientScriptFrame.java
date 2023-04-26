@@ -2,13 +2,13 @@ package jag.script;
 
 public class ClientScriptFrame {
 
-    public int targetId;
+    public int instructionIndex;
     public ClientScript target;
-    public int[] intStack;
-    public String[] stringStack;
+    public int[] intLocals;
+    public String[] stringLocals;
 
     public ClientScriptFrame() {
-        this.targetId = -1;
+        this.instructionIndex = -1;
     }
 
     public static int method295(double var0, double var2, double var4) {

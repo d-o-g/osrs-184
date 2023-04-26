@@ -27,12 +27,13 @@ public class AudioRunnable implements Runnable {
         }
     }
 
-    public static void method986(Buffer var0, int var1) {
+    public static void writeRandom(Buffer buffer, int var1) {
         if (BufferedFile.random != null) {
             try {
                 BufferedFile.random.seek(0L);
-                BufferedFile.random.write(var0.payload, var1, 24);
+                BufferedFile.random.write(buffer.payload, var1, 24);
             } catch (Exception ignored) {
+
             }
         }
     }

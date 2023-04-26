@@ -16,7 +16,7 @@ public abstract class PathingEntity extends Entity {
     public final int[] pathYQueue;
     public final int[] hitsplats;
     public final int[] hitsplatTypes;
-    public final int[] hitsplatIds;
+    public final int[] specialHitsplatTypes;
     public final int[] specialHitsplats;
 
     public final byte[] pathQueueTraversed; //this is now in its own class
@@ -99,7 +99,7 @@ public abstract class PathingEntity extends Entity {
         hitsplatTypes = new int[4];
         hitsplats = new int[4];
         hitsplatCycles = new int[4];
-        hitsplatIds = new int[4];
+        specialHitsplatTypes = new int[4];
         specialHitsplats = new int[4];
         healthBars = new LinkedList<>();
         targetIndex = -1;
@@ -130,10 +130,10 @@ public abstract class PathingEntity extends Entity {
 
     public static void update(PathingEntity entity) {
         AnimationSequence animation;
-        if (entity.forceMovementStartCycle > client.engineCycle) {
-            method841(entity);
-        } else if (entity.forceMovementEndCycle >= client.engineCycle) {
-            HealthBar.method694(entity);
+        if (entity.forceMovementStartCycle > client.ticks) {
+            processMovementStartSequence(entity);
+        } else if (entity.forceMovementEndCycle >= client.ticks) {
+            processMovementEndSequence(entity);
         } else {
             entity.stance = entity.idleStance;
             if (entity.pathQueueSize == 0) {
@@ -401,7 +401,7 @@ public abstract class PathingEntity extends Entity {
             }
         }
 
-        if (entity.effect != -1 && client.engineCycle >= entity.effectDelay) {
+        if (entity.effect != -1 && client.ticks >= entity.effectDelay) {
             if (entity.effectFrame < 0) {
                 entity.effectFrame = 0;
             }
@@ -430,7 +430,7 @@ public abstract class PathingEntity extends Entity {
 
         if (entity.animation != -1 && entity.animationDelay <= 1) {
             animation = AnimationSequence.get(entity.animation);
-            if (animation.animatingPrecedence == 1 && entity.anInt2023 > 0 && entity.forceMovementStartCycle <= client.engineCycle && entity.forceMovementEndCycle < client.engineCycle) {
+            if (animation.animatingPrecedence == 1 && entity.anInt2023 > 0 && entity.forceMovementStartCycle <= client.ticks && entity.forceMovementEndCycle < client.ticks) {
                 entity.animationDelay = 1;
                 return;
             }
@@ -470,8 +470,8 @@ public abstract class PathingEntity extends Entity {
 
     }
 
-    public static void method841(PathingEntity var0) {
-        int var1 = var0.forceMovementStartCycle - client.engineCycle;
+    public static void processMovementStartSequence(PathingEntity var0) {
+        int var1 = var0.forceMovementStartCycle - client.ticks;
         int var2 = var0.boundSize + var0.startX * 128;
         int var3 = var0.boundSize + var0.startY * 128;
         var0.absoluteX += (var2 - var0.absoluteX) / var1;
@@ -496,7 +496,7 @@ public abstract class PathingEntity extends Entity {
             int var7 = GPI.playerCount;
             int[] var8 = GPI.playerIndices;
             byte var9 = 0;
-            if (var1 < var7 && entity.renderCycle == client.engineCycle && displayPlayerName((PlayerEntity) entity)) {
+            if (var1 < var7 && entity.renderCycle == client.ticks && displayPlayerName((PlayerEntity) entity)) {
                 PlayerEntity var10 = (PlayerEntity) entity;
                 if (var1 < var7) {
                     Server.absoluteToViewport(entity, entity.modelHeight + 15);
@@ -512,11 +512,11 @@ public abstract class PathingEntity extends Entity {
             int var19;
             int var25;
             int var26;
-            if (!entity.healthBars._isEmpty()) {
+            if (!entity.healthBars.isEmpty()) {
                 Server.absoluteToViewport(entity, entity.modelHeight + 15);
 
                 for (HealthBar bar = entity.healthBars.head(); bar != null; bar = entity.healthBars.next()) {
-                    HitUpdate update = bar.method695(client.engineCycle);
+                    HitUpdate update = bar.method695(client.ticks);
                     if (update == null) {
                         if (bar.method693()) {
                             bar.unlink();
@@ -538,7 +538,7 @@ public abstract class PathingEntity extends Entity {
 
                         int var20 = 255;
                         boolean var21 = true;
-                        int var22 = client.engineCycle - update.startCycle;
+                        int var22 = client.ticks - update.startCycle;
                         int var23 = var19 * update.currentWidth / def.maxWidth;
                         int var24;
                         int var94;
@@ -612,12 +612,12 @@ public abstract class PathingEntity extends Entity {
                     if (client.viewportRenderX > -1) {
                         if (player.prayerIcon != -1) {
                             var13 += 25;
-                            StructDefinition.prayerIconSprites[player.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
+                            StructDefinition.skullIconSprites[player.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
                         }
 
                         if (player.skullIcon != -1) {
                             var13 += 25;
-                            WorldMapChunkDefinition.skullIconSprites[player.skullIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
+                            WorldMapChunkDefinition.prayerIconSprites[player.skullIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
                         }
                     }
                 }
@@ -635,14 +635,14 @@ public abstract class PathingEntity extends Entity {
                     var91 = var91.transform();
                 }
 
-                if (var91.prayerIcon >= 0 && var91.prayerIcon < WorldMapChunkDefinition.skullIconSprites.length) {
+                if (var91.prayerIcon >= 0 && var91.prayerIcon < WorldMapChunkDefinition.prayerIconSprites.length) {
                     Server.absoluteToViewport(entity, entity.modelHeight + 15);
                     if (client.viewportRenderX > -1) {
-                        WorldMapChunkDefinition.skullIconSprites[var91.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - 30);
+                        WorldMapChunkDefinition.prayerIconSprites[var91.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - 30);
                     }
                 }
 
-                if (HintArrow.type == 1 && client.npcIndices[var1 - var7] == HintArrow.npc && client.engineCycle % 20 < 10) {
+                if (HintArrow.type == 1 && client.npcIndices[var1 - var7] == HintArrow.npc && client.ticks % 20 < 10) {
                     Server.absoluteToViewport(entity, entity.modelHeight + 15);
                     if (client.viewportRenderX > -1) {
                         HintArrow.overheadSprites[0].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - 28);
@@ -672,7 +672,7 @@ public abstract class PathingEntity extends Entity {
                 int var29 = 0;
                 HitsplatDefinition var30;
                 if (var28 >= 0) {
-                    if (var92 <= client.engineCycle) {
+                    if (var92 <= client.ticks) {
                         continue;
                     }
 
@@ -703,7 +703,7 @@ public abstract class PathingEntity extends Entity {
                     continue;
                 }
 
-                var19 = entity.hitsplatIds[var27];
+                var19 = entity.specialHitsplatTypes[var27];
                 HitsplatDefinition var33 = null;
                 HitsplatDefinition var95;
                 if (var19 >= 0) {
@@ -725,7 +725,7 @@ public abstract class PathingEntity extends Entity {
                     }
                 }
 
-                if (var92 - var29 <= client.engineCycle) {
+                if (var92 - var29 <= client.ticks) {
                     if (var93 == null) {
                         entity.hitsplatCycles[var27] = -1;
                     } else {
@@ -967,7 +967,7 @@ public abstract class PathingEntity extends Entity {
                                 }
                             }
 
-                            var76 = entity.hitsplatCycles[var27] - client.engineCycle;
+                            var76 = entity.hitsplatCycles[var27] - client.ticks;
                             int var77 = var93.offsetX - var76 * var93.offsetX / var93.duration;
                             int var78 = var76 * var93.offsetY / var93.duration + -var93.offsetY;
                             int var79 = var77 + (var2 + client.viewportRenderX - (var65 >> 1));
@@ -1266,12 +1266,32 @@ public abstract class PathingEntity extends Entity {
         return (client.displayPlayerNames & 8) != 0;
     }
 
-    public final void addHitSplat(int type, int damage, int id, int special, int currentCycle, int delay) {
+    public static void processMovementEndSequence(PathingEntity entity) {
+        if (entity.forceMovementEndCycle == client.ticks
+                || entity.animation == -1
+                || entity.animationDelay != 0
+                || entity.animationFrameCycle + 1 > AnimationSequence.get(entity.animation).frameLengths[entity.animationFrame]) {
+            int var1 = entity.forceMovementEndCycle - entity.forceMovementStartCycle;
+            int var2 = client.ticks - entity.forceMovementStartCycle;
+            int var3 = entity.boundSize + entity.startX * 128;
+            int var4 = entity.boundSize + entity.startY * 128;
+            int var5 = entity.boundSize + entity.endX * 128;
+            int var6 = entity.boundSize + entity.endY * 128;
+            entity.absoluteX = (var2 * var5 + var3 * (var1 - var2)) / var1;
+            entity.absoluteY = (var6 * var2 + var4 * (var1 - var2)) / var1;
+        }
+
+        entity.anInt2022 = 0;
+        entity.orientation = entity.anInt2019;
+        entity.turnOrientation = entity.orientation;
+    }
+
+    public final void addHitSplat(int type, int damage, int specialType, int special, int currentCycle, int delay) {
         boolean expire = true;
         boolean var9 = true;
 
-        for (int var10 = 0; var10 < 4; ++var10) {
-            if (hitsplatCycles[var10] > currentCycle) {
+        for (int i = 0; i < 4; ++i) {
+            if (hitsplatCycles[i] > currentCycle) {
                 expire = false;
             } else {
                 var9 = false;
@@ -1296,33 +1316,32 @@ public abstract class PathingEntity extends Entity {
         }
 
         int index = -1;
-        int var15;
         if (var9) {
             if (comparisonType == -1) {
                 return;
             }
 
             index = 0;
-            var15 = 0;
+            int result = 0;
             if (comparisonType == 0) {
-                var15 = hitsplatCycles[0];
+                result = hitsplatCycles[0];
             } else if (comparisonType == 1) {
-                var15 = hitsplats[0];
+                result = hitsplats[0];
             }
 
             for (int i = 1; i < 4; ++i) {
                 if (comparisonType == 0) {
-                    if (hitsplatCycles[i] < var15) {
+                    if (hitsplatCycles[i] < result) {
                         index = i;
-                        var15 = hitsplatCycles[i];
+                        result = hitsplatCycles[i];
                     }
-                } else if (comparisonType == 1 && hitsplats[i] < var15) {
+                } else if (comparisonType == 1 && hitsplats[i] < result) {
                     index = i;
-                    var15 = hitsplats[i];
+                    result = hitsplats[i];
                 }
             }
 
-            if (comparisonType == 1 && var15 >= damage) {
+            if (comparisonType == 1 && result >= damage) {
                 return;
             }
         } else {
@@ -1330,11 +1349,11 @@ public abstract class PathingEntity extends Entity {
                 hitsplatCount = 0;
             }
 
-            for (var15 = 0; var15 < 4; ++var15) {
-                byte var18 = hitsplatCount;
+            for (int i = 0; i < 4; ++i) {
+                byte count = hitsplatCount;
                 hitsplatCount = (byte) ((hitsplatCount + 1) % 4);
-                if (hitsplatCycles[var18] <= currentCycle) {
-                    index = var18;
+                if (hitsplatCycles[count] <= currentCycle) {
+                    index = count;
                     break;
                 }
             }
@@ -1343,7 +1362,7 @@ public abstract class PathingEntity extends Entity {
         if (index >= 0) {
             hitsplatTypes[index] = type;
             hitsplats[index] = damage;
-            hitsplatIds[index] = id;
+            specialHitsplatTypes[index] = specialType;
             specialHitsplats[index] = special;
             hitsplatCycles[index] = currentCycle + duration + delay;
         }

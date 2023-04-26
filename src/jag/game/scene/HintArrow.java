@@ -24,7 +24,7 @@ public class HintArrow {
     public static void draw(int baseX, int baseY) {
         if (type == 2) {
             SceneGraph.absoluteToViewport((x - client.baseX << 7) + insetX, (y - client.baseY << 7) + insetY, z * 4);
-            if (client.viewportRenderX > -1 && client.engineCycle % 20 < 10) {
+            if (client.viewportRenderX > -1 && client.ticks % 20 < 10) {
                 overheadSprites[0].renderAlphaAt(baseX + client.viewportRenderX - 12, client.viewportRenderY + baseY - 28);
             }
         }

@@ -29,10 +29,10 @@ public class GPI {
             int var3 = var0.absoluteY >> 7;
             if (var2 >= 0 && var2 < 104 && var3 >= 0 && var3 < 104) {
                 long var4 = EntityUID.build(0, 0, 0, false, var0.index);
-                if (var0.transformedNpcModel != null && client.engineCycle >= var0.animationStartCycle && client.engineCycle < var0.animationEndCycle) {
+                if (var0.transformedNpcModel != null && client.ticks >= var0.animationStartCycle && client.ticks < var0.animationEndCycle) {
                     var0.aBoolean1905 = false;
                     var0.tileHeight = SceneGraph.getTileHeight(var0.absoluteX, var0.absoluteY, SceneGraph.floorLevel);
-                    var0.renderCycle = client.engineCycle;
+                    var0.renderCycle = client.ticks;
                     client.sceneGraph.addPlayerObject(SceneGraph.floorLevel, var0.absoluteX, var0.absoluteY, var0.tileHeight, var0, var0.turnOrientation, var4, var0.startObjectX, var0.startObjectY, var0.endObjectX, var0.endObjectY);
                 } else {
                     if ((var0.absoluteX & 127) == 64 && (var0.absoluteY & 127) == 64) {
@@ -44,7 +44,7 @@ public class GPI {
                     }
 
                     var0.tileHeight = SceneGraph.getTileHeight(var0.absoluteX, var0.absoluteY, SceneGraph.floorLevel);
-                    var0.renderCycle = client.engineCycle;
+                    var0.renderCycle = client.ticks;
                     client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, var0.absoluteX, var0.absoluteY, var0.tileHeight, 60, var0, var0.turnOrientation, var4, var0.stretch);
                 }
             }

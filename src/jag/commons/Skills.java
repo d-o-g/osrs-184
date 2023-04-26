@@ -4,6 +4,9 @@ public class Skills {
 
     public static final boolean[] ENABLED = new boolean[]{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false};
     public static final int[] EXP_TABLE;
+    public static final int[] experiences = new int[25];
+    public static final int[] levels = new int[25];
+    public static final int[] currentLevels = new int[25];
 
     static {
         EXP_TABLE = new int[99];

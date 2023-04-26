@@ -21,7 +21,7 @@ import jag.worldmap.WorldMapObjectIcon;
 import jag.worldmap.WorldMapTileDecor;
 
 public class Node_Sub19 extends Node {
-    public static int anInt1191;
+    public static int chunkY;
     public int anInt564;
     public AudioOverrideEffect aAudioOverrideEffect_1193;
     public AudioOverride aAudioOverride_1192;
@@ -49,8 +49,8 @@ public class Node_Sub19 extends Node {
 
     public static void processComponentEvents(InterfaceComponent[] group, int var1, int var2, int var3, int var4, int var5, int rootX, int rootY) {
         for (InterfaceComponent c : group) {
-            if (c != null && c.parentUid == var1 && (!c.format || c.type == 0 || c.decodedObjects || InterfaceComponent.getConfig(c) != 0 || c == client.topLevelOfDraggedComponent || c.clientcode == 1338)) {
-                if (c.format) {
+            if (c != null && c.parentUid == var1 && (!c.if3 || c.type == 0 || c.decodedObjects || InterfaceComponent.getConfig(c) != 0 || c == client.topLevelOfDraggedComponent || c.clientcode == 1338)) {
+                if (c.if3) {
                     if (InterfaceComponent.isExplicitlyHidden(c)) {
                         continue;
                     }
@@ -130,8 +130,8 @@ public class Node_Sub19 extends Node {
                     }
                 }
 
-                if (var33 || !c.format || var13 < var15 && var14 < var16) {
-                    if (c.format) {
+                if (var33 || !c.if3 || var13 < var15 && var14 < var16) {
+                    if (c.if3) {
                         ScriptEvent var19;
                         if (c.noClickThrough) {
                             if (Mouse.x >= var13 && Mouse.y >= var14 && Mouse.x < var15 && Mouse.y < var16) {
@@ -202,7 +202,7 @@ public class Node_Sub19 extends Node {
 
                                         if (AudioOverrideEffect.method794(c.aByteArrayArray1365[var22][var25]) || var26) {
                                             var23 = true;
-                                            if (c.keyCycles != null && c.keyCycles[var22] > client.engineCycle) {
+                                            if (c.keyCycles != null && c.keyCycles[var22] > client.ticks) {
                                                 break;
                                             }
 
@@ -240,9 +240,9 @@ public class Node_Sub19 extends Node {
 
                                     if (var25 != 0) {
                                         if (c.keyCycles[var22] == 0) {
-                                            c.keyCycles[var22] = var25 + client.engineCycle + c.keyRate2[var22];
+                                            c.keyCycles[var22] = var25 + client.ticks + c.keyRate2[var22];
                                         } else {
-                                            c.keyCycles[var22] = var25 + client.engineCycle;
+                                            c.keyCycles[var22] = var25 + client.ticks;
                                         }
                                     } else {
                                         c.keyCycles[var22] = Integer.MAX_VALUE;
@@ -255,7 +255,7 @@ public class Node_Sub19 extends Node {
                             }
                         }
 
-                        if (c.format) {
+                        if (c.if3) {
                             var34 = Mouse.x >= var13 && Mouse.y >= var14 && Mouse.x < var15 && Mouse.y < var16;
 
                             boolean var35 = (Mouse.pressMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.pressMeta == 4) && var34;
@@ -523,7 +523,7 @@ public class Node_Sub19 extends Node {
                             }
                         }
 
-                        if (!c.format) {
+                        if (!c.if3) {
                             if (client.draggedComponent != null || AnimationFrameGroup.dragComponent != null || ContextMenu.open) {
                                 continue;
                             }

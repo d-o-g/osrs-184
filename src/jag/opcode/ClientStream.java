@@ -60,7 +60,7 @@ public class ClientStream {
     }
 
     public final void drop() {
-        outgoing._clear();
+        outgoing.clear();
         buffered = 0;
     }
 
