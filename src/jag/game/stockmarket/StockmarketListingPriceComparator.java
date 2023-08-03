@@ -6,7 +6,7 @@ import jag.game.scene.SceneGraph;
 
 import java.util.Comparator;
 
-public final class StockMarketOfferPriceComparator implements Comparator<StockMarketEvent> {
+public final class StockmarketListingPriceComparator implements Comparator<StockmarketEvent> {
 
     public static void method330() {
         SceneGraph.lowMemory = false;
@@ -34,11 +34,11 @@ public final class StockMarketOfferPriceComparator implements Comparator<StockMa
         throw new IllegalArgumentException();
     }
 
-    int method332(StockMarketEvent var1, StockMarketEvent var2) {
-        return Integer.compare(var1.aStockMarketOffer551.itemPrice, var2.aStockMarketOffer551.itemPrice);
+    int method332(StockmarketEvent var1, StockmarketEvent var2) {
+        return Integer.compare(var1.aStockmarketListing551.unitPrice, var2.aStockmarketListing551.unitPrice);
     }
 
-    public int compare(StockMarketEvent var1, StockMarketEvent var2) {
+    public int compare(StockmarketEvent var1, StockmarketEvent var2) {
         return this.method332(var1, var2);
     }
 

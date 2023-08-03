@@ -358,7 +358,7 @@ public class SceneGraph {
     public static void method517() {
         int var0 = anInt1235 * 16384 + 64;
         int var1 = Clock.anInt889 * 16384 + 64;
-        int var2 = getTileHeight(var0, var1, floorLevel) - StockMarketOfferWorldComparator.anInt347;
+        int var2 = getTileHeight(var0, var1, floorLevel) - StockmarketListingWorldComparator.anInt347;
         if (Camera.x < var0) {
             Camera.x = (var0 - Camera.x) * Statics53.anInt520 / 1000 + Camera.x + MouseRecorder.anInt388;
             if (Camera.x > var0) {
@@ -899,7 +899,7 @@ public class SceneGraph {
                                             var47 = collisionMaps[var30];
                                         }
 
-                                        StockMarketOfferLifetimeComparator.method414(var15, var25, var26, objectId, var18, var17, scene, var47);
+                                        StockmarketListingLifetimeComparator.method414(var15, var25, var26, objectId, var18, var17, scene, var47);
                                     }
                                 }
                             }
@@ -1185,7 +1185,7 @@ public class SceneGraph {
                                             int var46 = var14 * 256 / var17;
                                             int var43 = var15 / var18;
                                             int var44 = var16 / var18;
-                                            var41 = StockMarketOfferLifetimeComparator.method412(var46, var43, var44);
+                                            var41 = StockmarketListingLifetimeComparator.method412(var46, var43, var44);
                                             var46 = var46 + SceneGraphRenderData.tileHueOffset & 255;
                                             var44 += SceneGraphRenderData.tileLightnessOffset;
                                             if (var44 < 0) {
@@ -1194,7 +1194,7 @@ public class SceneGraph {
                                                 var44 = 255;
                                             }
 
-                                            var42 = StockMarketOfferLifetimeComparator.method412(var46, var43, var44);
+                                            var42 = StockmarketListingLifetimeComparator.method412(var46, var43, var44);
                                         }
 
                                         TileOverlay overlay;
@@ -1268,7 +1268,7 @@ public class SceneGraph {
                                                 var55 = -1;
                                                 var56 = -2;
                                             } else {
-                                                var57 = StockMarketOfferLifetimeComparator.method412(overlay.hue, overlay.saturation, overlay.lightness);
+                                                var57 = StockmarketListingLifetimeComparator.method412(overlay.hue, overlay.saturation, overlay.lightness);
                                                 var58 = overlay.hue + SceneGraphRenderData.tileHueOffset & 255;
                                                 var59 = overlay.lightness + SceneGraphRenderData.tileLightnessOffset;
                                                 if (var59 < 0) {
@@ -1277,7 +1277,7 @@ public class SceneGraph {
                                                     var59 = 255;
                                                 }
 
-                                                var56 = StockMarketOfferLifetimeComparator.method412(var58, overlay.saturation, var59);
+                                                var56 = StockmarketListingLifetimeComparator.method412(var58, overlay.saturation, var59);
                                             }
 
                                             var58 = 0;
@@ -1294,7 +1294,7 @@ public class SceneGraph {
                                                     var60 = 255;
                                                 }
 
-                                                var56 = StockMarketOfferLifetimeComparator.method412(var59, overlay.secondarySaturation, var60);
+                                                var56 = StockmarketListingLifetimeComparator.method412(var59, overlay.secondarySaturation, var60);
                                                 var58 = JagGraphics3D.COLOR_PALETTE[WorldMapScriptEvent.method187(var56, 96)];
                                             }
 
@@ -1532,7 +1532,7 @@ public class SceneGraph {
                 for (PendingSpawn spawn = client.pendingSpawns.head(); spawn != null; spawn = client.pendingSpawns.next()) {
                     if (spawn.endCycle == -1) {
                         spawn.startCycle = 0;
-                        StockMarketEvent.method388(spawn);
+                        StockmarketEvent.method388(spawn);
                     } else {
                         spawn.unlink();
                     }

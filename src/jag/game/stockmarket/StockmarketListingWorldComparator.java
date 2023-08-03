@@ -9,14 +9,14 @@ import jag.statics.Statics53;
 import java.io.File;
 import java.util.Comparator;
 
-public class StockMarketOfferWorldComparator implements Comparator {
+public class StockmarketListingWorldComparator implements Comparator {
     public static File cachePathFile;
     public static ReferenceTable aReferenceTable350;
     public static InterfaceComponent anInterfaceComponent351;
     public static int anInt347;
     public boolean aBoolean349;
 
-    public StockMarketOfferWorldComparator() {
+    public StockmarketListingWorldComparator() {
 
     }
 
@@ -24,7 +24,7 @@ public class StockMarketOfferWorldComparator implements Comparator {
         return Statics53.CHAT_LINE_TABLE.lookup(var0);
     }
 
-    int method247(StockMarketEvent var1, StockMarketEvent var2) {
+    int method247(StockmarketEvent var1, StockmarketEvent var2) {
         if (var2.world == var1.world) {
             return 0;
         }
@@ -42,7 +42,7 @@ public class StockMarketOfferWorldComparator implements Comparator {
     }
 
     public int compare(Object var1, Object var2) {
-        return this.method247((StockMarketEvent) var1, (StockMarketEvent) var2);
+        return this.method247((StockmarketEvent) var1, (StockmarketEvent) var2);
     }
 
     public boolean equals(Object var1) {

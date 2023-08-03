@@ -85,7 +85,7 @@ public class Login {
         int[] indices = GPI.playerIndices;
 
         for (int i = 0; i < count; ++i) {
-            if (indices[i] != client.varpControlledInt2 && indices[i] != client.playerIndex) {
+            if (indices[i] != client.combatTargetPlayerIndex && indices[i] != client.playerIndex) {
                 GPI.loadPlayerIntoScene(client.players[indices[i]], true);
             }
         }
@@ -121,8 +121,8 @@ public class Login {
                 worldSelectorFlags = IndexedSprite.method474(Archive.sprites, "sl_flags", "");
             }
 
-            if (StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653 == null) {
-                StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653 = IndexedSprite.method474(Archive.sprites, "sl_arrows", "");
+            if (StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653 == null) {
+                StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653 = IndexedSprite.method474(Archive.sprites, "sl_arrows", "");
             }
 
             if (AnimationFrameGroup.aDoublyNode_Sub24_Sub4Array801 == null) {
@@ -148,60 +148,60 @@ public class Login {
                 var1.drawString("Free world", paddingX + 152, 21, 16777215, -1);
             }
 
-            if (StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653 != null) {
+            if (StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653 != null) {
                 var41 = paddingX + 280;
                 if (Server.indexComparator[0] == 0 && Server.populationComparator[0] == 0) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var41, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var41, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var41, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var41, 4);
                 }
 
                 if (Server.indexComparator[0] == 0 && Server.populationComparator[0] == 1) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var41 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var41 + 15, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var41 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var41 + 15, 4);
                 }
 
                 var0.drawString("World", var41 + 32, 17, 16777215, -1);
                 var8 = paddingX + 390;
                 if (Server.indexComparator[0] == 1 && Server.populationComparator[0] == 0) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var8, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var8, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var8, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var8, 4);
                 }
 
                 if (Server.indexComparator[0] == 1 && Server.populationComparator[0] == 1) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var8 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var8 + 15, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var8 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var8 + 15, 4);
                 }
 
                 var0.drawString("Players", var8 + 32, 17, 16777215, -1);
                 var39 = paddingX + 500;
                 if (Server.indexComparator[0] == 2 && Server.populationComparator[0] == 0) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var39, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var39, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var39, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var39, 4);
                 }
 
                 if (Server.indexComparator[0] == 2 && Server.populationComparator[0] == 1) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var39 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var39 + 15, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var39 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var39 + 15, 4);
                 }
 
                 var0.drawString("Location", var39 + 32, 17, 16777215, -1);
                 var36 = paddingX + 610;
                 if (Server.indexComparator[0] == 3 && Server.populationComparator[0] == 0) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var36, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var36, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var36, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var36, 4);
                 }
 
                 if (Server.indexComparator[0] == 3 && Server.populationComparator[0] == 1) {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var36 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var36 + 15, 4);
                 } else {
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var36 + 15, 4);
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var36 + 15, 4);
                 }
 
                 var0.drawString("Type", var36 + 32, 17, 16777215, -1);
@@ -539,8 +539,8 @@ public class Login {
                         var0.method1154(loginResponse3, credentialsBoxX + 180, var41, 16777215, 0);
                         var41 += 15;
                         var16 = "PIN: ";
-                        String var14 = totp;
-                        var22 = var14.length();
+                        String totp = Login.totp;
+                        var22 = totp.length();
                         char[] var46 = new char[var22];
 
                         for (var23 = 0; var23 < var22; ++var23) {
@@ -965,7 +965,7 @@ public class Login {
                     Archive cfg = Archive.config;
                     Archive models = Archive.models;
                     IdentikitDefinition.table = cfg;
-                    StockMarketOfferWorldComparator.aReferenceTable350 = models;
+                    StockmarketListingWorldComparator.aReferenceTable350 = models;
                     PlayerModel.identikitCount = IdentikitDefinition.table.getFileCount(3);
                     boolean lowMemory = client.lowMemory;
                     ObjectDefinition.configTable = cfg;
@@ -978,7 +978,7 @@ public class Login {
                     AnimationSequence.method1202(Archive.config, Archive.skeletons, Archive.skins);
                     Statics52.aReferenceTable500 = cfg;
                     EffectAnimation.table = models;
-                    StockMarketOfferNameComparator.method327(Archive.config);
+                    StockmarketListingNameComparator.method327(Archive.config);
                     VarDefinition.table = Archive.config;
                     VarDefinition.count = VarDefinition.table.getFileCount(16);
                     MouseRecorder.method263(Archive.interfaces, Archive.models, Archive.sprites, Archive.fonts);
@@ -1537,7 +1537,7 @@ public class Login {
                                     }
 
                                     setMessages("", "Connecting to server...", "");
-                                    PlayerAccountType.method918(false);
+                                    PlayerAccountType.updateLoginStep(false);
                                     client.setGameState(20);
                                     return;
                                 }
@@ -1633,7 +1633,7 @@ public class Login {
                                                 }
 
                                                 setMessages("", "Connecting to server...", "");
-                                                PlayerAccountType.method918(false);
+                                                PlayerAccountType.updateLoginStep(false);
                                                 client.setGameState(20);
                                                 return;
                                             }
@@ -1674,7 +1674,7 @@ public class Login {
 
                                         parsedTotp = Integer.parseInt(totp);
                                         totp = "";
-                                        PlayerAccountType.method918(true);
+                                        PlayerAccountType.updateLoginStep(true);
                                         setMessages("", "Connecting to server...", "");
                                         client.setGameState(20);
                                         return;
@@ -1727,7 +1727,7 @@ public class Login {
 
                                                 parsedTotp = Integer.parseInt(totp);
                                                 totp = "";
-                                                PlayerAccountType.method918(true);
+                                                PlayerAccountType.updateLoginStep(true);
                                                 setMessages("", "Connecting to server...", "");
                                                 client.setGameState(20);
                                                 return;
@@ -1742,7 +1742,7 @@ public class Login {
                                     var21 = credentialsBoxX + 180 - 80;
                                     var23 = 321;
                                     if (var6 == 1 && var18 >= var21 - 75 && var18 <= var21 + 75 && var19 >= var23 - 20 && var19 <= var23 + 20) {
-                                        StockMarketOfferLifetimeComparator.method411();
+                                        StockmarketListingLifetimeComparator.method411();
                                         return;
                                     }
 
@@ -1777,7 +1777,7 @@ public class Login {
                                             }
 
                                             if (SecureRandomService.anInt457 == 84) {
-                                                StockMarketOfferLifetimeComparator.method411();
+                                                StockmarketListingLifetimeComparator.method411();
                                                 return;
                                             }
 

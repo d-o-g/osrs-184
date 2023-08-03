@@ -1,7 +1,7 @@
 package jag.graphics;
 
 import jag.audi.DefaultAudioSystemProvider;
-import jag.game.stockmarket.StockMarketOfferNameComparator;
+import jag.game.stockmarket.StockmarketListingNameComparator;
 import jag.game.type.ItemDefinition;
 import jag.js5.ReferenceTable;
 import jag.script.ScriptEvent;
@@ -58,7 +58,7 @@ public final class Canvas extends java.awt.Canvas {
         }
 
         short[] var10 = WorldMapLabelIcon.grandExchangeSearchResults;
-        StockMarketOfferNameComparator.method328(var6, var10, 0, var6.length - 1);
+        StockmarketListingNameComparator.method328(var6, var10, 0, var6.length - 1);
     }
 
     public void update(Graphics g) {

@@ -5,7 +5,7 @@ import jag.commons.collection.ReferenceCache;
 import jag.game.HealthBar;
 import jag.game.Vars;
 import jag.game.relationship.FriendChatUser;
-import jag.game.stockmarket.StockMarketOfferNameComparator;
+import jag.game.stockmarket.StockmarketListingNameComparator;
 import jag.graphics.Font;
 import jag.graphics.Sprite;
 import jag.js5.ReferenceTable;
@@ -171,7 +171,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         if (var2 != null) {
             return var2;
         }
-        var2 = Sprite.get(StockMarketOfferNameComparator.aReferenceTable480, iconId, 0);
+        var2 = Sprite.get(StockmarketListingNameComparator.aReferenceTable480, iconId, 0);
         if (var2 != null) {
             sprites.put(var2, iconId);
         }
@@ -187,7 +187,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         if (var2 != null) {
             return var2;
         }
-        var2 = Sprite.get(StockMarketOfferNameComparator.aReferenceTable480, middleSpriteId, 0);
+        var2 = Sprite.get(StockmarketListingNameComparator.aReferenceTable480, middleSpriteId, 0);
         if (var2 != null) {
             sprites.put(var2, middleSpriteId);
         }
@@ -203,7 +203,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         if (var2 != null) {
             return var2;
         }
-        var2 = Sprite.get(StockMarketOfferNameComparator.aReferenceTable480, leftSpriteId, 0);
+        var2 = Sprite.get(StockmarketListingNameComparator.aReferenceTable480, leftSpriteId, 0);
         if (var2 != null) {
             sprites.put(var2, leftSpriteId);
         }
@@ -219,7 +219,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         if (var2 != null) {
             return var2;
         }
-        var2 = Sprite.get(StockMarketOfferNameComparator.aReferenceTable480, rightSpriteId, 0);
+        var2 = Sprite.get(StockmarketListingNameComparator.aReferenceTable480, rightSpriteId, 0);
         if (var2 != null) {
             sprites.put(var2, rightSpriteId);
         }
@@ -235,7 +235,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         if (font != null) {
             return font;
         }
-        font = FriendChatUser.method708(StockMarketOfferNameComparator.aReferenceTable480, aReferenceTable1515, fontId, 0);
+        font = FriendChatUser.method708(StockmarketListingNameComparator.aReferenceTable480, aReferenceTable1515, fontId, 0);
         if (font != null) {
             fonts.put(font, fontId);
         }

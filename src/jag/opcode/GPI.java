@@ -60,8 +60,8 @@ public class GPI {
     }
 
     public static void loadPlayerIntoScene() {
-        if (client.varpControlledInt2 >= 0 && client.players[client.varpControlledInt2] != null) {
-            loadPlayerIntoScene(client.players[client.varpControlledInt2], false);
+        if (client.combatTargetPlayerIndex >= 0 && client.players[client.combatTargetPlayerIndex] != null) {
+            loadPlayerIntoScene(client.players[client.combatTargetPlayerIndex], false);
         }
 
     }

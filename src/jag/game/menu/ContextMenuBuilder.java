@@ -32,7 +32,7 @@ public class ContextMenuBuilder {
                 ContextMenu.primaryArgs[ContextMenu.rowCount] = primary;
                 ContextMenu.secondaryArgs[ContextMenu.rowCount] = secondary;
                 ContextMenu.tertiaryArgs[ContextMenu.rowCount] = tertiary;
-                ContextMenu.prioritizedActions[ContextMenu.rowCount] = prioritize;
+                ContextMenu.shiftActions[ContextMenu.rowCount] = prioritize;
                 ++ContextMenu.rowCount;
             }
 
@@ -310,7 +310,7 @@ public class ContextMenuBuilder {
                 def = def.transform();
             }
 
-            if (def != null && def.interactable && (!def.follower || client.anInt1053 == index)) {
+            if (def != null && def.interactable && (!def.follower || client.followerIndex == index)) {
                 String menuDefinition = def.name;
                 int var6;
                 int opcode;
@@ -443,8 +443,8 @@ public class ContextMenuBuilder {
                 if (playeruid != -1L) {
                     int sceneX = EntityUID.getObjectSceneX(playeruid);
                     int sceneY = EntityUID.getObjectSceneY(playeruid);
-                    PlayerEntity var12 = client.players[client.varpControlledInt2];
-                    applyPlayerActions(var12, client.varpControlledInt2, sceneX, sceneY);
+                    PlayerEntity var12 = client.players[client.combatTargetPlayerIndex];
+                    applyPlayerActions(var12, client.combatTargetPlayerIndex, sceneX, sceneY);
                 }
 
                 return;
@@ -563,7 +563,7 @@ public class ContextMenuBuilder {
                             }
                         }
 
-                        if (id != client.varpControlledInt2) {
+                        if (id != client.combatTargetPlayerIndex) {
                             applyPlayerActions(player, id, x, y);
                         } else {
                             playeruid = uid;
@@ -628,7 +628,7 @@ public class ContextMenuBuilder {
         ContextMenu.actions[0] = "Cancel";
         ContextMenu.targets[0] = "";
         ContextMenu.opcodes[0] = 1006;
-        ContextMenu.prioritizedActions[0] = false;
+        ContextMenu.shiftActions[0] = false;
         ContextMenu.rowCount = 1;
     }
 }

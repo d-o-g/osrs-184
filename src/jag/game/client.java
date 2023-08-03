@@ -114,7 +114,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static final NodeDeque<Pickable>[][][] pickables = new NodeDeque[4][104][104];
 
     public static final CollisionMap[] collisionMaps = new CollisionMap[4];
-    public static final StockMarketOffer[] stockMarketOffers = new StockMarketOffer[8];
+    public static final StockmarketListing[] stockMarketOffers = new StockmarketListing[8];
     public static final AudioEffect[] audioEffects = new AudioEffect[50];
     public static final Sprite[] minimapFunctions = new Sprite[1000];
     public static final PlayerEntity[] players = new PlayerEntity[2048];
@@ -133,7 +133,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static final OperatingSystemProvider operatingSystemProvider = new DefaultOperatingSystemProvider();
     public static final DefaultRouteStrategy routeStrategy = new DefaultRouteStrategy();
     public static final GameStateEvent gameStateEvent = new GameStateEvent();
-    public static final StockMarketOfferWorldComparator stockMarketComparator = new StockMarketOfferWorldComparator();
+    public static final StockmarketListingWorldComparator stockmarketListingWorldComparator = new StockmarketListingWorldComparator();
 
     public static byte[] random = null;
 
@@ -151,7 +151,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static boolean displayFps = false;
     public static boolean draggingComponent = false;
     public static boolean displayLoadingMessages = true;
-    public static boolean aBoolean1043 = true;
+    public static boolean displayMouseOverText = true;
     public static boolean aBoolean1062 = false;
     public static boolean cameraLocked = false;
     public static boolean aBoolean1042 = false;
@@ -180,7 +180,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int gameState = 0;
     public static int playerIndex = -1;
     public static int viewportRenderX = -1;
-    public static int varpControlledInt1 = 0;
+    public static int openMenuOnLeftClick = 0;
     public static int npcUpdateCount = 0;
     public static int renderedComponentCount = 0;
     public static int anInt1084 = -2;
@@ -206,7 +206,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int currentComponentDragX = 0;
     public static int anInt1066 = 0;
     public static int currentComponentDragY = 0;
-    public static int varpControlledInt2 = -1;
+    public static int combatTargetPlayerIndex = -1;
     public static int anInt1060 = -1;
     public static int anInt1068 = -1;
     public static int anInt1073 = -1;
@@ -228,7 +228,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int draggingComponentX = 0;
     public static int draggingComponentY = 0;
     public static int anInt1018 = 0;
-    public static int anInt1053 = -1;
+    public static int followerIndex = -1;
     public static int mapState = 0;
     public static int anInt1015 = 0;
     public static int draggingComponentSourceIndex = 0;
@@ -238,11 +238,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int stockMarketEventUpdateCycle = 0;
     public static int audioEffectCount = 0;
     public static int energy = 0;
-    public static int anInt898 = -1;
+    public static int currentAudioTrackGroupId = -1;
     public static int weight = 0;
     public static int serverTransferCycles = 0;
     public static int anInt1002 = 0;
-    public static int anInt897 = 127;
+    public static int areaSoundEffectVolume = 127;
     public static int anInt1092 = 0;
     public static int anInt1061 = 0;
     public static int anInt1078 = 0;
@@ -258,12 +258,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     public static int anInt1064 = 0;
     public static int anInt1014 = 0;
     public static int messageIndex = 0;
-    public static int anInt900 = 255;
-    public static int anInt901 = 127;
+    public static int musicVolume = 255;
+    public static int soundEffectVolume = 127;
     public static int publicChatMode = 0;
     public static int displayPlayerNames = 0;
     public static int tradeChatMode = 0;
-    public static int anInt1045 = 0;
+    public static int chatEffects = 0;
     public static int anInt1054 = 0;
     public static int archiveEntryCount = 0;
     public static int anInt895 = 0;
@@ -399,9 +399,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             var8 = 0;
                         }
 
-                        var9 = (var3 - var8) * anInt897 / var3;
+                        var9 = (var3 - var8) * areaSoundEffectVolume / var3;
                     } else {
-                        var9 = anInt901;
+                        var9 = soundEffectVolume;
                     }
 
                     if (var9 > 0) {
@@ -437,8 +437,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
 
             if (!var12) {
-                if (anInt900 != 0 && anInt898 != -1) {
-                    AudioSystem.init(Archive.audioTracks, anInt898, 0, anInt900, false);
+                if (musicVolume != 0 && currentAudioTrackGroupId != -1) {
+                    AudioSystem.init(Archive.audioTracks, currentAudioTrackGroupId, 0, musicVolume, false);
                 }
 
                 aBoolean904 = false;
@@ -566,7 +566,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 loginProcess = 0;
                 gameStateEvent.updateGameState(var0);
                 if (var0 != 20) {
-                    PlayerAccountType.method918(false);
+                    PlayerAccountType.updateLoginStep(false);
                 }
             }
 
@@ -600,7 +600,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     WorldMapAreaChunk_Sub2.aDoublyNode_Sub24_Sub4_288 = null;
                     LoadedArchive.aSpriteArray429 = null;
                     Login.worldSelectorFlags = null;
-                    StockMarketOfferQuantityComparator.aDoublyNode_Sub24_Sub4Array653 = null;
+                    StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653 = null;
                     AnimationFrameGroup.aDoublyNode_Sub24_Sub4Array801 = null;
                     Login.slbutton = null;
                     AsyncOutputStream.loginScreenEffect.destroy();
@@ -668,7 +668,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public static void method884(int var0, int var1, int var2) {
-        if (anInt901 != 0 && var1 != 0 && audioEffectCount < 50) {
+        if (soundEffectVolume != 0 && var1 != 0 && audioEffectCount < 50) {
             audioEffectIds[audioEffectCount] = var0;
             audioEffectLoops[audioEffectCount] = var1;
             audioEffectDelays[audioEffectCount] = var2;
@@ -680,7 +680,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     public static void method181(AnimationSequence var0, int var1, int var2, int var3) {
-        if (audioEffectCount < 50 && anInt897 != 0) {
+        if (audioEffectCount < 50 && areaSoundEffectVolume != 0) {
             if (var0.anIntArray691 != null && var1 < var0.anIntArray691.length) {
                 int var4 = var0.anIntArray691[var1];
                 if (var4 != 0) {
@@ -716,7 +716,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         EffectAnimation.clear();
         Varbit.cache.clear();
         AudioOverride.clear();
-        StockMarketEvent.clear();
+        StockmarketEvent.clear();
         HealthBarDefinition.cache.clear();
         HealthBarDefinition.sprites.clear();
         StructDefinition.cache.clear();
@@ -777,7 +777,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public static void method865() {
         anInt1061 = anInt1075;
-        StockMarketOfferLifetimeComparator.inFriendsChat = true;
+        StockmarketListingLifetimeComparator.inFriendsChat = true;
     }
 
     public static void drawLoadingMessage(String var0, boolean var1) {
@@ -989,7 +989,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     public boolean isOpenMenuOnLeftClick() {
         int last = ContextMenu.getLastRowIndex();
-        return (varpControlledInt1 == 1 && ContextMenu.rowCount > 2 || ContextMenu.isComponentAction2(last)) && !ContextMenu.prioritizedActions[last];
+        return (openMenuOnLeftClick == 1 && ContextMenu.rowCount > 2 || ContextMenu.isComponentAction2(last)) && !ContextMenu.shiftActions[last];
     }
 
     protected void onExit() {
@@ -1019,7 +1019,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
             for (ZoneProt zoneProt : ZoneProt.values()) {
                 if (stream.currentIncomingPacket == zoneProt.getServerProt()) {
-                    return serverProtHandler.processZoneProt(incoming, ZoneProt.MAP_PROJANIM);
+                    return serverProtHandler.processZoneProt(incoming, zoneProt);
                 }
             }
 
@@ -2262,7 +2262,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             if (anInt1039 != -1) {
                 int var1 = anInt1039;
                 int var2 = anInt1038;
-                if ((ContextMenu.rowCount >= 2 || ItemSelection.state != 0 || ComponentSelection.state) && aBoolean1043) {
+                if ((ContextMenu.rowCount >= 2 || ItemSelection.state != 0 || ComponentSelection.state) && displayMouseOverText) {
                     int var3 = ContextMenu.getLastRowIndex();
                     String var4;
                     if (ItemSelection.state == 1 && ContextMenu.rowCount < 2) {
@@ -2505,13 +2505,13 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         worldMap.method1272();
                     }
 
-                    if (StockMarketOfferLifetimeComparator.inFriendsChat) {
+                    if (StockmarketListingLifetimeComparator.inFriendsChat) {
                         if (friendChat != null) {
                             friendChat.sort();
                         }
 
                         GPI.method488();
-                        StockMarketOfferLifetimeComparator.inFriendsChat = false;
+                        StockmarketListingLifetimeComparator.inFriendsChat = false;
                     }
 
                     Statics44.updateMinimapFloorLevel();
@@ -2560,11 +2560,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
                     }
 
-                    if (StockMarketOfferWorldComparator.anInterfaceComponent351 != null) {
+                    if (StockmarketListingWorldComparator.anInterfaceComponent351 != null) {
                         ++anInt1018;
                         if (anInt1018 >= 15) {
-                            InterfaceComponent.invalidate(StockMarketOfferWorldComparator.anInterfaceComponent351);
-                            StockMarketOfferWorldComparator.anInterfaceComponent351 = null;
+                            InterfaceComponent.invalidate(StockmarketListingWorldComparator.anInterfaceComponent351);
+                            StockmarketListingWorldComparator.anInterfaceComponent351 = null;
                         }
                     }
 
@@ -3213,7 +3213,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 packet.buffer.p4(Archive.mapscene.hash);
                 packet.buffer.p4(Archive.worldmap.hash);
                 packet.buffer.p4(Archive.mapland.hash);
-                packet.buffer.tinyKeyEncrypt2(seed, offset, packet.buffer.pos);
+                packet.buffer.tinyenclogin(seed, offset, packet.buffer.pos);
                 packet.buffer.pSize2(packet.buffer.pos - var8);
                 stream.writeLater(packet);
                 stream.flush();
@@ -3386,7 +3386,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             npcs[var29] = null;
                         }
 
-                        varpControlledInt2 = -1;
+                        combatTargetPlayerIndex = -1;
                         projectiles.clear();
                         effectObjects.clear();
 
@@ -3410,7 +3410,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
 
                         varcs.clear();
-                        anInt1053 = -1;
+                        followerIndex = -1;
                         if (rootInterfaceIndex != -1) {
                             InterfaceComponent.method830(rootInterfaceIndex);
                         }
@@ -3441,10 +3441,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         friendChat = null;
 
                         for (var29 = 0; var29 < 8; ++var29) {
-                            stockMarketOffers[var29] = new StockMarketOffer();
+                            stockMarketOffers[var29] = new StockmarketListing();
                         }
 
-                        StockMarketOffer.mediator = null;
+                        StockmarketListing.manager = null;
                         PlayerEntity.update(input);
                         ServerProt.chunkX = -1;
                         PlayerAccountType.onSceneXTEAKeyChange(false, input);
@@ -3590,9 +3590,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     var5 = ContextMenu.primaryArgs[var2];
                     ContextMenu.primaryArgs[var2] = ContextMenu.primaryArgs[var2 + 1];
                     ContextMenu.primaryArgs[var2 + 1] = var5;
-                    boolean var6 = ContextMenu.prioritizedActions[var2];
-                    ContextMenu.prioritizedActions[var2] = ContextMenu.prioritizedActions[var2 + 1];
-                    ContextMenu.prioritizedActions[var2 + 1] = var6;
+                    boolean var6 = ContextMenu.shiftActions[var2];
+                    ContextMenu.shiftActions[var2] = ContextMenu.shiftActions[var2 + 1];
+                    ContextMenu.shiftActions[var2 + 1] = var6;
                     var1 = false;
                 }
             }
@@ -3852,7 +3852,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     }
                 }
 
-                StockMarketOfferPriceComparator.method330();
+                StockmarketListingPriceComparator.method330();
                 LoginStep.currentDomain = this.getCodeBase().getHost();
                 String var4 = devbuild.name;
                 byte var5 = 0;
@@ -3903,12 +3903,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                     File var10;
                     label176:
                     for (int var6 = 0; var6 < 4; ++var6) {
-                        StockMarketOfferWorldComparator.cachePathFile = Statics5.method60("oldschool", var4, var6);
-                        if (!StockMarketOfferWorldComparator.cachePathFile.exists()) {
-                            StockMarketOfferWorldComparator.cachePathFile.mkdirs();
+                        StockmarketListingWorldComparator.cachePathFile = Statics5.method60("oldschool", var4, var6);
+                        if (!StockmarketListingWorldComparator.cachePathFile.exists()) {
+                            StockmarketListingWorldComparator.cachePathFile.mkdirs();
                         }
 
-                        File[] var7 = StockMarketOfferWorldComparator.cachePathFile.listFiles();
+                        File[] var7 = StockmarketListingWorldComparator.cachePathFile.listFiles();
                         if (var7 == null) {
                             break;
                         }
@@ -3943,7 +3943,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                         }
                     }
 
-                    BufferedFile.cachePathFile = StockMarketOfferWorldComparator.cachePathFile;
+                    BufferedFile.cachePathFile = StockmarketListingWorldComparator.cachePathFile;
                     if (!BufferedFile.cachePathFile.exists()) {
                         throw new RuntimeException("");
                     }

@@ -46,7 +46,7 @@ public class WorldMapAreaChunk_Sub3 implements WorldMapAreaChunk {
         }
 
         if (var0.equalsIgnoreCase("mouseovertext")) {
-            client.aBoolean1043 = !client.aBoolean1043;
+            client.displayMouseOverText = !client.displayMouseOverText;
         }
 
         if (client.rights >= 2) {

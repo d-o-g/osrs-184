@@ -68,7 +68,7 @@ public class DynamicObject extends Entity {
         AudioSystem.volume = 0;
         AudioSystem.aBoolean620 = false;
         AudioSystem.pcmSampleLength = 2;
-        client.anInt898 = -1;
+        client.currentAudioTrackGroupId = -1;
         client.aBoolean904 = false;
         ClientProt.method4();
         client.setGameState(10);

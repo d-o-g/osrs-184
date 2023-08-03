@@ -2,7 +2,7 @@ package jag.game.scene.entity;
 
 import jag.commons.collection.Node;
 import jag.game.client;
-import jag.game.stockmarket.StockMarketEvent;
+import jag.game.stockmarket.StockmarketEvent;
 import jag.graphics.Sprite;
 
 public final class PendingSpawn extends Node {
@@ -43,7 +43,7 @@ public final class PendingSpawn extends Node {
             var10.type = stubType;
             var10.sceneX = sceneX;
             var10.sceneY = sceneY;
-            StockMarketEvent.method388(var10);
+            StockmarketEvent.method388(var10);
             client.pendingSpawns.add(var10);
         }
 

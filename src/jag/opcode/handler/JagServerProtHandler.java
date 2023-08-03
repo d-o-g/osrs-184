@@ -177,13 +177,13 @@ public class JagServerProtHandler extends ServerProtHandler {
         client.cameraLocked = true;
         SceneGraph.anInt1235 = incoming.g1() * 128;
         Clock.anInt889 = incoming.g1() * 128;
-        StockMarketOfferWorldComparator.anInt347 = incoming.g2();
+        StockmarketListingWorldComparator.anInt347 = incoming.g2();
         MouseRecorder.anInt388 = incoming.g1();
         Statics53.anInt520 = incoming.g1();
         if (Statics53.anInt520 >= 100) {
             Camera.x = SceneGraph.anInt1235 * 16384 + 64;
             Camera.y = Clock.anInt889 * 16384 + 64;
-            Camera.z = SceneGraph.getTileHeight(Camera.x, Camera.y, SceneGraph.floorLevel) - StockMarketOfferWorldComparator.anInt347;
+            Camera.z = SceneGraph.getTileHeight(Camera.x, Camera.y, SceneGraph.floorLevel) - StockmarketListingWorldComparator.anInt347;
         }
 
         stream.currentIncomingPacket = null;
@@ -209,11 +209,11 @@ public class JagServerProtHandler extends ServerProtHandler {
     public boolean processStockMarketUpdate(BitBuffer incoming) {
         int var6 = incoming.g1();
         if (incoming.g1() == 0) {
-            client.stockMarketOffers[var6] = new StockMarketOffer();
+            client.stockMarketOffers[var6] = new StockmarketListing();
             incoming.pos += 18;
         } else {
             --incoming.pos;
-            client.stockMarketOffers[var6] = new StockMarketOffer(incoming);
+            client.stockMarketOffers[var6] = new StockmarketListing(incoming);
         }
 
         client.anInt1071 = client.anInt1075;
@@ -262,10 +262,10 @@ public class JagServerProtHandler extends ServerProtHandler {
     public boolean processStockMarketEvents(BitBuffer incoming) {
         boolean var42 = incoming.g1() == 1;
         if (var42) {
-            StockMarketOffer.ageAdjustment = Clock.now() - incoming.g8();
-            StockMarketOffer.mediator = new StockMarketMediator(incoming);
+            StockmarketListing.ageAdjustment = Clock.now() - incoming.g8();
+            StockmarketListing.manager = new StockmarketManager(incoming);
         } else {
-            StockMarketOffer.mediator = null;
+            StockmarketListing.manager = null;
         }
 
         client.stockMarketEventUpdateCycle = client.anInt1075;

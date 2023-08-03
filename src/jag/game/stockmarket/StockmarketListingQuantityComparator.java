@@ -7,7 +7,7 @@ import jag.graphics.JagGraphics3D;
 
 import java.util.Comparator;
 
-public final class StockMarketOfferQuantityComparator implements Comparator<StockMarketEvent> {
+public final class StockmarketListingQuantityComparator implements Comparator<StockmarketEvent> {
 
     public static IndexedSprite[] aDoublyNode_Sub24_Sub4Array653;
 
@@ -50,11 +50,11 @@ public final class StockMarketOfferQuantityComparator implements Comparator<Stoc
         return 10000;
     }
 
-    int method478(StockMarketEvent var1, StockMarketEvent var2) {
-        return Integer.compare(var1.aStockMarketOffer551.itemQuantity, var2.aStockMarketOffer551.itemQuantity);
+    int method478(StockmarketEvent var1, StockmarketEvent var2) {
+        return Integer.compare(var1.aStockmarketListing551.quantity, var2.aStockmarketListing551.quantity);
     }
 
-    public int compare(StockMarketEvent var1, StockMarketEvent var2) {
+    public int compare(StockmarketEvent var1, StockmarketEvent var2) {
         return this.method478(var1, var2);
     }
 

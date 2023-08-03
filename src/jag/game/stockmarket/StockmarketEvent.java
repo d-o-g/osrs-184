@@ -6,9 +6,9 @@ import jag.game.scene.entity.PendingSpawn;
 import jag.game.type.HitsplatDefinition;
 import jag.opcode.Buffer;
 
-public class StockMarketEvent {
+public class StockmarketEvent {
 
-    public final StockMarketOffer aStockMarketOffer551;
+    public final StockmarketListing aStockmarketListing551;
 
     public final long age;
 
@@ -17,21 +17,21 @@ public class StockMarketEvent {
     final String aString549;
     final String aString550;
 
-    StockMarketEvent(Buffer var1, byte var2, int var3) {
+    StockmarketEvent(Buffer var1, byte var2, int var3) {
         this.aString550 = var1.gstr();
         this.aString549 = var1.gstr();
         this.world = var1.g2();
         this.age = var1.g8();
         int var4 = var1.g4();
         int var5 = var1.g4();
-        this.aStockMarketOffer551 = new StockMarketOffer();
-        this.aStockMarketOffer551.method228();
-        this.aStockMarketOffer551.method227(var2);
-        this.aStockMarketOffer551.itemPrice = var4;
-        this.aStockMarketOffer551.itemQuantity = var5;
-        this.aStockMarketOffer551.transferred = 0;
-        this.aStockMarketOffer551.spent = 0;
-        this.aStockMarketOffer551.itemId = var3;
+        this.aStockmarketListing551 = new StockmarketListing();
+        this.aStockmarketListing551.setInitialState();
+        this.aStockmarketListing551.setType(var2);
+        this.aStockmarketListing551.unitPrice = var4;
+        this.aStockmarketListing551.quantity = var5;
+        this.aStockmarketListing551.transferred = 0;
+        this.aStockmarketListing551.spent = 0;
+        this.aStockmarketListing551.itemId = var3;
     }
 
     public static void method388(PendingSpawn var0) {

@@ -492,7 +492,7 @@ public class Buffer extends Node {
         return payload[pos] < 0 ? g4() & Integer.MAX_VALUE : g2();
     }
 
-    public void tinyKeyEncrypt(int[] keys, int start, int end) {
+    public void tinyenclogin(int[] keys, int start, int end) {
         int src = pos;
         pos = start;
         int dst = (end - start) / 8;
@@ -500,8 +500,32 @@ public class Buffer extends Node {
         for (int i = 0; i < dst; ++i) {
             int l = g4();
             int r = g4();
-            int var9 = 0xc6ef3720;
-            int var10 = 0x9e3779b9;
+            int var9 = 0;
+            int var10 = -1640531527;
+
+            for (int var11 = 32; var11-- > 0; r += l + (l << 4 ^ l >>> 5) ^ keys[var9 >>> 11 & 3] + var9) {
+                l += r + (r << 4 ^ r >>> 5) ^ var9 + keys[var9 & 3];
+                var9 += var10;
+            }
+
+            pos -= 8;
+            p4(l);
+            p4(r);
+        }
+
+        pos = src;
+    }
+
+    public void tinyenc(int[] keys, int start, int end) {
+        int src = pos;
+        pos = start;
+        int dst = (end - start) / 8;
+
+        for (int i = 0; i < dst; ++i) {
+            int l = g4();
+            int r = g4();
+            int var9 = -957401312;
+            int var10 = -1640531527;
 
             for (int var11 = 32; var11-- > 0; l -= r + (r << 4 ^ r >>> 5) ^ var9 + keys[var9 & 3]) {
                 r -= l + (l << 4 ^ l >>> 5) ^ keys[var9 >>> 11 & 3] + var9;
@@ -737,7 +761,7 @@ public class Buffer extends Node {
                 + ((payload[pos++] & 0xff) << 16);
     }
 
-    public void tinyKeyEncrypt(int[] keys) {
+    public void tinyenc(int[] keys) {
         int var2 = pos / 8;
         pos = 0;
 
@@ -759,31 +783,7 @@ public class Buffer extends Node {
 
     }
 
-    public void tinyKeyEncrypt2(int[] var1, int var2, int var3) {
-        int var4 = pos;
-        pos = var2;
-        int var5 = (var3 - var2) / 8;
-
-        for (int var6 = 0; var6 < var5; ++var6) {
-            int var7 = g4();
-            int var8 = g4();
-            int var9 = 0;
-            int var10 = -1640531527;
-
-            for (int var11 = 32; var11-- > 0; var8 += var7 + (var7 << 4 ^ var7 >>> 5) ^ var1[var9 >>> 11 & 3] + var9) {
-                var7 += var8 + (var8 << 4 ^ var8 >>> 5) ^ var9 + var1[var9 & 3];
-                var9 += var10;
-            }
-
-            pos -= 8;
-            p4(var7);
-            p4(var8);
-        }
-
-        pos = var4;
-    }
-
-    public void tinyKeyDecrypt(int[] var1) {
+    public void tinydec(int[] var1) {
         int var2 = pos / 8;
         pos = 0;
 

@@ -226,7 +226,7 @@ public class ZoneProt {
                         && PlayerEntity.local.pathXQueue[0] <= range + x
                         && PlayerEntity.local.pathYQueue[0] >= y - range
                         && PlayerEntity.local.pathYQueue[0] <= range + y
-                        && client.anInt897 != 0
+                        && client.areaSoundEffectVolume != 0
                         && loop > 0
                         && client.audioEffectCount < 50) {
                     client.audioEffectIds[client.audioEffectCount] = id;

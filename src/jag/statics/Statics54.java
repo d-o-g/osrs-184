@@ -2,7 +2,7 @@ package jag.statics;
 
 import jag.game.scene.CollisionMap;
 import jag.game.scene.SceneGraph;
-import jag.game.stockmarket.StockMarketOfferLifetimeComparator;
+import jag.game.stockmarket.StockmarketListingLifetimeComparator;
 import jag.game.type.ObjectDefinition;
 import jag.opcode.Buffer;
 
@@ -100,7 +100,7 @@ public class Statics54 {
                             var39 = var9[var38];
                         }
 
-                        StockMarketOfferLifetimeComparator.method414(var1, var28, var36, var11, var20 + var7 & 3, var19, var8, var39);
+                        StockmarketListingLifetimeComparator.method414(var1, var28, var36, var11, var20 + var7 & 3, var19, var8, var39);
                     }
                 }
             }

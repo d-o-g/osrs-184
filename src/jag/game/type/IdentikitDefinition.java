@@ -4,7 +4,7 @@ import jag.commons.collection.DoublyLinkedNode;
 import jag.commons.collection.ReferenceCache;
 import jag.game.InterfaceComponent;
 import jag.game.scene.entity.UnlitModel;
-import jag.game.stockmarket.StockMarketOfferWorldComparator;
+import jag.game.stockmarket.StockmarketListingWorldComparator;
 import jag.js5.ReferenceTable;
 import jag.opcode.Buffer;
 
@@ -91,7 +91,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
         boolean var1 = true;
 
         for (int var2 = 0; var2 < 5; ++var2) {
-            if (models[var2] != -1 && !StockMarketOfferWorldComparator.aReferenceTable350.load(models[var2], 0)) {
+            if (models[var2] != -1 && !StockmarketListingWorldComparator.aReferenceTable350.load(models[var2], 0)) {
                 var1 = false;
             }
         }
@@ -105,7 +105,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
 
         for (int var3 = 0; var3 < 5; ++var3) {
             if (models[var3] != -1) {
-                var1[var2++] = UnlitModel.method982(StockMarketOfferWorldComparator.aReferenceTable350, models[var3], 0);
+                var1[var2++] = UnlitModel.method982(StockmarketListingWorldComparator.aReferenceTable350, models[var3], 0);
             }
         }
 
@@ -133,7 +133,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
 
         boolean present = true;
         for (int i : anIntArray747) {
-            if (!StockMarketOfferWorldComparator.aReferenceTable350.load(i, 0)) {
+            if (!StockmarketListingWorldComparator.aReferenceTable350.load(i, 0)) {
                 present = false;
             }
         }
@@ -159,7 +159,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
         UnlitModel[] var1 = new UnlitModel[anIntArray747.length];
 
         for (int var2 = 0; var2 < anIntArray747.length; ++var2) {
-            var1[var2] = UnlitModel.method982(StockMarketOfferWorldComparator.aReferenceTable350, anIntArray747[var2], 0);
+            var1[var2] = UnlitModel.method982(StockmarketListingWorldComparator.aReferenceTable350, anIntArray747[var2], 0);
         }
 
         UnlitModel var3;

@@ -143,8 +143,8 @@ public class ClientProt implements OutgoingPacketProtocol {
     }
 
     public static void method5(int var0) {
-        if (client.anInt900 != 0 && var0 != -1) {
-            AudioSystem.init(Archive.audioTracks2, var0, 0, client.anInt900, false);
+        if (client.musicVolume != 0 && var0 != -1) {
+            AudioSystem.init(Archive.audioTracks2, var0, 0, client.musicVolume, false);
             client.aBoolean904 = true;
         }
 

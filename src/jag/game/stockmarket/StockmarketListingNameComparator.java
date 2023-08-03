@@ -5,7 +5,7 @@ import jag.js5.ReferenceTable;
 
 import java.util.Comparator;
 
-public final class StockMarketOfferNameComparator implements Comparator<StockMarketEvent> {
+public final class StockmarketListingNameComparator implements Comparator<StockmarketEvent> {
 
     public static ReferenceTable aReferenceTable480;
 
@@ -45,11 +45,11 @@ public final class StockMarketOfferNameComparator implements Comparator<StockMar
 
     }
 
-    int method326(StockMarketEvent var1, StockMarketEvent var2) {
+    int method326(StockmarketEvent var1, StockmarketEvent var2) {
         return var1.method390().compareTo(var2.method390());
     }
 
-    public int compare(StockMarketEvent var1, StockMarketEvent var2) {
+    public int compare(StockmarketEvent var1, StockmarketEvent var2) {
         return this.method326(var1, var2);
     }
 

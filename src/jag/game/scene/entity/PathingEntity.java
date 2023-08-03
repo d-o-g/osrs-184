@@ -1097,7 +1097,7 @@ public abstract class PathingEntity extends Entity {
             PathingEntity entity;
             if (i < playerCount) {
                 entity = client.players[indices[i]];
-                if (indices[i] == client.varpControlledInt2) {
+                if (indices[i] == client.combatTargetPlayerIndex) {
                     varp = true;
                     var5 = i;
                     continue;
@@ -1119,7 +1119,7 @@ public abstract class PathingEntity extends Entity {
         }
 
         if (varp) {
-            renderOverhead(client.players[client.varpControlledInt2], var5, viewportX, viewportY, viewportWidth, viewportHeight);
+            renderOverhead(client.players[client.combatTargetPlayerIndex], var5, viewportX, viewportY, viewportWidth, viewportHeight);
         }
 
         for (int i = 0; i < client.overheadMessageCount; ++i) {
@@ -1143,7 +1143,7 @@ public abstract class PathingEntity extends Entity {
             client.viewportRenderX = client.overheadMessageXPositions[i];
             client.viewportRenderY = client.overheadMessageYPositions[i] = y;
             String var17 = client.overheadMessages[i];
-            if (client.anInt1045 == 0) {
+            if (client.chatEffects == 0) {
                 int var18 = 16776960;
                 if (client.overheadMessageColors[i] < 6) {
                     var18 = client.anIntArray1094[client.overheadMessageColors[i]];

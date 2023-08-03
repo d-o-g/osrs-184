@@ -1,7 +1,7 @@
 package jag.game.option;
 
 import jag.game.client;
-import jag.game.stockmarket.StockMarketOfferWorldComparator;
+import jag.game.stockmarket.StockmarketListingWorldComparator;
 import jag.js5.DiskFile;
 import jag.opcode.AsyncConnection;
 import jag.opcode.Buffer;
@@ -73,7 +73,7 @@ public class ClientPreferences {
     }
 
     public static DiskFile getFile(String var0, String var1, boolean var2) {
-        File var3 = new File(StockMarketOfferWorldComparator.cachePathFile, "preferences" + var0 + ".dat");
+        File var3 = new File(StockmarketListingWorldComparator.cachePathFile, "preferences" + var0 + ".dat");
         if (var3.exists()) {
             try {
                 return new DiskFile(var3, "rw", 10000L);

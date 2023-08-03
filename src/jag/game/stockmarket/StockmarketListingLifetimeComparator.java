@@ -30,7 +30,7 @@ import java.net.URLConnection;
 import java.util.Comparator;
 import java.util.Random;
 
-public final class StockMarketOfferLifetimeComparator implements Comparator<StockMarketEvent> {
+public final class StockmarketListingLifetimeComparator implements Comparator<StockmarketEvent> {
     public static boolean inFriendsChat;
     public static InterfaceComponent anInterfaceComponent585;
 
@@ -140,7 +140,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                 Buffer var49 = new Buffer(var16);
                 var49.pcstr(var47);
                 var49.pos = var16;
-                var49.tinyKeyEncrypt(var15);
+                var49.tinyenc(var15);
                 Buffer var19 = new Buffer(var49.pos + var13.pos + var14.pos + 5);
                 var19.p1(2);
                 var19.p1(var13.pos);
@@ -243,7 +243,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
                             } else if (var53.startsWith("Not permitted for social network accounts.")) {
                                 var43 = 6;
                             } else {
-                                var19.tinyKeyDecrypt(var15);
+                                var19.tinydec(var15);
 
                                 while (var19.pos > 0 && var19.payload[var19.pos - 1] == 0) {
                                     --var19.pos;
@@ -700,7 +700,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
         return (var1 / 32 << 7) + (var0 / 4 << 10) + var2 / 2;
     }
 
-    int method413(StockMarketEvent var1, StockMarketEvent var2) {
+    int method413(StockmarketEvent var1, StockmarketEvent var2) {
         return Long.compare(var1.age, var2.age);
     }
 
@@ -708,7 +708,7 @@ public final class StockMarketOfferLifetimeComparator implements Comparator<Stoc
         return super.equals(var1);
     }
 
-    public int compare(StockMarketEvent var1, StockMarketEvent var2) {
+    public int compare(StockmarketEvent var1, StockmarketEvent var2) {
         return this.method413(var1, var2);
     }
 }

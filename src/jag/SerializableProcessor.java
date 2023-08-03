@@ -79,13 +79,13 @@ public class SerializableProcessor implements EnumType {
                     var5 += sound.anInt112 * 128 - var2;
                 }
 
-                if (var5 - 64 <= sound.anInt372 && client.anInt897 != 0 && var0 == sound.anInt378) {
+                if (var5 - 64 <= sound.anInt372 && client.areaSoundEffectVolume != 0 && var0 == sound.anInt378) {
                     var5 -= 64;
                     if (var5 < 0) {
                         var5 = 0;
                     }
 
-                    int var6 = (sound.anInt372 - var5) * client.anInt897 / sound.anInt372;
+                    int var6 = (sound.anInt372 - var5) * client.areaSoundEffectVolume / sound.anInt372;
                     if (sound.aClass5_Sub6_Sub2_370 == null) {
                         if (sound.ambientSoundId >= 0) {
                             AudioEffect var7 = AudioEffect.load(Archive.audioEffects, sound.ambientSoundId, 0);

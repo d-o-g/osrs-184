@@ -34,8 +34,8 @@ public enum PlayerAccountType implements EnumType {
         this.notJagex = notJagex;
     }
 
-    public static void method918(boolean var0) {
-        if (var0) {
+    public static void updateLoginStep(boolean authenticator) {
+        if (authenticator) {
             client.loginStep = Login.aBoolean462 ? LoginStep.anEnum_Sub3_828 : LoginStep.anEnum_Sub3_825;
         } else {
             client.loginStep = client.preferences.properties.containsKey(Djb2.hash(Login.username)) ? LoginStep.anEnum_Sub3_827 : LoginStep.anEnum_Sub3_826;

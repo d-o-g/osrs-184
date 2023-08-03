@@ -11,7 +11,7 @@ import jag.game.InterfaceComponent;
 import jag.game.SubInterface;
 import jag.game.client;
 import jag.game.menu.ContextMenuBuilder;
-import jag.game.stockmarket.StockMarketOfferQuantityComparator;
+import jag.game.stockmarket.StockmarketListingQuantityComparator;
 import jag.game.type.AnimationFrameGroup;
 import jag.opcode.AsyncOutputStream;
 import jag.opcode.OldConnection;
@@ -270,7 +270,7 @@ public class Node_Sub19 extends Node {
                                 client.worldMap.method1278(var18, var20, var34 & var35, var34 & var23);
                             }
 
-                            if (client.draggedComponent != null && c != client.draggedComponent && var34 && StockMarketOfferQuantityComparator.method477(InterfaceComponent.getConfig(c))) {
+                            if (client.draggedComponent != null && c != client.draggedComponent && var34 && StockmarketListingQuantityComparator.method477(InterfaceComponent.getConfig(c))) {
                                 client.draggedSpecialComponent = c;
                             }
 

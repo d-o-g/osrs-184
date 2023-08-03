@@ -12,8 +12,7 @@ import jag.game.relationship.FriendChatUser;
 import jag.game.scene.SceneGraph;
 import jag.game.scene.SceneOccluder;
 import jag.game.scene.entity.*;
-import jag.game.stockmarket.StockMarketOffer;
-import jag.game.stockmarket.StockMarketOfferWorldComparator;
+import jag.game.stockmarket.StockmarketListingWorldComparator;
 import jag.game.type.*;
 import jag.graphics.*;
 import jag.js5.ReferenceTable;
@@ -37,8 +36,9 @@ public class InterfaceComponent extends Node {
     public static boolean forceRepaint = false;
 
     public static int anInt1342;
+  public static InterfaceComponent[] draggingInterface;
 
-    public InterfaceComponent[] subcomponents;
+  public InterfaceComponent[] subcomponents;
 
     public Object[] cs2Listeners;
     public Object[] anObjectArray1400;
@@ -361,11 +361,11 @@ public class InterfaceComponent extends Node {
             int parentX, int parentY,
             int boundsIndex) {
         if (load(group)) {
-            StockMarketOffer.draggingInterface = null;
+            draggingInterface = null;
             renderComponents(client.interfaces[group], -1, minX, minY, maxX, maxY, parentX, parentY, boundsIndex);
-            if (StockMarketOffer.draggingInterface != null) {
-                renderComponents(StockMarketOffer.draggingInterface, -1412584499, minX, minY, maxX, maxY, anInt1342, SceneOccluder.anInt1913, boundsIndex);
-                StockMarketOffer.draggingInterface = null;
+            if (draggingInterface != null) {
+                renderComponents(draggingInterface, -1412584499, minX, minY, maxX, maxY, anInt1342, SceneOccluder.anInt1913, boundsIndex);
+                draggingInterface = null;
             }
 
         } else {
@@ -415,7 +415,7 @@ public class InterfaceComponent extends Node {
                     int var16;
                     if (component == client.draggedComponent) {
                         if (uid != 0xabcdabcd && !component.scrollBar) {
-                            StockMarketOffer.draggingInterface = components;
+                            draggingInterface = components;
                             anInt1342 = rootX;
                             SceneOccluder.anInt1913 = rootY;
                             continue;
@@ -668,7 +668,7 @@ public class InterfaceComponent extends Node {
                                                                     invalidate(var29);
                                                                 }
                                                             }
-                                                        } else if (component == StockMarketOfferWorldComparator.anInterfaceComponent351 && var19 == client.anInt1015) {
+                                                        } else if (component == StockmarketListingWorldComparator.anInterfaceComponent351 && var19 == client.anInt1015) {
                                                             var28.method832(var22, var23, 128);
                                                         } else {
                                                             var28.renderAlphaAt(var22, var23);

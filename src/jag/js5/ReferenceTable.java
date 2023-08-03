@@ -1,7 +1,7 @@
 package jag.js5;
 
 import jag.ByteBufferProvider;
-import jag.game.stockmarket.StockMarketOfferPriceComparator;
+import jag.game.stockmarket.StockmarketListingPriceComparator;
 import jag.graphics.BaseFont;
 import jag.opcode.Buffer;
 import jag.worldmap.WorldMapTileDecor_Sub2;
@@ -104,7 +104,7 @@ public abstract class ReferenceTable {
                 }
             }
 
-            byte[] var6 = StockMarketOfferPriceComparator.method333(childrenSizes[group][file], false);
+            byte[] var6 = StockmarketListingPriceComparator.method333(childrenSizes[group][file], false);
             if (shallow) {
                 childrenSizes[group][file] = null;
             }
@@ -145,7 +145,7 @@ public abstract class ReferenceTable {
                 }
             }
 
-            return StockMarketOfferPriceComparator.method333(childrenSizes[group][file], false);
+            return StockmarketListingPriceComparator.method333(childrenSizes[group][file], false);
         }
         return null;
     }
@@ -387,11 +387,11 @@ public abstract class ReferenceTable {
 
         byte[] data;
         if (xtea != null && (xtea[0] != 0 || xtea[1] != 0 || xtea[2] != 0 || xtea[3] != 0)) {
-            data = StockMarketOfferPriceComparator.method333(groups[group], true);
+            data = StockmarketListingPriceComparator.method333(groups[group], true);
             Buffer buffer = new Buffer(data);
-            buffer.tinyKeyEncrypt(xtea, 5, buffer.payload.length);
+            buffer.tinyenc(xtea, 5, buffer.payload.length);
         } else {
-            data = StockMarketOfferPriceComparator.method333(groups[group], false);
+            data = StockmarketListingPriceComparator.method333(groups[group], false);
         }
 
         byte[] var20 = decodeContainer(data);

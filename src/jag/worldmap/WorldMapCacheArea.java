@@ -1,7 +1,7 @@
 package jag.worldmap;
 
 import jag.EnumType;
-import jag.game.stockmarket.StockMarketOfferNameComparator;
+import jag.game.stockmarket.StockmarketListingNameComparator;
 import jag.game.type.HitsplatDefinition;
 import jag.js5.*;
 import jag.opcode.Buffer;
@@ -57,7 +57,7 @@ public class WorldMapCacheArea {
 
     public static void method88(ReferenceTable var0, ReferenceTable var1, ReferenceTable var2) {
         HitsplatDefinition.table = var0;
-        StockMarketOfferNameComparator.aReferenceTable480 = var1;
+        StockmarketListingNameComparator.aReferenceTable480 = var1;
         HitsplatDefinition.aReferenceTable1515 = var2;
     }
 

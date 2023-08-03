@@ -31,9 +31,9 @@ public class AudioOverrideEffect {
     public static void method795(int var0) {
         if (var0 == -1 && !client.aBoolean904) {
             Statics57.method533();
-        } else if (var0 != -1 && var0 != client.anInt898 && client.anInt900 != 0 && !client.aBoolean904) {
+        } else if (var0 != -1 && var0 != client.currentAudioTrackGroupId && client.musicVolume != 0 && !client.aBoolean904) {
             Archive var1 = Archive.audioTracks;
-            int var2 = client.anInt900;
+            int var2 = client.musicVolume;
             AudioSystem.state = 1;
             AudioSystem.tracks = var1;
             AudioSystem.trackGroup = var0;
@@ -43,6 +43,6 @@ public class AudioOverrideEffect {
             AudioSystem.pcmSampleLength = 2;
         }
 
-        client.anInt898 = var0;
+        client.currentAudioTrackGroupId = var0;
     }
 }

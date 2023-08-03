@@ -84,72 +84,72 @@ public final class OldConnection extends Connection implements Runnable {
             }
 
             if (value == 3) {
-                short test = 0;
+                short volume = 0;
                 if (varp == 0) {
-                    test = 255;
+                    volume = 255;
                 }
 
                 if (varp == 1) {
-                    test = 192;
+                    volume = 192;
                 }
 
                 if (varp == 2) {
-                    test = 128;
+                    volume = 128;
                 }
 
                 if (varp == 3) {
-                    test = 64;
+                    volume = 64;
                 }
 
                 if (varp == 4) {
-                    test = 0;
+                    volume = 0;
                 }
 
-                if (test != client.anInt900) {
-                    if (client.anInt900 == 0 && client.anInt898 != -1) {
-                        AudioSystem.init(Archive.audioTracks, client.anInt898, 0, test, false);
+                if (volume != client.musicVolume) {
+                    if (client.musicVolume == 0 && client.currentAudioTrackGroupId != -1) {
+                        AudioSystem.init(Archive.audioTracks, client.currentAudioTrackGroupId, 0, volume, false);
                         client.aBoolean904 = false;
-                    } else if (test == 0) {
+                    } else if (volume == 0) {
                         Statics57.method533();
                         client.aBoolean904 = false;
                     } else if (AudioSystem.state != 0) {
-                        AudioSystem.volume = test;
+                        AudioSystem.volume = volume;
                     } else {
-                        Statics50.aClass5_Sub6_Sub3_326.method703(test);
+                        Statics50.aClass5_Sub6_Sub3_326.method703(volume);
                     }
 
-                    client.anInt900 = test;
+                    client.musicVolume = volume;
                 }
             }
 
             if (value == 4) {
                 if (varp == 0) {
-                    client.anInt901 = 127;
+                    client.soundEffectVolume = 127;
                 }
 
                 if (varp == 1) {
-                    client.anInt901 = 96;
+                    client.soundEffectVolume = 96;
                 }
 
                 if (varp == 2) {
-                    client.anInt901 = 64;
+                    client.soundEffectVolume = 64;
                 }
 
                 if (varp == 3) {
-                    client.anInt901 = 32;
+                    client.soundEffectVolume = 32;
                 }
 
                 if (varp == 4) {
-                    client.anInt901 = 0;
+                    client.soundEffectVolume = 0;
                 }
             }
 
             if (value == 5) {
-                client.varpControlledInt1 = varp;
+                client.openMenuOnLeftClick = varp;
             }
 
             if (value == 6) {
-                client.anInt1045 = varp;
+                client.chatEffects = varp;
             }
 
             if (value == 9) {
@@ -158,28 +158,28 @@ public final class OldConnection extends Connection implements Runnable {
 
             if (value == 10) {
                 if (varp == 0) {
-                    client.anInt897 = 127;
+                    client.areaSoundEffectVolume = 127;
                 }
 
                 if (varp == 1) {
-                    client.anInt897 = 96;
+                    client.areaSoundEffectVolume = 96;
                 }
 
                 if (varp == 2) {
-                    client.anInt897 = 64;
+                    client.areaSoundEffectVolume = 64;
                 }
 
                 if (varp == 3) {
-                    client.anInt897 = 32;
+                    client.areaSoundEffectVolume = 32;
                 }
 
                 if (varp == 4) {
-                    client.anInt897 = 0;
+                    client.areaSoundEffectVolume = 0;
                 }
             }
 
             if (value == 17) {
-                client.anInt1053 = varp & 65535;
+                client.followerIndex = varp & 65535;
             }
 
             if (value == 18) {
@@ -191,9 +191,9 @@ public final class OldConnection extends Connection implements Runnable {
 
             if (value == 19) {
                 if (varp == -1) {
-                    client.varpControlledInt2 = -1;
+                    client.combatTargetPlayerIndex = -1;
                 } else {
-                    client.varpControlledInt2 = varp & 2047;
+                    client.combatTargetPlayerIndex = varp & 2047;
                 }
             }
 
