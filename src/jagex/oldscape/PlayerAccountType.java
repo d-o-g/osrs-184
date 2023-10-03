@@ -39,7 +39,7 @@ public enum PlayerAccountType implements EnumType {
     if (authenticator) {
       client.loginStep = Login.aBoolean462 ? LoginStep.anEnum_Sub3_828 : LoginStep.anEnum_Sub3_825;
     } else {
-      client.loginStep = client.preferences.properties.containsKey(Djb2.hash(Login.username)) ? LoginStep.anEnum_Sub3_827 : LoginStep.anEnum_Sub3_826;
+      client.loginStep = client.preferences.properties.containsKey(Djb2.ascii(Login.username)) ? LoginStep.anEnum_Sub3_827 : LoginStep.anEnum_Sub3_826;
     }
 
   }

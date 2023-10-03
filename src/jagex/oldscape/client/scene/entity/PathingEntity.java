@@ -573,11 +573,11 @@ public abstract class PathingEntity extends Entity {
               var25 -= var18;
               if (var20 >= 0 && var20 < 255) {
                 var16.method832(var25, var26, var20);
-                JagGraphics.method1364(var25, var26, var25 + var94, var26 + var24);
+                JagGraphics.setDrawingArea(var25, var26, var25 + var94, var26 + var24);
                 var17.method832(var25, var26, var20);
               } else {
                 var16.renderAlphaAt(var25, var26);
-                JagGraphics.method1364(var25, var26, var94 + var25, var26 + var24);
+                JagGraphics.setDrawingArea(var25, var26, var94 + var25, var26 + var24);
                 var17.renderAlphaAt(var25, var26);
               }
 
@@ -1214,7 +1214,7 @@ public abstract class PathingEntity extends Entity {
 
         if (client.overheadMessageEffects[i] == 4) {
           var19 = (150 - client.overheadMessageCyclesRemaining[i]) * (Font.b12full.textWidth(var17) + 100) / 150;
-          JagGraphics.method1364(viewportX + client.viewportRenderX - 50, viewportY, viewportX + client.viewportRenderX + 50, viewportHeight + viewportY);
+          JagGraphics.setDrawingArea(viewportX + client.viewportRenderX - 50, viewportY, viewportX + client.viewportRenderX + 50, viewportHeight + viewportY);
           Font.b12full.drawString(var17, viewportX + client.viewportRenderX + 50 - var19, client.viewportRenderY + viewportY, var18, 0);
           JagGraphics.setClip(viewportX, viewportY, viewportX + viewportWidth, viewportHeight + viewportY);
         }
@@ -1228,7 +1228,7 @@ public abstract class PathingEntity extends Entity {
             var20 = var19 - 125;
           }
 
-          JagGraphics.method1364(viewportX, client.viewportRenderY + viewportY - Font.b12full.anInt375 - 1, viewportX + viewportWidth, client.viewportRenderY + viewportY + 5);
+          JagGraphics.setDrawingArea(viewportX, client.viewportRenderY + viewportY - Font.b12full.anInt375 - 1, viewportX + viewportWidth, client.viewportRenderY + viewportY + 5);
           Font.b12full.method1154(var17, viewportX + client.viewportRenderX, var20 + client.viewportRenderY + viewportY, var18, 0);
           JagGraphics.setClip(viewportX, viewportY, viewportX + viewportWidth, viewportHeight + viewportY);
         }

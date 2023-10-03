@@ -203,7 +203,7 @@ public final class WorldMapController {
             WorldMapIcon var12 = (WorldMapIcon) aVar10;
             int var13 = var3 * (var12.max.x - this.anInt261 * 4096) / (this.anInt260 * 4096);
             int var14 = var4 - (var12.max.y - this.anInt268 * 4096) * var4 / (this.anInt263 * 4096);
-            JagGraphics.method1367(var13 + var1, var14 + var2, 2, 16776960, 256);
+            JagGraphics.applyImageFilter(var13 + var1, var14 + var2, 2, 16776960, 256);
           }
         }
       }

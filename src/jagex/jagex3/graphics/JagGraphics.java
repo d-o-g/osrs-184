@@ -51,36 +51,34 @@ public class JagGraphics extends DoublyLinkedNode {
     }
   }
 
-  public static void fillRect(int var0, int var1, int var2, int var3, int var4) {
-    if (var0 < drawingAreaLeft) {
-      var2 -= drawingAreaLeft - var0;
-      var0 = drawingAreaLeft;
+  public static void fillRect(int x, int y, int width, int height, int color) {
+    if (x < drawingAreaLeft) {
+      width -= drawingAreaLeft - x;
+      x = drawingAreaLeft;
     }
 
-    if (var1 < drawingAreaTop) {
-      var3 -= drawingAreaTop - var1;
-      var1 = drawingAreaTop;
+    if (y < drawingAreaTop) {
+      height -= drawingAreaTop - y;
+      y = drawingAreaTop;
     }
 
-    if (var0 + var2 > drawingAreaBottom) {
-      var2 = drawingAreaBottom - var0;
+    if (x + width > drawingAreaRight) {
+      width = drawingAreaRight - x;
     }
 
-    if (var3 + var1 > drawingAreaRight) {
-      var3 = drawingAreaRight - var1;
+    if (y + height > drawingAreaBottom) {
+      height = drawingAreaBottom - y;
     }
 
-    int var5 = drawingAreaWidth - var2;
-    int var6 = var0 + drawingAreaWidth * var1;
+    int stride = drawingAreaWidth - width;
+    int offset = x + drawingAreaWidth * y;
 
-    for (int var7 = -var3; var7 < 0; ++var7) {
-      for (int var8 = -var2; var8 < 0; ++var8) {
-        drawingAreaPixels[var6++] = var4;
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        drawingAreaPixels[offset + j] = color;
       }
-
-      var6 += var5;
+      offset += stride;
     }
-
   }
 
   public static void drawHorizontalLine(int var0, int var1, int var2, int var3) {
@@ -99,309 +97,302 @@ public class JagGraphics extends DoublyLinkedNode {
       for (int var5 = 0; var5 < var2; ++var5) {
         drawingAreaPixels[var4 + var5] = var3;
       }
-
     }
   }
 
-  public static void setClip(int var0, int var1, int var2, int var3) {
-    if (var0 < 0) {
-      var0 = 0;
+  public static void setClip(int x, int y, int width, int height) {
+    if (x < 0) {
+      x = 0;
     }
 
-    if (var1 < 0) {
-      var1 = 0;
+    if (y < 0) {
+      y = 0;
     }
 
-    if (var2 > drawingAreaWidth) {
-      var2 = drawingAreaWidth;
+    if (width > drawingAreaWidth) {
+      width = drawingAreaWidth;
     }
 
-    if (var3 > drawingAreaHeight) {
-      var3 = drawingAreaHeight;
+    if (height > drawingAreaHeight) {
+      height = drawingAreaHeight;
     }
 
-    drawingAreaLeft = var0;
-    drawingAreaTop = var1;
-    drawingAreaBottom = var2;
-    drawingAreaRight = var3;
+    drawingAreaLeft = x;
+    drawingAreaTop = y;
+    drawingAreaRight = width;
+    drawingAreaBottom = height;
   }
 
-  public static void method1367(int var0, int var1, int var2, int var3, int var4) {
-    if (var4 != 0) {
-      if (var4 == 256) {
-        method1357(var0, var1, var2, var3);
+  public static void applyImageFilter(int x, int y, int width, int height, int intensity) {
+    if (intensity != 0) {
+      if (intensity == 256) {
+        applyFullIntensityFilter(x, y, width, height);
       } else {
-        if (var2 < 0) {
-          var2 = -var2;
+        int absWidth = Math.abs(width);
+        int diffIntensity = 256 - intensity;
+        int redIntensity = (height >> 16 & 255) * intensity;
+        int greenIntensity = (height >> 8 & 255) * intensity;
+        int blueIntensity = (height & 255) * intensity;
+        int startY = y - absWidth;
+        startY = Math.max(startY, drawingAreaTop);
+        int endY = absWidth + y + 1;
+        endY = Math.min(endY, drawingAreaRight);
+        int currentY = startY;
+        int radiusSquared = absWidth * absWidth;
+        int delta = 0;
+        int startYDifference = y - startY;
+        int startYSquared = startYDifference * startYDifference;
+        int innerDiff = startYSquared - startYDifference;
+
+        if (y > endY) {
+          y = endY;
         }
 
-        int var5 = 256 - var4;
-        int var6 = (var3 >> 16 & 255) * var4;
-        int var7 = (var3 >> 8 & 255) * var4;
-        int var8 = var4 * (var3 & 255);
-        int var9 = var1 - var2;
-        if (var9 < drawingAreaTop) {
-          var9 = drawingAreaTop;
+        int x1;
+        int x2;
+        int pixelOffset;
+        int redComponent;
+        int greenComponent;
+        int blueComponent;
+
+        while (currentY < y) {
+          while (innerDiff <= radiusSquared || startYSquared <= radiusSquared) {
+            startYSquared = startYSquared + delta + delta;
+            innerDiff += delta++ + delta;
+          }
+
+          x1 = x - delta + 1;
+          if (x1 < drawingAreaLeft) {
+            x1 = drawingAreaLeft;
+          }
+
+          x2 = x + delta;
+          if (x2 > drawingAreaBottom) {
+            x2 = drawingAreaBottom;
+          }
+
+          pixelOffset = x1 + currentY * drawingAreaWidth;
+
+          for (int currentX = x1; currentX < x2; ++currentX) {
+            redComponent = diffIntensity * (drawingAreaPixels[pixelOffset] >> 16 & 255);
+            greenComponent = (drawingAreaPixels[pixelOffset] >> 8 & 255) * diffIntensity;
+            blueComponent = diffIntensity * (drawingAreaPixels[pixelOffset] & 255);
+            int resultPixel = (blueIntensity + blueComponent >> 8) + (redIntensity + redComponent >> 8 << 16) + (greenIntensity + greenComponent >> 8 << 8);
+            drawingAreaPixels[pixelOffset++] = resultPixel;
+          }
+
+          ++currentY;
+          startYSquared -= startYDifference-- + startYDifference;
+          innerDiff -= startYDifference + startYDifference;
         }
 
-        int var10 = var2 + var1 + 1;
-        if (var10 > drawingAreaRight) {
-          var10 = drawingAreaRight;
+        delta = absWidth;
+        startYDifference = -startYDifference;
+        innerDiff = radiusSquared + startYDifference * startYDifference;
+        startYSquared = innerDiff - absWidth;
+
+        for (innerDiff -= startYDifference; currentY < endY; startYSquared += startYDifference++ + startYDifference) {
+          while (innerDiff > radiusSquared && startYSquared > radiusSquared) {
+            innerDiff -= delta-- + delta;
+            startYSquared -= delta + delta;
+          }
+
+          x1 = x - delta;
+          if (x1 < drawingAreaLeft) {
+            x1 = drawingAreaLeft;
+          }
+
+          x2 = x + delta;
+          if (x2 > drawingAreaBottom - 1) {
+            x2 = drawingAreaBottom - 1;
+          }
+
+          pixelOffset = x1 + currentY * drawingAreaWidth;
+
+          for (int currentX = x1; currentX <= x2; ++currentX) {
+            redComponent = diffIntensity * (drawingAreaPixels[pixelOffset] >> 16 & 255);
+            greenComponent = (drawingAreaPixels[pixelOffset] >> 8 & 255) * diffIntensity;
+            blueComponent = diffIntensity * (drawingAreaPixels[pixelOffset] & 255);
+            int resultPixel = (blueIntensity + blueComponent >> 8) + (redIntensity + redComponent >> 8 << 16) + (greenIntensity + greenComponent >> 8 << 8);
+            drawingAreaPixels[pixelOffset++] = resultPixel;
+          }
+
+          ++currentY;
+          innerDiff = innerDiff + delta + delta;
         }
-
-        int var11 = var9;
-        int var12 = var2 * var2;
-        int var13 = 0;
-        int var14 = var1 - var9;
-        int var15 = var14 * var14;
-        int var16 = var15 - var14;
-        if (var1 > var10) {
-          var1 = var10;
-        }
-
-        int var17;
-        int var18;
-        int var19;
-        int var20;
-        int var21;
-        int var22;
-        int var23;
-        int var24;
-        while (var11 < var1) {
-          while (var16 <= var12 || var15 <= var12) {
-            var15 = var15 + var13 + var13;
-            var16 += var13++ + var13;
-          }
-
-          var17 = var0 - var13 + 1;
-          if (var17 < drawingAreaLeft) {
-            var17 = drawingAreaLeft;
-          }
-
-          var18 = var0 + var13;
-          if (var18 > drawingAreaBottom) {
-            var18 = drawingAreaBottom;
-          }
-
-          var19 = var17 + var11 * drawingAreaWidth;
-
-          for (var20 = var17; var20 < var18; ++var20) {
-            var21 = var5 * (drawingAreaPixels[var19] >> 16 & 255);
-            var22 = (drawingAreaPixels[var19] >> 8 & 255) * var5;
-            var23 = var5 * (drawingAreaPixels[var19] & 255);
-            var24 = (var8 + var23 >> 8) + (var6 + var21 >> 8 << 16) + (var7 + var22 >> 8 << 8);
-            drawingAreaPixels[var19++] = var24;
-          }
-
-          ++var11;
-          var15 -= var14-- + var14;
-          var16 -= var14 + var14;
-        }
-
-        var13 = var2;
-        var14 = -var14;
-        var16 = var12 + var14 * var14;
-        var15 = var16 - var2;
-
-        for (var16 -= var14; var11 < var10; var15 += var14++ + var14) {
-          while (var16 > var12 && var15 > var12) {
-            var16 -= var13-- + var13;
-            var15 -= var13 + var13;
-          }
-
-          var17 = var0 - var13;
-          if (var17 < drawingAreaLeft) {
-            var17 = drawingAreaLeft;
-          }
-
-          var18 = var0 + var13;
-          if (var18 > drawingAreaBottom - 1) {
-            var18 = drawingAreaBottom - 1;
-          }
-
-          var19 = var17 + var11 * drawingAreaWidth;
-
-          for (var20 = var17; var20 <= var18; ++var20) {
-            var21 = var5 * (drawingAreaPixels[var19] >> 16 & 255);
-            var22 = (drawingAreaPixels[var19] >> 8 & 255) * var5;
-            var23 = var5 * (drawingAreaPixels[var19] & 255);
-            var24 = (var8 + var23 >> 8) + (var6 + var21 >> 8 << 16) + (var7 + var22 >> 8 << 8);
-            drawingAreaPixels[var19++] = var24;
-          }
-
-          ++var11;
-          var16 = var16 + var14 + var14;
-        }
-
       }
     }
   }
 
-  public static void method1361(int var0, int var1, int var2, int var3, int var4, int var5, byte[] var6, int var7) {
-    if (var0 + var2 >= 0 && var3 + var1 >= 0) {
-      if (var0 < drawingAreaWidth && var1 < drawingAreaHeight) {
-        int var8 = 0;
-        int var9 = 0;
-        if (var0 < 0) {
-          var8 -= var0;
-          var2 += var0;
+  public static void drawImageWithMask(int x, int y, int width, int height, int primaryColor, int secondaryColor, byte[] maskData, int maskWidth) {
+    if (x + width >= 0 && y + height >= 0) {
+      if (x < drawingAreaWidth && y < drawingAreaHeight) {
+        int xOffset = 0;
+        int yOffset = 0;
+
+        if (x < 0) {
+          xOffset -= x;
+          width += x;
         }
 
-        if (var1 < 0) {
-          var9 -= var1;
-          var3 += var1;
+        if (y < 0) {
+          yOffset -= y;
+          height += y;
         }
 
-        if (var0 + var2 > drawingAreaWidth) {
-          var2 = drawingAreaWidth - var0;
+        if (x + width > drawingAreaWidth) {
+          width = drawingAreaWidth - x;
         }
 
-        if (var3 + var1 > drawingAreaHeight) {
-          var3 = drawingAreaHeight - var1;
+        if (y + height > drawingAreaHeight) {
+          height = drawingAreaHeight - y;
         }
 
-        int var10 = var6.length / var7;
-        int var11 = drawingAreaWidth - var2;
-        int var12 = var4 >>> 24;
-        int var13 = var5 >>> 24;
-        int var14;
-        int var15;
-        int var16;
-        int var17;
-        int var18;
-        if (var12 == 255 && var13 == 255) {
-          var14 = var0 + var8 + (var9 + var1) * drawingAreaWidth;
+        int maskLength = maskData.length / maskWidth;
+        int rowLength = drawingAreaWidth - width;
+        int primaryAlpha = primaryColor >>> 24;
+        int secondaryAlpha = secondaryColor >>> 24;
+        int pixelOffset;
+        if (primaryAlpha == 255 && secondaryAlpha == 255) {
+          pixelOffset = x + xOffset + (yOffset + y) * drawingAreaWidth;
 
-          for (var15 = var9 + var1; var15 < var3 + var9 + var1; ++var15) {
-            for (var16 = var0 + var8; var16 < var0 + var8 + var2; ++var16) {
-              var17 = (var15 - var1) % var10;
-              var18 = (var16 - var0) % var7;
-              if (var6[var18 + var17 * var7] != 0) {
-                drawingAreaPixels[var14++] = var5;
+          for (int currentY = yOffset + y; currentY < height + yOffset + y; ++currentY) {
+            for (int currentX = xOffset + x; currentX < xOffset + x + width; ++currentX) {
+              int maskX = (currentY - y) % maskLength;
+              int maskY = (currentX - x) % maskWidth;
+
+              if (maskData[maskY + maskX * maskWidth] != 0) {
+                drawingAreaPixels[pixelOffset++] = secondaryColor;
               } else {
-                drawingAreaPixels[var14++] = var4;
+                drawingAreaPixels[pixelOffset++] = primaryColor;
               }
             }
 
-            var14 += var11;
+            pixelOffset += rowLength;
           }
         } else {
-          var14 = var0 + var8 + (var9 + var1) * drawingAreaWidth;
+          pixelOffset = x + xOffset + (yOffset + y) * drawingAreaWidth;
 
-          for (var15 = var9 + var1; var15 < var3 + var9 + var1; ++var15) {
-            for (var16 = var0 + var8; var16 < var0 + var8 + var2; ++var16) {
-              var17 = (var15 - var1) % var10;
-              var18 = (var16 - var0) % var7;
-              int var19 = var4;
-              if (var6[var18 + var17 * var7] != 0) {
-                var19 = var5;
+          for (int currentY = yOffset + y; currentY < height + yOffset + y; ++currentY) {
+            for (int currentX = xOffset + x; currentX < xOffset + x + width; ++currentX) {
+              int maskX = (currentY - y) % maskLength;
+              int maskY = (currentX - x) % maskWidth;
+              int targetColor = primaryColor;
+
+              if (maskData[maskY + maskX * maskWidth] != 0) {
+                targetColor = secondaryColor;
               }
 
-              int var20 = var19 >>> 24;
-              int var21 = 255 - var20;
-              int var22 = drawingAreaPixels[var14];
-              int var23 = ((var19 & 16711935) * var20 + (var22 & 16711935) * var21 & -16711936) + (var20 * (var19 & 65280) + var21 * (var22 & 65280) & 16711680) >> 8;
-              drawingAreaPixels[var14++] = var23;
+              int targetAlpha = targetColor >>> 24;
+              int sourceAlpha = 255 - targetAlpha;
+              int currentPixel = drawingAreaPixels[pixelOffset];
+              int targetRed = ((targetColor & 16711935) * targetAlpha + (currentPixel & 16711935) * sourceAlpha & -16711936) + (targetAlpha * (targetColor & 65280) + sourceAlpha * (currentPixel & 65280) & 16711680) >> 8;
+              drawingAreaPixels[pixelOffset++] = targetRed;
             }
 
-            var14 += var11;
+            pixelOffset += rowLength;
           }
         }
-
       }
     }
   }
 
-  static void method1357(int var0, int var1, int var2, int var3) {
-    if (var2 == 0) {
-      method1375(var0, var1, var3);
+  public static void setPixel(int x, int y, int color) {
+    if (x >= drawingAreaLeft && y >= drawingAreaTop && x < drawingAreaBottom && y < drawingAreaRight) {
+      drawingAreaPixels[x + drawingAreaWidth * y] = color;
+    }
+  }
+
+  public static void applyFullIntensityFilter(int x, int y, int radius, int color) {
+    if (radius == 0) {
+      setPixel(x, y, color);
     } else {
-      if (var2 < 0) {
-        var2 = -var2;
+      if (radius < 0) {
+        radius = -radius;
       }
 
-      int var4 = var1 - var2;
-      if (var4 < drawingAreaTop) {
-        var4 = drawingAreaTop;
+      int startY = y - radius;
+      if (startY < drawingAreaTop) {
+        startY = drawingAreaTop;
       }
 
-      int var5 = var2 + var1 + 1;
-      if (var5 > drawingAreaRight) {
-        var5 = drawingAreaRight;
+      int endY = radius + y + 1;
+      if (endY > drawingAreaRight) {
+        endY = drawingAreaRight;
       }
 
-      int var6 = var4;
-      int var7 = var2 * var2;
-      int var8 = 0;
-      int var9 = var1 - var4;
-      int var10 = var9 * var9;
-      int var11 = var10 - var9;
-      if (var1 > var5) {
-        var1 = var5;
+      int currentY = startY;
+      int radiusSquared = radius * radius;
+      int delta = 0;
+      int startYDifference = y - startY;
+      int startYSquared = startYDifference * startYDifference;
+      int innerDiff = startYSquared - startYDifference;
+
+      if (y > endY) {
+        y = endY;
       }
 
-      int var12;
-      int var13;
-      int var14;
-      int var15;
-      while (var6 < var1) {
-        while (var11 <= var7 || var10 <= var7) {
-          var10 = var10 + var8 + var8;
-          var11 += var8++ + var8;
+      int x1;
+      int x2;
+      int pixelOffset;
+
+      while (currentY < y) {
+        while (innerDiff <= radiusSquared || startYSquared <= radiusSquared) {
+          startYSquared = startYSquared + delta + delta;
+          innerDiff += delta++ + delta;
         }
 
-        var12 = var0 - var8 + 1;
-        if (var12 < drawingAreaLeft) {
-          var12 = drawingAreaLeft;
+        x1 = x - delta + 1;
+        if (x1 < drawingAreaLeft) {
+          x1 = drawingAreaLeft;
         }
 
-        var13 = var0 + var8;
-        if (var13 > drawingAreaBottom) {
-          var13 = drawingAreaBottom;
+        x2 = x + delta;
+        if (x2 > drawingAreaBottom) {
+          x2 = drawingAreaBottom;
         }
 
-        var14 = var12 + var6 * drawingAreaWidth;
+        pixelOffset = x1 + currentY * drawingAreaWidth;
 
-        for (var15 = var12; var15 < var13; ++var15) {
-          drawingAreaPixels[var14++] = var3;
+        for (int currentX = x1; currentX < x2; ++currentX) {
+          drawingAreaPixels[pixelOffset++] = color;
         }
 
-        ++var6;
-        var10 -= var9-- + var9;
-        var11 -= var9 + var9;
+        ++currentY;
+        startYSquared -= startYDifference-- + startYDifference;
+        innerDiff -= startYDifference + startYDifference;
       }
 
-      var8 = var2;
-      var9 = var6 - var1;
-      var11 = var7 + var9 * var9;
-      var10 = var11 - var2;
+      delta = radius;
+      startYDifference = -startYDifference;
+      innerDiff = radiusSquared + startYDifference * startYDifference;
+      startYSquared = innerDiff - radius;
 
-      for (var11 -= var9; var6 < var5; var10 += var9++ + var9) {
-        while (var11 > var7 && var10 > var7) {
-          var11 -= var8-- + var8;
-          var10 -= var8 + var8;
+      for (innerDiff -= startYDifference; currentY < endY; startYSquared += startYDifference++ + startYDifference) {
+        while (innerDiff > radiusSquared && startYSquared > radiusSquared) {
+          innerDiff -= delta-- + delta;
+          startYSquared -= delta + delta;
         }
 
-        var12 = var0 - var8;
-        if (var12 < drawingAreaLeft) {
-          var12 = drawingAreaLeft;
+        x1 = x - delta;
+        if (x1 < drawingAreaLeft) {
+          x1 = drawingAreaLeft;
         }
 
-        var13 = var0 + var8;
-        if (var13 > drawingAreaBottom - 1) {
-          var13 = drawingAreaBottom - 1;
+        x2 = x + delta;
+        if (x2 > drawingAreaBottom - 1) {
+          x2 = drawingAreaBottom - 1;
         }
 
-        var14 = var12 + var6 * drawingAreaWidth;
+        pixelOffset = x1 + currentY * drawingAreaWidth;
 
-        for (var15 = var12; var15 <= var13; ++var15) {
-          drawingAreaPixels[var14++] = var3;
+        for (int currentX = x1; currentX <= x2; ++currentX) {
+          drawingAreaPixels[pixelOffset++] = color;
         }
 
-        ++var6;
-        var11 = var11 + var9 + var9;
+        ++currentY;
+        innerDiff = innerDiff + delta + delta;
       }
-
     }
   }
 
@@ -412,53 +403,45 @@ public class JagGraphics extends DoublyLinkedNode {
     drawingAreaRight = drawingAreaHeight;
   }
 
-  public static void method1370(int var0, int var1, int var2, int var3, int var4, int var5) {
-    if (var0 < drawingAreaLeft) {
-      var2 -= drawingAreaLeft - var0;
-      var0 = drawingAreaLeft;
+  public static void drawRectWithAlpha(int x, int y, int width, int height, int color, int alpha) {
+    if (x < drawingAreaLeft) {
+      width -= drawingAreaLeft - x;
+      x = drawingAreaLeft;
     }
 
-    if (var1 < drawingAreaTop) {
-      var3 -= drawingAreaTop - var1;
-      var1 = drawingAreaTop;
+    if (y < drawingAreaTop) {
+      height -= drawingAreaTop - y;
+      y = drawingAreaTop;
     }
 
-    if (var0 + var2 > drawingAreaBottom) {
-      var2 = drawingAreaBottom - var0;
+    if (x + width > drawingAreaBottom) {
+      width = drawingAreaBottom - x;
     }
 
-    if (var3 + var1 > drawingAreaRight) {
-      var3 = drawingAreaRight - var1;
+    if (y + height > drawingAreaRight) {
+      height = drawingAreaRight - y;
     }
 
-    var4 = (var5 * (var4 & 16711935) >> 8 & 16711935) + (var5 * (var4 & 65280) >> 8 & 65280);
-    int var6 = 256 - var5;
-    int var7 = drawingAreaWidth - var2;
-    int var8 = var0 + drawingAreaWidth * var1;
+    int combinedColor = (alpha * (color & 16711935) >> 8 & 16711935) + (alpha * (color & 65280) >> 8 & 65280);
+    int inverseAlpha = 256 - alpha;
+    int stride = drawingAreaWidth - width;
+    int pixelOffset = x + drawingAreaWidth * y;
 
-    for (int var9 = 0; var9 < var3; ++var9) {
-      for (int var10 = -var2; var10 < 0; ++var10) {
-        int var11 = drawingAreaPixels[var8];
-        var11 = ((var11 & 16711935) * var6 >> 8 & 16711935) + (var6 * (var11 & 65280) >> 8 & 65280);
-        drawingAreaPixels[var8++] = var11 + var4;
+    for (int row = 0; row < height; ++row) {
+      for (int col = 0; col < width; ++col) {
+        int pixelColor = drawingAreaPixels[pixelOffset];
+        pixelColor = ((pixelColor & 16711935) * inverseAlpha >> 8 & 16711935) + (inverseAlpha * (pixelColor & 65280) >> 8 & 65280);
+        drawingAreaPixels[pixelOffset++] = pixelColor + combinedColor;
       }
-
-      var8 += var7;
+      pixelOffset += stride;
     }
-
   }
 
-  public static void method1372(int var0, int var1, int var2, int var3, int var4) {
-    drawHorizontalLine(var0, var1, var2, var4);
-    drawHorizontalLine(var0, var3 + var1 - 1, var2, var4);
-    drawVerticalLine(var0, var1, var3, var4);
-    drawVerticalLine(var0 + var2 - 1, var1, var3, var4);
-  }
-
-  static void method1375(int var0, int var1, int var2) {
-    if (var0 >= drawingAreaLeft && var1 >= drawingAreaTop && var0 < drawingAreaBottom && var1 < drawingAreaRight) {
-      drawingAreaPixels[var0 + drawingAreaWidth * var1] = var2;
-    }
+  public static void drawRectOutline(int x, int y, int width, int height, int color) {
+    drawHorizontalLine(x, y, width, color);
+    drawHorizontalLine(x, y + height - 1, width, color);
+    drawVerticalLine(x, y, height, color);
+    drawVerticalLine(x + width - 1, y, height, color);
   }
 
   public static void clear() {
@@ -487,61 +470,56 @@ public class JagGraphics extends DoublyLinkedNode {
     drawingAreaRight = var0[3];
   }
 
-  public static void method1376(int var0, int var1, int var2, int var3, int var4, int var5) {
-    if (var2 > 0 && var3 > 0) {
-      int var6 = 0;
-      int var7 = 65536 / var3;
-      if (var0 < drawingAreaLeft) {
-        var2 -= drawingAreaLeft - var0;
-        var0 = drawingAreaLeft;
+  public static void blitRectWithAlpha(int x, int y, int width, int height, int color1, int color2) {
+    if (width > 0 && height > 0) {
+      int delta = 0;
+      int deltaStep = 65536 / height;
+      if (x < drawingAreaLeft) {
+        width -= drawingAreaLeft - x;
+        x = drawingAreaLeft;
       }
 
-      if (var1 < drawingAreaTop) {
-        var6 += (drawingAreaTop - var1) * var7;
-        var3 -= drawingAreaTop - var1;
-        var1 = drawingAreaTop;
+      if (y < drawingAreaTop) {
+        delta += (drawingAreaTop - y) * deltaStep;
+        height -= drawingAreaTop - y;
+        y = drawingAreaTop;
       }
 
-      if (var0 + var2 > drawingAreaBottom) {
-        var2 = drawingAreaBottom - var0;
+      if (x + width > drawingAreaBottom) {
+        width = drawingAreaBottom - x;
       }
 
-      if (var3 + var1 > drawingAreaRight) {
-        var3 = drawingAreaRight - var1;
+      if (height + y > drawingAreaRight) {
+        height = drawingAreaRight - y;
       }
 
-      int var8 = drawingAreaWidth - var2;
-      int var9 = var0 + drawingAreaWidth * var1;
+      int stride = drawingAreaWidth - width;
+      int offset = x + drawingAreaWidth * y;
 
-      for (int var10 = -var3; var10 < 0; ++var10) {
-        int var11 = 65536 - var6 >> 8;
-        int var12 = var6 >> 8;
-        int var13 = (var12 * (var5 & 16711935) + var11 * (var4 & 16711935) & -16711936) + (var12 * (var5 & 65280) + var11 * (var4 & 65280) & 16711680) >>> 8;
+      for (int dy = -height; dy < 0; ++dy) {
+        int alpha1 = 65536 - delta >> 8;
+        int alpha2 = delta >> 8;
+        int blendedColor = (alpha2 * (color2 & 16711935) + alpha1 * (color1 & 16711935) & -16711936) + (alpha2 * (color2 & 65280) + alpha1 * (color1 & 65280) & 16711680) >>> 8;
 
-        for (int var14 = -var2; var14 < 0; ++var14) {
-          drawingAreaPixels[var9++] = var13;
+        for (int dx = -width; dx < 0; ++dx) {
+          drawingAreaPixels[offset++] = blendedColor;
         }
 
-        var9 += var8;
-        var6 += var7;
+        offset += stride;
+        delta += deltaStep;
       }
-
     }
   }
 
-  public static void method1362(int var0, int var1, int var2, int[] var3, int[] var4) {
-    int var5 = var0 + drawingAreaWidth * var1;
-
-    for (var1 = 0; var1 < var3.length; ++var1) {
-      int var6 = var5 + var3[var1];
-
-      for (var0 = -var4[var1]; var0 < 0; ++var0) {
-        drawingAreaPixels[var6++] = var2;
+  public static void fillRectangles(int x, int y, int color, int[] widths, int[] heights) {
+    int offset = x + drawingAreaWidth * y;
+    for (int i = 0; i < widths.length; ++i) {
+      int rowOffset = offset + widths[i];
+      for (int j = -heights[i]; j < 0; ++j) {
+        drawingAreaPixels[rowOffset++] = color;
       }
-
-      var5 += drawingAreaWidth;
+      offset += drawingAreaWidth;
     }
-
   }
 
   public static void drawRect(int var0, int var1, int var2, int var3, int var4, int var5) {
@@ -634,7 +612,7 @@ public class JagGraphics extends DoublyLinkedNode {
     }
   }
 
-  public static void method1359(int var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
+  public static void blitImageWithAlpha(int var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
     if (var2 > 0 && var3 > 0) {
       int var8 = 0;
       int var9 = 65536 / var3;
@@ -689,7 +667,7 @@ public class JagGraphics extends DoublyLinkedNode {
     }
   }
 
-  public static void method1364(int var0, int var1, int var2, int var3) {
+  public static void setDrawingArea(int var0, int var1, int var2, int var3) {
     if (drawingAreaLeft < var0) {
       drawingAreaLeft = var0;
     }
@@ -761,7 +739,6 @@ public class JagGraphics extends DoublyLinkedNode {
         drawingAreaPixels[var9] = var14;
         var9 += drawingAreaWidth;
       }
-
     }
   }
 }

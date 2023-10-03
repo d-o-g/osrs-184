@@ -596,7 +596,7 @@ public class WorldMapRenderRules {
     if (var7 != 0 && this.anInt170 != 0 && this.data != null) {
       var8 = this.method121(var8, var7);
       var7 = this.method127(var7);
-      JagGraphics.method1361(var1, var2, var5, var6, var3, var4, this.data[var7 - 1][var8], this.anInt170);
+      JagGraphics.drawImageWithMask(var1, var2, var5, var6, var3, var4, this.data[var7 - 1][var8], this.anInt170);
     }
   }
 }

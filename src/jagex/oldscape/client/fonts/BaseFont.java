@@ -1,9 +1,9 @@
 package jagex.oldscape.client.fonts;
 
+import jagex.core.stringtools.Strings;
 import jagex.jagex3.graphics.IndexedSprite;
 import jagex.jagex3.graphics.JagGraphics;
 import jagex.oldscape.SerializableLong;
-import jagex.jagex3.sound.Class97;
 
 import java.util.Random;
 
@@ -251,75 +251,6 @@ public abstract class BaseFont extends JagGraphics {
     }
   }
 
-  public static int method1501(CharSequence var0) {
-    return Class97.method536(var0, 10);
-  }
-
-  public static byte toCp1252Byte(char var0) {
-    byte var1;
-    if (var0 > 0 && var0 < 128 || var0 >= 160 && var0 <= 255) {
-      var1 = (byte) var0;
-    } else if (var0 == 8364) {
-      var1 = -128;
-    } else if (var0 == 8218) {
-      var1 = -126;
-    } else if (var0 == 402) {
-      var1 = -125;
-    } else if (var0 == 8222) {
-      var1 = -124;
-    } else if (var0 == 8230) {
-      var1 = -123;
-    } else if (var0 == 8224) {
-      var1 = -122;
-    } else if (var0 == 8225) {
-      var1 = -121;
-    } else if (var0 == 710) {
-      var1 = -120;
-    } else if (var0 == 8240) {
-      var1 = -119;
-    } else if (var0 == 352) {
-      var1 = -118;
-    } else if (var0 == 8249) {
-      var1 = -117;
-    } else if (var0 == 338) {
-      var1 = -116;
-    } else if (var0 == 381) {
-      var1 = -114;
-    } else if (var0 == 8216) {
-      var1 = -111;
-    } else if (var0 == 8217) {
-      var1 = -110;
-    } else if (var0 == 8220) {
-      var1 = -109;
-    } else if (var0 == 8221) {
-      var1 = -108;
-    } else if (var0 == 8226) {
-      var1 = -107;
-    } else if (var0 == 8211) {
-      var1 = -106;
-    } else if (var0 == 8212) {
-      var1 = -105;
-    } else if (var0 == 732) {
-      var1 = -104;
-    } else if (var0 == 8482) {
-      var1 = -103;
-    } else if (var0 == 353) {
-      var1 = -102;
-    } else if (var0 == 8250) {
-      var1 = -101;
-    } else if (var0 == 339) {
-      var1 = -100;
-    } else if (var0 == 382) {
-      var1 = -98;
-    } else if (var0 == 376) {
-      var1 = -97;
-    } else {
-      var1 = 63;
-    }
-
-    return var1;
-  }
-
   void method1160(int var1, int var2) {
     anInt367 = -1;
     anInt386 = -1;
@@ -354,7 +285,7 @@ public abstract class BaseFont extends JagGraphics {
             if (!var7.equals("gt")) {
               if (var7.startsWith("img=")) {
                 try {
-                  int var8 = method1501(var7.substring(4));
+                  int var8 = Strings.parseInt(var7.substring(4));
                   var4 += aDoublyNode_Sub24_Sub4Array1573[var8].anInt375;
                   var3 = -1;
                 } catch (Exception ignored) {
@@ -372,7 +303,7 @@ public abstract class BaseFont extends JagGraphics {
         }
 
         if (var2 == -1) {
-          var4 += this.anIntArray1574[(char) (toCp1252Byte(var6) & 255)];
+          var4 += this.anIntArray1574[(char) (Strings.toCp1252Byte(var6) & 255)];
           if (this.aByteArray1425 != null && var3 != -1) {
             var4 += this.aByteArray1425[var6 + (var3 << 8)];
           }
@@ -434,7 +365,7 @@ public abstract class BaseFont extends JagGraphics {
             var11 = '>';
           } else if (var16.startsWith("img=")) {
             try {
-              int var17 = method1501(var16.substring(4));
+              int var17 = Strings.parseInt(var16.substring(4));
               var4 += aDoublyNode_Sub24_Sub4Array1573[var17].anInt375;
               var11 = 0;
             } catch (Exception ignored) {
@@ -494,7 +425,7 @@ public abstract class BaseFont extends JagGraphics {
 
     for (int var6 = 0; var6 < var1.length(); ++var6) {
       if (var1.charAt(var6) != 0) {
-        char var7 = (char) (toCp1252Byte(var1.charAt(var6)) & 255);
+        char var7 = (char) (Strings.toCp1252Byte(var1.charAt(var6)) & 255);
         if (var7 == '<') {
           var4 = var6;
         } else {
@@ -508,7 +439,7 @@ public abstract class BaseFont extends JagGraphics {
               if (!var8.equals("gt")) {
                 if (var8.startsWith("img=")) {
                   try {
-                    var9 = method1501(var8.substring(4));
+                    var9 = Strings.parseInt(var8.substring(4));
                     IndexedSprite var10 = aDoublyNode_Sub24_Sub4Array1573[var9];
                     var10.renderAt(var2, var3 + this.anInt375 - var10.anInt372);
                     var2 += var10.anInt375;
@@ -653,7 +584,7 @@ public abstract class BaseFont extends JagGraphics {
 
     for (int var9 = 0; var9 < var1.length(); ++var9) {
       if (var1.charAt(var9) != 0) {
-        char var10 = (char) (toCp1252Byte(var1.charAt(var9)) & 255);
+        char var10 = (char) (Strings.toCp1252Byte(var1.charAt(var9)) & 255);
         if (var10 == '<') {
           var6 = var9;
         } else {
@@ -682,7 +613,7 @@ public abstract class BaseFont extends JagGraphics {
                     }
 
                     ++var8;
-                    var14 = method1501(var11.substring(4));
+                    var14 = Strings.parseInt(var11.substring(4));
                     IndexedSprite var15 = aDoublyNode_Sub24_Sub4Array1573[var14];
                     var15.renderAt(var12 + var2, var13 + (var3 + this.anInt375 - var15.anInt372));
                     var2 += var15.anInt375;
@@ -766,7 +697,7 @@ public abstract class BaseFont extends JagGraphics {
       var1 = ' ';
     }
 
-    return this.anIntArray1574[toCp1252Byte(var1) & 255];
+    return this.anIntArray1574[Strings.toCp1252Byte(var1) & 255];
   }
 
   void method1162(String var1) {

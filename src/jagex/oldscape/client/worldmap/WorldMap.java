@@ -357,7 +357,7 @@ public class WorldMap {
     int var7 = var3 / 2 + var1;
     int var8 = var4 / 2 + var2 - 18 - var6;
     JagGraphics.fillRect(var1, var2, var3, var4, -16777216);
-    JagGraphics.method1372(var7 - 152, var8, 304, 34, -65536);
+    JagGraphics.drawRectOutline(var7 - 152, var8, 304, 34, -65536);
     JagGraphics.fillRect(var7 - 150, var8 + 2, var5 * 3, 30, -65536);
     font.method1154("Loading...", var7, var6 + var8, -1, -1);
   }
@@ -488,7 +488,7 @@ public class WorldMap {
         var14 = var2 - controller.tileScale * (var7 - (var12 - minPositionY));
       }
 
-      JagGraphics.method1370(var1, var2, var3, var4, 0, 128);
+      JagGraphics.drawRectWithAlpha(var1, var2, var3, var4, 0, 128);
       if (1.0F == var10) {
         aSprite1695.method821(var13, var14, 192);
       } else {

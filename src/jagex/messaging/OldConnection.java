@@ -62,22 +62,22 @@ public final class OldConnection extends Connection implements Runnable {
       int varp = Vars.values[id];
       if (value == 1) {
         if (varp == 1) {
-          JagGraphics3D.method634(0.9D);
+          JagGraphics3D.generateColorPalette(0.9D);
           ((DefaultMaterialProvider) JagGraphics3D.materialProvider).setBrightness(0.9D);
         }
 
         if (varp == 2) {
-          JagGraphics3D.method634(0.8D);
+          JagGraphics3D.generateColorPalette(0.8D);
           ((DefaultMaterialProvider) JagGraphics3D.materialProvider).setBrightness(0.8D);
         }
 
         if (varp == 3) {
-          JagGraphics3D.method634(0.7D);
+          JagGraphics3D.generateColorPalette(0.7D);
           ((DefaultMaterialProvider) JagGraphics3D.materialProvider).setBrightness(0.7D);
         }
 
         if (varp == 4) {
-          JagGraphics3D.method634(0.6D);
+          JagGraphics3D.generateColorPalette(0.6D);
           ((DefaultMaterialProvider) JagGraphics3D.materialProvider).setBrightness(0.6D);
         }
 

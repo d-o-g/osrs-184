@@ -125,7 +125,7 @@ public class Material extends Node {
       }
 
       for (int j = 0; j < var18.length; ++j) {
-        var18[j] = JagGraphics3D.method631(var18[j], var1);
+        var18[j] = JagGraphics3D.rgbPow(var18[j], var1);
       }
 
       int var14;

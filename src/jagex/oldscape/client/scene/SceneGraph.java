@@ -1684,7 +1684,7 @@ public class SceneGraph {
           JagGraphics.fillRect(var4.anInt380 / 2 + var1 - 1, var4.anInt568 / 2 + var2 - 1, 3, 3, 16777215);
         }
       } else {
-        JagGraphics.method1362(var1, var2, 0, var4.anIntArray1108, var4.anIntArray749);
+        JagGraphics.fillRectangles(var1, var2, 0, var4.anIntArray1108, var4.anIntArray749);
       }
 
       client.aBooleanArray1087[var3] = true;
@@ -2724,17 +2724,17 @@ public class SceneGraph {
 
               if (var1.texture == -1) {
                 if (var1.anInt2001 != 12345678) {
-                  JagGraphics3D.method627(var27, var29, var25, var26, var28, var24, var1.anInt2001, var1.anInt2000, var1.anInt2003);
+                  JagGraphics3D.rasterizeTriangleWithShading(var27, var29, var25, var26, var28, var24, var1.anInt2001, var1.anInt2000, var1.anInt2003);
                 }
               } else if (!lowMemory) {
                 if (var1.flatShade) {
-                  JagGraphics3D.method638(var27, var29, var25, var26, var28, var24, var1.anInt2001, var1.anInt2000, var1.anInt2003, var10, var14, var9, var17, var18, var21, var12, var11, var15, var1.texture);
+                  JagGraphics3D.drawAndShadeTexturedTriangle(var27, var29, var25, var26, var28, var24, var1.anInt2001, var1.anInt2000, var1.anInt2003, var10, var14, var9, var17, var18, var21, var12, var11, var15, var1.texture);
                 } else {
-                  JagGraphics3D.method638(var27, var29, var25, var26, var28, var24, var1.anInt2001, var1.anInt2000, var1.anInt2003, var13, var9, var14, var19, var21, var18, var16, var15, var11, var1.texture);
+                  JagGraphics3D.drawAndShadeTexturedTriangle(var27, var29, var25, var26, var28, var24, var1.anInt2001, var1.anInt2000, var1.anInt2003, var13, var9, var14, var19, var21, var18, var16, var15, var11, var1.texture);
                 }
               } else {
                 var30 = JagGraphics3D.materialProvider.rgb(var1.texture);
-                JagGraphics3D.method627(var27, var29, var25, var26, var28, var24, method1444(var30, var1.anInt2001), method1444(var30, var1.anInt2000), method1444(var30, var1.anInt2003));
+                JagGraphics3D.rasterizeTriangleWithShading(var27, var29, var25, var26, var28, var24, method1444(var30, var1.anInt2001), method1444(var30, var1.anInt2000), method1444(var30, var1.anInt2003));
               }
             }
 
@@ -2748,13 +2748,13 @@ public class SceneGraph {
 
               if (var1.texture == -1) {
                 if (var1.anInt2002 != 12345678) {
-                  JagGraphics3D.method627(var23, var25, var29, var22, var24, var28, var1.anInt2002, var1.anInt2003, var1.anInt2000);
+                  JagGraphics3D.rasterizeTriangleWithShading(var23, var25, var29, var22, var24, var28, var1.anInt2002, var1.anInt2003, var1.anInt2000);
                 }
               } else if (!lowMemory) {
-                JagGraphics3D.method638(var23, var25, var29, var22, var24, var28, var1.anInt2002, var1.anInt2003, var1.anInt2000, var10, var14, var9, var17, var18, var21, var12, var11, var15, var1.texture);
+                JagGraphics3D.drawAndShadeTexturedTriangle(var23, var25, var29, var22, var24, var28, var1.anInt2002, var1.anInt2003, var1.anInt2000, var10, var14, var9, var17, var18, var21, var12, var11, var15, var1.texture);
               } else {
                 var30 = JagGraphics3D.materialProvider.rgb(var1.texture);
-                JagGraphics3D.method627(var23, var25, var29, var22, var24, var28, method1444(var30, var1.anInt2002), method1444(var30, var1.anInt2003), method1444(var30, var1.anInt2000));
+                JagGraphics3D.rasterizeTriangleWithShading(var23, var25, var29, var22, var24, var28, method1444(var30, var1.anInt2002), method1444(var30, var1.anInt2003), method1444(var30, var1.anInt2000));
               }
             }
 
@@ -2819,16 +2819,16 @@ public class SceneGraph {
         if (var1.triangleTexture != null && var1.triangleTexture[var9] != -1) {
           if (!lowMemory) {
             if (var1.flatShade) {
-              JagGraphics3D.method638(var16, var17, var18, var13, var14, var15, var1.anIntArray1547[var9], var1.anIntArray1544[var9], var1.anIntArray1542[var9], TileModel.anIntArray1537[0], TileModel.anIntArray1537[1], TileModel.anIntArray1537[3], TileModel.anIntArray1550[0], TileModel.anIntArray1550[1], TileModel.anIntArray1550[3], TileModel.anIntArray1538[0], TileModel.anIntArray1538[1], TileModel.anIntArray1538[3], var1.triangleTexture[var9]);
+              JagGraphics3D.drawAndShadeTexturedTriangle(var16, var17, var18, var13, var14, var15, var1.anIntArray1547[var9], var1.anIntArray1544[var9], var1.anIntArray1542[var9], TileModel.anIntArray1537[0], TileModel.anIntArray1537[1], TileModel.anIntArray1537[3], TileModel.anIntArray1550[0], TileModel.anIntArray1550[1], TileModel.anIntArray1550[3], TileModel.anIntArray1538[0], TileModel.anIntArray1538[1], TileModel.anIntArray1538[3], var1.triangleTexture[var9]);
             } else {
-              JagGraphics3D.method638(var16, var17, var18, var13, var14, var15, var1.anIntArray1547[var9], var1.anIntArray1544[var9], var1.anIntArray1542[var9], TileModel.anIntArray1537[var10], TileModel.anIntArray1537[var11], TileModel.anIntArray1537[var12], TileModel.anIntArray1550[var10], TileModel.anIntArray1550[var11], TileModel.anIntArray1550[var12], TileModel.anIntArray1538[var10], TileModel.anIntArray1538[var11], TileModel.anIntArray1538[var12], var1.triangleTexture[var9]);
+              JagGraphics3D.drawAndShadeTexturedTriangle(var16, var17, var18, var13, var14, var15, var1.anIntArray1547[var9], var1.anIntArray1544[var9], var1.anIntArray1542[var9], TileModel.anIntArray1537[var10], TileModel.anIntArray1537[var11], TileModel.anIntArray1537[var12], TileModel.anIntArray1550[var10], TileModel.anIntArray1550[var11], TileModel.anIntArray1550[var12], TileModel.anIntArray1538[var10], TileModel.anIntArray1538[var11], TileModel.anIntArray1538[var12], var1.triangleTexture[var9]);
             }
           } else {
             int var19 = JagGraphics3D.materialProvider.rgb(var1.triangleTexture[var9]);
-            JagGraphics3D.method627(var16, var17, var18, var13, var14, var15, method1444(var19, var1.anIntArray1547[var9]), method1444(var19, var1.anIntArray1544[var9]), method1444(var19, var1.anIntArray1542[var9]));
+            JagGraphics3D.rasterizeTriangleWithShading(var16, var17, var18, var13, var14, var15, method1444(var19, var1.anIntArray1547[var9]), method1444(var19, var1.anIntArray1544[var9]), method1444(var19, var1.anIntArray1542[var9]));
           }
         } else if (var1.anIntArray1547[var9] != 12345678) {
-          JagGraphics3D.method627(var16, var17, var18, var13, var14, var15, var1.anIntArray1547[var9], var1.anIntArray1544[var9], var1.anIntArray1542[var9]);
+          JagGraphics3D.rasterizeTriangleWithShading(var16, var17, var18, var13, var14, var15, var1.anIntArray1547[var9], var1.anIntArray1544[var9], var1.anIntArray1542[var9]);
         }
       }
     }

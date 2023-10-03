@@ -1,6 +1,5 @@
 package jagex.messaging;
 
-import jagex.oldscape.ClientParameter;
 import jagex.oldscape.LoginScreenEffect;
 import jagex.jagex3.client.input.keyboard.Keyboard;
 import jagex.jagex3.client.input.mouse.Mouse;
@@ -38,16 +37,6 @@ public class AsyncOutputStream implements Runnable {
     thread = new Thread(this);
     thread.setDaemon(true);
     thread.start();
-  }
-
-  public static int method15(ClientParameter var0) {
-    if (var0 == null) {
-      return 12;
-    }
-    if (var0.id == 0) {
-      return 20;
-    }
-    return 12;
   }
 
   public static void processMinimapClick(InterfaceComponent component, int x, int y) {

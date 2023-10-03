@@ -1,9 +1,9 @@
 package jagex.oldscape.client;
 
+import jagex.messaging.Buffer;
 import jagex.oldscape.URLRequest;
 import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.scene.entity.PathingEntity;
-import jagex.messaging.*;
 import jagex.oldscape.shared.prot.ClientProt;
 import jagex.oldscape.shared.prot.OutgoingPacket;
 
@@ -75,121 +75,89 @@ public class Server {
     sort(servers, 0, servers.length - 1, Server.indexComparator, Server.populationComparator);
   }
 
-  public static String method149(int var0) {
-    String var1 = Integer.toString(var0);
-
-    for (int var2 = var1.length() - 3; var2 > 0; var2 -= 3) {
-      var1 = var1.substring(0, var2) + "," + var1.substring(var2);
-    }
-
-    if (var1.length() > 9) {
-      return " " + client.getColorTags(65408) + var1.substring(0, var1.length() - 8) + "M" + " " + " (" + var1 + ")" + "</col>";
-    }
-    return var1.length() > 6 ? " " + client.getColorTags(16777215) + var1.substring(0, var1.length() - 4) + "K" + " " + " (" + var1 + ")" + "</col>" : " " + client.getColorTags(16776960) + var1 + "</col>";
-  }
-
-  public static void sort(Server[] array, int start, int end, int[] comparatorA, int[] comparatorB) {
+  public static void sort(Server[] array, int start, int end, int[] comparator, int[] reverseFlags) {
     if (start < end) {
-      int var5 = start - 1;
-      int var6 = end + 1;
-      int var7 = (end + start) / 2;
-      Server var8 = array[var7];
-      array[var7] = array[start];
-      array[start] = var8;
+      int leftIndex = start - 1;
+      int rightIndex = end + 1;
+      int pivotIndex = (end + start) / 2;
+      Server pivotServer = array[pivotIndex];
+      array[pivotIndex] = array[start];
+      array[start] = pivotServer;
 
-      while (var5 < var6) {
-        boolean var9 = true;
+      while (leftIndex < rightIndex) {
+        boolean leftShouldSwap = true;
 
-        int var10;
-        int var11;
-        int var12;
+        int leftComparatorValue;
+        int rightComparatorValue;
         do {
-          --var6;
+          --rightIndex;
 
-          for (var10 = 0; var10 < 4; ++var10) {
-            if (comparatorA[var10] == 2) {
-              var11 = array[var6].index;
-              var12 = var8.index;
-            } else if (comparatorA[var10] == 1) {
-              var11 = array[var6].population;
-              var12 = var8.population;
-              if (var11 == -1 && comparatorB[var10] == 1) {
-                var11 = 2001;
-              }
+          for (int comparatorIndex = 0; comparatorIndex < 4; ++comparatorIndex) {
+            leftComparatorValue = getComparatorValue(array[rightIndex], comparator[comparatorIndex]);
+            rightComparatorValue = getComparatorValue(pivotServer, comparator[comparatorIndex]);
 
-              if (var12 == -1 && comparatorB[var10] == 1) {
-                var12 = 2001;
-              }
-            } else if (comparatorA[var10] == 3) {
-              var11 = array[var6].isMembers() ? 1 : 0;
-              var12 = var8.isMembers() ? 1 : 0;
-            } else {
-              var11 = array[var6].id;
-              var12 = var8.id;
-            }
-
-            if (var11 != var12) {
-              if ((comparatorB[var10] != 1 || var11 <= var12) && (comparatorB[var10] != 0 || var11 >= var12)) {
-                var9 = false;
+            if (leftComparatorValue != rightComparatorValue) {
+              if ((reverseFlags[comparatorIndex] != 1 || leftComparatorValue <= rightComparatorValue) &&
+                  (reverseFlags[comparatorIndex] != 0 || leftComparatorValue >= rightComparatorValue)) {
+                leftShouldSwap = false;
               }
               break;
             }
 
-            if (var10 == 3) {
-              var9 = false;
+            if (comparatorIndex == 3) {
+              leftShouldSwap = false;
             }
           }
-        } while (var9);
+        } while (leftShouldSwap);
 
-        var9 = true;
+        boolean rightShouldSwap = true;
 
         do {
-          ++var5;
+          ++leftIndex;
 
-          for (var10 = 0; var10 < 4; ++var10) {
-            if (comparatorA[var10] == 2) {
-              var11 = array[var5].index;
-              var12 = var8.index;
-            } else if (comparatorA[var10] == 1) {
-              var11 = array[var5].population;
-              var12 = var8.population;
-              if (var11 == -1 && comparatorB[var10] == 1) {
-                var11 = 2001;
-              }
+          for (int comparatorIndex = 0; comparatorIndex < 4; ++comparatorIndex) {
+            leftComparatorValue = getComparatorValue(array[leftIndex], comparator[comparatorIndex]);
+            rightComparatorValue = getComparatorValue(pivotServer, comparator[comparatorIndex]);
 
-              if (var12 == -1 && comparatorB[var10] == 1) {
-                var12 = 2001;
-              }
-            } else if (comparatorA[var10] == 3) {
-              var11 = array[var5].isMembers() ? 1 : 0;
-              var12 = var8.isMembers() ? 1 : 0;
-            } else {
-              var11 = array[var5].id;
-              var12 = var8.id;
-            }
-
-            if (var12 != var11) {
-              if ((comparatorB[var10] != 1 || var11 >= var12) && (comparatorB[var10] != 0 || var11 <= var12)) {
-                var9 = false;
+            if (leftComparatorValue != rightComparatorValue) {
+              if ((reverseFlags[comparatorIndex] != 1 || leftComparatorValue >= rightComparatorValue) &&
+                  (reverseFlags[comparatorIndex] != 0 || leftComparatorValue <= rightComparatorValue)) {
+                rightShouldSwap = false;
               }
               break;
             }
 
-            if (var10 == 3) {
-              var9 = false;
+            if (comparatorIndex == 3) {
+              rightShouldSwap = false;
             }
           }
-        } while (var9);
+        } while (rightShouldSwap);
 
-        if (var5 < var6) {
-          Server var13 = array[var5];
-          array[var5] = array[var6];
-          array[var6] = var13;
+        if (leftIndex < rightIndex) {
+          Server tempServer = array[leftIndex];
+          array[leftIndex] = array[rightIndex];
+          array[rightIndex] = tempServer;
         }
       }
 
-      sort(array, start, var6, comparatorA, comparatorB);
-      sort(array, var6 + 1, end, comparatorA, comparatorB);
+      sort(array, start, rightIndex, comparator, reverseFlags);
+      sort(array, rightIndex + 1, end, comparator, reverseFlags);
+    }
+  }
+
+
+  private static int getComparatorValue(Server server, int comparator) {
+    switch (comparator) {
+      case 1:
+        int population = server.population;
+        return (population == -1 && comparator == 1) ? 2001 : population;
+      case 2:
+        return server.index;
+      case 3:
+        return server.isMembers() ? 1 : 0;
+      default: {
+        return server.id;
+      }
     }
   }
 

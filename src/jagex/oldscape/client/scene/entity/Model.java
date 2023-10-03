@@ -25,7 +25,7 @@ public class Model extends Entity {
   public static final int[] anIntArray1728 = new int[4700];
   public static final int[] anIntArray1731 = new int[4700];
   public static final int[] anIntArray1750 = new int[10];
-  public static final int[] anIntArray1741 = JagGraphics3D.anIntArray785;
+  public static final int[] anIntArray1741 = JagGraphics3D.RECIPROCAL_65536;
   public static final int[] anIntArray1746 = new int[10];
   public static final int[] anIntArray1751 = new int[2000];
   public static final int[] anIntArray1744 = new int[2000];
@@ -408,14 +408,14 @@ public class Model extends Entity {
         }
 
         if (zFaceColors[triangle] == -1) {
-          JagGraphics3D.method619(var14, var15, var16, var11, var12, var13, xFaceColors[triangle], xFaceColors[triangle], xFaceColors[triangle], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], faceTextures[triangle]);
+          JagGraphics3D.renderTexturedTriangleWithShading(var14, var15, var16, var11, var12, var13, xFaceColors[triangle], xFaceColors[triangle], xFaceColors[triangle], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], faceTextures[triangle]);
         } else {
-          JagGraphics3D.method619(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], faceTextures[triangle]);
+          JagGraphics3D.renderTexturedTriangleWithShading(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], faceTextures[triangle]);
         }
       } else if (zFaceColors[triangle] == -1) {
         JagGraphics3D.fillTriangle(var14, var15, var16, var11, var12, var13, colorPalette[xFaceColors[triangle]]);
       } else {
-        JagGraphics3D.method627(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2]);
+        JagGraphics3D.rasterizeTriangleWithShading(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2]);
       }
     }
 
@@ -438,19 +438,19 @@ public class Model extends Entity {
 
         short var21 = faceTextures[triangle];
         if (zFaceColors[triangle] == -1) {
-          JagGraphics3D.method619(var14, var15, var16, var11, var12, var13, xFaceColors[triangle], xFaceColors[triangle], xFaceColors[triangle], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
-          JagGraphics3D.method619(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], xFaceColors[triangle], xFaceColors[triangle], xFaceColors[triangle], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
+          JagGraphics3D.renderTexturedTriangleWithShading(var14, var15, var16, var11, var12, var13, xFaceColors[triangle], xFaceColors[triangle], xFaceColors[triangle], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
+          JagGraphics3D.renderTexturedTriangleWithShading(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], xFaceColors[triangle], xFaceColors[triangle], xFaceColors[triangle], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
         } else {
-          JagGraphics3D.method619(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
-          JagGraphics3D.method619(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], anIntArray1746[0], anIntArray1746[2], anIntArray1746[3], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
+          JagGraphics3D.renderTexturedTriangleWithShading(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
+          JagGraphics3D.renderTexturedTriangleWithShading(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], anIntArray1746[0], anIntArray1746[2], anIntArray1746[3], anIntArray1738[var18], anIntArray1738[var19], anIntArray1738[var20], anIntArray1731[var18], anIntArray1731[var19], anIntArray1731[var20], anIntArray1730[var18], anIntArray1730[var19], anIntArray1730[var20], var21);
         }
       } else if (zFaceColors[triangle] == -1) {
         var18 = colorPalette[xFaceColors[triangle]];
         JagGraphics3D.fillTriangle(var14, var15, var16, var11, var12, var13, var18);
         JagGraphics3D.fillTriangle(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], var18);
       } else {
-        JagGraphics3D.method627(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2]);
-        JagGraphics3D.method627(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], anIntArray1746[0], anIntArray1746[2], anIntArray1746[3]);
+        JagGraphics3D.rasterizeTriangleWithShading(var14, var15, var16, var11, var12, var13, anIntArray1746[0], anIntArray1746[1], anIntArray1746[2]);
+        JagGraphics3D.rasterizeTriangleWithShading(var14, var16, anIntArray1750[3], var11, var13, anIntArray1748[3], anIntArray1746[0], anIntArray1746[2], anIntArray1746[3]);
       }
     }
 
@@ -517,9 +517,9 @@ public class Model extends Entity {
       int var9 = SIN_TABLE[rotation];
 
       for (int i = 0; i < vertexCount; ++i) {
-        int var11 = JagGraphics3D.method625(xVertices[i], zVertices[i], var8, var9);
+        int var11 = JagGraphics3D.dot(xVertices[i], zVertices[i], var8, var9);
         int var12 = yVertices[i];
-        int var13 = JagGraphics3D.method628(xVertices[i], zVertices[i], var8, var9);
+        int var13 = JagGraphics3D.cross(xVertices[i], zVertices[i], var8, var9);
         if (var11 < var2) {
           var2 = var11;
         }
@@ -908,14 +908,14 @@ public class Model extends Entity {
         }
 
         if (zFaceColors[i] == -1) {
-          JagGraphics3D.method619(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], xFaceColors[i], xFaceColors[i], xFaceColors[i], anIntArray1738[var6], anIntArray1738[var7], anIntArray1738[var8], anIntArray1731[var6], anIntArray1731[var7], anIntArray1731[var8], anIntArray1730[var6], anIntArray1730[var7], anIntArray1730[var8], faceTextures[i]);
+          JagGraphics3D.renderTexturedTriangleWithShading(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], xFaceColors[i], xFaceColors[i], xFaceColors[i], anIntArray1738[var6], anIntArray1738[var7], anIntArray1738[var8], anIntArray1731[var6], anIntArray1731[var7], anIntArray1731[var8], anIntArray1730[var6], anIntArray1730[var7], anIntArray1730[var8], faceTextures[i]);
         } else {
-          JagGraphics3D.method619(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], xFaceColors[i], yFaceColors[i], zFaceColors[i], anIntArray1738[var6], anIntArray1738[var7], anIntArray1738[var8], anIntArray1731[var6], anIntArray1731[var7], anIntArray1731[var8], anIntArray1730[var6], anIntArray1730[var7], anIntArray1730[var8], faceTextures[i]);
+          JagGraphics3D.renderTexturedTriangleWithShading(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], xFaceColors[i], yFaceColors[i], zFaceColors[i], anIntArray1738[var6], anIntArray1738[var7], anIntArray1738[var8], anIntArray1731[var6], anIntArray1731[var7], anIntArray1731[var8], anIntArray1730[var6], anIntArray1730[var7], anIntArray1730[var8], faceTextures[i]);
         }
       } else if (zFaceColors[i] == -1) {
         JagGraphics3D.fillTriangle(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], colorPalette[xFaceColors[i]]);
       } else {
-        JagGraphics3D.method627(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], xFaceColors[i], yFaceColors[i], zFaceColors[i]);
+        JagGraphics3D.rasterizeTriangleWithShading(screenY[x], screenY[y], screenY[z], screenX[x], screenX[y], screenX[z], xFaceColors[i], yFaceColors[i], zFaceColors[i]);
       }
 
     }

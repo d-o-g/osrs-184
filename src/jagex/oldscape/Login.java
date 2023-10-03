@@ -145,8 +145,8 @@ public class Login {
       }
 
       JagGraphics.fillRect(paddingX, 23, 765, 480, 0);
-      JagGraphics.method1376(paddingX, 0, 125, 23, 12425273, 9135624);
-      JagGraphics.method1376(paddingX + 125, 0, 640, 23, 5197647, 2697513);
+      JagGraphics.blitRectWithAlpha(paddingX, 0, 125, 23, 12425273, 9135624);
+      JagGraphics.blitRectWithAlpha(paddingX + 125, 0, 640, 23, 5197647, 2697513);
       var0.method1154("Select a world", paddingX + 62, 15, 0, -1);
       if (AnimationFrameGroup.aDoublyNode_Sub24_Sub4Array801 != null) {
         AnimationFrameGroup.aDoublyNode_Sub24_Sub4Array801[1].renderAt(paddingX + 140, 1);
@@ -340,7 +340,7 @@ public class Login {
           }
 
           JagGraphics.fillRect(Mouse.x - var27 / 2, var50, var27, var28, 16777120);
-          JagGraphics.method1372(Mouse.x - var27 / 2, var50, var27, var28, 0);
+          JagGraphics.drawRectOutline(Mouse.x - var27 / 2, var50, var27, var28, 0);
           var1.method1154(Server.servers[anInt463].activity, Mouse.x, var50 + var1.anInt375 + 4, 0, -1);
         }
       }
@@ -354,8 +354,8 @@ public class Login {
         var7 = 20;
         var0.method1154("RuneScape is loading - please wait...", credentialsBoxX + 180, 245 - var7, 16777215, -1);
         var8 = 253 - var7;
-        JagGraphics.method1372(credentialsBoxX + 180 - 152, var8, 304, 34, 9179409);
-        JagGraphics.method1372(credentialsBoxX + 180 - 151, var8 + 1, 302, 32, 0);
+        JagGraphics.drawRectOutline(credentialsBoxX + 180 - 152, var8, 304, 34, 9179409);
+        JagGraphics.drawRectOutline(credentialsBoxX + 180 - 151, var8 + 1, 302, 32, 0);
         JagGraphics.fillRect(credentialsBoxX + 180 - 150, var8 + 2, anInt473 * 3, 30, 9179409);
         JagGraphics.fillRect(anInt473 * 3 + (credentialsBoxX + 180 - 150), var8 + 2, 300 - anInt473 * 3, 30, 0);
         var0.method1154(loadingStateText, credentialsBoxX + 180, 276 - var7, 16777215, -1);
@@ -1101,8 +1101,8 @@ public class Login {
           anInt473 = 90;
         } else {
           Archive.materialProvider = new DefaultMaterialProvider(Archive.textures, Archive.sprites, 20, 0.8D, client.lowMemory ? 64 : 128);
-          JagGraphics3D.method636(Archive.materialProvider);
-          JagGraphics3D.method634(0.8D);
+          JagGraphics3D.setMaterialProvider(Archive.materialProvider);
+          JagGraphics3D.generateColorPalette(0.8D);
           client.bootState = 100;
         }
       } else if (client.bootState == 100) {

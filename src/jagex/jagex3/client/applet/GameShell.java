@@ -8,7 +8,6 @@ import jagex.core.time.Clock;
 import jagex.core.stringtools.Strings;
 import jagex.oldscape.*;
 import jagex.oldscape.client.client;
-import jagex.oldscape.client.fonts.BaseFont;
 import jagex.oldscape.client.scene.CollisionMap;
 import jagex.oldscape.client.scene.entity.EntityUID;
 import jagex.oldscape.client.type.AnimationSequence;
@@ -676,7 +675,7 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
             }
 
             String minor = version.substring(6, i);
-            if (Strings.parseInt(minor) && BaseFont.method1501(minor) < 10) {
+            if (Strings.isInteger(minor) && Strings.parseInt(minor) < 10) {
               error("wrongjava");
               return;
             }

@@ -1,5 +1,6 @@
 package jagex.oldscape.client;
 
+import jagex.core.stringtools.Strings;
 import jagex.datastructure.Node;
 import jagex.datastructure.instrusive.cache.ReferenceCache;
 import jagex.datastructure.instrusive.hashtable.IntegerNode;
@@ -706,20 +707,20 @@ public class InterfaceComponent extends Node {
                   if (component.filled) {
                     switch (component.fillType.type) {
                       case 1:
-                        JagGraphics.method1376(absoluteX, absoluteY, component.width, component.height, component.foreground, component.enabledForeground);
+                        JagGraphics.blitRectWithAlpha(absoluteX, absoluteY, component.width, component.height, component.foreground, component.enabledForeground);
                         break;
                       case 2:
-                        JagGraphics.method1359(absoluteX, absoluteY, component.width, component.height, component.foreground, component.enabledForeground, 255 - (component.alpha & 255), 255 - (component.enabledAlpha & 255));
+                        JagGraphics.blitImageWithAlpha(absoluteX, absoluteY, component.width, component.height, component.foreground, component.enabledForeground, 255 - (component.alpha & 255), 255 - (component.enabledAlpha & 255));
                         break;
                       default:
                         if (alpha == 0) {
                           JagGraphics.fillRect(absoluteX, absoluteY, component.width, component.height, var19);
                         } else {
-                          JagGraphics.method1370(absoluteX, absoluteY, component.width, component.height, var19, 256 - (alpha & 255));
+                          JagGraphics.drawRectWithAlpha(absoluteX, absoluteY, component.width, component.height, var19, 256 - (alpha & 255));
                         }
                     }
                   } else if (alpha == 0) {
-                    JagGraphics.method1372(absoluteX, absoluteY, component.width, component.height, var19);
+                    JagGraphics.drawRectOutline(absoluteX, absoluteY, component.width, component.height, var19);
                   } else {
                     JagGraphics.drawRect(absoluteX, absoluteY, component.width, component.height, var19, 256 - (alpha & 255));
                   }
@@ -757,7 +758,7 @@ public class InterfaceComponent extends Node {
                         }
 
                         if ((var46.stackable == 1 || component.itemStackSize != 1) && component.itemStackSize != -1) {
-                          var45 = client.getColorTags(16748608) + var45 + "</col>" + " " + 'x' + Server.method149(component.itemStackSize);
+                          var45 = client.getColorTags(16748608) + var45 + "</col>" + " " + 'x' + Strings.formatNumber(component.itemStackSize);
                         }
                       }
 
@@ -807,7 +808,7 @@ public class InterfaceComponent extends Node {
                             var38.method807(absoluteX, absoluteY, component.width, component.height);
                           }
                         } else {
-                          JagGraphics.method1364(absoluteX, absoluteY, absoluteX + component.width, absoluteY + component.height);
+                          JagGraphics.setDrawingArea(absoluteX, absoluteY, absoluteX + component.width, absoluteY + component.height);
                           var22 = (var20 - 1 + component.width) / var20;
                           var23 = (var21 - 1 + component.height) / var21;
 
@@ -907,7 +908,7 @@ public class InterfaceComponent extends Node {
                               if (var34.stackable != 1 && component.itemStackSizes[var20] == 1) {
                                 var31 = client.getColorTags(16748608) + var34.name + "</col>";
                               } else {
-                                var31 = client.getColorTags(16748608) + var34.name + "</col>" + " " + 'x' + Server.method149(component.itemStackSizes[var20]);
+                                var31 = client.getColorTags(16748608) + var34.name + "</col>" + " " + 'x' + Strings.formatNumber(component.itemStackSizes[var20]);
                               }
 
                               var26 = absoluteX + var22 * (component.xPadding + 115);
@@ -966,7 +967,7 @@ public class InterfaceComponent extends Node {
                         }
 
                         JagGraphics.fillRect(var25, var26, var19, var20, 16777120);
-                        JagGraphics.method1372(var25, var26, var19, var20, 0);
+                        JagGraphics.drawRectOutline(var25, var26, var19, var20, 0);
                         var33 = component.text;
                         var27 = var26 + var32.anInt375 + 2;
 

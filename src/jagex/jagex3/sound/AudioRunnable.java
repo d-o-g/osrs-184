@@ -21,7 +21,7 @@ public class AudioRunnable implements Runnable {
       if (client.mapState < 3) {
         AttackOptionPriority.compass.rotate(var1, var2, var4.anInt380, var4.anInt568, 25, 25, Camera.yOffset, 256, var4.anIntArray1108, var4.anIntArray749);
       } else {
-        JagGraphics.method1362(var1, var2, 0, var4.anIntArray1108, var4.anIntArray749);
+        JagGraphics.fillRectangles(var1, var2, 0, var4.anIntArray1108, var4.anIntArray749);
       }
 
     }

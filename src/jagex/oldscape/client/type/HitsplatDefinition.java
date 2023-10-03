@@ -1,8 +1,8 @@
 package jagex.oldscape.client.type;
 
+import jagex.core.stringtools.Strings;
 import jagex.datastructure.DoublyLinkedNode;
 import jagex.datastructure.instrusive.cache.ReferenceCache;
-import jagex.oldscape.client.HealthBar;
 import jagex.oldscape.client.Vars;
 import jagex.oldscape.client.social.FriendChatUser;
 import jagex.oldscape.stockmarket.StockmarketListingNameComparator;
@@ -258,7 +258,7 @@ public class HitsplatDefinition extends DoublyLinkedNode {
         return var2;
       }
 
-      var2 = var2.substring(0, var3) + HealthBar.toString(var1, false) + var2.substring(var3 + 2);
+      var2 = var2.substring(0, var3) + Strings.toString(var1, false) + var2.substring(var3 + 2);
     }
   }
 }

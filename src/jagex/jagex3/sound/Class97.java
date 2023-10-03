@@ -21,64 +21,6 @@ public class Class97 {
     aReferenceTable733 = var2;
   }
 
-  public static int method536(CharSequence seq, int var1) {
-    if (var1 >= 2 && var1 <= 36) {
-      boolean var3 = false;
-      boolean var4 = false;
-      int var5 = 0;
-      int var6 = seq.length();
-
-      for (int var7 = 0; var7 < var6; ++var7) {
-        char var8 = seq.charAt(var7);
-        if (var7 == 0) {
-          if (var8 == '-') {
-            var3 = true;
-            continue;
-          }
-
-          if (var8 == '+') {
-            continue;
-          }
-        }
-
-        int var10;
-        if (var8 >= '0' && var8 <= '9') {
-          var10 = var8 - '0';
-        } else if (var8 >= 'A' && var8 <= 'Z') {
-          var10 = var8 - '7';
-        } else {
-          if (var8 < 'a' || var8 > 'z') {
-            throw new NumberFormatException();
-          }
-
-          var10 = var8 - 'W';
-        }
-
-        if (var10 >= var1) {
-          throw new NumberFormatException();
-        }
-
-        if (var3) {
-          var10 = -var10;
-        }
-
-        int var9 = var5 * var1 + var10;
-        if (var9 / var1 != var5) {
-          throw new NumberFormatException();
-        }
-
-        var5 = var9;
-        var4 = true;
-      }
-
-      if (!var4) {
-        throw new NumberFormatException();
-      }
-      return var5;
-    }
-    throw new IllegalArgumentException("" + var1);
-  }
-
   RawAudioOverride method540(int var1, int var2, int[] var3) {
     int var4 = var2 ^ (var1 << 4 & 65535 | var1 >>> 12);
     var4 |= var1 << 16;

@@ -14,41 +14,6 @@ public class HealthBar extends Node {
     this.definition = definition;
   }
 
-  public static String toString(int var0, boolean var1) {
-    if (var1 && var0 >= 0) {
-      int var2 = var0;
-      String var3;
-      if (var1) {
-        int var4 = 2;
-
-        for (int var5 = var0 / 10; var5 != 0; ++var4) {
-          var5 /= 10;
-        }
-
-        char[] var6 = new char[var4];
-        var6[0] = '+';
-
-        for (int var7 = var4 - 1; var7 > 0; --var7) {
-          int var8 = var2;
-          var2 /= 10;
-          int var9 = var8 - var2 * 10;
-          if (var9 >= 10) {
-            var6[var7] = (char) (var9 + 87);
-          } else {
-            var6[var7] = (char) (var9 + 48);
-          }
-        }
-
-        var3 = new String(var6);
-      } else {
-        var3 = Integer.toString(var0, 10);
-      }
-
-      return var3;
-    }
-    return Integer.toString(var0);
-  }
-
   public void update(int cycle, int width, int currWidth, int currCycle) {
     HitUpdate pending = null;
     int var6 = 0;

@@ -1,5 +1,6 @@
 package jagex.oldscape.stockmarket;
 
+import jagex.core.stringtools.Strings;
 import jagex.jagex3.client.applet.GameShell;
 import jagex.oldscape.*;
 import jagex.jagex3.sound.ObjectSound;
@@ -9,7 +10,6 @@ import jagex.oldscape.client.*;
 import jagex.oldscape.client.scene.*;
 import jagex.oldscape.client.scene.entity.*;
 import jagex.oldscape.client.type.ObjectDefinition;
-import jagex.oldscape.client.fonts.BaseFont;
 import jagex.jagex3.js5.BufferedFile;
 import jagex.messaging.Buffer;
 import jagex.statics.*;
@@ -159,7 +159,7 @@ public final class StockmarketListingLifetimeComparator implements Comparator<St
               if (var32 == ' ') {
                 var30.append('+');
               } else {
-                byte var33 = BaseFont.toCp1252Byte(var32);
+                byte var33 = Strings.toCp1252Byte(var32);
                 var30.append('%');
                 var34 = var33 >> 4 & 15;
                 if (var34 >= 10) {
@@ -191,7 +191,7 @@ public final class StockmarketListingLifetimeComparator implements Comparator<St
               if (var38 == ' ') {
                 var37.append('+');
               } else {
-                byte var39 = BaseFont.toCp1252Byte(var38);
+                byte var39 = Strings.toCp1252Byte(var38);
                 var37.append('%');
                 int var40 = var39 >> 4 & 15;
                 if (var40 >= 10) {

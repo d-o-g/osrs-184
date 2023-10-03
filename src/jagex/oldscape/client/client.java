@@ -756,7 +756,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       int var5 = Font.p12full.method1144(var0, 250);
       int var6 = Font.p12full.method1150(var0, 250) * 13;
       JagGraphics.fillRect(var3 - var2, var4 - var2, var2 + var5 + var2, var2 + var6 + var2, 0);
-      JagGraphics.method1372(var3 - var2, var4 - var2, var2 + var5 + var2, var2 + var2 + var6, 16777215);
+      JagGraphics.drawRectOutline(var3 - var2, var4 - var2, var2 + var5 + var2, var2 + var2 + var6, 16777215);
       Font.p12full.method1149(var0, var3, var4, var5, var6, 16777215, -1, 1, 1, 0);
       int var7 = var3 - var2;
       int var8 = var4 - var2;
@@ -2255,7 +2255,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       int col = 6116423;
       JagGraphics.fillRect(x, y, w, h, col);
       JagGraphics.fillRect(x + 1, y + 1, w - 2, 16, 0);
-      JagGraphics.method1372(x + 1, y + 18, w - 2, h - 19, 0);
+      JagGraphics.drawRectOutline(x + 1, y + 18, w - 2, h - 19, 0);
       Font.b12full.drawString("Choose Option", x + 3, y + 14, col, -1);
       int var7 = Mouse.x;
       int var8 = Mouse.y;
@@ -2285,9 +2285,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     if (redrawMode == 3) {
       for (int i = 0; i < renderedComponentCount; ++i) {
         if (aBooleanArray1083[i]) {
-          JagGraphics.method1370(interfacePositionsX[i], interfacePositionsY[i], interfaceWidths[i], interfaceHeights[i], 16711935, 128);
+          JagGraphics.drawRectWithAlpha(interfacePositionsX[i], interfacePositionsY[i], interfaceWidths[i], interfaceHeights[i], 16711935, 128);
         } else if (aBooleanArray1087[i]) {
-          JagGraphics.method1370(interfacePositionsX[i], interfacePositionsY[i], interfaceWidths[i], interfaceHeights[i], 16711680, 128);
+          JagGraphics.drawRectWithAlpha(interfacePositionsX[i], interfacePositionsY[i], interfaceWidths[i], interfaceHeights[i], 16711680, 128);
         }
       }
     }
@@ -3097,7 +3097,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
               buffer.pos += 4;
               break;
             case 3:
-              buffer.p4(preferences.properties.get(Djb2.hash(Login.username)));
+              buffer.p4(preferences.properties.get(Djb2.ascii(Login.username)));
           }
 
           buffer.p1(LoginHeaderType.anEnum_Sub10_1767.getOrdinal());
@@ -3258,7 +3258,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             var6 |= input.gheader() << 16;
             var6 |= input.gheader() << 8;
             var6 |= input.gheader();
-            var16 = Djb2.hash(Login.username);
+            var16 = Djb2.ascii(Login.username);
             if (preferences.properties.size() >= 10 && !preferences.properties.containsKey(var16)) {
               Iterator<Map.Entry<Integer, Integer>> var17 = preferences.properties.entrySet().iterator();
               var17.next();

@@ -2,8 +2,8 @@ package jagex.jagex3.js5;
 
 import jagex.core.compression.bzip2.Bzip2Decompressor;
 import jagex.core.compression.gzip.GzipDecompressor;
+import jagex.core.stringtools.Djb2;
 import jagex.oldscape.ByteBufferProvider;
-import jagex.oldscape.client.fonts.BaseFont;
 import jagex.messaging.Buffer;
 import jagex.oldscape.client.worldmap.WorldMapTileDecor_Sub2;
 
@@ -11,8 +11,9 @@ import java.util.Arrays;
 
 public abstract class ReferenceTable {
 
-  static final int maximumContainerSize = 0;
+  static final int MAXIMUM_CONTAINER_SIZE = 0;
   static final GzipDecompressor gzipdecompressor = new GzipDecompressor();
+
   public int hash;
   int entryCount;
   int[] entryIndices;
@@ -38,7 +39,7 @@ public abstract class ReferenceTable {
     Buffer buffer = new Buffer(data);
     int type = buffer.g1();
     int compressed = buffer.g4();
-    if (compressed < 0 || maximumContainerSize != 0 && compressed > maximumContainerSize) {
+    if (compressed < 0 || MAXIMUM_CONTAINER_SIZE != 0 && compressed > MAXIMUM_CONTAINER_SIZE) {
       throw new RuntimeException();
     }
 
@@ -49,7 +50,7 @@ public abstract class ReferenceTable {
     }
 
     int length = buffer.g4();
-    if (length < 0 || maximumContainerSize != 0 && length > maximumContainerSize) {
+    if (length < 0 || MAXIMUM_CONTAINER_SIZE != 0 && length > MAXIMUM_CONTAINER_SIZE) {
       throw new RuntimeException();
     }
 
@@ -59,6 +60,7 @@ public abstract class ReferenceTable {
     } else {
       gzipdecompressor.decompress(buffer, decoded);
     }
+
     return decoded;
   }
 
@@ -70,21 +72,11 @@ public abstract class ReferenceTable {
     return new Archive(cache, WorldMapTileDecor_Sub2.referenceCache, idx, soft, shallow, true);
   }
 
-  public static int djb2(CharSequence var0) {
-    int var1 = var0.length();
-    int var2 = 0;
-
-    for (int var3 = 0; var3 < var1; ++var3) {
-      var2 = (var2 << 5) - var2 + BaseFont.toCp1252Byte(var0.charAt(var3));
-    }
-
-    return var2;
-  }
-
   public static byte[] getBuffer(Object var0, boolean var1) {
     if (var0 == null) {
       return null;
     }
+
     if (var0 instanceof byte[]) {
       byte[] var6 = (byte[]) var0;
       if (var1) {
@@ -342,8 +334,8 @@ public abstract class ReferenceTable {
   public boolean load(String groupName, String fileName) {
     groupName = groupName.toLowerCase();
     fileName = fileName.toLowerCase();
-    int group = entry.get(djb2(groupName));
-    int file = children[group].get(djb2(fileName));
+    int group = entry.get(Djb2.cp1252(groupName));
+    int file = children[group].get(Djb2.cp1252(fileName));
     return load(group, file);
   }
 
@@ -354,22 +346,22 @@ public abstract class ReferenceTable {
   public boolean validate(String groupName, String fileName) {
     groupName = groupName.toLowerCase();
     fileName = fileName.toLowerCase();
-    int group = entry.get(djb2(groupName));
+    int group = entry.get(Djb2.cp1252(groupName));
     if (group < 0) {
       return false;
     }
-    int file = children[group].get(djb2(fileName));
+    int file = children[group].get(Djb2.cp1252(fileName));
     return file >= 0;
   }
 
   public int getGroup(String name) {
     name = name.toLowerCase();
-    return entry.get(djb2(name));
+    return entry.get(Djb2.cp1252(name));
   }
 
   public int getFile(int index, String name) {
     name = name.toLowerCase();
-    return children[index].get(djb2(name));
+    return children[index].get(Djb2.cp1252(name));
   }
 
   public boolean loadDynamic(int var1) {
@@ -476,8 +468,8 @@ public abstract class ReferenceTable {
   public byte[] unpack(String groupName, String fileName) {
     groupName = groupName.toLowerCase();
     fileName = fileName.toLowerCase();
-    int group = entry.get(djb2(groupName));
-    int file = children[group].get(djb2(fileName));
+    int group = entry.get(Djb2.cp1252(groupName));
+    int file = children[group].get(Djb2.cp1252(fileName));
     return unpack(group, file);
   }
 
@@ -512,13 +504,13 @@ public abstract class ReferenceTable {
 
   public boolean method909(String var1) {
     var1 = var1.toLowerCase();
-    int var2 = entry.get(djb2(var1));
+    int var2 = entry.get(Djb2.cp1252(var1));
     return loadGroup(var2);
   }
 
   public int method895(String var1) {
     var1 = var1.toLowerCase();
-    int var2 = entry.get(djb2(var1));
+    int var2 = entry.get(Djb2.cp1252(var1));
     return getLoadingPercent(var2);
   }
 
@@ -529,7 +521,7 @@ public abstract class ReferenceTable {
 
   public void method912(String var1) {
     var1 = var1.toLowerCase();
-    int var2 = entry.get(djb2(var1));
+    int var2 = entry.get(Djb2.cp1252(var1));
     if (var2 >= 0) {
       method490(var2);
     }

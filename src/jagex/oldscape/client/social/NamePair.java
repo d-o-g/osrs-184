@@ -1,7 +1,7 @@
 package jagex.oldscape.client.social;
 
+import jagex.core.stringtools.Strings;
 import jagex.oldscape.ClientParameter;
-import jagex.oldscape.script.ScriptEvent;
 
 public class NamePair implements Comparable {
 
@@ -10,7 +10,7 @@ public class NamePair implements Comparable {
 
   public NamePair(String raw, ClientParameter nameLengthParameter) {
     this.raw = raw;
-    this.formatted = ScriptEvent.format(raw, nameLengthParameter);
+    this.formatted = Strings.format(raw, nameLengthParameter);
   }
 
   public int compare0(NamePair other) {

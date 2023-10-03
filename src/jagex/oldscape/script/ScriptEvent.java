@@ -12,7 +12,6 @@ import jagex.datastructure.instrusive.hashtable.IterableNodeTable;
 import jagex.oldscape.*;
 import jagex.oldscape.client.*;
 import jagex.oldscape.client.chat.*;
-import jagex.oldscape.client.fonts.BaseFont;
 import jagex.oldscape.client.fonts.Font;
 import jagex.oldscape.client.minimenu.ContextMenu;
 import jagex.oldscape.client.option.ClientPreferences;
@@ -52,79 +51,6 @@ public class ScriptEvent extends Node {
 
   public ScriptEvent() {
     this.type = 76;
-  }
-
-  public static String format(CharSequence var0, ClientParameter nameLengthParameter) {
-    if (var0 == null) {
-      return null;
-    }
-    int var2 = 0;
-
-    int var3;
-    for (var3 = var0.length(); var2 < var3 && method1377(var0.charAt(var2)); ++var2) {
-    }
-
-    while (var3 > var2 && method1377(var0.charAt(var3 - 1))) {
-      --var3;
-    }
-
-    int var4 = var3 - var2;
-    if (var4 >= 1 && var4 <= AsyncOutputStream.method15(nameLengthParameter)) {
-      StringBuilder var5 = new StringBuilder(var4);
-
-      for (int var6 = var2; var6 < var3; ++var6) {
-        char var7 = var0.charAt(var6);
-        boolean var8;
-        if (Character.isISOControl(var7)) {
-          var8 = false;
-        } else if (isAlphaNumeric(var7)) {
-          var8 = true;
-        } else {
-          char[] var10 = Statics42.aCharArray1910;
-          int var11 = 0;
-
-          label73:
-          while (true) {
-            char var12;
-            if (var11 >= var10.length) {
-              var10 = Statics42.aCharArray1909;
-
-              for (var11 = 0; var11 < var10.length; ++var11) {
-                var12 = var10[var11];
-                if (var7 == var12) {
-                  var8 = true;
-                  break label73;
-                }
-              }
-
-              var8 = false;
-              break;
-            }
-
-            var12 = var10[var11];
-            if (var12 == var7) {
-              var8 = true;
-              break;
-            }
-
-            ++var11;
-          }
-        }
-
-        if (var8) {
-          char var9 = Statics49.convertDiacritic(var7);
-          if (var9 != 0) {
-            var5.append(var9);
-          }
-        }
-      }
-
-      if (var5.length() == 0) {
-        return null;
-      }
-      return var5.toString();
-    }
-    return null;
   }
 
   public static void method1306(boolean var0) {
@@ -713,7 +639,7 @@ public class ScriptEvent extends Node {
             } else if (var29 == 37) {
               var12 = var7[id];
               Statics46.anInt441 -= var12;
-              String var31 = TileOverlay.method1009(stringStack, Statics46.anInt441, var12);
+              String var31 = Strings.concat(stringStack, Statics46.anInt441, var12);
               stringStack[++Statics46.anInt441 - 1] = var31;
             } else if (var29 == 38) {
               --Statics46.anInt442;
@@ -1732,7 +1658,7 @@ public class ScriptEvent extends Node {
     if (var0 == 4102) {
       var3 = stringStack[--Statics46.anInt441];
       var4 = intStack[--Statics46.anInt442];
-      stringStack[++Statics46.anInt441 - 1] = var3 + HealthBar.toString(var4, true);
+      stringStack[++Statics46.anInt441 - 1] = var3 + Strings.toString(var4, true);
       return 1;
     }
     if (var0 == 4103) {
@@ -2531,8 +2457,8 @@ public class ScriptEvent extends Node {
     if (var0 == 3104) {
       var3 = stringStack[--Statics46.anInt441];
       var10 = 0;
-      if (Strings.parseInt(var3)) {
-        var10 = BaseFont.method1501(var3);
+      if (Strings.isInteger(var3)) {
+        var10 = Strings.parseInt(var3);
       }
 
       OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_NUMERIC_INPUT, client.stream.encryptor);
@@ -4238,10 +4164,6 @@ public class ScriptEvent extends Node {
 
   public static void fire(ScriptEvent var0) {
     process(var0, 500000);
-  }
-
-  public static boolean method1377(char var0) {
-    return var0 == 160 || var0 == ' ' || var0 == '_' || var0 == '-';
   }
 
   public static void method681(String var0, int var1) {

@@ -2,7 +2,6 @@ package jagex.messaging;
 
 import jagex.core.stringtools.Strings;
 import jagex.datastructure.Node;
-import jagex.oldscape.client.social.AssociateComparatorByName;
 import jagex.statics.Statics35;
 import jagex.oldscape.client.worldmap.WorldMapIcon;
 
@@ -673,7 +672,7 @@ public class Buffer extends Node {
     if (offset + pos > payload.length) {
       throw new IllegalStateException("");
     }
-    String str = AssociateComparatorByName.method719(payload, pos, offset);
+    String str = Strings.decodeUtf8(payload, pos, offset);
     pos += offset;
     return str;
   }
@@ -720,7 +719,7 @@ public class Buffer extends Node {
   }
 
   public void method1052(CharSequence seq) {
-    int flag = Strings.method702(seq);
+    int flag = Strings.getUtf8Length(seq);
     payload[pos++] = 0;
     pFlag(flag);
     pos += WorldMapIcon.method202(payload, pos, seq);

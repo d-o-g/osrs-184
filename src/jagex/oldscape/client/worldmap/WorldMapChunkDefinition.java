@@ -603,8 +603,8 @@ public class WorldMapChunkDefinition {
     if (var6 != null) {
       var6.renderAlphaAt(var2 - var6.width / 2, var3 - var6.height / 2);
       if (var4 % var5 < var5 / 2) {
-        JagGraphics.method1367(var2, var3, 15, 16776960, 128);
-        JagGraphics.method1367(var2, var3, 7, 16777215, 256);
+        JagGraphics.applyImageFilter(var2, var3, 15, 16776960, 128);
+        JagGraphics.applyImageFilter(var2, var3, 7, 16777215, 256);
       }
 
     }
