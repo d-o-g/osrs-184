@@ -86,7 +86,7 @@ public final class Projectile extends Entity {
 
   protected Model getModel() {
     EffectAnimation var1 = EffectAnimation.get(id);
-    Model var2 = var1.method1004(anInt1659);
+    Model var2 = var1.getModel(anInt1659);
     if (var2 == null) {
       return null;
     }

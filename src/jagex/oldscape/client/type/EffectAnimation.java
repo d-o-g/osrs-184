@@ -98,34 +98,33 @@ public class EffectAnimation extends DoublyLinkedNode {
 
   }
 
-  public final Model method1004(int var1) {
+  public final Model getModel(int frame) {
     Model cached = modelCache.get(id);
     if (cached == null) {
-      UnlitModel var3 = UnlitModel.method982(table, modelId, 0);
-      if (var3 == null) {
+      UnlitModel unlit = UnlitModel.method982(table, modelId, 0);
+      if (unlit == null) {
         return null;
       }
 
-      int var4;
       if (aShortArray1461 != null) {
-        for (var4 = 0; var4 < aShortArray1461.length; ++var4) {
-          var3.texturize(aShortArray1461[var4], aShortArray1462[var4]);
+        for (int i = 0; i < aShortArray1461.length; ++i) {
+          unlit.texturize(aShortArray1461[i], aShortArray1462[i]);
         }
       }
 
       if (aShortArray1460 != null) {
-        for (var4 = 0; var4 < aShortArray1460.length; ++var4) {
-          var3.colorize(aShortArray1460[var4], aShortArray1459[var4]);
+        for (int i = 0; i < aShortArray1460.length; ++i) {
+          unlit.colorize(aShortArray1460[i], aShortArray1459[i]);
         }
       }
 
-      cached = var3.light(ambience + 64, contrast + 850, -30, -50, -30);
+      cached = unlit.light(ambience + 64, contrast + 850, -30, -50, -30);
       modelCache.put(cached, id);
     }
 
     Model animated;
-    if (animation != -1 && var1 != -1) {
-      animated = AnimationSequence.get(animation).method880(cached, var1);
+    if (animation != -1 && frame != -1) {
+      animated = AnimationSequence.get(animation).getAnimatedModel(cached, frame);
     } else {
       animated = cached.method1294(true);
     }

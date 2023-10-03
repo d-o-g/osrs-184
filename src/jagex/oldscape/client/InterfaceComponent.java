@@ -1805,6 +1805,13 @@ public class InterfaceComponent extends Node {
     return false;
   }
 
+  public static void processDialogActionPacket(int var0, int var1) {
+    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DIALOG_ACTION, client.stream.encryptor);
+    packet.buffer.ip4(var0);
+    packet.buffer.p2(var1);
+    client.stream.writeLater(packet);
+  }
+
   public Sprite method958(boolean enabled) {
     forceRepaint = false;
 

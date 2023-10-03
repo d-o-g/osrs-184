@@ -207,7 +207,7 @@ public class ScriptEvent extends Node {
     if (var0 == 3609) {
       var5 = stringStack[--Statics46.anInt441];
       var5 = PlayerAccountType.getNameExcludingTags(var5);
-      intStack[++Statics46.anInt442 - 1] = client.relationshipManager.isFriend(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
+      intStack[++Statics46.anInt442 - 1] = client.relationshipManager.isFriend(new NamePair(var5, ClientParameter.loginTypeParameter)) ? 1 : 0;
       return 1;
     }
     if (var0 == 3611) {
@@ -305,7 +305,7 @@ public class ScriptEvent extends Node {
     if (var0 == 3623) {
       var5 = stringStack[--Statics46.anInt441];
       var5 = PlayerAccountType.getNameExcludingTags(var5);
-      intStack[++Statics46.anInt442 - 1] = client.relationshipManager.isIgnored(new NamePair(var5, PreciseWorldMapAreaChunk.loginTypeParameter)) ? 1 : 0;
+      intStack[++Statics46.anInt442 - 1] = client.relationshipManager.isIgnored(new NamePair(var5, ClientParameter.loginTypeParameter)) ? 1 : 0;
       return 1;
     }
     if (var0 == 3624) {
@@ -541,7 +541,7 @@ public class ScriptEvent extends Node {
     if (Statics24.method966(event.type)) {
       EnumDefinition.aWorldMapScriptEvent_1443 = (WorldMapScriptEvent) args[0];
       WorldMapFunction var3 = WorldMapFunction.get(EnumDefinition.aWorldMapScriptEvent_1443.anInt306);
-      script = WorldMapAreaChunk_Sub2.method151(event.type, var3.objectId, var3.category);
+      script = ClientScript.method151(event.type, var3.objectId, var3.category);
     } else {
       id = (Integer) args[0];
       script = ClientScript.decode(id);
@@ -1444,7 +1444,7 @@ public class ScriptEvent extends Node {
       } else if (var14.startsWith("glow3:")) {
         var17 = 11;
         var3 = var3.substring("glow3:".length());
-      } else if (WorldMapLabelSize.aClientLocale_525 != ClientLocale.GB) {
+      } else if (WorldMapLabelSize.locale != ClientLocale.GB) {
         if (var14.startsWith("yellow:")) {
           var17 = 0;
           var3 = var3.substring("yellow:".length());
@@ -1501,7 +1501,7 @@ public class ScriptEvent extends Node {
       } else if (var14.startsWith("slide:")) {
         var11 = 5;
         var3 = var3.substring("slide:".length());
-      } else if (ClientLocale.GB != WorldMapLabelSize.aClientLocale_525) {
+      } else if (ClientLocale.GB != WorldMapLabelSize.locale) {
         if (var14.startsWith("wave:")) {
           var11 = 1;
           var3 = var3.substring("wave:".length());
@@ -1561,12 +1561,12 @@ public class ScriptEvent extends Node {
       }
       if (var0 == 5019) {
         var7 = intStack[--Statics46.anInt442];
-        intStack[++Statics46.anInt442 - 1] = Clock.method723(var7);
+        intStack[++Statics46.anInt442 - 1] = ChatLine.method723(var7);
         return 1;
       }
       if (var0 == 5020) {
         var3 = stringStack[--Statics46.anInt441];
-        WorldMapAreaChunk_Sub3.method368(var3);
+        ClientPreferences.method368(var3);
         return 1;
       }
       if (var0 == 5021) {
@@ -1760,7 +1760,7 @@ public class ScriptEvent extends Node {
       }
       if (var0 == 4107) {
         Statics46.anInt441 -= 2;
-        intStack[++Statics46.anInt442 - 1] = method799(Statics46.method298(stringStack[Statics46.anInt441], stringStack[Statics46.anInt441 + 1], WorldMapLabelSize.aClientLocale_525));
+        intStack[++Statics46.anInt442 - 1] = method799(Statics46.method298(stringStack[Statics46.anInt441], stringStack[Statics46.anInt441 + 1], WorldMapLabelSize.locale));
         return 1;
       }
       int var12;
@@ -1800,7 +1800,7 @@ public class ScriptEvent extends Node {
       }
       if (var0 == 4111) {
         var3 = stringStack[--Statics46.anInt441];
-        stringStack[++Statics46.anInt441 - 1] = BaseFont.processGtLt(var3);
+        stringStack[++Statics46.anInt441 - 1] = Strings.escapeAngleBrackets(var3);
         return 1;
       }
       if (var0 == 4112) {
@@ -3558,7 +3558,7 @@ public class ScriptEvent extends Node {
       return 1;
     }
     if (var0 == 1121) {
-      Clock.processDialogActionPacket(var4.uid, var4.subComponentIndex);
+      InterfaceComponent.processDialogActionPacket(var4.uid, var4.subComponentIndex);
       client.pleaseWaitComponent = var4;
       InterfaceComponent.invalidate(var4);
       return 1;
@@ -3931,7 +3931,7 @@ public class ScriptEvent extends Node {
       if (var13 == null) {
         intStack[++Statics46.anInt442 - 1] = 0;
       } else {
-        intStack[++Statics46.anInt442 - 1] = var13.method69().getHash();
+        intStack[++Statics46.anInt442 - 1] = var13.getBasePosition().getHash();
       }
 
       return 1;
@@ -3943,8 +3943,8 @@ public class ScriptEvent extends Node {
         intStack[++Statics46.anInt442 - 1] = 0;
         intStack[++Statics46.anInt442 - 1] = 0;
       } else {
-        intStack[++Statics46.anInt442 - 1] = (var13.method70() - var13.getMinRegionX() + 1) * 64;
-        intStack[++Statics46.anInt442 - 1] = (var13.method72() - var13.getMinRegionY() + 1) * 64;
+        intStack[++Statics46.anInt442 - 1] = (var13.getRegionMaxX() - var13.getMinRegionX() + 1) * 64;
+        intStack[++Statics46.anInt442 - 1] = (var13.getRegionMaxY() - var13.getMinRegionY() + 1) * 64;
       }
 
       return 1;
@@ -3960,8 +3960,8 @@ public class ScriptEvent extends Node {
       } else {
         intStack[++Statics46.anInt442 - 1] = var13.getMinRegionX() * 64;
         intStack[++Statics46.anInt442 - 1] = var13.getMinRegionY() * 64;
-        intStack[++Statics46.anInt442 - 1] = var13.method70() * 64 + 64 - 1;
-        intStack[++Statics46.anInt442 - 1] = var13.method72() * 64 + 64 - 1;
+        intStack[++Statics46.anInt442 - 1] = var13.getRegionMaxX() * 64 + 64 - 1;
+        intStack[++Statics46.anInt442 - 1] = var13.getRegionMaxY() * 64 + 64 - 1;
       }
 
       return 1;

@@ -1,10 +1,9 @@
 package jagex.core.compression.bzip2;
 
-import jagex.oldscape.DirectByteBufferProvider;
-
 public final class Bzip2Decompressor {
 
   public static final Bzip2Entry entry = new Bzip2Entry();
+  public static int[] block;
 
   public static int decompress(byte[] outputBuffer, int size, byte[] inputBuffer, int caret) {
     synchronized (entry) {
@@ -31,8 +30,8 @@ public final class Bzip2Decompressor {
     int[] var21 = null;
     int[] var22 = null;
     entry.blockSize = 1410065408;
-    if (DirectByteBufferProvider.block == null) {
-      DirectByteBufferProvider.block = new int[100000];
+    if (block == null) {
+      block = new int[100000];
     }
 
     boolean var23 = true;
@@ -259,7 +258,7 @@ public final class Bzip2Decompressor {
                 }
               }
 
-              DirectByteBufferProvider.block[var47] = entry.unseq[var24 & 255] & 255;
+              block[var47] = entry.unseq[var24 & 255] & 255;
               ++var47;
               if (var45 == 0) {
                 ++var43;
@@ -318,7 +317,7 @@ public final class Bzip2Decompressor {
               var10000 = entry.unzftab;
 
               for (var10000[var24 & 255] += var48; var48 > 0; --var48) {
-                DirectByteBufferProvider.block[var47] = var24 & 255;
+                block[var47] = var24 & 255;
                 ++var47;
               }
             }
@@ -336,15 +335,15 @@ public final class Bzip2Decompressor {
           }
 
           for (int var36 = 0; var36 < var47; ++var36) {
-            var24 = (byte) (DirectByteBufferProvider.block[var36] & 255);
-            var10000 = DirectByteBufferProvider.block;
+            var24 = (byte) (block[var36] & 255);
+            var10000 = block;
             int var10001 = entry.cftab[var24 & 255];
             var10000[var10001] |= var36 << 8;
           }
 
-          entry.anInt1588 = DirectByteBufferProvider.block[entry.pointer] >> 8;
+          entry.anInt1588 = block[entry.pointer] >> 8;
           entry.anInt1590 = 0;
-          entry.anInt1588 = DirectByteBufferProvider.block[entry.anInt1588];
+          entry.anInt1588 = block[entry.anInt1588];
           entry.anInt1604 = (byte) (entry.anInt1588 & 255);
           entry.anInt1588 >>= 8;
           ++entry.anInt1590;
@@ -441,7 +440,7 @@ public final class Bzip2Decompressor {
     int var2 = var0.anInt1585;
     int var3 = var0.anInt1590;
     int var4 = var0.anInt1604;
-    int[] var5 = DirectByteBufferProvider.block;
+    int[] var5 = block;
     int var6 = var0.anInt1588;
     byte[] var7 = var0.outputBuffer;
     int var8 = var0.nextOut;
@@ -543,7 +542,7 @@ public final class Bzip2Decompressor {
     var0.anInt1585 = var2;
     var0.anInt1590 = var3;
     var0.anInt1604 = var4;
-    DirectByteBufferProvider.block = var5;
+    block = var5;
     var0.anInt1588 = var6;
     var0.outputBuffer = var7;
     var0.nextOut = var8;

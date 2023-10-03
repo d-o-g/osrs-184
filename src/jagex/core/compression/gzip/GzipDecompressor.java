@@ -8,9 +8,6 @@ public class GzipDecompressor {
 
   public Inflater inflater;
 
-  public GzipDecompressor() {
-  }
-
   public void decompress(Buffer buffer, byte[] b) {
     if (buffer.payload[buffer.pos] == 31 && buffer.payload[buffer.pos + 1] == -117) {
       if (inflater == null) {

@@ -117,6 +117,17 @@ public class ClientScript extends DoublyLinkedNode {
     return script;
   }
 
+  public static ClientScript method151(int var0, int var1, int var2) {
+    int var3 = (var1 << 8) + var0;
+    ClientScript var5 = get(var3);
+    if (var5 != null) {
+      return var5;
+    }
+    int var6 = (var2 + 40000 << 8) + var0;
+    var5 = get(var6);
+    return var5;
+  }
+
   public IterableNodeTable<? super Node>[] createTableArray(int len) {
     return new IterableNodeTable[len];
   }

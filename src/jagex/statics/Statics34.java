@@ -45,7 +45,7 @@ public final class Statics34 {
       var6.pathQueueTraversed[0] = GPI.aByteArray596[var1];
       var6.floorLevel = (byte) var8;
       var6.method1414((var9 << 13) + var3 - client.baseX, (var10 << 13) + var4 - client.baseY);
-      var6.aBoolean1904 = false;
+      var6.updatingPosition = false;
       return true;
     }
     if (var2 == 1) {

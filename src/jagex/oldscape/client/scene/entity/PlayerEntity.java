@@ -1,5 +1,6 @@
 package jagex.oldscape.client.scene.entity;
 
+import jagex.core.stringtools.Strings;
 import jagex.jagex3.util.Jagexception;
 import jagex.jagex3.client.input.keyboard.Keyboard;
 import jagex.oldscape.*;
@@ -10,10 +11,8 @@ import jagex.oldscape.client.minimenu.ContextMenu;
 import jagex.oldscape.client.social.*;
 import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.type.*;
-import jagex.oldscape.client.fonts.BaseFont;
 import jagex.messaging.*;
 import jagex.statics.Statics34;
-import jagex.oldscape.client.worldmap.PreciseWorldMapAreaChunk;
 
 public final class PlayerEntity extends PathingEntity {
 
@@ -30,12 +29,12 @@ public final class PlayerEntity extends PathingEntity {
 
   public Model transformedNpcModel;
 
-  public boolean aBoolean1905;
+  public boolean forceInanimate;
   public boolean hidden;
-  public boolean aBoolean1904;
+  public boolean updatingPosition;
 
-  public int prayerIcon;
   public int skullIcon;
+  public int prayerIcon;
   public int index;
   public int combatLevel;
   public int skillLevel;
@@ -55,8 +54,8 @@ public final class PlayerEntity extends PathingEntity {
   public int updateY;
 
   public PlayerEntity() {
-    prayerIcon = -1;
     skullIcon = -1;
+    prayerIcon = -1;
     actions = new String[3];
 
     for (int i = 0; i < 3; ++i) {
@@ -67,221 +66,207 @@ public final class PlayerEntity extends PathingEntity {
     skillLevel = 0;
     animationStartCycle = 0;
     animationEndCycle = 0;
-    aBoolean1905 = false;
+    forceInanimate = false;
     team = 0;
     hidden = false;
     befriendedPlayerStatus = AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1554;
     friendsChatUserStatus = AssociateStatus.A_CHAT_LINE_PRIVACY_TYPE___1554;
-    aBoolean1904 = false;
+    updatingPosition = false;
   }
 
   public static void update(BitBuffer packet, int var1) {
     int var2 = packet.pos;
     GPI.anInt594 = 0;
-    int var3 = 0;
+    int processing = 0;
     packet.bitAccess();
 
-    int var4;
-    int var5;
-    int var6;
-    int var7;
-    int var8;
-    byte[] var10000;
-    for (var4 = 0; var4 < GPI.playerCount; ++var4) {
-      var5 = GPI.playerIndices[var4];
-      if ((GPI.playerSkipFlags[var5] & 1) == 0) {
-        if (var3 > 0) {
-          --var3;
-          var10000 = GPI.playerSkipFlags;
-          var10000[var5] = (byte) (var10000[var5] | 2);
-        } else {
-          var6 = packet.g(1);
-          if (var6 == 0) {
-            var7 = packet.g(2);
-            if (var7 == 0) {
-              var8 = 0;
-            } else if (var7 == 1) {
-              var8 = packet.g(5);
-            } else if (var7 == 2) {
-              var8 = packet.g(8);
-            } else {
-              var8 = packet.g(11);
-            }
+    int result;
+    for (int i = 0; i < GPI.playerCount; ++i) {
+      int index = GPI.playerIndices[i];
+      if ((GPI.playerSkipFlags[index] & 1) == 0) {
+        if (processing > 0) {
+          --processing;
+          GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
+          continue;
+        }
 
-            var3 = var8;
-            var10000 = GPI.playerSkipFlags;
-            var10000[var5] = (byte) (var10000[var5] | 2);
+        int update = packet.g(1);
+        if (update == 0) {
+          int type = packet.g(2);
+          if (type == 0) {
+            result = 0;
+          } else if (type == 1) {
+            result = packet.g(5);
+          } else if (type == 2) {
+            result = packet.g(8);
           } else {
-            GPI.updatePlayerLocation(packet, var5);
+            result = packet.g(11);
           }
+
+          processing = result;
+          GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
+        } else {
+          GPI.updatePlayerLocation(packet, index);
         }
       }
     }
 
     packet.byteAccess();
-    if (var3 != 0) {
+    if (processing != 0) {
       throw new RuntimeException();
     }
     packet.bitAccess();
 
-    for (var4 = 0; var4 < GPI.playerCount; ++var4) {
-      var5 = GPI.playerIndices[var4];
-      if ((GPI.playerSkipFlags[var5] & 1) != 0) {
-        if (var3 > 0) {
-          --var3;
-          var10000 = GPI.playerSkipFlags;
-          var10000[var5] = (byte) (var10000[var5] | 2);
+    for (int i = 0; i < GPI.playerCount; ++i) {
+      int index = GPI.playerIndices[i];
+      if ((GPI.playerSkipFlags[index] & 1) != 0) {
+        if (processing > 0) {
+          --processing;
+          GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
         } else {
-          var6 = packet.g(1);
+          int var6 = packet.g(1);
           if (var6 == 0) {
-            var7 = packet.g(2);
+            int var7 = packet.g(2);
             if (var7 == 0) {
-              var8 = 0;
+              result = 0;
             } else if (var7 == 1) {
-              var8 = packet.g(5);
+              result = packet.g(5);
             } else if (var7 == 2) {
-              var8 = packet.g(8);
+              result = packet.g(8);
             } else {
-              var8 = packet.g(11);
+              result = packet.g(11);
             }
 
-            var3 = var8;
-            var10000 = GPI.playerSkipFlags;
-            var10000[var5] = (byte) (var10000[var5] | 2);
+            processing = result;
+            GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
           } else {
-            GPI.updatePlayerLocation(packet, var5);
+            GPI.updatePlayerLocation(packet, index);
           }
         }
       }
     }
 
     packet.byteAccess();
-    if (var3 != 0) {
+    if (processing != 0) {
       throw new RuntimeException();
     }
+
     packet.bitAccess();
 
-    for (var4 = 0; var4 < GPI.globalPlayerCount; ++var4) {
-      var5 = GPI.globalPlayerIndices[var4];
+    for (int i = 0; i < GPI.globalPlayerCount; ++i) {
+      int var5 = GPI.globalPlayerIndices[i];
       if ((GPI.playerSkipFlags[var5] & 1) != 0) {
-        if (var3 > 0) {
-          --var3;
-          var10000 = GPI.playerSkipFlags;
-          var10000[var5] = (byte) (var10000[var5] | 2);
+        if (processing > 0) {
+          --processing;
+          GPI.playerSkipFlags[var5] = (byte) (GPI.playerSkipFlags[var5] | 2);
         } else {
-          var6 = packet.g(1);
+          int var6 = packet.g(1);
           if (var6 == 0) {
-            var7 = packet.g(2);
+            int var7 = packet.g(2);
             if (var7 == 0) {
-              var8 = 0;
+              result = 0;
             } else if (var7 == 1) {
-              var8 = packet.g(5);
+              result = packet.g(5);
             } else if (var7 == 2) {
-              var8 = packet.g(8);
+              result = packet.g(8);
             } else {
-              var8 = packet.g(11);
+              result = packet.g(11);
             }
 
-            var3 = var8;
-            var10000 = GPI.playerSkipFlags;
-            var10000[var5] = (byte) (var10000[var5] | 2);
+            processing = result;
+            GPI.playerSkipFlags[var5] = (byte) (GPI.playerSkipFlags[var5] | 2);
           } else if (Statics34.method1168(packet, var5)) {
-            var10000 = GPI.playerSkipFlags;
-            var10000[var5] = (byte) (var10000[var5] | 2);
+            GPI.playerSkipFlags[var5] = (byte) (GPI.playerSkipFlags[var5] | 2);
           }
         }
       }
     }
 
     packet.byteAccess();
-    if (var3 != 0) {
+    if (processing != 0) {
       throw new RuntimeException();
     }
+
     packet.bitAccess();
 
-    for (var4 = 0; var4 < GPI.globalPlayerCount; ++var4) {
-      var5 = GPI.globalPlayerIndices[var4];
-      if ((GPI.playerSkipFlags[var5] & 1) == 0) {
-        if (var3 > 0) {
-          --var3;
-          var10000 = GPI.playerSkipFlags;
-          var10000[var5] = (byte) (var10000[var5] | 2);
+    for (int i = 0; i < GPI.globalPlayerCount; ++i) {
+      int index = GPI.globalPlayerIndices[i];
+      if ((GPI.playerSkipFlags[index] & 1) == 0) {
+        if (processing > 0) {
+          --processing;
+          GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
         } else {
-          var6 = packet.g(1);
+          int var6 = packet.g(1);
           if (var6 == 0) {
-            var7 = packet.g(2);
+            int var7 = packet.g(2);
             if (var7 == 0) {
-              var8 = 0;
+              result = 0;
             } else if (var7 == 1) {
-              var8 = packet.g(5);
+              result = packet.g(5);
             } else if (var7 == 2) {
-              var8 = packet.g(8);
+              result = packet.g(8);
             } else {
-              var8 = packet.g(11);
+              result = packet.g(11);
             }
 
-            var3 = var8;
-            var10000 = GPI.playerSkipFlags;
-            var10000[var5] = (byte) (var10000[var5] | 2);
-          } else if (Statics34.method1168(packet, var5)) {
-            var10000 = GPI.playerSkipFlags;
-            var10000[var5] = (byte) (var10000[var5] | 2);
+            processing = result;
+            GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
+          } else if (Statics34.method1168(packet, index)) {
+            GPI.playerSkipFlags[index] = (byte) (GPI.playerSkipFlags[index] | 2);
           }
         }
       }
     }
 
     packet.byteAccess();
-    if (var3 != 0) {
+    if (processing != 0) {
       throw new RuntimeException();
     }
     GPI.playerCount = 0;
     GPI.globalPlayerCount = 0;
 
-    PlayerEntity player;
-    for (var4 = 1; var4 < 2048; ++var4) {
-      var10000 = GPI.playerSkipFlags;
-      var10000[var4] = (byte) (var10000[var4] >> 1);
-      player = client.players[var4];
+    for (int i = 1; i < 2048; ++i) {
+      GPI.playerSkipFlags[i] = (byte) (GPI.playerSkipFlags[i] >> 1);
+      PlayerEntity player = client.players[i];
       if (player != null) {
-        GPI.playerIndices[++GPI.playerCount - 1] = var4;
+        GPI.playerIndices[++GPI.playerCount - 1] = i;
       } else {
-        GPI.globalPlayerIndices[++GPI.globalPlayerCount - 1] = var4;
+        GPI.globalPlayerIndices[++GPI.globalPlayerCount - 1] = i;
       }
     }
 
-    for (var3 = 0; var3 < GPI.anInt594; ++var3) {
-      var4 = GPI.anIntArray588[var3];
-      player = client.players[var4];
-      var6 = packet.g1();
-      if ((var6 & 0x1) != 0) {
-        var6 += packet.g1() << 8;
+    for (processing = 0; processing < GPI.anInt594; ++processing) {
+      int index = GPI.anIntArray588[processing];
+      PlayerEntity player = client.players[index];
+      int mask = packet.g1();
+      if ((mask & 0x1) != 0) {
+        mask += packet.g1() << 8;
       }
 
       byte var9 = -1;
-      if ((var6 & 0x100) != 0) {
-        for (var7 = 0; var7 < 3; ++var7) {
-          player.actions[var7] = packet.gstr();
+      if ((mask & 0x100) != 0) {
+        for (int i = 0; i < 3; ++i) {
+          player.actions[i] = packet.gstr();
         }
       }
 
-      if ((var6 & 0x800) != 0) {
+      if ((mask & 0x800) != 0) {
         player.effect = packet.g2();
-        var7 = packet.g4();
-        player.anInt2014 = var7 >> 16;
-        player.effectDelay = (var7 & 65535) + client.ticks;
+        int packed = packet.g4();
+        player.effectYOffset = packed >> 16;
+        player.effectDelay = (packed & 0xffff) + client.ticks;
         player.effectFrame = 0;
         player.effectFrameCycle = 0;
         if (player.effectDelay > client.ticks) {
           player.effectFrame = -1;
         }
 
-        if (player.effect == 65535) {
+        if (player.effect == 0xffff) {
           player.effect = -1;
         }
       }
 
-      if ((var6 & 0x2) != 0) {
+      if ((mask & 0x2) != 0) {
         player.overheadText = packet.gstr();
         if (player.overheadText.charAt(0) == '~') {
           player.overheadText = player.overheadText.substring(1);
@@ -296,48 +281,46 @@ public final class PlayerEntity extends PathingEntity {
         player.overheadTextCyclesLeft = 150;
       }
 
-      if ((var6 & 0x8) != 0) {
-        var7 = packet.ig1_alt1();
-        byte[] var11 = new byte[var7];
-        Buffer var12 = new Buffer(var11);
-        packet.igdataa(var11, 0, var7);
-        GPI.buffers[var4] = var12;
-        player.decode(var12);
+      if ((mask & 0x8) != 0) {
+        int len = packet.ig1_alt1();
+        byte[] data = new byte[len];
+        Buffer buffer = new Buffer(data);
+        packet.igdataa(data, 0, len);
+        GPI.buffers[index] = buffer;
+        player.decode(buffer);
       }
 
-      int var14;
-      int var15;
-      int var18;
-      if ((var6 & 0x80) != 0) {
-        var7 = packet.g2();
-        PlayerAccountType var20 = (PlayerAccountType) EnumType.getByOrdinal(PlayerAccountType.getValues(), packet.g1());
-        boolean var13 = packet.ig1_alt1() == 1;
-        var14 = packet.ig1_alt1();
-        var15 = packet.pos;
+      if ((mask & 0x80) != 0) {
+        int packed = packet.g2();
+        PlayerAccountType type = (PlayerAccountType) EnumType.getByOrdinal(PlayerAccountType.getValues(), packet.g1());
+        boolean autoChatting = packet.ig1_alt1() == 1;
+        int var14 = packet.ig1_alt1();
+        int var15 = packet.pos;
         if (player.namePair != null && player.model != null) {
-          boolean var16 = var20.notJagex && client.relationshipManager.isIgnored(player.namePair);
+          boolean ignored = type.notJagex && client.relationshipManager.isIgnored(player.namePair);
 
-          if (!var16 && client.anInt1014 == 0 && !player.hidden) {
+          if (!ignored && client.anInt1014 == 0 && !player.hidden) {
             GPI.chatBuffer.pos = 0;
             packet.igdata(GPI.chatBuffer.payload, 0, var14);
             GPI.chatBuffer.pos = 0;
-            String var17 = BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(GPI.chatBuffer)));
-            player.overheadText = var17.trim();
-            player.overheadTextForeground = var7 >> 8;
-            player.overheadTextEffect = var7 & 255;
+            String rawText = Strings.escapeAngleBrackets(Strings.toTitleCase(Strings.decompressText(GPI.chatBuffer)));
+            player.overheadText = rawText.trim();
+            player.overheadTextForeground = packed >> 8;
+            player.overheadTextEffect = packed & 255;
             player.overheadTextCyclesLeft = 150;
-            player.autoChatting = var13;
-            player.aBoolean2005 = player != local && var20.notJagex && "" != client.aString1091 && !var17.toLowerCase().contains(client.aString1091);
-            if (var20.staff) {
-              var18 = var13 ? 91 : 1;
+            player.autoChatting = autoChatting;
+            player.aBoolean2005 = player != local && type.notJagex && !"".equals(client.aString1091) && !rawText.toLowerCase().contains(client.aString1091);
+            int modMessageType;
+            if (type.staff) {
+              modMessageType = autoChatting ? 91 : 1;
             } else {
-              var18 = var13 ? 90 : 2;
+              modMessageType = autoChatting ? 90 : 2;
             }
 
-            if (var20.icon != -1) {
-              ChatHistory.messageReceived(var18, ContextMenu.addImgTags(var20.icon) + player.namePair.getRaw(), var17);
+            if (type.icon != -1) {
+              ChatHistory.messageReceived(modMessageType, ContextMenu.addImgTags(type.icon) + player.namePair.getRaw(), rawText);
             } else {
-              ChatHistory.messageReceived(var18, player.namePair.getRaw(), var17);
+              ChatHistory.messageReceived(modMessageType, player.namePair.getRaw(), rawText);
             }
           }
         }
@@ -345,25 +328,25 @@ public final class PlayerEntity extends PathingEntity {
         packet.pos = var14 + var15;
       }
 
-      if ((var6 & 0x1000) != 0) {
-        GPI.aByteArray596[var4] = packet.g1b();
+      if ((mask & 0x1000) != 0) {
+        GPI.aByteArray596[index] = packet.g1b();
       }
 
-      if ((var6 & 0x10) != 0) {
-        var7 = packet.g2s_le();
-        if (var7 == 65535) {
-          var7 = -1;
+      if ((mask & 0x10) != 0) {
+        int animation = packet.g2s_le();
+        if (animation == 65535) {
+          animation = -1;
         }
 
-        var8 = packet.g1();
-        animate(player, var7, var8);
+        result = packet.g1();
+        animate(player, animation, result);
       }
 
-      if ((var6 & 0x200) != 0) {
+      if ((mask & 0x200) != 0) {
         var9 = packet.g1b();
       }
 
-      if ((var6 & 0x400) != 0) {
+      if ((mask & 0x400) != 0) {
         player.startX = packet.g1_alt2();
         player.startY = packet.g1_alt1();
         player.endX = packet.g1_alt2();
@@ -371,7 +354,7 @@ public final class PlayerEntity extends PathingEntity {
         player.forceMovementStartCycle = packet.g2() + client.ticks;
         player.forceMovementEndCycle = packet.g2s_le() + client.ticks;
         player.anInt2019 = packet.g2_alt4();
-        if (player.aBoolean1904) {
+        if (player.updatingPosition) {
           player.startX += player.updateX;
           player.startY += player.updateY;
           player.endX += player.updateX;
@@ -388,15 +371,15 @@ public final class PlayerEntity extends PathingEntity {
         player.anInt2023 = 0;
       }
 
-      if ((var6 & 0x4) != 0) {
-        var7 = packet.g1_alt3();
+      if ((mask & 0x4) != 0) {
+        int var7 = packet.g1_alt3();
         int var19;
         int var22;
         int var23;
         if (var7 > 0) {
-          for (var8 = 0; var8 < var7; ++var8) {
-            var14 = -1;
-            var15 = -1;
+          for (result = 0; result < var7; ++result) {
+            int var14 = -1;
+            int var15 = -1;
             var23 = -1;
             var22 = packet.gSmarts();
             if (var22 == 32767) {
@@ -415,31 +398,31 @@ public final class PlayerEntity extends PathingEntity {
           }
         }
 
-        var8 = packet.g1_alt4();
-        if (var8 > 0) {
-          for (var22 = 0; var22 < var8; ++var22) {
-            var14 = packet.gSmarts();
-            var15 = packet.gSmarts();
+        result = packet.g1_alt4();
+        if (result > 0) {
+          for (var22 = 0; var22 < result; ++var22) {
+            int var14 = packet.gSmarts();
+            int var15 = packet.gSmarts();
             if (var15 != 32767) {
               var23 = packet.gSmarts();
               var19 = packet.g1_alt3();
-              var18 = var15 > 0 ? packet.g1_alt3() : var19;
+              int var18 = var15 > 0 ? packet.g1_alt3() : var19;
               player.updateHealthBar(var14, client.ticks, var15, var23, var19, var18);
             } else {
-              player.method1503(var14);
+              player.deleteHeadbar(var14);
             }
           }
         }
       }
 
-      if ((var6 & 0x40) != 0) {
+      if ((mask & 0x40) != 0) {
         player.targetIndex = packet.g2s_le();
         if (player.targetIndex == 65535) {
           player.targetIndex = -1;
         }
       }
 
-      if ((var6 & 0x20) != 0) {
+      if ((mask & 0x20) != 0) {
         player.transformedOrientation = packet.g2();
         if (player.pathQueueSize == 0) {
           player.orientation = player.transformedOrientation;
@@ -447,7 +430,7 @@ public final class PlayerEntity extends PathingEntity {
         }
       }
 
-      if (player.aBoolean1904) {
+      if (player.updatingPosition) {
         if (var9 == 127) {
           player.method1414(player.updateX, player.updateY);
         } else {
@@ -455,7 +438,7 @@ public final class PlayerEntity extends PathingEntity {
           if (var9 != -1) {
             var21 = var9;
           } else {
-            var21 = GPI.aByteArray596[var4];
+            var21 = GPI.aByteArray596[index];
           }
 
           player.method1415(player.updateX, player.updateY, var21);
@@ -573,7 +556,7 @@ public final class PlayerEntity extends PathingEntity {
       return null;
     }
     AnimationSequence animation = super.animation != -1 && super.animationDelay == 0 ? AnimationSequence.get(super.animation) : null;
-    AnimationSequence stance = super.stance != -1 && !aBoolean1905 && (super.stance != super.idleStance || animation == null) ? AnimationSequence.get(super.stance) : null;
+    AnimationSequence stance = super.stance != -1 && !forceInanimate && (super.stance != super.idleStance || animation == null) ? AnimationSequence.get(super.stance) : null;
     Model var3 = model.getModel(animation, super.animationFrame, stance, super.stanceFrame);
     if (var3 == null) {
       return null;
@@ -582,16 +565,16 @@ public final class PlayerEntity extends PathingEntity {
     super.modelHeight = var3.height;
     Model var4;
     Model[] var5;
-    if (!aBoolean1905 && super.effect != -1 && super.effectFrame != -1) {
-      var4 = EffectAnimation.get(super.effect).method1004(super.effectFrame);
+    if (!forceInanimate && super.effect != -1 && super.effectFrame != -1) {
+      var4 = EffectAnimation.get(super.effect).getModel(super.effectFrame);
       if (var4 != null) {
-        var4.offsetBy(0, -super.anInt2014, 0);
+        var4.offsetBy(0, -super.effectYOffset, 0);
         var5 = new Model[]{var3, var4};
         var3 = new Model(var5, 2);
       }
     }
 
-    if (!aBoolean1905 && transformedNpcModel != null) {
+    if (!forceInanimate && transformedNpcModel != null) {
       if (client.ticks >= animationEndCycle) {
         transformedNpcModel = null;
       }
@@ -677,8 +660,8 @@ public final class PlayerEntity extends PathingEntity {
   public void decode(Buffer buffer) {
     buffer.pos = 0;
     int gender = buffer.g1();
-    prayerIcon = buffer.g1b();
     skullIcon = buffer.g1b();
+    prayerIcon = buffer.g1b();
     int transformedNpcId = -1;
     team = 0;
 
@@ -750,7 +733,7 @@ public final class PlayerEntity extends PathingEntity {
       super.runStance = -1;
     }
 
-    namePair = new NamePair(buffer.gstr(), PreciseWorldMapAreaChunk.loginTypeParameter);
+    namePair = new NamePair(buffer.gstr(), ClientParameter.loginTypeParameter);
     setIsBefriendedDefaults();
     setIsInFriendsChatDefaults();
     if (this == local) {

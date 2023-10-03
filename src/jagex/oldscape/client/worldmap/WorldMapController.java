@@ -234,30 +234,30 @@ public final class WorldMapController {
       this.aClass9_Sub1_273.getBaseY();
       this.anInt261 = this.aClass9_Sub1_273.getMinRegionX() * 64;
       this.anInt268 = this.aClass9_Sub1_273.getMinRegionY() * 64;
-      this.anInt260 = (this.aClass9_Sub1_273.method70() - this.aClass9_Sub1_273.getMinRegionX() + 1) * 64;
-      this.anInt263 = (this.aClass9_Sub1_273.method72() - this.aClass9_Sub1_273.getMinRegionY() + 1) * 64;
-      int var9 = this.aClass9_Sub1_273.method70() - this.aClass9_Sub1_273.getMinRegionX() + 1;
-      int var10 = this.aClass9_Sub1_273.method72() - this.aClass9_Sub1_273.getMinRegionY() + 1;
+      this.anInt260 = (this.aClass9_Sub1_273.getRegionMaxX() - this.aClass9_Sub1_273.getMinRegionX() + 1) * 64;
+      this.anInt263 = (this.aClass9_Sub1_273.getRegionMaxY() - this.aClass9_Sub1_273.getMinRegionY() + 1) * 64;
+      int var9 = this.aClass9_Sub1_273.getRegionMaxX() - this.aClass9_Sub1_273.getMinRegionX() + 1;
+      int var10 = this.aClass9_Sub1_273.getRegionMaxY() - this.aClass9_Sub1_273.getMinRegionY() + 1;
       System.nanoTime();
       System.nanoTime();
       SerializableProcessor.method453();
       this.aWorldMapChunkDefinitionArrayArray269 = new WorldMapChunkDefinition[var9][var10];
 
-      for (Object anAHashSet291 : this.aClass9_Sub1_273.aHashSet291) {
+      for (Object anAHashSet291 : this.aClass9_Sub1_273.decor1) {
         WorldMapTileDecor_Sub2 var12 = (WorldMapTileDecor_Sub2) anAHashSet291;
         int var13 = var12.anInt517;
         int var14 = var12.anInt516;
         int var15 = var13 - this.aClass9_Sub1_273.getMinRegionX();
         int var16 = var14 - this.aClass9_Sub1_273.getMinRegionY();
-        this.aWorldMapChunkDefinitionArrayArray269[var15][var16] = new WorldMapChunkDefinition(var13, var14, this.aClass9_Sub1_273.method67(), this.fonts);
+        this.aWorldMapChunkDefinitionArrayArray269[var15][var16] = new WorldMapChunkDefinition(var13, var14, this.aClass9_Sub1_273.getBackgroundColor(), this.fonts);
         this.aWorldMapChunkDefinitionArrayArray269[var15][var16].method54(var12, this.aClass9_Sub1_273.icons);
       }
 
       for (int var17 = 0; var17 < var9; ++var17) {
         for (int var18 = 0; var18 < var10; ++var18) {
           if (this.aWorldMapChunkDefinitionArrayArray269[var17][var18] == null) {
-            this.aWorldMapChunkDefinitionArrayArray269[var17][var18] = new WorldMapChunkDefinition(this.aClass9_Sub1_273.getMinRegionX() + var17, this.aClass9_Sub1_273.getMinRegionY() + var18, this.aClass9_Sub1_273.method67(), this.fonts);
-            this.aWorldMapChunkDefinitionArrayArray269[var17][var18].method52(this.aClass9_Sub1_273.aHashSet289, this.aClass9_Sub1_273.icons);
+            this.aWorldMapChunkDefinitionArrayArray269[var17][var18] = new WorldMapChunkDefinition(this.aClass9_Sub1_273.getMinRegionX() + var17, this.aClass9_Sub1_273.getMinRegionY() + var18, this.aClass9_Sub1_273.getBackgroundColor(), this.fonts);
+            this.aWorldMapChunkDefinitionArrayArray269[var17][var18].method52(this.aClass9_Sub1_273.decor2, this.aClass9_Sub1_273.icons);
           }
         }
       }

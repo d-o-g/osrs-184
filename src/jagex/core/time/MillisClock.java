@@ -1,73 +1,76 @@
 package jagex.core.time;
 
 public class MillisClock extends Clock {
-  final long[] aLongArray820;
-  int anInt821;
-  int anInt819;
-  int anInt817;
-  long aLong818;
-  int anInt816;
+
+  private final long[] records;
+  private int sleepTime;
+  private int elapsed;
+  private int counter;
+  private long lastUpdateTime;
+  private int index;
 
   MillisClock() {
-    this.aLongArray820 = new long[10];
-    this.anInt821 = 256;
-    this.anInt819 = 1;
-    this.anInt817 = 0;
-    this.aLong818 = Clock.now();
+    this.records = new long[10];
+    this.sleepTime = 256;
+    this.elapsed = 1;
+    this.counter = 0;
+    this.lastUpdateTime = Clock.now();
 
-    for (int var1 = 0; var1 < 10; ++var1) {
-      this.aLongArray820[var1] = this.aLong818;
+    for (int i = 0; i < 10; ++i) {
+      this.records[i] = this.lastUpdateTime;
     }
-
   }
 
-  public int sleep(int time, int var2) {
-    int var3 = this.anInt821;
-    int var4 = this.anInt819;
-    this.anInt821 = 300;
-    this.anInt819 = 1;
-    this.aLong818 = Clock.now();
-    if (0L == this.aLongArray820[this.anInt816]) {
-      this.anInt821 = var3;
-      this.anInt819 = var4;
-    } else if (this.aLong818 > this.aLongArray820[this.anInt816]) {
-      this.anInt821 = (int) ((long) (time * 2560L) / (this.aLong818 - this.aLongArray820[this.anInt816]));
+  @Override
+  public int sleep(int desired, int minimum) {
+    int prevSleepTime = this.sleepTime;
+    int prevTimeElapsed = this.elapsed;
+    this.sleepTime = 300;
+    this.elapsed = 1;
+    this.lastUpdateTime = Clock.now();
+
+    if (this.records[this.index] == 0L) {
+      this.sleepTime = prevSleepTime;
+      this.elapsed = prevTimeElapsed;
+    } else if (this.lastUpdateTime > this.records[this.index]) {
+      this.sleepTime = (int) ((long) (desired * 2560L) / (this.lastUpdateTime - this.records[this.index]));
     }
 
-    if (this.anInt821 < 25) {
-      this.anInt821 = 25;
+    if (this.sleepTime < 25) {
+      this.sleepTime = 25;
     }
 
-    if (this.anInt821 > 256) {
-      this.anInt821 = 256;
-      this.anInt819 = (int) ((long) time - (this.aLong818 - this.aLongArray820[this.anInt816]) / 10L);
+    if (this.sleepTime > 256) {
+      this.sleepTime = 256;
+      this.elapsed = (int) ((long) desired - (this.lastUpdateTime - this.records[this.index]) / 10L);
     }
 
-    if (this.anInt819 > time) {
-      this.anInt819 = time;
+    if (this.elapsed > desired) {
+      this.elapsed = desired;
     }
 
-    this.aLongArray820[this.anInt816] = this.aLong818;
-    this.anInt816 = (this.anInt816 + 1) % 10;
-    if (this.anInt819 > 1) {
-      for (int var5 = 0; var5 < 10; ++var5) {
-        if (0L != this.aLongArray820[var5]) {
-          this.aLongArray820[var5] += this.anInt819;
+    this.records[this.index] = this.lastUpdateTime;
+    this.index = (this.index + 1) % 10;
+
+    if (this.elapsed > 1) {
+      for (int i = 0; i < 10; ++i) {
+        if (this.records[i] != 0L) {
+          this.records[i] += this.elapsed;
         }
       }
     }
 
-    if (this.anInt819 < var2) {
-      this.anInt819 = var2;
+    if (this.elapsed < minimum) {
+      this.elapsed = minimum;
     }
 
-    long var6 = this.anInt819;
-    if (var6 > 0L) {
-      if (var6 % 10L == 0L) {
-        long var8 = var6 - 1L;
+    long sleepDuration = this.elapsed;
+    if (sleepDuration > 0L) {
+      if (sleepDuration % 10L == 0L) {
+        long adjustedSleepDuration = sleepDuration - 1L;
 
         try {
-          Thread.sleep(var8);
+          Thread.sleep(adjustedSleepDuration);
         } catch (InterruptedException ignored) {
         }
 
@@ -77,25 +80,26 @@ public class MillisClock extends Clock {
         }
       } else {
         try {
-          Thread.sleep(var6);
+          Thread.sleep(sleepDuration);
         } catch (InterruptedException ignored) {
         }
       }
     }
 
-    int var12;
-    for (var12 = 0; this.anInt817 < 256; this.anInt817 += this.anInt821) {
-      ++var12;
+    int iterations = 0;
+    while (this.counter < 256) {
+      ++iterations;
+      this.counter += this.sleepTime;
     }
 
-    this.anInt817 &= 255;
-    return var12;
+    this.counter &= 255;
+    return iterations;
   }
 
+  @Override
   public void update() {
-    for (int var1 = 0; var1 < 10; ++var1) {
-      this.aLongArray820[var1] = 0L;
+    for (int i = 0; i < 10; ++i) {
+      this.records[i] = 0L;
     }
-
   }
 }

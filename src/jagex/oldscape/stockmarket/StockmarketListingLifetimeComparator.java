@@ -31,7 +31,7 @@ public final class StockmarketListingLifetimeComparator implements Comparator<St
     } else {
       long var6;
       try {
-        URL var0 = new URL(GameShell.method611("services", false) + "m=accountappeal/login.ws");
+        URL var0 = new URL(GameShell.buildUrl("services", false) + "m=accountappeal/login.ws");
         URLConnection var1 = var0.openConnection();
         var1.setRequestProperty("connection", "close");
         var1.setDoInput(true);
@@ -143,7 +143,7 @@ public final class StockmarketListingLifetimeComparator implements Comparator<St
 
         byte var43;
         try {
-          URL var25 = new URL(GameShell.method611("services", false) + "m=accountappeal/login.ws");
+          URL var25 = new URL(GameShell.buildUrl("services", false) + "m=accountappeal/login.ws");
           URLConnection var26 = var25.openConnection();
           var26.setDoInput(true);
           var26.setDoOutput(true);

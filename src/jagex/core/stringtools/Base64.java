@@ -1,107 +1,138 @@
 package jagex.core.stringtools;
 
+import java.util.Arrays;
+
 public class Base64 {
 
-  public static final char[] BASE64;
+  private static final char[] STANDARD_BASE64_CHARS;
 
-  static final char[] aCharArray1635;
-  static final char[] aCharArray1633;
-  static final int[] anIntArray1632;
+  private static final char[] URL_SAFE_BASE64_CHARS;
+  private static final char[] FILE_SAFE_BASE64_CHARS;
+  private static final int[] BASE64_DECODE_TABLE;
 
   static {
-    BASE64 = new char[64];
+    STANDARD_BASE64_CHARS = initializeStandardBase64Chars();
+    URL_SAFE_BASE64_CHARS = initializeUrlSafeBase64Chars();
+    FILE_SAFE_BASE64_CHARS = initializeFileSafeBase64Chars();
+    BASE64_DECODE_TABLE = initializeBase64DecodeTable();
+  }
 
-    int var0;
-    for (var0 = 0; var0 < 26; ++var0) {
-      BASE64[var0] = (char) (var0 + 65);
+  private static char[] initializeStandardBase64Chars() {
+    char[] chars = new char[64];
+    int index = 0;
+
+    for (int i = 0; i < 26; ++i) {
+      chars[index++] = (char) (i + 'A');
     }
 
-    for (var0 = 26; var0 < 52; ++var0) {
-      BASE64[var0] = (char) (var0 + 97 - 26);
+    for (int i = 26; i < 52; ++i) {
+      chars[index++] = (char) (i + 'a' - 26);
     }
 
-    for (var0 = 52; var0 < 62; ++var0) {
-      BASE64[var0] = (char) (var0 + 48 - 52);
+    for (int i = 52; i < 62; ++i) {
+      chars[index++] = (char) (i + '0' - 52);
     }
 
-    BASE64[62] = '+';
-    BASE64[63] = '/';
-    aCharArray1635 = new char[64];
+    chars[62] = '+';
+    chars[63] = '/';
 
-    for (var0 = 0; var0 < 26; ++var0) {
-      aCharArray1635[var0] = (char) (var0 + 65);
+    return chars;
+  }
+
+  private static char[] initializeUrlSafeBase64Chars() {
+    char[] chars = new char[64];
+    int index = 0;
+
+    for (int i = 0; i < 26; ++i) {
+      chars[index++] = (char) (i + 'A');
     }
 
-    for (var0 = 26; var0 < 52; ++var0) {
-      aCharArray1635[var0] = (char) (var0 + 97 - 26);
+    for (int i = 26; i < 52; ++i) {
+      chars[index++] = (char) (i + 'a' - 26);
     }
 
-    for (var0 = 52; var0 < 62; ++var0) {
-      aCharArray1635[var0] = (char) (var0 + 48 - 52);
+    for (int i = 52; i < 62; ++i) {
+      chars[index++] = (char) (i + '0' - 52);
     }
 
-    aCharArray1635[62] = '*';
-    aCharArray1635[63] = '-';
-    aCharArray1633 = new char[64];
+    chars[62] = '*';
+    chars[63] = '-';
 
-    for (var0 = 0; var0 < 26; ++var0) {
-      aCharArray1633[var0] = (char) (var0 + 65);
+    return chars;
+  }
+
+  private static char[] initializeFileSafeBase64Chars() {
+    char[] chars = new char[64];
+    int index = 0;
+
+    for (int i = 0; i < 26; ++i) {
+      chars[index++] = (char) (i + 'A');
     }
 
-    for (var0 = 26; var0 < 52; ++var0) {
-      aCharArray1633[var0] = (char) (var0 + 97 - 26);
+    for (int i = 26; i < 52; ++i) {
+      chars[index++] = (char) (i + 'a' - 26);
     }
 
-    for (var0 = 52; var0 < 62; ++var0) {
-      aCharArray1633[var0] = (char) (var0 + 48 - 52);
+    for (int i = 52; i < 62; ++i) {
+      chars[index++] = (char) (i + '0' - 52);
     }
 
-    aCharArray1633[62] = '-';
-    aCharArray1633[63] = '_';
-    anIntArray1632 = new int[128];
+    chars[62] = '-';
+    chars[63] = '_';
 
-    for (var0 = 0; var0 < anIntArray1632.length; ++var0) {
-      anIntArray1632[var0] = -1;
+    return chars;
+  }
+
+  private static int[] initializeBase64DecodeTable() {
+    int[] decodeTable = new int[128];
+
+    Arrays.fill(decodeTable, -1);
+
+    for (int i = 'A'; i <= 'Z'; ++i) {
+      decodeTable[i] = i - 'A';
     }
 
-    for (var0 = 65; var0 <= 90; ++var0) {
-      anIntArray1632[var0] = var0 - 65;
+    for (int i = 'a'; i <= 'z'; ++i) {
+      decodeTable[i] = i - 'a' + 26;
     }
 
-    for (var0 = 97; var0 <= 122; ++var0) {
-      anIntArray1632[var0] = var0 - 97 + 26;
+    for (int i = '0'; i <= '9'; ++i) {
+      decodeTable[i] = i - '0' + 52;
     }
 
-    for (var0 = 48; var0 <= 57; ++var0) {
-      anIntArray1632[var0] = var0 - 48 + 52;
-    }
+    decodeTable['+'] = 62;
+    decodeTable['*'] = 62;
+    decodeTable['/'] = 63;
+    decodeTable['-'] = 63;
 
-    anIntArray1632[43] = 62;
-    anIntArray1632[42] = 62;
-    anIntArray1632[47] = 63;
-    anIntArray1632[45] = 63;
+    return decodeTable;
   }
 
   public static String encode(byte[] data, int start, int len) {
-    StringBuilder var3 = new StringBuilder();
+    StringBuilder encoded = new StringBuilder();
 
     for (int i = start; i < len + start; i += 3) {
-      int var5 = data[i] & 255;
-      var3.append(BASE64[var5 >>> 2]);
+      int b1 = data[i] & 0xFF;
+      encoded.append(STANDARD_BASE64_CHARS[b1 >>> 2]);
+
       if (i < len - 1) {
-        int var6 = data[i + 1] & 255;
-        var3.append(BASE64[(var5 & 3) << 4 | var6 >>> 4]);
+        int b2 = data[i + 1] & 0xFF;
+        encoded.append(STANDARD_BASE64_CHARS[(b1 & 3) << 4 | b2 >>> 4]);
+
         if (i < len - 2) {
-          int var7 = data[i + 2] & 255;
-          var3.append(BASE64[(var6 & 15) << 2 | var7 >>> 6]).append(BASE64[var7 & 63]);
+          int b3 = data[i + 2] & 0xFF;
+          encoded.append(STANDARD_BASE64_CHARS[(b2 & 15) << 2 | b3 >>> 6]);
+          encoded.append(STANDARD_BASE64_CHARS[b3 & 63]);
         } else {
-          var3.append(BASE64[(var6 & 15) << 2]).append("=");
+          encoded.append(STANDARD_BASE64_CHARS[(b2 & 15) << 2]);
+          encoded.append("=");
         }
       } else {
-        var3.append(BASE64[(var5 & 3) << 4]).append("==");
+        encoded.append(STANDARD_BASE64_CHARS[(b1 & 3) << 4]);
+        encoded.append("==");
       }
     }
 
-    return var3.toString();
+    return encoded.toString();
   }
 }

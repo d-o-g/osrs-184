@@ -1,6 +1,7 @@
 package jagex.oldscape;
 
 import jagex.core.compression.huffman.Huffman;
+import jagex.core.stringtools.Strings;
 import jagex.jagex3.client.applet.GameShell;
 import jagex.jagex3.sound.*;
 import jagex.jagex3.sound.vorbis.Decimator;
@@ -78,6 +79,7 @@ public class Login {
   public static Sprite leftTitleSprite;
   public static Sprite rightTitleSprite;
   public static int parsedTotp;
+  public static IndexedSprite aDoublyNode_Sub24_Sub4_288;
 
   static {
     paddingX = 0;
@@ -400,7 +402,7 @@ public class Login {
             var15 = var15.substring(0, var15.length() - 1);
           }
 
-          var0.drawString(BaseFont.processGtLt(var15), credentialsBoxX + 180 - 70, var41, 16777215, 0);
+          var0.drawString(Strings.escapeAngleBrackets(var15), credentialsBoxX + 180 - 70, var41, 16777215, 0);
           var41 += 15;
           var9 = "Password: ";
           var17 = password;
@@ -474,7 +476,7 @@ public class Login {
             var15 = var15.substring(1);
           }
 
-          var0.drawString(BaseFont.processGtLt(var15) + (anInt461 == 0 & client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 70, var41, 16777215, 0);
+          var0.drawString(Strings.escapeAngleBrackets(var15) + (anInt461 == 0 & client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxCenterX - 70, var41, 16777215, 0);
           var41 += 15;
           var9 = "Password: ";
           var17 = password;
@@ -560,7 +562,7 @@ public class Login {
             var22 = var41 - var0.anInt375;
             IndexedSprite var47;
             if (aBoolean462) {
-              var47 = WorldMapAreaChunk_Sub2.aDoublyNode_Sub24_Sub4_288;
+              var47 = aDoublyNode_Sub24_Sub4_288;
             } else {
               var47 = aDoublyNode_Sub24_Sub4_1148;
             }
@@ -607,7 +609,7 @@ public class Login {
                 var15 = var15.substring(1);
               }
 
-              var0.drawString(BaseFont.processGtLt(var15) + (client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 34, var41, 16777215, 0);
+              var0.drawString(Strings.escapeAngleBrackets(var15) + (client.ticks % 40 < 20 ? client.getColorTags(16776960) + "|" : ""), credentialsBoxX + 180 - 34, var41, 16777215, 0);
               var20 = credentialsBoxX + 180 - 80;
               var49 = 321;
               GraphicsProvider.titlebuttonSprite.renderAt(var20 - 73, var49 - 20);
@@ -716,7 +718,7 @@ public class Login {
       }
 
       AssociateComparator_Sub2.titleMuteSprites[client.preferences.loginScreenAudioDisabled ? 1 : 0].renderAt(paddingX + 765 - 40, 463);
-      if (client.gameState > 5 && ClientLocale.GB == WorldMapLabelSize.aClientLocale_525) {
+      if (client.gameState > 5 && ClientLocale.GB == WorldMapLabelSize.locale) {
         if (slbutton != null) {
           var41 = paddingX + 5;
           var42 = 463;
@@ -990,7 +992,7 @@ public class Login {
           VarcInteger.table = Archive.config;
           ParameterDefinition.table = Archive.config;
           client.varcs = new Varcs();
-          WorldMapCacheArea.method88(Archive.config, Archive.sprites, Archive.fonts);
+          HitsplatDefinition.method88(Archive.config, Archive.sprites, Archive.fonts);
           HealthBarDefinition.method296(Archive.config, Archive.sprites);
           WorldMapFunction.table = Archive.sprites;
           if (cfg.method908()) {
@@ -1392,7 +1394,7 @@ public class Login {
         }
 
         if (client.gameState == 10 || client.gameState == 11) {
-          if (WorldMapLabelSize.aClientLocale_525 == ClientLocale.GB) {
+          if (WorldMapLabelSize.locale == ClientLocale.GB) {
             if (Mouse.clickMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.clickMeta == 4) {
               var6 = paddingX + 5;
               short var8 = 463;
@@ -1442,7 +1444,7 @@ public class Login {
             var11 = credentialsBoxCenterX - 80;
             var12 = 291;
             if (var6 == 1 && var18 >= var11 - 75 && var18 <= var11 + 75 && var19 >= var12 - 20 && var19 <= var12 + 20) {
-              Browser.openURL0(GameShell.method611("secure", true) + "m=account-creation/g=oldscape/create_account_funnel.ws", true, false);
+              Browser.openURL0(GameShell.buildUrl("secure", true) + "m=account-creation/g=oldscape/create_account_funnel.ws", true, false);
             }
 
             var11 = credentialsBoxCenterX + 80;
@@ -1688,7 +1690,7 @@ public class Login {
                   }
 
                   if (var6 == 1 && var18 >= credentialsBoxX + 180 - 34 && var18 <= credentialsBoxX + 34 + 180 && var19 >= 351 && var19 <= 363) {
-                    Browser.openURL0(GameShell.method611("secure", true) + "m=totp-authenticator/disableTOTPRequest", true, false);
+                    Browser.openURL0(GameShell.buildUrl("secure", true) + "m=totp-authenticator/disableTOTPRequest", true, false);
                   }
 
                   var21 = credentialsBoxX + 180 + 80;
@@ -1758,7 +1760,7 @@ public class Login {
                   if (LoginProt.aBounds_846 != null) {
                     var25 = LoginProt.aBounds_846.width / 2;
                     if (var6 == 1 && var18 >= LoginProt.aBounds_846.x - var25 && var18 <= var25 + LoginProt.aBounds_846.x && var19 >= var12 - 15 && var19 < var12) {
-                      Browser.openURL0(GameShell.method611("secure", true) + "m=weblogin/g=oldscape/cant_log_in", true, false);
+                      Browser.openURL0(GameShell.buildUrl("secure", true) + "m=weblogin/g=oldscape/cant_log_in", true, false);
                     }
                   }
 
@@ -1808,7 +1810,7 @@ public class Login {
                   var21 = credentialsBoxX + 180 - 80;
                   var23 = 321;
                   if (var6 == 1 && var18 >= var21 - 75 && var18 <= var21 + 75 && var19 >= var23 - 20 && var19 <= var23 + 20) {
-                    Browser.openURL0(GameShell.method611("secure", true) + "m=dob/set_dob.ws", true, false);
+                    Browser.openURL0(GameShell.buildUrl("secure", true) + "m=dob/set_dob.ws", true, false);
                     setMessages("", "Page has opened in a new window.", "(Please check your popup blocker.)");
                     step = 6;
                     return;
@@ -1918,7 +1920,7 @@ public class Login {
       AssociateComparator_Sub2.titleMuteSprites = IndexedSprite.method474(var1, "title_mute", "");
       aDoublyNode_Sub24_Sub4_1148 = WorldMapArea.loadIndexedSprite(var1, "options_radio_buttons,0", "");
       WorldMapElement.aDoublyNode_Sub24_Sub4_363 = WorldMapArea.loadIndexedSprite(var1, "options_radio_buttons,4", "");
-      WorldMapAreaChunk_Sub2.aDoublyNode_Sub24_Sub4_288 = WorldMapArea.loadIndexedSprite(var1, "options_radio_buttons,2", "");
+      aDoublyNode_Sub24_Sub4_288 = WorldMapArea.loadIndexedSprite(var1, "options_radio_buttons,2", "");
       aDoublyNode_Sub24_Sub4_470 = WorldMapArea.loadIndexedSprite(var1, "options_radio_buttons,6", "");
       Statics51.anInt495 = aDoublyNode_Sub24_Sub4_1148.anInt378;
       WorldMapCacheFeature.anInt296 = aDoublyNode_Sub24_Sub4_1148.anInt377;

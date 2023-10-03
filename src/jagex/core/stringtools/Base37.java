@@ -3,12 +3,11 @@ package jagex.core.stringtools;
 public class Base37 {
 
   public static final char[] CHARSET = new char[]{'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-  public static final long[] aLongArray1571;
+  public static final long[] POWERS_OF_37 = new long[12];
 
   static {
-    aLongArray1571 = new long[12];
-    for (int i = 0; i < aLongArray1571.length; ++i) {
-      aLongArray1571[i] = (long) Math.pow(37.0D, i);
+    for (int i = 0; i < POWERS_OF_37.length; ++i) {
+      POWERS_OF_37[i] = (long) Math.pow(37.0D, i);
     }
   }
 
@@ -19,14 +18,14 @@ public class Base37 {
       base *= 37L;
       char c = entry.charAt(i);
       if (c >= 'A' && c <= 'Z') {
-        base += c + 1 - 65;
+        base += c - 'A' + 1;
       } else if (c >= 'a' && c <= 'z') {
-        base += c + 1 - 97;
+        base += c - 'a' + 1;
       } else if (c >= '0' && c <= '9') {
-        base += c + 27 - 48;
+        base += c - '0' + 27;
       }
 
-      if (base >= 177917621779460413L) {
+      if (base >= 0x27817226572713dL) {
         break;
       }
     }
@@ -34,11 +33,12 @@ public class Base37 {
     while (base % 37L == 0L && 0L != base) {
       base /= 37L;
     }
+
     return base;
   }
 
   public static String decode(long encoded) {
-    if (encoded > 0L && encoded < 6582952005840035281L) {
+    if (encoded > 0L && encoded < 0x5b5b57f8a98a5dd1L) {
       if (0L == encoded % 37L) {
         return null;
       }

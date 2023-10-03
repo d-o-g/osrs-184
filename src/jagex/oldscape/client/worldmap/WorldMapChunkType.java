@@ -10,10 +10,10 @@ public enum WorldMapChunkType implements EnumType {
   anEnum_Sub2_621(1, (byte) 3);
 
   public final byte index;
-  public final int type;
+  public final int identifier;
 
-  WorldMapChunkType(int type, byte index) {
-    this.type = type;
+  WorldMapChunkType(int identifier, byte index) {
+    this.identifier = identifier;
     this.index = index;
   }
 

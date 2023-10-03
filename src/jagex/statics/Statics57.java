@@ -8,7 +8,7 @@ public class Statics57 {
   public static AudioTrack anAudioTrack1158;
   public static ReferenceTable aReferenceTable1159;
   public static ReferenceTable aReferenceTable1160;
-  public static String aString1162;
+  public static String cookie;
   public static int[] mapFileIds;
 
   static {

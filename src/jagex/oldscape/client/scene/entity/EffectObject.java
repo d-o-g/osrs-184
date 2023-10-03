@@ -42,9 +42,9 @@ public final class EffectObject extends Entity {
     EffectAnimation def = EffectAnimation.get(id);
     Model model;
     if (!finished) {
-      model = def.method1004(frame);
+      model = def.getModel(frame);
     } else {
-      model = def.method1004(-1);
+      model = def.getModel(-1);
     }
 
     return model;

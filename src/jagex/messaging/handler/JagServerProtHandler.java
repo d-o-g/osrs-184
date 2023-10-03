@@ -1,5 +1,6 @@
 package jagex.messaging.handler;
 
+import jagex.core.stringtools.Strings;
 import jagex.datastructure.instrusive.hashtable.IntegerNode;
 import jagex.core.stringtools.Base37;
 import jagex.core.time.Clock;
@@ -11,12 +12,10 @@ import jagex.oldscape.client.social.NamePair;
 import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.shared.prot.*;
 import jagex.oldscape.stockmarket.*;
-import jagex.oldscape.client.fonts.BaseFont;
 import jagex.jagex3.js5.Js5Worker;
 import jagex.jagex3.js5.ResourceCache;
 import jagex.messaging.*;
 import jagex.statics.Statics53;
-import jagex.oldscape.client.worldmap.PreciseWorldMapAreaChunk;
 
 import java.io.IOException;
 
@@ -177,13 +176,13 @@ public class JagServerProtHandler extends ServerProtHandler {
   public boolean processLockCameraRequest(BitBuffer incoming) {
     client.cameraLocked = true;
     SceneGraph.anInt1235 = incoming.g1() * 128;
-    Clock.anInt889 = incoming.g1() * 128;
+    Camera.anInt889 = incoming.g1() * 128;
     StockmarketListingWorldComparator.anInt347 = incoming.g2();
     MouseRecorder.anInt388 = incoming.g1();
     Statics53.anInt520 = incoming.g1();
     if (Statics53.anInt520 >= 100) {
       Camera.x = SceneGraph.anInt1235 * 16384 + 64;
-      Camera.y = Clock.anInt889 * 16384 + 64;
+      Camera.y = Camera.anInt889 * 16384 + 64;
       Camera.z = SceneGraph.getTileHeight(Camera.x, Camera.y, SceneGraph.floorLevel) - StockmarketListingWorldComparator.anInt347;
     }
 
@@ -365,14 +364,14 @@ public class JagServerProtHandler extends ServerProtHandler {
       }
     }
 
-    if (accountType.notJagex && client.relationshipManager.isIgnored(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+    if (accountType.notJagex && client.relationshipManager.isIgnored(new NamePair(var38, ClientParameter.loginTypeParameter))) {
       ignored = true;
     }
 
     if (!ignored && client.anInt1014 == 0) {
       client.messageIds[client.messageIndex] = var22;
       client.messageIndex = (client.messageIndex + 1) % 100;
-      String escaped = BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(incoming)));
+      String escaped = Strings.escapeAngleBrackets(Strings.toTitleCase(Strings.decompressText(incoming)));
       if (accountType.icon != -1) {
         ChatHistory.messageReceived(9, ContextMenu.addImgTags(accountType.icon) + var38, escaped, Base37.decode(var18));
       } else {

@@ -27,4 +27,8 @@ public class CursorEntities {
     mouseInViewport = false;
     count = 0;
   }
+
+  public static int method722() {
+    return viewportMouseX;
+  }
 }

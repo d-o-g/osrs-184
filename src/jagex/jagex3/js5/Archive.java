@@ -82,7 +82,7 @@ public class Archive extends ReferenceTable {
 
   void load(int i) {
     if (cache != null && valid != null && valid[i]) {
-      WorldMapCacheArea.method77(i, cache, this);
+      CacheRequestWorker.method77(i, cache, this);
     } else {
       Js5Worker.request(this, index, i, super.groupCrcs[i], (byte) 2, true);
     }
@@ -249,7 +249,7 @@ public class Archive extends ReferenceTable {
     this.crc = crc;
     this.version = version;
     if (meta != null) {
-      WorldMapCacheArea.method77(index, meta, this);
+      CacheRequestWorker.method77(index, meta, this);
     } else {
       Js5Worker.request(this, 255, index, this.crc, (byte) 0, true);
     }

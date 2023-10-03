@@ -14,19 +14,19 @@ public class OperatingSystemNode extends Node {
   final int heapSize;
   final int processorCount;
   final int processorInfoInt;
-  final int processorInfoInt2;
+  final int clockSpeed;
   final int szDriverDateP2;
   final int szDriverDateP1;
-  final int processorInfoInt3;
-  final int processorInfoInt4;
-  final int processorInfoInt5;
+  final int unk10;
+  final int unk11;
+  final int unk15;
   final String szDescription;
-  final String unusedString;
+  final String glRenderer;
   final String directXVersion;
-  final String unusedString2;
-  final String processorInfoString;
-  final String processorInfoString2;
-  final String unusedString3;
+  final String glVersion;
+  final String cpuId;
+  final String cpuName;
+  final String mobileDeviceName;
   final boolean unusedBool;
   final boolean x64;
   int[] cpuInfo;
@@ -37,9 +37,9 @@ public class OperatingSystemNode extends Node {
       int heapSize, int processorCount,
       int processorInfoInt,
       String szDescription,
-      String unusedString,
+      String glRenderer,
       String directXVersion,
-      String unusedString2, String processorInfoString, String processorInfoString2, int[] cpuInfo) {
+      String glVersion, String cpuId, String cpuName, int[] cpuInfo) {
     this.osType = osType;
     this.x64 = x64;
     this.osVersion = osVersion;
@@ -51,31 +51,31 @@ public class OperatingSystemNode extends Node {
     this.heapSize = heapSize;
     this.processorCount = processorCount;
     this.processorInfoInt = processorInfoInt;
-    this.processorInfoInt2 = 0;
+    this.clockSpeed = 0;
     this.szDescription = szDescription;
-    this.unusedString = unusedString;
+    this.glRenderer = glRenderer;
     this.directXVersion = directXVersion;
-    this.unusedString2 = unusedString2;
+    this.glVersion = glVersion;
     this.szDriverDateP2 = 0;
     this.szDriverDateP1 = 0;
-    this.processorInfoInt3 = 0;
-    this.processorInfoInt4 = 0;
-    this.processorInfoString = processorInfoString;
-    this.processorInfoString2 = processorInfoString2;
+    this.unk10 = 0;
+    this.unk11 = 0;
+    this.cpuId = cpuId;
+    this.cpuName = cpuName;
     this.cpuInfo = cpuInfo;
-    this.processorInfoInt5 = 0;
-    this.unusedString3 = "";
+    this.unk15 = 0;
+    this.mobileDeviceName = "";
   }
 
   public int getPayloadSize() {
     byte base = 39;
     int size = base + Buffer.stringLengthPlusTwo(this.szDescription);
-    size += Buffer.stringLengthPlusTwo(this.unusedString);
+    size += Buffer.stringLengthPlusTwo(this.glRenderer);
     size += Buffer.stringLengthPlusTwo(this.directXVersion);
-    size += Buffer.stringLengthPlusTwo(this.unusedString2);
-    size += Buffer.stringLengthPlusTwo(this.processorInfoString);
-    size += Buffer.stringLengthPlusTwo(this.processorInfoString2);
-    size += Buffer.stringLengthPlusTwo(this.unusedString3);
+    size += Buffer.stringLengthPlusTwo(this.glVersion);
+    size += Buffer.stringLengthPlusTwo(this.cpuId);
+    size += Buffer.stringLengthPlusTwo(this.cpuName);
+    size += Buffer.stringLengthPlusTwo(this.mobileDeviceName);
     return size;
   }
 
@@ -92,23 +92,23 @@ public class OperatingSystemNode extends Node {
     buffer.p2(this.heapSize);
     buffer.p1(this.processorCount);
     buffer.p3(this.processorInfoInt);
-    buffer.p2(this.processorInfoInt2);
+    buffer.p2(this.clockSpeed);
     buffer.pstr(this.szDescription);
-    buffer.pstr(this.unusedString);
+    buffer.pstr(this.glRenderer);
     buffer.pstr(this.directXVersion);
-    buffer.pstr(this.unusedString2);
+    buffer.pstr(this.glVersion);
     buffer.p1(this.szDriverDateP1);
     buffer.p2(this.szDriverDateP2);
-    buffer.pstr(this.processorInfoString);
-    buffer.pstr(this.processorInfoString2);
-    buffer.p1(this.processorInfoInt3);
-    buffer.p1(this.processorInfoInt4);
+    buffer.pstr(this.cpuId);
+    buffer.pstr(this.cpuName);
+    buffer.p1(this.unk10);
+    buffer.p1(this.unk11);
 
     for (int i : this.cpuInfo) {
       buffer.p4(i);
     }
 
-    buffer.p4(this.processorInfoInt5);
-    buffer.pstr(this.unusedString3);
+    buffer.p4(this.unk15);
+    buffer.pstr(this.mobileDeviceName);
   }
 }

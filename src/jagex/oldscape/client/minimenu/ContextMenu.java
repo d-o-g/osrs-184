@@ -2,7 +2,6 @@ package jagex.oldscape.client.minimenu;
 
 import jagex.jagex3.client.input.keyboard.Keyboard;
 import jagex.jagex3.client.input.mouse.Mouse;
-import jagex.core.time.Clock;
 import jagex.oldscape.client.*;
 import jagex.oldscape.client.chat.ChatHistory;
 import jagex.oldscape.client.scene.HintArrow;
@@ -576,7 +575,7 @@ public class ContextMenu {
           }
         } else if (opcode == 30) {
           if (client.pleaseWaitComponent == null) {
-            Clock.processDialogActionPacket(tertiary, secondary);
+            InterfaceComponent.processDialogActionPacket(tertiary, secondary);
             client.pleaseWaitComponent = InterfaceComponent.lookup(tertiary, secondary);
             InterfaceComponent.invalidate(client.pleaseWaitComponent);
           }

@@ -4,14 +4,7 @@ import java.nio.ByteBuffer;
 
 public class DirectByteBufferProvider extends ByteBufferProvider {
 
-  public static int[] block;
-  public static int[] anIntArray1136;
-
   ByteBuffer internal;
-
-  public DirectByteBufferProvider() {
-
-  }
 
   public byte[] get() {
     byte[] allocate = new byte[internal.capacity()];

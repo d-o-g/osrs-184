@@ -1,6 +1,7 @@
 package jagex.oldscape.client;
 
 import jagex.core.compression.bzip2.Bzip2Entry;
+import jagex.core.stringtools.Strings;
 import jagex.jagex3.client.applet.GameShell;
 import jagex.jagex3.client.input.keyboard.Keyboard;
 import jagex.jagex3.client.input.mouse.Mouse;
@@ -60,9 +61,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
   public static final int[] OBJECT_TYPE_TO_STUB_TYPE = new int[]{0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3};
   public static final int[] PLAYER_ACTION_OPCODES = new int[]{44, 45, 46, 47, 48, 49, 50, 51};
-  public static final int[] npcIndices2 = new int[1000];
+  public static final int[] npcDeleteIndices = new int[1000];
   public static final int[] npcIndices = new int[32768];
-  public static final int[] processedNpcIndices = new int[250];
+  public static final int[] updatedNpcIndices = new int[250];
   public static final int[] interfacePositionsX = new int[100];
   public static final int[] interfaceWidths = new int[100];
   public static final int[] interfaceHeights = new int[100];
@@ -169,7 +170,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public static int canvasWidth;
   public static int canvasHeight;
   public static int ticks = 0;
-  public static int npcCount2 = 0;
+  public static int npcDeleteCount = 0;
   public static int updateTimer = 0;
   public static int rootInterfaceIndex = -1;
   public static int gameState = 0;
@@ -312,6 +313,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public static DevelopmentBuild devbuild;
   public static GraphicsProvider graphicsProvider;
   public static GameType gameType;
+  public static int[] anIntArray1136;
 
   static {
     overheadMessageCapacity = 50;
@@ -563,7 +565,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           Login.logoSprite = null;
           AssociateComparator_Sub2.titleMuteSprites = null;
           Login.aDoublyNode_Sub24_Sub4_1148 = null;
-          WorldMapAreaChunk_Sub2.aDoublyNode_Sub24_Sub4_288 = null;
+          Login.aDoublyNode_Sub24_Sub4_288 = null;
           LoadedArchive.aSpriteArray429 = null;
           Login.worldSelectorFlags = null;
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653 = null;
@@ -914,7 +916,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     AssociateComparatorByMyWorld.method603(preferences.resizable);
-    relationshipManager = new RelationshipManager(PreciseWorldMapAreaChunk.loginTypeParameter);
+    relationshipManager = new RelationshipManager(ClientParameter.loginTypeParameter);
   }
 
   public void updateSize(boolean fireInputScripts) {
@@ -1154,14 +1156,14 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           }
         }
 
-        if (relationshipManager.isIgnored(new NamePair(var38, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+        if (relationshipManager.isIgnored(new NamePair(var38, ClientParameter.loginTypeParameter))) {
           ignore = true;
         }
 
         if (!ignore && anInt1014 == 0) {
           messageIds[messageIndex] = messageId;
           messageIndex = (messageIndex + 1) % 100;
-          String var32 = BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(incoming)));
+          String var32 = Strings.escapeAngleBrackets(Strings.toTitleCase(Strings.decompressText(incoming)));
           byte type;
           if (accountType.staff) {
             type = 7;
@@ -1297,7 +1299,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           friendChat = null;
         } else {
           if (friendChat == null) {
-            friendChat = new FriendChat(PreciseWorldMapAreaChunk.loginTypeParameter, instance);
+            friendChat = new FriendChat(ClientParameter.loginTypeParameter, instance);
           }
 
           friendChat.decode(incoming);
@@ -1384,7 +1386,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         boolean ignored = false;
         if (sentByPlayer) {
           name = incoming.gstr();
-          if (relationshipManager.isIgnored(new NamePair(name, PreciseWorldMapAreaChunk.loginTypeParameter))) {
+          if (relationshipManager.isIgnored(new NamePair(name, ClientParameter.loginTypeParameter))) {
             ignored = true;
           }
         }
@@ -1841,7 +1843,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
       if (ServerProt.SEND_PRIV_MSG2 == stream.currentIncomingPacket) {
         String var38 = incoming.gstr();
-          ChatHistory.messageReceived(6, var38, BaseFont.processGtLt(OldConnection.method714(DefaultRouteStrategy.method294(incoming))));
+          ChatHistory.messageReceived(6, var38, Strings.escapeAngleBrackets(Strings.toTitleCase(Strings.decompressText(incoming))));
         stream.currentIncomingPacket = null;
         return true;
       }
@@ -2118,7 +2120,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         synchronized (Keyboard.instance) {
           Keyboard.idleTime++;
           Keyboard.anInt157 = Keyboard.anInt162;
-          Keyboard.pressedKeysCount = 0;
+          Keyboard.pressedKeyCount = 0;
           int var5;
           if (Keyboard.meta >= 0) {
             while (Keyboard.meta != Keyboard.pendingMeta) {
@@ -2127,8 +2129,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
               if (index < 0) {
                 Keyboard.heldKeys[~index] = false;
               } else {
-                if (!Keyboard.heldKeys[index] && Keyboard.pressedKeysCount < Keyboard.pressedKeyIndices.length - 1) {
-                  Keyboard.pressedKeyIndices[Keyboard.pressedKeysCount++] = index;
+                if (!Keyboard.heldKeys[index] && Keyboard.pressedKeyCount < Keyboard.pressedKeyIndices.length - 1) {
+                  Keyboard.pressedKeyIndices[Keyboard.pressedKeyCount++] = index;
                 }
 
                 Keyboard.heldKeys[index] = true;
@@ -2142,7 +2144,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             Keyboard.meta = Keyboard.pendingMeta;
           }
 
-          if (Keyboard.pressedKeysCount > 0) {
+          if (Keyboard.pressedKeyCount > 0) {
             Keyboard.idleTime = 0;
           }
 
@@ -3079,10 +3081,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         buffer.p4(seed[3]);
         buffer.p8(SceneGraphRenderData.aLong403);
         if (gameState == 40) {
-          buffer.p4(DirectByteBufferProvider.anIntArray1136[0]);
-          buffer.p4(DirectByteBufferProvider.anIntArray1136[1]);
-          buffer.p4(DirectByteBufferProvider.anIntArray1136[2]);
-          buffer.p4(DirectByteBufferProvider.anIntArray1136[3]);
+          buffer.p4(anIntArray1136[0]);
+          buffer.p4(anIntArray1136[1]);
+          buffer.p4(anIntArray1136[2]);
+          buffer.p4(anIntArray1136[3]);
         } else {
           buffer.p1(loginStep.getOrdinal());
           switch (loginStep.anInt619) {
@@ -3103,7 +3105,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         }
 
         buffer.pRsa(Statics51.rsaExponent, Statics51.rsaModulus);
-        DirectByteBufferProvider.anIntArray1136 = seed;
+        anIntArray1136 = seed;
         OutgoingPacket packet = OutgoingPacket.prepareLoginPacket();
         packet.buffer.pos = 0;
         if (gameState == 40) {
@@ -3150,8 +3152,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           packet.buffer.pdata(var11, 0, var11.length);
         }
 
-        packet.buffer.pcstr(Statics57.aString1162);
-        packet.buffer.p4(WorldMapCacheArea.anInt130);
+        packet.buffer.pcstr(Statics57.cookie);
+        packet.buffer.p4(GameShell.anInt130);
         Buffer osbuffer = new Buffer(operatingSystemNode.getPayloadSize());
         operatingSystemNode.writeTo(osbuffer);
         packet.buffer.pdata(osbuffer.payload, 0, osbuffer.payload.length);
@@ -3781,7 +3783,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 currentWorldMask = Integer.parseInt(var2);
                 break;
               case 6:
-                WorldMapLabelSize.aClientLocale_525 = ClientLocale.valueOf(Integer.parseInt(var2));
+                WorldMapLabelSize.locale = ClientLocale.valueOf(Integer.parseInt(var2));
                 break;
               case 7:
                 devbuild = DevelopmentBuild.valueOf(Integer.parseInt(var2));
@@ -3791,22 +3793,22 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 }
                 break;
               case 9:
-                Statics57.aString1162 = var2;
+                Statics57.cookie = var2;
                 break;
               case 10:
                 GameType[] var3 = new GameType[]{GameType.GAME3, GameType.RUNESCAPE, GameType.STELLARDAWN, GameType.OSRS, GameType.GAME4, GameType.GAME5};
                 gameType = (GameType) EnumType.getByOrdinal(var3, Integer.parseInt(var2));
                 if (gameType == GameType.OSRS) {
-                  PreciseWorldMapAreaChunk.loginTypeParameter = ClientParameter.A_CLIENT_PARAMETER___1801;
+                  ClientParameter.loginTypeParameter = ClientParameter.A_CLIENT_PARAMETER___1801;
                 } else {
-                  PreciseWorldMapAreaChunk.loginTypeParameter = ClientParameter.A_CLIENT_PARAMETER___1799;
+                  ClientParameter.loginTypeParameter = ClientParameter.A_CLIENT_PARAMETER___1799;
                 }
                 break;
               case 12:
                 currentWorld = Integer.parseInt(var2);
                 break;
               case 14:
-                WorldMapCacheArea.anInt130 = Integer.parseInt(var2);
+                GameShell.anInt130 = Integer.parseInt(var2);
                 break;
               case 15:
                 gameTypeId = Integer.parseInt(var2);

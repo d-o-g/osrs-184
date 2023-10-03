@@ -52,7 +52,7 @@ public class WorldMapTileDecor_Sub1 extends WorldMapTileDecor {
     }
   }
 
-  public void method109(Buffer buffer) {
+  public void decode2(Buffer buffer) {
     int var2 = buffer.g1();
     if (var2 != WorldMapGroundDecorType.A_WORLD_MAP_TYPE___312.index) {
       throw new IllegalStateException("");

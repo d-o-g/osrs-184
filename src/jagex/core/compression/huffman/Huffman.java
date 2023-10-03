@@ -2,266 +2,196 @@ package jagex.core.compression.huffman;
 
 public class Huffman {
 
+  private static final int BITS_PER_BYTE = 8;
+
   public static Huffman instance;
 
   public final int[] masks;
-
   public final byte[] bits;
-
   public int[] keys;
 
   public Huffman(byte[] bits) {
-    int size = bits.length;
-    masks = new int[size];
+    this.masks = new int[bits.length];
+    this.keys = new int[8];
     this.bits = bits;
-    int[] var3 = new int[33];
-    keys = new int[8];
-    int var4 = 0;
 
-    for (int i = 0; i < size; ++i) {
+    buildHuffmanTree(bits);
+  }
+
+  private void buildHuffmanTree(byte[] bits) {
+    int[] tempArray = new int[33];
+    int maxKey = 0;
+
+    for (int i = 0; i < bits.length; ++i) {
       byte bit = bits[i];
+
       if (bit != 0) {
-        int var7 = 1 << 32 - bit;
-        int mask = var3[bit];
+        int mask = tempArray[bit];
         masks[i] = mask;
-        int var9;
-        if ((mask & var7) != 0) {
-          var9 = var3[bit - 1];
+        int newMask;
+
+        if ((mask & (1 << (32 - bit))) != 0) {
+          newMask = tempArray[bit - 1];
         } else {
-          var9 = mask | var7;
+          newMask = mask | (1 << (32 - bit));
 
           for (int j = bit - 1; j >= 1; --j) {
-            int var11 = var3[j];
-            if (mask != var11) {
+            int temp = tempArray[j];
+
+            if (mask != temp) {
               break;
             }
 
-            int var12 = 1 << 32 - j;
-            if ((var11 & var12) != 0) {
-              var3[j] = var3[j - 1];
+            int bitMask = 1 << (32 - j);
+
+            if ((temp & bitMask) != 0) {
+              tempArray[j] = tempArray[j - 1];
               break;
             }
 
-            var3[j] = var11 | var12;
+            tempArray[j] = temp | bitMask;
           }
         }
 
-        var3[bit] = var9;
+        tempArray[bit] = newMask;
 
         for (int j = bit + 1; j <= 32; ++j) {
-          if (mask == var3[j]) {
-            var3[j] = var9;
+          if (mask == tempArray[j]) {
+            tempArray[j] = newMask;
           }
         }
 
-        int var10 = 0;
-        for (int j = 0; j < bit; ++j) {
-          int var12 = Integer.MIN_VALUE >>> j;
-          if ((mask & var12) != 0) {
-            if (keys[var10] == 0) {
-              keys[var10] = var4;
-            }
+        int key = assignKey(bit, mask);
+        keys[key] = ~i;
 
-            var10 = keys[var10];
-          } else {
-            ++var10;
-          }
-
-          if (var10 >= keys.length) {
-            int[] var13 = new int[keys.length * 2];
-            System.arraycopy(keys, 0, var13, 0, keys.length);
-            keys = var13;
-          }
-        }
-
-        keys[var10] = ~i;
-        if (var10 >= var4) {
-          var4 = var10 + 1;
+        if (key >= maxKey) {
+          maxKey = key + 1;
         }
       }
     }
-
   }
 
-  public int decompress(byte[] var1, int var2, byte[] var3, int var4, int var5) {
-    if (var5 == 0) {
-      return 0;
-    }
-    int var6 = 0;
-    var5 += var4;
-    int var7 = var2;
+  private int assignKey(int bit, int mask) {
+    int key = 0;
 
-    while (true) {
-      byte var8 = var1[var7];
-      if (var8 < 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
+    for (int j = 0; j < bit; ++j) {
+      int bitMask = Integer.MIN_VALUE >>> j;
 
-      int var9;
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
+      if ((mask & bitMask) != 0) {
+        if (keys[key] == 0) {
+          keys[key] = keys.length;
         }
 
-        var6 = 0;
-      }
-
-      if ((var8 & 64) != 0) {
-        var6 = keys[var6];
+        key = keys[key];
       } else {
-        ++var6;
-      }
+        ++key;
 
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
+        if (key >= keys.length) {
+          expandKeysArray();
         }
-
-        var6 = 0;
       }
-
-      if ((var8 & 32) != 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
-
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
-        }
-
-        var6 = 0;
-      }
-
-      if ((var8 & 16) != 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
-
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
-        }
-
-        var6 = 0;
-      }
-
-      if ((var8 & 8) != 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
-
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
-        }
-
-        var6 = 0;
-      }
-
-      if ((var8 & 4) != 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
-
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
-        }
-
-        var6 = 0;
-      }
-
-      if ((var8 & 2) != 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
-
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
-        }
-
-        var6 = 0;
-      }
-
-      if ((var8 & 1) != 0) {
-        var6 = keys[var6];
-      } else {
-        ++var6;
-      }
-
-      if ((var9 = keys[var6]) < 0) {
-        var3[var4++] = (byte) (~var9);
-        if (var4 >= var5) {
-          break;
-        }
-
-        var6 = 0;
-      }
-
-      ++var7;
     }
 
-    return var7 + 1 - var2;
+    return key;
   }
 
-  public int compress(byte[] var1, int var2, int var3, byte[] var4, int var5) {
-    int var6 = 0;
-    int var7 = var5 << 3;
+  private void expandKeysArray() {
+    int[] newKeys = new int[keys.length * 2];
+    System.arraycopy(keys, 0, newKeys, 0, keys.length);
+    keys = newKeys;
+  }
 
-    for (var3 += var2; var2 < var3; ++var2) {
-      int var8 = var1[var2] & 255;
-      int var9 = masks[var8];
-      byte var10 = bits[var8];
-      if (var10 == 0) {
-        throw new RuntimeException("" + var8);
-      }
+  public int decompress(byte[] input, int inputOffset, byte[] output, int outputOffset, int length) {
+    int inputBitOffset = inputOffset * BITS_PER_BYTE;
+    int outputBitOffset = outputOffset * BITS_PER_BYTE;
 
-      int var11 = var7 >> 3;
-      int var12 = var7 & 7;
-      var6 &= -var12 >> 31;
-      int var13 = (var12 + var10 - 1 >> 3) + var11;
-      var12 += 24;
-      var4[var11] = (byte) (var6 |= var9 >>> var12);
-      if (var11 < var13) {
-        ++var11;
-        var12 -= 8;
-        var4[var11] = (byte) (var6 = var9 >>> var12);
-        if (var11 < var13) {
-          ++var11;
-          var12 -= 8;
-          var4[var11] = (byte) (var6 = var9 >>> var12);
-          if (var11 < var13) {
-            ++var11;
-            var12 -= 8;
-            var4[var11] = (byte) (var6 = var9 >>> var12);
-            if (var11 < var13) {
-              ++var11;
-              var12 -= 8;
-              var4[var11] = (byte) (var6 = var9 << -var12);
-            }
-          }
+    int bytesRead = 0;
+
+    while (bytesRead < length) {
+      int currentByte = inputBitOffset / BITS_PER_BYTE;
+      int currentBit = inputBitOffset % BITS_PER_BYTE;
+
+      int code = 0;
+      int codeLength = 0;
+
+      while (true) {
+        if (currentByte >= input.length) {
+          break;
+        }
+
+        code = (code << 1) | ((input[currentByte] >> (7 - currentBit)) & 1);
+        currentBit++;
+
+        if (currentBit == BITS_PER_BYTE) {
+          currentBit = 0;
+          currentByte++;
+        }
+
+        codeLength++;
+
+        int symbol = masks[code];
+        if (symbol != 0) {
+          int bitsToRead = codeLength - bits[symbol];
+          code = symbol;
+          outputBitOffset = writeBits(output, outputBitOffset, code, bitsToRead);
+          bytesRead++;
+          break;
         }
       }
 
-      var7 += var10;
+      inputBitOffset += codeLength;
     }
 
-    return (var7 + 7 >> 3) - var5;
+    return bytesRead;
+  }
+
+  public int compress(byte[] input, int inputOffset, int length, byte[] output, int outputOffset) {
+    int inputBitOffset = inputOffset * BITS_PER_BYTE;
+    int outputBitOffset = outputOffset * BITS_PER_BYTE;
+
+    int bytesWritten = 0;
+
+    while (bytesWritten < length) {
+      int currentByte = inputBitOffset / BITS_PER_BYTE;
+      int currentBit = inputBitOffset % BITS_PER_BYTE;
+
+      int code = 0;
+      int codeLength = 0;
+
+      while (codeLength < 32) {
+        int nextBit = ((input[currentByte] >> (7 - currentBit)) & 1);
+        code = (code << 1) | nextBit;
+        currentBit++;
+
+        if (currentBit == BITS_PER_BYTE) {
+          currentBit = 0;
+          currentByte++;
+        }
+
+        codeLength++;
+
+        int symbol = masks[code];
+        if (symbol != 0) {
+          int bitsToWrite = codeLength - bits[symbol];
+          outputBitOffset = writeBits(output, outputBitOffset, symbol, bitsToWrite);
+          bytesWritten++;
+          break;
+        }
+      }
+
+      inputBitOffset += codeLength;
+    }
+
+    return (outputBitOffset + BITS_PER_BYTE - 1) / BITS_PER_BYTE - outputOffset;
+  }
+
+  private int writeBits(byte[] buffer, int bitOffset, int value, int numBits) {
+    for (int i = numBits - 1; i >= 0; i--) {
+      int bit = (value >> i) & 1;
+      buffer[bitOffset / BITS_PER_BYTE] |= (bit << (7 - bitOffset % BITS_PER_BYTE));
+      bitOffset++;
+    }
+
+    return bitOffset;
   }
 }

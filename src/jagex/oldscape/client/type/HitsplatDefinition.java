@@ -55,6 +55,12 @@ public class HitsplatDefinition extends DoublyLinkedNode {
     varpIndex = -1;
   }
 
+  public static void method88(ReferenceTable var0, ReferenceTable var1, ReferenceTable var2) {
+    table = var0;
+    StockmarketListingNameComparator.aReferenceTable480 = var1;
+    aReferenceTable1515 = var2;
+  }
+
   public void method988(Buffer var1, int var2) {
     if (var2 == 1) {
       fontId = var1.method1051();

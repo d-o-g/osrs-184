@@ -26,7 +26,6 @@ public class WorldMapPosition {
       x = hash >> 14 & 16383;
       y = hash & 16383;
     }
-
   }
 
   public int getHash() {

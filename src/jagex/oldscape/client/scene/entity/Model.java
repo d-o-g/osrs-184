@@ -1,7 +1,6 @@
 package jagex.oldscape.client.scene.entity;
 
 import jagex.oldscape.Identikit;
-import jagex.core.time.Clock;
 import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.type.AnimationFrameGroup;
 import jagex.oldscape.client.type.Skeleton;
@@ -738,7 +737,7 @@ public class Model extends Entity {
               boolean var25 = var12 - var23 <= 50;
 
               boolean var26 = var25 || texturedTriangleCount > 0;
-              int var27 = Clock.method722();
+              int var27 = CursorEntities.method722();
               int var28 = CursorEntities.viewportMouseY;
               boolean var30 = CursorEntities.mouseInViewport;
               boolean var32 = method857(var9);

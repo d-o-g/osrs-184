@@ -1,16 +1,12 @@
 package jagex.oldscape.client.worldmap;
 
 import jagex.oldscape.EnumType;
-import jagex.oldscape.stockmarket.StockmarketListingNameComparator;
-import jagex.oldscape.client.type.HitsplatDefinition;
-import jagex.jagex3.js5.*;
 import jagex.messaging.Buffer;
 
 import java.util.Iterator;
 
 public class WorldMapCacheArea {
 
-  public static int anInt130;
   public String name;
   public int background;
   public String jagName;
@@ -36,31 +32,6 @@ public class WorldMapCacheArea {
     this.mainland = false;
   }
 
-  public static void method77(int var0, ResourceCache var1, Archive var2) {
-    byte[] var3 = null;
-    synchronized (CacheRequestWorker.requests) {
-      for (CacheRequest req = CacheRequestWorker.requests.head(); req != null; req = CacheRequestWorker.requests.next()) {
-        if ((long) var0 == req.key && var1 == req.cache && req.type == 0) {
-          var3 = req.data;
-          break;
-        }
-      }
-    }
-
-    if (var3 != null) {
-      var2.method486(var1, var0, var3, true);
-    } else {
-      byte[] var4 = var1.read(var0);
-      var2.method486(var1, var0, var4, true);
-    }
-  }
-
-  public static void method88(ReferenceTable var0, ReferenceTable var1, ReferenceTable var2) {
-    HitsplatDefinition.table = var0;
-    StockmarketListingNameComparator.aReferenceTable480 = var1;
-    HitsplatDefinition.aReferenceTable1515 = var2;
-  }
-
   public void decode(Buffer buffer, int id) {
     this.id = id;
     this.jagName = buffer.gstr();
@@ -70,56 +41,49 @@ public class WorldMapCacheArea {
     buffer.g1();
     this.mainland = buffer.g1() == 1;
     this.baseZoom = buffer.g1();
-    int var3 = buffer.g1();
+    int chunkCount = buffer.g1();
     this.chunks = new java.util.LinkedList<>();
 
-    for (int var4 = 0; var4 < var3; ++var4) {
+    for (int i = 0; i < chunkCount; ++i) {
       this.chunks.add(this.decodeChunk(buffer));
     }
 
-    this.method80();
+    this.adjustChunkAreas();
   }
 
-  public boolean contains(int var1, int var2) {
-    int var3 = var1 / 64;
-    int var4 = var2 / 64;
-    if (var3 >= this.regionMinX && var3 <= this.regionMaxX) {
-      if (var4 >= this.regionMinY && var4 <= this.regionMaxY) {
-        Iterator<WorldMapAreaChunk> var5 = this.chunks.iterator();
-
-        WorldMapAreaChunk var6;
-        do {
-          if (!var5.hasNext()) {
-            return false;
-          }
-
-          var6 = var5.next();
-        } while (!var6.contains(var1, var2));
-
-        return true;
-      }
+  public boolean contains(int x, int y) {
+    int regionX = x / 64;
+    int regionY = y / 64;
+    if (regionX < this.regionMinX || regionX > this.regionMaxX) {
       return false;
     }
+
+    if (regionY < this.regionMinY || regionY > this.regionMaxY) {
+      return false;
+    }
+
+    for (WorldMapAreaChunk chunk : this.chunks) {
+      if (chunk.contains(x, y)) {
+        return true;
+      }
+    }
+
     return false;
   }
+
 
   public int getId() {
     return this.id;
   }
 
-  public int[] toScreen(int var1, int var2, int var3) {
-    Iterator<WorldMapAreaChunk> var4 = this.chunks.iterator();
-
-    WorldMapAreaChunk var5;
-    do {
-      if (!var4.hasNext()) {
-        return null;
+  public int[] toScreen(int x, int y, int level) {
+    for (WorldMapAreaChunk chunk : this.chunks) {
+      if (chunk.contains(level, x, y)) {
+        return chunk.outline(level, x, y);
       }
+    }
 
-      var5 = var4.next();
-    } while (!var5.contains(var1, var2, var3));
-
-    return var5.outline(var1, var2, var3);
+    return null;
   }
 
   public int getMinRegionX() {
@@ -131,33 +95,23 @@ public class WorldMapCacheArea {
   }
 
   public boolean contains(int level, int x, int y) {
-    Iterator<WorldMapAreaChunk> var4 = this.chunks.iterator();
-
-    WorldMapAreaChunk var5;
-    do {
-      if (!var4.hasNext()) {
-        return false;
+    for (WorldMapAreaChunk chunk : this.chunks) {
+      if (chunk.contains(level, x, y)) {
+        return true;
       }
+    }
 
-      var5 = var4.next();
-    } while (!var5.contains(level, x, y));
-
-    return true;
+    return false;
   }
 
   public WorldMapPosition getPosition(int x, int y) {
-    Iterator<WorldMapAreaChunk> var3 = this.chunks.iterator();
-
-    WorldMapAreaChunk var4;
-    do {
-      if (!var3.hasNext()) {
-        return null;
+    for (WorldMapAreaChunk chunk : this.chunks) {
+      if (chunk.contains(x, y)) {
+        return chunk.getPosition(x, y);
       }
+    }
 
-      var4 = var3.next();
-    } while (!var4.contains(x, y));
-
-    return var4.getPosition(x, y);
+    return null;
   }
 
   public int getLevel() {
@@ -180,25 +134,23 @@ public class WorldMapCacheArea {
     return this.baseZoom;
   }
 
-  void method80() {
-
-    for (WorldMapAreaChunk var2 : this.chunks) {
-      var2.method93(this);
+  void adjustChunkAreas() {
+    for (WorldMapAreaChunk chunk : this.chunks) {
+      chunk.adjustArea(this);
     }
-
   }
 
-  WorldMapAreaChunk decodeChunk(Buffer var1) {
-    int var2 = var1.g1();
+  WorldMapAreaChunk decodeChunk(Buffer buffer) {
+    int ordinal = buffer.g1();
     WorldMapChunkType[] types = new WorldMapChunkType[]{WorldMapChunkType.anEnum_Sub2_624, WorldMapChunkType.anEnum_Sub2_622, WorldMapChunkType.anEnum_Sub2_621, WorldMapChunkType.anEnum_Sub2_625};
-    WorldMapChunkType type = (WorldMapChunkType) EnumType.getByOrdinal(types, var2);
+    WorldMapChunkType type = (WorldMapChunkType) EnumType.getByOrdinal(types, ordinal);
     WorldMapAreaChunk chunk;
-    switch (type.type) {
+    switch (type.identifier) {
       case 0:
         chunk = new RectangularWorldMapAreaChunk();
         break;
       case 1:
-        chunk = new WorldMapAreaChunk_Sub2();
+        chunk = new WorldMapChunkRegion();
         break;
       case 2:
         chunk = new WorldMapAreaChunk_Sub3();
@@ -210,11 +162,11 @@ public class WorldMapCacheArea {
         throw new IllegalStateException("");
     }
 
-    chunk.decode(var1);
+    chunk.decode(buffer);
     return chunk;
   }
 
-  public int method70() {
+  public int getRegionMaxX() {
     return this.regionMaxX;
   }
 
@@ -222,11 +174,11 @@ public class WorldMapCacheArea {
     return this.mainland;
   }
 
-  public int method72() {
+  public int getRegionMaxY() {
     return this.regionMaxY;
   }
 
-  public int method67() {
+  public int getBackgroundColor() {
     return this.background;
   }
 
@@ -234,7 +186,7 @@ public class WorldMapCacheArea {
     return this.name;
   }
 
-  public WorldMapPosition method69() {
+  public WorldMapPosition getBasePosition() {
     return new WorldMapPosition(this.base);
   }
 }

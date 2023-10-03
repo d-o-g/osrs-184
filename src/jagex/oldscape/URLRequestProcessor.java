@@ -12,19 +12,15 @@ public class URLRequestProcessor implements Runnable {
 
   final Thread thread;
 
-  final java.util.Queue queue;
+  final java.util.Queue<URLRequest> queue;
 
   volatile boolean killed;
 
   public URLRequestProcessor() {
-    queue = new java.util.LinkedList();
+    queue = new java.util.LinkedList<>();
     thread = new Thread(this);
     thread.setPriority(1);
     thread.start();
-  }
-
-  public static char toTitleCase(char c) {
-    return c != 181 && c != 402 ? Character.toTitleCase(c) : c;
   }
 
   public URLRequest enqueue(URL url) {
@@ -55,7 +51,7 @@ public class URLRequestProcessor implements Runnable {
       try {
         URLRequest current;
         synchronized (this) {
-          current = (URLRequest) queue.poll();
+          current = queue.poll();
           if (current == null) {
             try {
               wait();
@@ -100,6 +96,5 @@ public class URLRequestProcessor implements Runnable {
         client.sendError(null, e);
       }
     }
-
   }
 }

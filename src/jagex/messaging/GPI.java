@@ -23,14 +23,14 @@ public class GPI {
 
   public static void loadPlayerIntoScene(PlayerEntity var0, boolean var1) {
     if (var0 != null && var0.isDefined() && !var0.hidden) {
-      var0.aBoolean1905 = (client.lowMemory && playerCount > 50 || playerCount > 200) && var1 && var0.idleStance == var0.stance;
+      var0.forceInanimate = (client.lowMemory && playerCount > 50 || playerCount > 200) && var1 && var0.idleStance == var0.stance;
 
       int var2 = var0.absoluteX >> 7;
       int var3 = var0.absoluteY >> 7;
       if (var2 >= 0 && var2 < 104 && var3 >= 0 && var3 < 104) {
         long var4 = EntityUID.build(0, 0, 0, false, var0.index);
         if (var0.transformedNpcModel != null && client.ticks >= var0.animationStartCycle && client.ticks < var0.animationEndCycle) {
-          var0.aBoolean1905 = false;
+          var0.forceInanimate = false;
           var0.tileHeight = SceneGraph.getTileHeight(var0.absoluteX, var0.absoluteY, SceneGraph.floorLevel);
           var0.renderCycle = client.ticks;
           client.sceneGraph.addPlayerObject(SceneGraph.floorLevel, var0.absoluteX, var0.absoluteY, var0.tileHeight, var0, var0.turnOrientation, var4, var0.startObjectX, var0.startObjectY, var0.endObjectX, var0.endObjectY);
@@ -76,7 +76,7 @@ public class GPI {
     PlayerEntity player = client.players[index];
     if (var3 == 0) {
       if (var2) {
-        player.aBoolean1904 = false;
+        player.updatingPosition = false;
       } else if (client.playerIndex == index) {
         throw new RuntimeException();
       } else {
@@ -126,16 +126,16 @@ public class GPI {
 
         if (client.playerIndex != index || player.absoluteX >= 1536 && player.absoluteY >= 1536 && player.absoluteX < 11776 && player.absoluteY < 11776) {
           if (var2) {
-            player.aBoolean1904 = true;
+            player.updatingPosition = true;
             player.updateX = var6;
             player.updateY = var7;
           } else {
-            player.aBoolean1904 = false;
+            player.updatingPosition = false;
             player.method1415(var6, var7, aByteArray596[index]);
           }
         } else {
           player.method1414(var6, var7);
-          player.aBoolean1904 = false;
+          player.updatingPosition = false;
         }
 
       } else if (var3 == 2) {
@@ -190,13 +190,13 @@ public class GPI {
 
         if (client.playerIndex == index && (player.absoluteX < 1536 || player.absoluteY < 1536 || player.absoluteX >= 11776 || player.absoluteY >= 11776)) {
           player.method1414(var6, var7);
-          player.aBoolean1904 = false;
+          player.updatingPosition = false;
         } else if (var2) {
-          player.aBoolean1904 = true;
+          player.updatingPosition = true;
           player.updateX = var6;
           player.updateY = var7;
         } else {
-          player.aBoolean1904 = false;
+          player.updatingPosition = false;
           player.method1415(var6, var7, aByteArray596[index]);
         }
 
@@ -223,13 +223,13 @@ public class GPI {
           var11 = var9 + player.pathYQueue[0];
           if (client.playerIndex == index && (player.absoluteX < 1536 || player.absoluteY < 1536 || player.absoluteX >= 11776 || player.absoluteY >= 11776)) {
             player.method1414(var10, var11);
-            player.aBoolean1904 = false;
+            player.updatingPosition = false;
           } else if (var2) {
-            player.aBoolean1904 = true;
+            player.updatingPosition = true;
             player.updateX = var10;
             player.updateY = var11;
           } else {
-            player.aBoolean1904 = false;
+            player.updatingPosition = false;
             player.method1415(var10, var11, aByteArray596[index]);
           }
 
@@ -242,16 +242,16 @@ public class GPI {
           var11 = (client.baseY + var9 + player.pathYQueue[0] & 16383) - client.baseY;
           if (client.playerIndex != index || player.absoluteX >= 1536 && player.absoluteY >= 1536 && player.absoluteX < 11776 && player.absoluteY < 11776) {
             if (var2) {
-              player.aBoolean1904 = true;
+              player.updatingPosition = true;
               player.updateX = var10;
               player.updateY = var11;
             } else {
-              player.aBoolean1904 = false;
+              player.updatingPosition = false;
               player.method1415(var10, var11, aByteArray596[index]);
             }
           } else {
             player.method1414(var10, var11);
-            player.aBoolean1904 = false;
+            player.updatingPosition = false;
           }
 
         }

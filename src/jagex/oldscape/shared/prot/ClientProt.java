@@ -137,7 +137,7 @@ public class ClientProt implements OutgoingProt {
   }
 
   public static IndexedSprite method6(boolean var0, boolean var1) {
-    return var0 ? (var1 ? Login.aDoublyNode_Sub24_Sub4_470 : WorldMapAreaChunk_Sub2.aDoublyNode_Sub24_Sub4_288) : (var1 ? WorldMapElement.aDoublyNode_Sub24_Sub4_363 : Login.aDoublyNode_Sub24_Sub4_1148);
+    return var0 ? (var1 ? Login.aDoublyNode_Sub24_Sub4_470 : Login.aDoublyNode_Sub24_Sub4_288) : (var1 ? WorldMapElement.aDoublyNode_Sub24_Sub4_363 : Login.aDoublyNode_Sub24_Sub4_1148);
   }
 
   public static void method5(int var0) {

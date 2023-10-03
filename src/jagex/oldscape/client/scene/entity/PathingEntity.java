@@ -58,7 +58,7 @@ public abstract class PathingEntity extends Entity {
   public int overheadTextForeground;
   public int overheadTextEffect;
   public int npcUpdateCycle;
-  public int anInt2014;
+  public int effectYOffset;
   public int targetIndex;
   public int animationFrameCycle;
   public int animationLoopCounts;
@@ -608,17 +608,17 @@ public abstract class PathingEntity extends Entity {
           return;
         }
 
-        if (player.prayerIcon != -1 || player.skullIcon != -1) {
+        if (player.skullIcon != -1 || player.prayerIcon != -1) {
           Server.absoluteToViewport(entity, entity.modelHeight + 15);
           if (client.viewportRenderX > -1) {
-            if (player.prayerIcon != -1) {
-              var13 += 25;
-              StructDefinition.skullIconSprites[player.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
-            }
-
             if (player.skullIcon != -1) {
               var13 += 25;
-              WorldMapChunkDefinition.prayerIconSprites[player.skullIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
+              StructDefinition.skullIconSprites[player.skullIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
+            }
+
+            if (player.prayerIcon != -1) {
+              var13 += 25;
+              WorldMapChunkDefinition.prayerIconSprites[player.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
             }
           }
         }
@@ -1369,29 +1369,24 @@ public abstract class PathingEntity extends Entity {
     }
   }
 
-  public final void method1503(int var1) {
-    HealthBarDefinition var2 = HealthBarDefinition.cache.get(var1);
-    HealthBarDefinition var3;
-    if (var2 == null) {
-      byte[] var4 = HealthBarDefinition.table.unpack(33, var1);
-      var2 = new HealthBarDefinition();
-      if (var4 != null) {
-        var2.decode(new Buffer(var4));
+  public final void deleteHeadbar(int healthbar) {
+    HealthBarDefinition definition = HealthBarDefinition.cache.get(healthbar);
+    if (definition == null) {
+      byte[] data = HealthBarDefinition.table.unpack(33, healthbar);
+      definition = new HealthBarDefinition();
+      if (data != null) {
+        definition.decode(new Buffer(data));
       }
 
-      HealthBarDefinition.cache.put(var2, var1);
+      HealthBarDefinition.cache.put(definition, healthbar);
     }
-    var3 = var2;
 
-    var2 = var3;
-
-    for (HealthBar var5 = healthBars.head(); var5 != null; var5 = healthBars.next()) {
-      if (var2 == var5.definition) {
-        var5.unlink();
+    for (HealthBar bar = healthBars.head(); bar != null; bar = healthBars.next()) {
+      if (definition == bar.definition) {
+        bar.unlink();
         return;
       }
     }
-
   }
 
   public final void updateHealthBar(int id, int currentCycle, int updateCycle, int delay, int width, int currWidth) {

@@ -251,33 +251,6 @@ public abstract class BaseFont extends JagGraphics {
     }
   }
 
-  public static String processGtLt(String var0) {
-    int var1 = var0.length();
-    int var2 = 0;
-
-    for (int var3 = 0; var3 < var1; ++var3) {
-      char var4 = var0.charAt(var3);
-      if (var4 == '<' || var4 == '>') {
-        var2 += 3;
-      }
-    }
-
-    StringBuilder var5 = new StringBuilder(var1 + var2);
-
-    for (int var7 = 0; var7 < var1; ++var7) {
-      char var6 = var0.charAt(var7);
-      if (var6 == '<') {
-        var5.append("<lt>");
-      } else if (var6 == '>') {
-        var5.append("<gt>");
-      } else {
-        var5.append(var6);
-      }
-    }
-
-    return var5.toString();
-  }
-
   public static int method1501(CharSequence var0) {
     return Class97.method536(var0, 10);
   }

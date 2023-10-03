@@ -22,7 +22,7 @@ public final class Keyboard implements KeyListener, FocusListener {
   public static int pendingMeta = 0;
   public static int anInt153 = 0;
   public static int anInt157 = 0;
-  public static int pressedKeysCount = 0;
+  public static int pressedKeyCount = 0;
   public static volatile int idleTime = 0;
   public static int anInt162 = 0;
   public static char aChar151;

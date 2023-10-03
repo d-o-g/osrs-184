@@ -183,20 +183,20 @@ public class JagClientProtHandler extends ClientProtHandler {
 
   @Override
   public void processKeyInfo() {
-    if (Keyboard.pressedKeysCount > 0) {
+    if (Keyboard.pressedKeyCount > 0) {
       OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.KEY_INFO, stream.encryptor);
       packet.buffer.p2(0);
       int startOffset = packet.buffer.pos;
       long time = Clock.now();
 
-      for (int i = 0; i < Keyboard.pressedKeysCount; ++i) {
-        long timeOffset = time - client.timeOfPreviousKeyPress;
-        if (timeOffset > 0xffffffL) {
-          timeOffset = 0xffffffL;
+      for (int i = 0; i < Keyboard.pressedKeyCount; ++i) {
+        long timeDifference = time - client.timeOfPreviousKeyPress;
+        if (timeDifference > 0xffffffL) {
+          timeDifference = 0xffffffL;
         }
 
         client.timeOfPreviousKeyPress = time;
-        packet.buffer.ip3((int) timeOffset);
+        packet.buffer.ip3((int) timeDifference);
         packet.buffer.p1_alt1(Keyboard.pressedKeyIndices[i]);
       }
 

@@ -30,6 +30,25 @@ public class CacheRequestWorker implements Runnable {
     }
   }
 
+  public static void method77(int var0, ResourceCache var1, Archive var2) {
+    byte[] var3 = null;
+    synchronized (requests) {
+      for (CacheRequest req = requests.head(); req != null; req = requests.next()) {
+        if ((long) var0 == req.key && var1 == req.cache && req.type == 0) {
+          var3 = req.data;
+          break;
+        }
+      }
+    }
+
+    if (var3 != null) {
+      var2.method486(var1, var0, var3, true);
+    } else {
+      byte[] var4 = var1.read(var0);
+      var2.method486(var1, var0, var4, true);
+    }
+  }
+
   public void run() {
     try {
       while (true) {

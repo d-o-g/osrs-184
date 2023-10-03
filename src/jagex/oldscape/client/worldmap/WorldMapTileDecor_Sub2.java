@@ -29,7 +29,7 @@ public class WorldMapTileDecor_Sub2 extends WorldMapTileDecor {
     AudioSystem.pcmSampleLength = var0;
   }
 
-  void method109(Buffer var1) {
+  void decode2(Buffer var1) {
     int var2 = var1.g1();
     if (var2 != WorldMapGroundDecorType.A_WORLD_MAP_TYPE___311.index) {
       throw new IllegalStateException("");

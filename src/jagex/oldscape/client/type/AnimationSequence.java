@@ -231,15 +231,15 @@ public class AnimationSequence extends DoublyLinkedNode {
 
   }
 
-  public Model method880(Model var1, int var2) {
-    var2 = frameIds[var2];
-    AnimationFrameGroup var3 = AnimationFrameGroup.get(var2 >> 16);
-    var2 &= 65535;
+  public Model getAnimatedModel(Model model, int frame) {
+    frame = frameIds[frame];
+    AnimationFrameGroup var3 = AnimationFrameGroup.get(frame >> 16);
+    frame &= 65535;
     if (var3 == null) {
-      return var1.method1294(true);
+      return model.method1294(true);
     }
-    Model var4 = var1.method1294(!var3.isShowing(var2));
-    var4.animate(var3, var2);
+    Model var4 = model.method1294(!var3.isShowing(frame));
+    var4.animate(var3, frame);
     return var4;
   }
 

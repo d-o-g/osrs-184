@@ -3,6 +3,7 @@ package jagex.oldscape.client.worldmap;
 import jagex.oldscape.ClientLocale;
 import jagex.jagex3.sound.PcmStream_Sub1;
 import jagex.jagex3.util.Perlin;
+import jagex.oldscape.ClientParameter;
 import jagex.oldscape.client.client;
 import jagex.oldscape.client.chat.ChatHistory;
 import jagex.oldscape.client.social.NamePair;
@@ -16,7 +17,7 @@ public class WorldMapLabelSize {
   public static final WorldMapLabelSize SMALL = new WorldMapLabelSize(1, 0, 4);
   public static final WorldMapLabelSize MEDIUM = new WorldMapLabelSize(0, 1, 2);
   public static final WorldMapLabelSize LARGE = new WorldMapLabelSize(2, 2, 0);
-  public static ClientLocale aClientLocale_525;
+  public static ClientLocale locale;
   public static PcmStream_Sub1 aClass5_Sub6_Sub1_528;
 
   public final int anInt527;
@@ -37,7 +38,7 @@ public class WorldMapLabelSize {
     int var2 = GPI.playerCount;
     int[] var3 = GPI.playerIndices;
     boolean var4 = false;
-    NamePair var5 = new NamePair(var1, PreciseWorldMapAreaChunk.loginTypeParameter);
+    NamePair var5 = new NamePair(var1, ClientParameter.loginTypeParameter);
 
     for (int var6 = 0; var6 < var2; ++var6) {
       PlayerEntity var7 = client.players[var3[var6]];

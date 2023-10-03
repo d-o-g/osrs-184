@@ -2,27 +2,28 @@ package jagex.core.time;
 
 public class NanoClock extends Clock {
 
-  long last;
+  private long lastUpdateTime;
 
   NanoClock() {
-    last = System.nanoTime();
+    this.lastUpdateTime = System.nanoTime();
   }
 
-  public int sleep(int time, int var2) {
-    long var3 = (long) var2 * 1000000L;
-    long var5 = last - System.nanoTime();
-    if (var5 < var3) {
-      var5 = var3;
+  @Override
+  public int sleep(int desired, int minimum) {
+    long minSleepTimeNanos = (long) minimum * 1_000_000L;
+    long timeElapsed = lastUpdateTime - System.nanoTime();
+    if (timeElapsed < minSleepTimeNanos) {
+      timeElapsed = minSleepTimeNanos;
     }
 
-    long var7 = var5 / 1000000L;
-    long var9;
-    if (var7 > 0L) {
-      if (var7 % 10L == 0L) {
-        var9 = var7 - 1L;
+    long sleepTimeMillis = timeElapsed / 1_000_000L;
+
+    if (sleepTimeMillis > 0L) {
+      if (sleepTimeMillis % 10L == 0L) {
+        long adjustedSleepTimeMillis = sleepTimeMillis - 1L;
 
         try {
-          Thread.sleep(var9);
+          Thread.sleep(adjustedSleepTimeMillis);
         } catch (InterruptedException ignored) {
         }
 
@@ -32,27 +33,29 @@ public class NanoClock extends Clock {
         }
       } else {
         try {
-          Thread.sleep(var7);
+          Thread.sleep(sleepTimeMillis);
         } catch (InterruptedException ignored) {
         }
       }
     }
 
-    var9 = System.nanoTime();
+    lastUpdateTime = System.nanoTime();
 
-    int var13;
-    for (var13 = 0; var13 < 10 && (var13 < 1 || last < var9); last += 1000000L * (long) time) {
-      ++var13;
+    int iterations = 0;
+    for (int i = 0; i < 10 && (i < 1 || lastUpdateTime < System.nanoTime()); i++) {
+      iterations++;
+      lastUpdateTime += 1_000_000L * (long) desired;
     }
 
-    if (last < var9) {
-      last = var9;
+    if (lastUpdateTime < System.nanoTime()) {
+      lastUpdateTime = System.nanoTime();
     }
 
-    return var13;
+    return iterations;
   }
 
+  @Override
   public void update() {
-    last = System.nanoTime();
+    lastUpdateTime = System.nanoTime();
   }
 }

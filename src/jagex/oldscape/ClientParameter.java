@@ -12,6 +12,7 @@ public class ClientParameter {
   static final ClientParameter A_CLIENT_PARAMETER___1793 = new ClientParameter(0);
   static final ClientParameter A_CLIENT_PARAMETER___1794 = new ClientParameter(8);
   static final ClientParameter A_CLIENT_PARAMETER___1802 = new ClientParameter(3);
+  public static ClientParameter loginTypeParameter;
 
   public final int id;
   final String name;

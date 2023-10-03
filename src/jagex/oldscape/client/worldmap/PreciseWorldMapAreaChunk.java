@@ -1,83 +1,87 @@
 package jagex.oldscape.client.worldmap;
 
-import jagex.oldscape.ClientParameter;
 import jagex.messaging.Buffer;
 
 public class PreciseWorldMapAreaChunk implements WorldMapAreaChunk {
 
-  public static ClientParameter loginTypeParameter;
-
-  int anInt279;
+  int regionX;
   int minLevel;
   int levelCount;
-  int anInt277;
-  int x;
-  int y;
+  int regionY;
+  int offsetX;
+  int offsetY;
 
   PreciseWorldMapAreaChunk() {
 
   }
 
+  @Override
   public boolean contains(int x, int y) {
-    return x >> 6 == this.anInt279 && y >> 6 == this.anInt277;
+    return x >> 6 == this.regionX && y >> 6 == this.regionY;
   }
 
+  @Override
   public boolean contains(int level, int x, int y) {
     if (level >= this.minLevel && level < this.levelCount + this.minLevel) {
-      return x >> 6 == this.x && y >> 6 == this.y;
+      return x >> 6 == this.offsetX && y >> 6 == this.offsetY;
     }
     return false;
   }
 
-  public void method93(WorldMapCacheArea area) {
-    if (area.regionMinX > this.anInt279) {
-      area.regionMinX = this.anInt279;
+  @Override
+  public void adjustArea(WorldMapCacheArea area) {
+    if (area.regionMinX > this.regionX) {
+      area.regionMinX = this.regionX;
     }
 
-    if (area.regionMaxX < this.anInt279) {
-      area.regionMaxX = this.anInt279;
+    if (area.regionMaxX < this.regionX) {
+      area.regionMaxX = this.regionX;
     }
 
-    if (area.regionMinY > this.anInt277) {
-      area.regionMinY = this.anInt277;
+    if (area.regionMinY > this.regionY) {
+      area.regionMinY = this.regionY;
     }
 
-    if (area.regionMaxY < this.anInt277) {
-      area.regionMaxY = this.anInt277;
+    if (area.regionMaxY < this.regionY) {
+      area.regionMaxY = this.regionY;
     }
-
   }
 
+  @Override
   public WorldMapPosition getPosition(int x, int y) {
     if (!this.contains(x, y)) {
       return null;
     }
-    int var3 = this.x * 64 - this.anInt279 * 64 + x;
-    int var4 = this.y * 64 - this.anInt277 * 64 + y;
-    return new WorldMapPosition(this.minLevel, var3, var4);
+
+    int relativeX = this.offsetX * 64 - this.regionX * 64 + x;
+    int relativeY = this.offsetY * 64 - this.regionY * 64 + y;
+    return new WorldMapPosition(this.minLevel, relativeX, relativeY);
   }
 
+  @Override
   public int[] outline(int level, int x, int y) {
     if (!this.contains(level, x, y)) {
       return null;
     }
+
     return new int[]{
-        x + (this.anInt279 * 64 - this.x * 64),
-        y + (this.anInt277 * 64 - this.y * 64)
+        x + (this.regionX * 64 - this.offsetX * 64),
+        y + (this.regionY * 64 - this.offsetY * 64)
     };
   }
 
-  void method148() {
+  void postDecode() {
 
   }
 
+  @Override
   public void decode(Buffer buffer) {
     minLevel = buffer.g1();
     levelCount = buffer.g1();
-    x = buffer.g2();
-    y = buffer.g2();
-    anInt279 = buffer.g2();
-    anInt277 = buffer.g2();
-    method148();
+    offsetX = buffer.g2();
+    offsetY = buffer.g2();
+    regionX = buffer.g2();
+    regionY = buffer.g2();
+    postDecode();
   }
 }

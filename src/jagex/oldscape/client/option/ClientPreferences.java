@@ -1,6 +1,9 @@
 package jagex.oldscape.client.option;
 
+import jagex.oldscape.client.chat.ChatHistory;
 import jagex.oldscape.client.client;
+import jagex.oldscape.shared.prot.ClientProt;
+import jagex.oldscape.shared.prot.OutgoingPacket;
 import jagex.oldscape.stockmarket.StockmarketListingWorldComparator;
 import jagex.jagex3.js5.DiskFile;
 import jagex.messaging.AsyncConnection;
@@ -153,6 +156,61 @@ public class ClientPreferences {
     }
 
     return var1;
+  }
+
+  public static void method368(String var0) {
+    if (var0.equalsIgnoreCase("toggleroof")) {
+      client.preferences.roofsHidden = !client.preferences.roofsHidden;
+      method854();
+      if (client.preferences.roofsHidden) {
+        ChatHistory.messageReceived(99, "", "Roofs are now all hidden");
+      } else {
+        ChatHistory.messageReceived(99, "", "Roofs will only be removed selectively");
+      }
+    }
+
+    if (var0.equalsIgnoreCase("displayfps")) {
+      client.displayFps = !client.displayFps;
+    }
+
+    if (var0.equalsIgnoreCase("renderself")) {
+      client.displaySelf = !client.displaySelf;
+    }
+
+    if (var0.equalsIgnoreCase("mouseovertext")) {
+      client.displayMouseOverText = !client.displayMouseOverText;
+    }
+
+    if (client.rights >= 2) {
+      if (var0.equalsIgnoreCase("errortest")) {
+        throw new RuntimeException();
+      }
+
+      if (var0.equalsIgnoreCase("showcoord")) {
+        client.worldMap.drawMouseOverPosition = !client.worldMap.drawMouseOverPosition;
+      }
+
+      if (var0.equalsIgnoreCase("fpson")) {
+        client.displayFps = true;
+      }
+
+      if (var0.equalsIgnoreCase("fpsoff")) {
+        client.displayFps = false;
+      }
+
+      if (var0.equalsIgnoreCase("gc")) {
+        System.gc();
+      }
+
+      if (var0.equalsIgnoreCase("clientdrop")) {
+        client.dropConnection();
+      }
+    }
+
+    OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.PROCESS_COMMAND, client.stream.encryptor);
+    packet.buffer.p1(var0.length() + 1);
+    packet.buffer.pcstr(var0);
+    client.stream.writeLater(packet);
   }
 
   public Buffer createOutputBuffer() {

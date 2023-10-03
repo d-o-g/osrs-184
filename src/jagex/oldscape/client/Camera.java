@@ -34,6 +34,7 @@ public class Camera {
   public static int packetIndicator = 0;
 
   public static boolean emitPackets = false;
+  public static int anInt889;
 
   public static void setOculusOrbToLocalPlayerPosition() {
     if (oculusOrbOnLocalPlayer && PlayerEntity.local != null) {

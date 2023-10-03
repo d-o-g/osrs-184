@@ -4,7 +4,6 @@ import jagex.jagex3.client.applet.GameShell;
 import jagex.jagex3.sound.*;
 import jagex.datastructure.instrusive.linklist.NodeDeque;
 import jagex.jagex3.client.input.mouse.Mouse;
-import jagex.core.time.Clock;
 import jagex.oldscape.*;
 import jagex.oldscape.client.*;
 import jagex.oldscape.client.fonts.NamedFont;
@@ -360,7 +359,7 @@ public class SceneGraph {
 
   public static void method517() {
     int var0 = anInt1235 * 16384 + 64;
-    int var1 = Clock.anInt889 * 16384 + 64;
+    int var1 = Camera.anInt889 * 16384 + 64;
     int var2 = getTileHeight(var0, var1, floorLevel) - StockmarketListingWorldComparator.anInt347;
     if (Camera.x < var0) {
       Camera.x = (var0 - Camera.x) * Statics53.anInt520 / 1000 + Camera.x + MouseRecorder.anInt388;

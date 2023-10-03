@@ -25,6 +25,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 
 public abstract class GameShell extends Applet implements Runnable, FocusListener, WindowListener {
@@ -52,6 +53,7 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
   public static int anInt1306 = 500;
   public static int anInt1309;
   public static int anInt1288;
+  public static int anInt130;
 
   final EventQueue systemEventQueue;
 
@@ -118,57 +120,62 @@ public abstract class GameShell extends Applet implements Runnable, FocusListene
     JagGraphics.drawHorizontalLine(var0 + 1, var5 + var6 + var1 + 14, 15, client.anInt983);
   }
 
-  public static String method611(String var0, boolean var1) {
-    String var2 = var1 ? "https://" : "http://";
+  public static String buildUrl(String base, boolean https) {
+    String protocol = https ? "https://" : "http://";
     if (client.gameTypeId == 1) {
-      var0 = var0 + "-wtrc";
+      base = base + "-wtrc";
     } else if (client.gameTypeId == 2) {
-      var0 = var0 + "-wtqa";
+      base = base + "-wtqa";
     } else if (client.gameTypeId == 3) {
-      var0 = var0 + "-wtwip";
+      base = base + "-wtwip";
     } else if (client.gameTypeId == 5) {
-      var0 = var0 + "-wti";
+      base = base + "-wti";
     } else if (client.gameTypeId == 4) {
-      var0 = "local";
+      base = "local";
     }
 
-    String var3 = "";
-    if (Statics57.aString1162 != null) {
-      var3 = "/p=" + Statics57.aString1162;
+    String param = "";
+    if (Statics57.cookie != null) {
+      param = "/p=" + Statics57.cookie;
     }
 
-    String var4 = "runescape.com";
-    return var2 + var0 + "." + var4 + "/l=" + WorldMapLabelSize.aClientLocale_525 + "/a=" + WorldMapCacheArea.anInt130 + var3 + "/";
+    String domain = "runescape.com";
+    return protocol + base + "." + domain + "/l=" + WorldMapLabelSize.locale + "/a=" + anInt130 + param + "/";
   }
 
-  public static void setDocumentCookie(String string) {
-    Statics57.aString1162 = string;
+  public static void setDocumentCookie(String cookie) {
+    Statics57.cookie = cookie;
 
     try {
-      String p18 = client.instance.getParameter(Integer.toString(18));
-      String p13 = client.instance.getParameter(Integer.toString(13));
-      String var3 = p18 + "settings=" + string + "; version=1; path=/; domain=" + p13;
-      if (string.length() == 0) {
-        var3 = var3 + "; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=0";
+      String param18 = client.instance.getParameter(Integer.toString(18));
+      String param13 = client.instance.getParameter(Integer.toString(13));
+      String cookieSettings = param18 + "settings=" + cookie + "; version=1; path=/; domain=" + param13;
+
+      if (cookie.length() == 0) {
+        cookieSettings += "; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=0";
       } else {
-        String var4 = var3 + "; Expires=";
-        long var5 = Clock.now() + 94608000000L;
-        Jagcalendar.CALENDAR.setTime(new Date(var5));
-        int var7 = Jagcalendar.CALENDAR.get(7);
-        int var8 = Jagcalendar.CALENDAR.get(5);
-        int var9 = Jagcalendar.CALENDAR.get(2);
-        int var10 = Jagcalendar.CALENDAR.get(1);
-        int var11 = Jagcalendar.CALENDAR.get(11);
-        int var12 = Jagcalendar.CALENDAR.get(12);
-        int var13 = Jagcalendar.CALENDAR.get(13);
-        String var14 = Jagcalendar.DAYS[var7 - 1] + ", " + var8 / 10 + var8 % 10 + "-" + Jagcalendar.MONTHS[0][var9] + "-" + var10 + " " + var11 / 10 + var11 % 10 + ":" + var12 / 10 + var12 % 10 + ":" + var13 / 10 + var13 % 10 + " GMT";
-        var3 = var4 + var14 + "; Max-Age=" + 94608000L;
+        String expiresHeader = cookieSettings + "; Expires=";
+        long expirationTime = Clock.now() + 94608000000L;
+        Jagcalendar.CALENDAR.setTime(new Date(expirationTime));
+
+        int dayOfWeek = Jagcalendar.CALENDAR.get(Calendar.DAY_OF_WEEK);
+        int dayOfMonth = Jagcalendar.CALENDAR.get(Calendar.DAY_OF_MONTH);
+        int month = Jagcalendar.CALENDAR.get(Calendar.MONTH);
+        int year = Jagcalendar.CALENDAR.get(Calendar.YEAR);
+        int hour = Jagcalendar.CALENDAR.get(Calendar.HOUR_OF_DAY);
+        int minute = Jagcalendar.CALENDAR.get(Calendar.MINUTE);
+        int second = Jagcalendar.CALENDAR.get(Calendar.SECOND);
+
+        String formattedDate = Jagcalendar.DAYS[dayOfWeek - 1] + ", " + dayOfMonth / 10 + dayOfMonth % 10 + "-" +
+                               Jagcalendar.MONTHS[0][month] + "-" + year + " " + hour / 10 + hour % 10 + ":" +
+                               minute / 10 + minute % 10 + ":" + second / 10 + second % 10 + " GMT";
+
+        cookieSettings = expiresHeader + formattedDate + "; Max-Age=" + 94608000L;
       }
 
-      JSObjectUtil.eval(client.instance, "document.cookie=\"" + var3 + "\"");
+      JSObjectUtil.eval(client.instance, "document.cookie=\"" + cookieSettings + "\"");
     } catch (Throwable ignored) {
     }
-
   }
 
   public static void updateClock() {

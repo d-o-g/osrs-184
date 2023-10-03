@@ -4,67 +4,75 @@ import jagex.messaging.Buffer;
 
 public class RectangularWorldMapAreaChunk implements WorldMapAreaChunk {
 
-  int anInt278;
+  int minRegionX;
   int minLevel;
   int levelCount;
-  int anInt282;
-  int anInt286;
+  int maxRegionX;
+  int minRegionY;
   int minX;
-  int anInt283;
+  int maxRegionY;
   int maxX;
   int minY;
   int maxY;
 
   RectangularWorldMapAreaChunk() {
+
   }
 
+  @Override
   public boolean contains(int x, int y) {
-    return x >> 6 >= this.anInt278 && x >> 6 <= this.anInt282 && y >> 6 >= this.anInt286 && y >> 6 <= this.anInt283;
+    return x >> 6 >= this.minRegionX && x >> 6 <= this.maxRegionX && y >> 6 >= this.minRegionY && y >> 6 <= this.maxRegionY;
   }
 
+  @Override
   public boolean contains(int level, int x, int y) {
     if (level >= this.minLevel && level < this.levelCount + this.minLevel) {
-      return x >> 6 >= this.minX && x >> 6 <= this.maxX
-             && y >> 6 >= this.minY && y >> 6 <= this.maxY;
+      return x >> 6 >= this.minX && x >> 6 <= this.maxX && y >> 6 >= this.minY && y >> 6 <= this.maxY;
     }
+
     return false;
   }
 
-  public void method93(WorldMapCacheArea var1) {
-    if (var1.regionMinX > this.anInt278) {
-      var1.regionMinX = this.anInt278;
+  @Override
+  public void adjustArea(WorldMapCacheArea area) {
+    if (area.regionMinX > this.minRegionX) {
+      area.regionMinX = this.minRegionX;
     }
 
-    if (var1.regionMaxX < this.anInt282) {
-      var1.regionMaxX = this.anInt282;
+    if (area.regionMaxX < this.maxRegionX) {
+      area.regionMaxX = this.maxRegionX;
     }
 
-    if (var1.regionMinY > this.anInt286) {
-      var1.regionMinY = this.anInt286;
+    if (area.regionMinY > this.minRegionY) {
+      area.regionMinY = this.minRegionY;
     }
 
-    if (var1.regionMaxY < this.anInt283) {
-      var1.regionMaxY = this.anInt283;
+    if (area.regionMaxY < this.maxRegionY) {
+      area.regionMaxY = this.maxRegionY;
     }
-
   }
 
+  @Override
   public WorldMapPosition getPosition(int x, int y) {
     if (!this.contains(x, y)) {
       return null;
     }
-    int var3 = this.minX * 64 - this.anInt278 * 64 + x;
-    int var4 = this.minY * 64 - this.anInt286 * 64 + y;
-    return new WorldMapPosition(this.minLevel, var3, var4);
+
+    int relativeX = this.minX * 64 - this.minRegionX * 64 + x;
+    int relativeY = this.minY * 64 - this.minRegionY * 64 + y;
+    return new WorldMapPosition(this.minLevel, relativeX, relativeY);
   }
 
+  @Override
   public int[] outline(int level, int x, int y) {
     if (!this.contains(level, x, y)) {
       return null;
     }
-    return new int[]{this.anInt278 * 64 - this.minX * 64 + x, y + (this.anInt286 * 64 - this.minY * 64)};
+
+    return new int[]{this.minRegionX * 64 - this.minX * 64 + x, y + (this.minRegionY * 64 - this.minY * 64)};
   }
 
+  @Override
   public void decode(Buffer buffer) {
     minLevel = buffer.g1();
     levelCount = buffer.g1();
@@ -72,14 +80,14 @@ public class RectangularWorldMapAreaChunk implements WorldMapAreaChunk {
     minY = buffer.g2();
     maxX = buffer.g2();
     maxY = buffer.g2();
-    anInt278 = buffer.g2();
-    anInt286 = buffer.g2();
-    anInt282 = buffer.g2();
-    anInt283 = buffer.g2();
-    method148();
+    minRegionX = buffer.g2();
+    minRegionY = buffer.g2();
+    maxRegionX = buffer.g2();
+    maxRegionY = buffer.g2();
+    postDecode();
   }
 
-  void method148() {
+  void postDecode() {
 
   }
 }
