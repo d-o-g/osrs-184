@@ -15,13 +15,13 @@ public class AudioRunnable implements Runnable {
     this.systems = new AudioSystem[2];
   }
 
-  public static void renderCompass(InterfaceComponent var0, int var1, int var2) {
-    ComponentSprite var4 = var0.getSprite(false);
-    if (var4 != null) {
+  public static void renderCompass(InterfaceComponent var0, int midX, int midY) {
+    ComponentSprite sprite = var0.getSprite(false);
+    if (sprite != null) {
       if (client.mapState < 3) {
-        AttackOptionPriority.compass.rotate(var1, var2, var4.anInt380, var4.anInt568, 25, 25, Camera.yOffset, 256, var4.anIntArray1108, var4.anIntArray749);
+        AttackOptionPriority.compass.rotate(midX, midY, sprite.width, sprite.height, 25, 25, Camera.yOffset, 256, sprite.pixels, sprite.scanlineOffsets);
       } else {
-        JagGraphics.fillRectangles(var1, var2, 0, var4.anIntArray1108, var4.anIntArray749);
+        JagGraphics.fillRectangles(midX, midY, 0, sprite.pixels, sprite.scanlineOffsets);
       }
 
     }

@@ -87,7 +87,7 @@ public class AudioFilter {
     return this.anIntArray743[var1] * 2;
   }
 
-  public final void method547(Buffer var1, AudioEnvelope var2) {
+  public final void decode(Buffer var1, AudioEnvelope var2) {
     int var3 = var1.g1();
     this.anIntArray743[0] = var3 >> 4;
     this.anIntArray743[1] = var3 & 15;
@@ -118,7 +118,7 @@ public class AudioFilter {
       }
 
       if (var4 != 0 || this.anIntArray739[1] != this.anIntArray739[0]) {
-        var2.method1512(var1);
+        var2.decodePoints(var1);
       }
     } else {
       int[] var7 = this.anIntArray739;

@@ -43,7 +43,7 @@ public final class ResourceCache {
         int var6;
         boolean var10000;
         if (var4) {
-          if (index.method1409() < (long) (var1 * 6L + 6)) {
+          if (index.method1409() < (var1 * 6L + 6)) {
             var10000 = false;
             return var10000;
           }
@@ -209,7 +209,7 @@ public final class ResourceCache {
     synchronized (data) {
       try {
         Object var10000;
-        if (index.method1409() < (long) (var1 * 6L + 6)) {
+        if (index.method1409() < (var1 * 6L + 6)) {
           var10000 = null;
           return (byte[]) var10000;
         }

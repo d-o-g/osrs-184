@@ -3,7 +3,6 @@ package jagex.oldscape.client.scene.entity;
 import jagex.jagex3.sound.AudioSystem;
 import jagex.jagex3.sound.PcmStream;
 import jagex.oldscape.client.client;
-import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.type.AnimationSequence;
 import jagex.oldscape.client.type.ObjectDefinition;
 import jagex.oldscape.shared.prot.ClientProt;
@@ -20,10 +19,10 @@ public class DynamicObject extends Entity {
 
   public AnimationSequence sequence;
 
-  public int anInt379;
-  public int anInt372;
+  public int animationDelay;
+  public int animationFrame;
 
-  public DynamicObject(int id, int type, int orientation, int floorLevel, int sceneX, int sceneY, int animationId, boolean var8, Entity ent) {
+  public DynamicObject(int id, int type, int orientation, int floorLevel, int sceneX, int sceneY, int animationId, boolean randomizeInitialAnimation, Entity entity) {
     this.id = id;
     this.type = type;
     this.orientation = orientation;
@@ -32,23 +31,80 @@ public class DynamicObject extends Entity {
     this.sceneY = sceneY;
     if (animationId != -1) {
       sequence = AnimationSequence.get(animationId);
-      anInt372 = 0;
-      anInt379 = client.ticks - 1;
-      if (sequence.replayMode == 0 && ent instanceof DynamicObject) {
-        DynamicObject obj = (DynamicObject) ent;
+      animationFrame = 0;
+      animationDelay = client.ticks - 1;
+      if (sequence.replayMode == 0 && entity instanceof DynamicObject) {
+        DynamicObject obj = (DynamicObject) entity;
         if (obj.sequence == sequence) {
-          anInt372 = obj.anInt372;
-          anInt379 = obj.anInt379;
+          animationFrame = obj.animationFrame;
+          animationDelay = obj.animationDelay;
           return;
         }
       }
 
-      if (var8 && sequence.loopOffset != -1) {
-        anInt372 = (int) (Math.random() * (double) sequence.frameIds.length);
-        anInt379 -= (int) (Math.random() * (double) sequence.frameLengths[anInt372]);
+      if (randomizeInitialAnimation && sequence.loopOffset != -1) {
+        animationFrame = (int) (Math.random() * (double) sequence.frameIds.length);
+        animationDelay -= (int) (Math.random() * (double) sequence.frameLengths[animationFrame]);
       }
     }
+  }
 
+  protected final Model getModel() {
+    if (sequence != null) {
+      int lifetime = client.ticks - animationDelay;
+      if (lifetime > 100 && sequence.loopOffset > 0) {
+        lifetime = 100;
+      }
+
+      label56:
+      {
+        do {
+          do {
+            if (lifetime <= sequence.frameLengths[animationFrame]) {
+              break label56;
+            }
+
+            lifetime -= sequence.frameLengths[animationFrame];
+            ++animationFrame;
+          } while (animationFrame < sequence.frameIds.length);
+
+          animationFrame -= sequence.loopOffset;
+        } while (animationFrame >= 0 && animationFrame < sequence.frameIds.length);
+
+        sequence = null;
+      }
+
+      animationDelay = client.ticks - lifetime;
+    }
+
+    ObjectDefinition definition = ObjectDefinition.get(id);
+    if (definition.transformIds != null) {
+      definition = definition.transform();
+    }
+
+    if (definition == null) {
+      return null;
+    }
+
+    int spanX;
+    int spanY;
+    if (orientation != 1 && orientation != 3) {
+      spanX = definition.sizeX;
+      spanY = definition.sizeY;
+    } else {
+      spanX = definition.sizeY;
+      spanY = definition.sizeX;
+    }
+
+    int centerX = (spanX >> 1) + sceneX;
+    int centerY = (spanX + 1 >> 1) + sceneX;
+    int bottomLeftY = (spanY >> 1) + sceneY;
+    int topRightY = (spanY + 1 >> 1) + sceneY;
+    int[][] heights = SceneGraphRenderData.tileHeights[floorLevel];
+    int height = heights[centerY][bottomLeftY] + heights[centerX][bottomLeftY] + heights[centerX][topRightY] + heights[centerY][topRightY] >> 2;
+    int endX = (sceneX << 7) + (spanX << 6);
+    int endY = (sceneY << 7) + (spanY << 6);
+    return definition.method1107(type, orientation, heights, endX, height, endY, sequence, animationFrame);
   }
 
   public static void gc() {
@@ -84,99 +140,5 @@ public class DynamicObject extends Entity {
       method1507(var1);
     }
 
-  }
-
-  public static void loadProjectilesIntoScene() {
-    Projectile projectile = client.projectiles.head();
-    while (projectile != null) {
-      if (projectile.floorLevel == SceneGraph.floorLevel && client.ticks <= projectile.endCycle) {
-        if (client.ticks >= projectile.startCycle) {
-          if (projectile.targetIndex > 0) {
-            NpcEntity npc = client.npcs[projectile.targetIndex - 1];
-            if (npc != null && npc.absoluteX >= 0 && npc.absoluteX < 13312 && npc.absoluteY >= 0 && npc.absoluteY < 13312) {
-              projectile.target(npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
-            }
-          }
-
-          if (projectile.targetIndex < 0) {
-            int var2 = -projectile.targetIndex - 1;
-            PlayerEntity player;
-            if (var2 == client.playerIndex) {
-              player = PlayerEntity.local;
-            } else {
-              player = client.players[var2];
-            }
-
-            if (player != null && player.absoluteX >= 0 && player.absoluteX < 13312 && player.absoluteY >= 0 && player.absoluteY < 13312) {
-              projectile.target(player.absoluteX, player.absoluteY, SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
-            }
-          }
-
-          projectile.method1193(client.anInt972);
-          client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, (int) projectile.absoluteX, (int) projectile.absoluteY, (int) projectile.aDouble1660, 60, projectile, projectile.xRotation, -1L, false);
-        }
-      } else {
-        projectile.unlink();
-      }
-      projectile = client.projectiles.next();
-    }
-
-  }
-
-  protected final Model getModel() {
-    if (sequence != null) {
-      int var1 = client.ticks - anInt379;
-      if (var1 > 100 && sequence.loopOffset > 0) {
-        var1 = 100;
-      }
-
-      label56:
-      {
-        do {
-          do {
-            if (var1 <= sequence.frameLengths[anInt372]) {
-              break label56;
-            }
-
-            var1 -= sequence.frameLengths[anInt372];
-            ++anInt372;
-          } while (anInt372 < sequence.frameIds.length);
-
-          anInt372 -= sequence.loopOffset;
-        } while (anInt372 >= 0 && anInt372 < sequence.frameIds.length);
-
-        sequence = null;
-      }
-
-      anInt379 = client.ticks - var1;
-    }
-
-    ObjectDefinition var2 = ObjectDefinition.get(id);
-    if (var2.transformIds != null) {
-      var2 = var2.transform();
-    }
-
-    if (var2 == null) {
-      return null;
-    }
-    int var3;
-    int var4;
-    if (orientation != 1 && orientation != 3) {
-      var3 = var2.sizeX;
-      var4 = var2.sizeY;
-    } else {
-      var3 = var2.sizeY;
-      var4 = var2.sizeX;
-    }
-
-    int var5 = (var3 >> 1) + sceneX;
-    int var6 = (var3 + 1 >> 1) + sceneX;
-    int var7 = (var4 >> 1) + sceneY;
-    int var8 = (var4 + 1 >> 1) + sceneY;
-    int[][] var9 = SceneGraphRenderData.tileHeights[floorLevel];
-    int var10 = var9[var6][var7] + var9[var5][var7] + var9[var5][var8] + var9[var6][var8] >> 2;
-    int var11 = (sceneX << 7) + (var3 << 6);
-    int var12 = (sceneY << 7) + (var4 << 6);
-    return var2.method1107(type, orientation, var9, var11, var10, var12, sequence, anInt372);
   }
 }

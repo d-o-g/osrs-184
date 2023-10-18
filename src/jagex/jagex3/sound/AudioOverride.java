@@ -474,7 +474,7 @@ public class AudioOverride extends Node {
     anIntArray692 = null;
   }
 
-  boolean method805(Class97 var1, byte[] var2, int[] var3) {
+  boolean method805(AudioManager var1, byte[] var2, int[] var3) {
     boolean var4 = true;
     int var5 = 0;
     RawAudioOverride var6 = null;
@@ -486,9 +486,9 @@ public class AudioOverride extends Node {
           if (var5 != var8) {
             var5 = var8--;
             if ((var8 & 1) == 0) {
-              var6 = var1.method538(var8 >> 2, var3);
+              var6 = var1.getAudioEffectOverride(var8 >> 2, var3);
             } else {
-              var6 = var1.method537(var8 >> 2, var3);
+              var6 = var1.getRawAudioOverride(var8 >> 2, var3);
             }
 
             if (var6 == null) {

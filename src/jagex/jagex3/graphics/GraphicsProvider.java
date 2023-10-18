@@ -4,7 +4,7 @@ public abstract class GraphicsProvider {
 
   public static IndexedSprite titlebuttonSprite;
 
-  public int[] anIntArray1818;
+  public int[] pixels;
 
   public int width;
   public int height;
@@ -14,7 +14,7 @@ public abstract class GraphicsProvider {
   }
 
   public final void method1318() {
-    JagGraphics.setTarget(this.anIntArray1818, this.width, this.height);
+    JagGraphics.setTarget(this.pixels, this.width, this.height);
   }
 
   public abstract void drawGame(int var1, int var2);

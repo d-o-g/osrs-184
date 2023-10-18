@@ -194,54 +194,52 @@ public final class Sprite extends JagGraphics {
 
   }
 
-  static void method813(int[] var0, int[] var1, int var3, int var4, int var5, int var6, int var7, int var8, int var9, int var10, int var11, int var12) {
-    int var13 = 256 - var12;
-    int var14 = var3;
+  static void blendImages(int[] dstPixels, int[] pixels, int srcX, int srcY, int destIndex, int destStep, int width, int height, int xStep, int yStep, int srcWidth, int alpha) {
+    int var13 = 256 - alpha;
+    int initialSrcX = srcX;
 
-    for (int var15 = -var8; var15 < 0; ++var15) {
-      int var16 = var11 * (var4 >> 16);
+    for (int yOffset = -height; yOffset < 0; ++yOffset) {
+      int scaledYOffset = srcWidth * (srcY >> 16);
 
-      for (int var17 = -var7; var17 < 0; ++var17) {
-        int var2 = var1[(var3 >> 16) + var16];
-        if (var2 != 0) {
-          int var18 = var0[var5];
-          var0[var5++] = ((var2 & 65280) * var12 + var13 * (var18 & 65280) & 16711680) + ((var18 & 16711935) * var13 + var12 * (var2 & 16711935) & -16711936) >> 8;
+      for (int xOffset = -width; xOffset < 0; ++xOffset) {
+        int scaledXOffset = pixels[(srcX >> 16) + scaledYOffset];
+        if (scaledXOffset != 0) {
+          int pixel = dstPixels[destIndex];
+          dstPixels[destIndex++] = ((scaledXOffset & 65280) * alpha + var13 * (pixel & 65280) & 16711680) + ((pixel & 16711935) * var13 + alpha * (scaledXOffset & 16711935) & -16711936) >> 8;
         } else {
-          ++var5;
+          ++destIndex;
         }
 
-        var3 += var9;
+        srcX += xStep;
       }
 
-      var4 += var10;
-      var3 = var14;
-      var5 += var6;
+      srcY += yStep;
+      srcX = initialSrcX;
+      destIndex += destStep;
     }
-
   }
 
-  static void method814(int[] var0, int[] var1, int var3, int var4, int var5, int var6, int var7, int var8, int var9, int var10, int var11) {
-    int var12 = var3;
+  static void drawImage(int[] dst, int[] pixels, int srcX, int srcY, int dstIndex, int dstIncrement, int width, int height, int xStep, int yStep, int srcWidth) {
+    int initialSrcX = srcX;
 
-    for (int var13 = -var8; var13 < 0; ++var13) {
-      int var14 = var11 * (var4 >> 16);
+    for (int yOffset = -height; yOffset < 0; ++yOffset) {
+      int yOffsetScaled = srcWidth * (srcY >> 16);
 
-      for (int var15 = -var7; var15 < 0; ++var15) {
-        int var2 = var1[(var3 >> 16) + var14];
-        if (var2 != 0) {
-          var0[var5++] = var2;
+      for (int xOffset = -width; xOffset < 0; ++xOffset) {
+        int pixel = pixels[(srcX >> 16) + yOffsetScaled];
+        if (pixel != 0) {
+          dst[dstIndex++] = pixel;
         } else {
-          ++var5;
+          ++dstIndex;
         }
 
-        var3 += var9;
+        srcX += xStep;
       }
 
-      var4 += var10;
-      var3 = var12;
-      var5 += var6;
+      srcY += yStep;
+      srcX = initialSrcX;
+      dstIndex += dstIncrement;
     }
-
   }
 
   static void method826(int var3, int[] var4, int[] var5, int var8, int var9, int var10, int var11, int var12, int var13, int var14, int var15) {
@@ -268,7 +266,6 @@ public final class Sprite extends JagGraphics {
       var3 = var16;
       var10 += var11;
     }
-
   }
 
   static void method829(int var3, int[] var4, int[] var5, int var8, int var9, int var10, int var11, int var12, int var13, int var14, int var15, int var16) {
@@ -875,66 +872,66 @@ public final class Sprite extends JagGraphics {
     }
   }
 
-  public void method807(int var1, int var2, int var3, int var4) {
-    if (var3 > 0 && var4 > 0) {
-      int var5 = this.width;
-      int var6 = this.height;
-      int var7 = 0;
-      int var8 = 0;
-      int var9 = this.anInt112;
-      int var10 = this.anInt375;
-      int var11 = (var9 << 16) / var3;
-      int var12 = (var10 << 16) / var4;
+  public void drawScaled(int x, int y, int scaledWdith, int scaledHeight) {
+    if (scaledWdith > 0 && scaledHeight > 0) {
+      int srcWidth = this.width;
+      int srcHeight = this.height;
+      int srcXOffset = 0;
+      int srcYOffset = 0;
+      int srcWidthScaled = this.anInt112;
+      int srcHeightScaled = this.anInt375;
+      int srcXStep = (srcWidthScaled << 16) / scaledWdith;
+      int srcYStep = (srcHeightScaled << 16) / scaledHeight;
       int var13;
       if (this.anInt377 > 0) {
-        var13 = (var11 + (this.anInt377 << 16) - 1) / var11;
-        var1 += var13;
-        var7 += var13 * var11 - (this.anInt377 << 16);
+        var13 = (srcXStep + (this.anInt377 << 16) - 1) / srcXStep;
+        x += var13;
+        srcXOffset += var13 * srcXStep - (this.anInt377 << 16);
       }
 
       if (this.anInt574 > 0) {
-        var13 = (var12 + (this.anInt574 << 16) - 1) / var12;
-        var2 += var13;
-        var8 += var13 * var12 - (this.anInt574 << 16);
+        var13 = (srcYStep + (this.anInt574 << 16) - 1) / srcYStep;
+        y += var13;
+        srcYOffset += var13 * srcYStep - (this.anInt574 << 16);
       }
 
-      if (var5 < var9) {
-        var3 = (var11 + ((var5 << 16) - var7) - 1) / var11;
+      if (srcWidth < srcWidthScaled) {
+        scaledWdith = (srcXStep + ((srcWidth << 16) - srcXOffset) - 1) / srcXStep;
       }
 
-      if (var6 < var10) {
-        var4 = (var12 + ((var6 << 16) - var8) - 1) / var12;
+      if (srcHeight < srcHeightScaled) {
+        scaledHeight = (srcYStep + ((srcHeight << 16) - srcYOffset) - 1) / srcYStep;
       }
 
-      var13 = var1 + var2 * JagGraphics.drawingAreaWidth;
-      int var14 = JagGraphics.drawingAreaWidth - var3;
-      if (var2 + var4 > JagGraphics.drawingAreaRight) {
-        var4 -= var2 + var4 - JagGraphics.drawingAreaRight;
+      var13 = x + y * JagGraphics.drawingAreaWidth;
+      int var14 = JagGraphics.drawingAreaWidth - scaledWdith;
+      if (y + scaledHeight > JagGraphics.drawingAreaRight) {
+        scaledHeight -= y + scaledHeight - JagGraphics.drawingAreaRight;
       }
 
       int var15;
-      if (var2 < JagGraphics.drawingAreaTop) {
-        var15 = JagGraphics.drawingAreaTop - var2;
-        var4 -= var15;
+      if (y < JagGraphics.drawingAreaTop) {
+        var15 = JagGraphics.drawingAreaTop - y;
+        scaledHeight -= var15;
         var13 += var15 * JagGraphics.drawingAreaWidth;
-        var8 += var12 * var15;
+        srcYOffset += srcYStep * var15;
       }
 
-      if (var3 + var1 > JagGraphics.drawingAreaBottom) {
-        var15 = var3 + var1 - JagGraphics.drawingAreaBottom;
-        var3 -= var15;
+      if (scaledWdith + x > JagGraphics.drawingAreaBottom) {
+        var15 = scaledWdith + x - JagGraphics.drawingAreaBottom;
+        scaledWdith -= var15;
         var14 += var15;
       }
 
-      if (var1 < JagGraphics.drawingAreaLeft) {
-        var15 = JagGraphics.drawingAreaLeft - var1;
-        var3 -= var15;
+      if (x < JagGraphics.drawingAreaLeft) {
+        var15 = JagGraphics.drawingAreaLeft - x;
+        scaledWdith -= var15;
         var13 += var15;
-        var7 += var11 * var15;
+        srcXOffset += srcXStep * var15;
         var14 += var15;
       }
 
-      method814(JagGraphics.drawingAreaPixels, this.pixels, var7, var8, var13, var14, var3, var4, var11, var12, var5);
+      drawImage(JagGraphics.drawingAreaPixels, this.pixels, srcXOffset, srcYOffset, var13, var14, scaledWdith, scaledHeight, srcXStep, srcYStep, srcWidth);
     }
   }
 
@@ -1343,99 +1340,99 @@ public final class Sprite extends JagGraphics {
 
   }
 
-  public void rotate(int centerX, int centerY, int width, int height, int angle, int var6, int var7, int var8, int[] var9, int[] var10) {
+  public void rotate(int centerX, int centerY, int width, int height, int angle, int sin, int cos, int scale, int[] pixels, int[] scanlineOffsets) {
     try {
       int var11 = -width / 2;
       int var12 = -height / 2;
-      int var13 = (int) (Math.sin((double) var7 / 326.11D) * 65536.0D);
-      int var14 = (int) (Math.cos((double) var7 / 326.11D) * 65536.0D);
-      var13 = var13 * var8 >> 8;
-      var14 = var14 * var8 >> 8;
-      int var15 = var12 * var13 + var11 * var14 + (angle << 16);
-      int var16 = var12 * var14 - var11 * var13 + (var6 << 16);
-      int var17 = centerX + centerY * JagGraphics.drawingAreaWidth;
+      int sinAngle = (int) (Math.sin((double) cos / 326.11D) * 65536.0D);
+      int cosAngle = (int) (Math.cos((double) cos / 326.11D) * 65536.0D);
+      sinAngle = sinAngle * scale >> 8;
+      cosAngle = cosAngle * scale >> 8;
+      int srcX = var12 * sinAngle + var11 * cosAngle + (angle << 16);
+      int srcY = var12 * cosAngle - var11 * sinAngle + (sin << 16);
+      int target = centerX + centerY * JagGraphics.drawingAreaWidth;
 
       for (centerY = 0; centerY < height; ++centerY) {
-        int var18 = var9[centerY];
-        int var19 = var17 + var18;
-        int var20 = var15 + var14 * var18;
-        int var21 = var16 - var13 * var18;
+        int sourceOffset = pixels[centerY];
+        int targetOffset = target + sourceOffset;
+        int var20 = srcX + cosAngle * sourceOffset;
+        int var21 = srcY - sinAngle * sourceOffset;
 
-        for (centerX = -var10[centerY]; centerX < 0; ++centerX) {
-          JagGraphics.drawingAreaPixels[var19++] = this.pixels[this.width * (var21 >> 16) + (var20 >> 16)];
-          var20 += var14;
-          var21 -= var13;
+        for (centerX = -scanlineOffsets[centerY]; centerX < 0; ++centerX) {
+          JagGraphics.drawingAreaPixels[targetOffset++] = this.pixels[this.width * (var21 >> 16) + (var20 >> 16)];
+          var20 += cosAngle;
+          var21 -= sinAngle;
         }
 
-        var15 += var13;
-        var16 += var14;
-        var17 += JagGraphics.drawingAreaWidth;
+        srcX += sinAngle;
+        srcY += cosAngle;
+        target += JagGraphics.drawingAreaWidth;
       }
     } catch (Exception ignored) {
     }
 
   }
 
-  public void method818(int var1, int var2, int var3, int var4, int var5) {
-    if (var3 > 0 && var4 > 0) {
-      int var6 = this.width;
-      int var7 = this.height;
-      int var8 = 0;
-      int var9 = 0;
-      int var10 = this.anInt112;
-      int var11 = this.anInt375;
-      int var12 = (var10 << 16) / var3;
-      int var13 = (var11 << 16) / var4;
+  public void drawScaled(int x, int y, int scaledWidth, int scaledHeight, int alpha) {
+    if (scaledWidth > 0 && scaledHeight > 0) {
+      int initialWidth = this.width;
+      int initialHeight = this.height;
+      int sourceX = 0;
+      int sourceY = 0;
+      int sourceWidthScaled = this.anInt112;
+      int sourceHeightScaled = this.anInt375;
+      int sourceXStep = (sourceWidthScaled << 16) / scaledWidth;
+      int sourceYStep = (sourceHeightScaled << 16) / scaledHeight;
       int var14;
       if (this.anInt377 > 0) {
-        var14 = (var12 + (this.anInt377 << 16) - 1) / var12;
-        var1 += var14;
-        var8 += var14 * var12 - (this.anInt377 << 16);
+        var14 = (sourceXStep + (this.anInt377 << 16) - 1) / sourceXStep;
+        x += var14;
+        sourceX += var14 * sourceXStep - (this.anInt377 << 16);
       }
 
       if (this.anInt574 > 0) {
-        var14 = (var13 + (this.anInt574 << 16) - 1) / var13;
-        var2 += var14;
-        var9 += var14 * var13 - (this.anInt574 << 16);
+        var14 = (sourceYStep + (this.anInt574 << 16) - 1) / sourceYStep;
+        y += var14;
+        sourceY += var14 * sourceYStep - (this.anInt574 << 16);
       }
 
-      if (var6 < var10) {
-        var3 = (var12 + ((var6 << 16) - var8) - 1) / var12;
+      if (initialWidth < sourceWidthScaled) {
+        scaledWidth = (sourceXStep + ((initialWidth << 16) - sourceX) - 1) / sourceXStep;
       }
 
-      if (var7 < var11) {
-        var4 = (var13 + ((var7 << 16) - var9) - 1) / var13;
+      if (initialHeight < sourceHeightScaled) {
+        scaledHeight = (sourceYStep + ((initialHeight << 16) - sourceY) - 1) / sourceYStep;
       }
 
-      var14 = var1 + var2 * JagGraphics.drawingAreaWidth;
-      int var15 = JagGraphics.drawingAreaWidth - var3;
-      if (var2 + var4 > JagGraphics.drawingAreaRight) {
-        var4 -= var2 + var4 - JagGraphics.drawingAreaRight;
+      var14 = x + y * JagGraphics.drawingAreaWidth;
+      int var15 = JagGraphics.drawingAreaWidth - scaledWidth;
+      if (y + scaledHeight > JagGraphics.drawingAreaRight) {
+        scaledHeight -= y + scaledHeight - JagGraphics.drawingAreaRight;
       }
 
       int var16;
-      if (var2 < JagGraphics.drawingAreaTop) {
-        var16 = JagGraphics.drawingAreaTop - var2;
-        var4 -= var16;
+      if (y < JagGraphics.drawingAreaTop) {
+        var16 = JagGraphics.drawingAreaTop - y;
+        scaledHeight -= var16;
         var14 += var16 * JagGraphics.drawingAreaWidth;
-        var9 += var13 * var16;
+        sourceY += sourceYStep * var16;
       }
 
-      if (var3 + var1 > JagGraphics.drawingAreaBottom) {
-        var16 = var3 + var1 - JagGraphics.drawingAreaBottom;
-        var3 -= var16;
+      if (scaledWidth + x > JagGraphics.drawingAreaBottom) {
+        var16 = scaledWidth + x - JagGraphics.drawingAreaBottom;
+        scaledWidth -= var16;
         var15 += var16;
       }
 
-      if (var1 < JagGraphics.drawingAreaLeft) {
-        var16 = JagGraphics.drawingAreaLeft - var1;
-        var3 -= var16;
+      if (x < JagGraphics.drawingAreaLeft) {
+        var16 = JagGraphics.drawingAreaLeft - x;
+        scaledWidth -= var16;
         var14 += var16;
-        var8 += var12 * var16;
+        sourceX += sourceXStep * var16;
         var15 += var16;
       }
 
-      method813(JagGraphics.drawingAreaPixels, this.pixels, var8, var9, var14, var15, var3, var4, var12, var13, var6, var5);
+      blendImages(JagGraphics.drawingAreaPixels, this.pixels, sourceX, sourceY, var14, var15, scaledWidth, scaledHeight, sourceXStep, sourceYStep, initialWidth, alpha);
     }
   }
 

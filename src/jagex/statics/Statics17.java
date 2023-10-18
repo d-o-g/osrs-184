@@ -18,9 +18,9 @@ public class Statics17 {
         int x = cos * xd + yd * sin >> 16;
         int y = yd * cos - sin * xd >> 16;
         if (delta > 2500) {
-          var4.method808(x + var5.anInt380 / 2 - var4.anInt112 / 2, var5.anInt568 / 2 - y - var4.anInt375 / 2, var0, var1, var5.anInt380, var5.anInt568, var5.anIntArray1108, var5.anIntArray749);
+          var4.method808(x + var5.width / 2 - var4.anInt112 / 2, var5.height / 2 - y - var4.anInt375 / 2, var0, var1, var5.width, var5.height, var5.pixels, var5.scanlineOffsets);
         } else {
-          var4.renderAlphaAt(var0 + x + var5.anInt380 / 2 - var4.anInt112 / 2, var5.anInt568 / 2 + var1 - y - var4.anInt375 / 2);
+          var4.renderAlphaAt(var0 + x + var5.width / 2 - var4.anInt112 / 2, var5.height / 2 + var1 - y - var4.anInt375 / 2);
         }
 
       }

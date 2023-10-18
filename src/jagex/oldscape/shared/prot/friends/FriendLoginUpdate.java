@@ -1,13 +1,13 @@
 package jagex.oldscape.shared.prot.friends;
 
-import jagex.jagex3.sound.Class97;
+import jagex.jagex3.sound.AudioManager;
 import jagex.datastructure.Linkable;
 import jagex.core.time.Clock;
 import jagex.oldscape.client.social.NamePair;
 
 public class FriendLoginUpdate extends Linkable {
 
-  public static Class97 aClass97_668;
+  public static AudioManager aAudioManager_668;
   public final int time;
   public final short world;
   public final NamePair namePair;

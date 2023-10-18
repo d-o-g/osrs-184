@@ -2166,8 +2166,8 @@ public class ScriptEvent extends Node {
       var5 = StockmarketListing.manager.events.get(var3);
       long var6 = Clock.now() - StockmarketListing.ageAdjustment - var5.age;
       int var8 = (int) (var6 / 3600000L);
-      int var9 = (int) ((var6 - (long) (var8 * 3600000L)) / 60000L);
-      int var10 = (int) ((var6 - (long) (var8 * 3600000L) - (long) (var9 * 60000L)) / 1000L);
+      int var9 = (int) ((var6 - (var8 * 3600000L)) / 60000L);
+      int var10 = (int) ((var6 - (var8 * 3600000L) - (var9 * 60000L)) / 1000L);
       String var11 = var8 + ":" + var9 / 10 + var9 % 10 + ":" + var10 / 10 + var10 % 10;
       stringStack[++Statics46.anInt441 - 1] = var11;
       return 1;

@@ -59,8 +59,8 @@ public class DefaultMaterialProvider implements MaterialProvider {
         return material.pixels;
       }
 
-      boolean var3 = material.index(brightness, size, sprites);
-      if (var3) {
+      boolean indexed = material.index(brightness, size, sprites);
+      if (indexed) {
         if (remaining == 0) {
           Material last = deque.popLast();
           last.reset();
@@ -105,6 +105,7 @@ public class DefaultMaterialProvider implements MaterialProvider {
     if (total == 0) {
       return 0;
     }
+
     return loaded * 100 / total;
   }
 
@@ -120,6 +121,5 @@ public class DefaultMaterialProvider implements MaterialProvider {
         material.loaded = false;
       }
     }
-
   }
 }

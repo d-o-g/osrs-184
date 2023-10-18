@@ -177,8 +177,8 @@ public class LoginScreenEffect {
           int var12 = var10;
           int var13 = 256 - var10;
           var10 = anIntArray423[var10];
-          int var14 = client.graphicsProvider.anIntArray1818[var8];
-          client.graphicsProvider.anIntArray1818[var8++] = -16777216 | ((var14 & 16711935) * var13 + (var10 & 16711935) * var12 & -16711936) + (var12 * (var10 & 65280) + var13 * (var14 & 65280) & 16711680) >> 8;
+          int var14 = client.graphicsProvider.pixels[var8];
+          client.graphicsProvider.pixels[var8++] = -16777216 | ((var14 & 16711935) * var13 + (var10 & 16711935) * var12 & -16711936) + (var12 * (var10 & 65280) + var13 * (var14 & 65280) & 16711680) >> 8;
         } else {
           ++var8;
         }

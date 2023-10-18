@@ -53,8 +53,8 @@ public class AsyncOutputStream implements Runnable {
     int relativeX = Mouse.clickX - x;
     int relativeY = Mouse.clickY - y;
     if (image.contains(relativeX, relativeY)) {
-      relativeX -= image.anInt380 / 2;
-      relativeY -= image.anInt568 / 2;
+      relativeX -= image.width / 2;
+      relativeY -= image.height / 2;
       int rot = Camera.yOffset & 0x7ff;
       int sin = JagGraphics3D.SIN_TABLE[rot];
       int cos = JagGraphics3D.COS_TABLE[rot];

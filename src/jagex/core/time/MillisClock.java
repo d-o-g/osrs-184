@@ -33,7 +33,7 @@ public class MillisClock extends Clock {
       this.sleepTime = prevSleepTime;
       this.elapsed = prevTimeElapsed;
     } else if (this.lastUpdateTime > this.records[this.index]) {
-      this.sleepTime = (int) ((long) (desired * 2560L) / (this.lastUpdateTime - this.records[this.index]));
+      this.sleepTime = (int) ((desired * 2560L) / (this.lastUpdateTime - this.records[this.index]));
     }
 
     if (this.sleepTime < 25) {

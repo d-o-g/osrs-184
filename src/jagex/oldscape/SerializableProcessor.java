@@ -86,7 +86,7 @@ public class SerializableProcessor implements EnumType {
             if (sound.ambientSoundId >= 0) {
               AudioEffect var7 = AudioEffect.load(Archive.audioEffects, sound.ambientSoundId, 0);
               if (var7 != null) {
-                RawAudioOverride var8 = var7.method1523().resample(Statics46.aClass98_446);
+                RawAudioOverride var8 = var7.createOverride().resample(Statics46.aClass98_446);
                 PcmStream_Sub2 var9 = PcmStream_Sub2.method598(var8, 100, var6);
                 var9.method585(-1);
                 WorldMapLabelSize.aClass5_Sub6_Sub1_528.method312(var9);
@@ -102,7 +102,7 @@ public class SerializableProcessor implements EnumType {
               int var10 = (int) (Math.random() * (double) sound.effects.length);
               AudioEffect var12 = AudioEffect.load(Archive.audioEffects, sound.effects[var10], 0);
               if (var12 != null) {
-                RawAudioOverride var13 = var12.method1523().resample(Statics46.aClass98_446);
+                RawAudioOverride var13 = var12.createOverride().resample(Statics46.aClass98_446);
                 PcmStream_Sub2 var11 = PcmStream_Sub2.method598(var13, 100, var6);
                 var11.method585(0);
                 WorldMapLabelSize.aClass5_Sub6_Sub1_528.method312(var11);

@@ -304,7 +304,7 @@ public class PcmStream_Sub3 extends PcmStream {
     return null;
   }
 
-  public synchronized boolean method776(AudioTrack var1, ReferenceTable var2, Class97 var3, int var4) {
+  public synchronized boolean method776(AudioTrack var1, ReferenceTable var2, AudioManager var3, int var4) {
     var1.method254();
     boolean var5 = true;
     int[] var6 = null;

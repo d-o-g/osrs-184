@@ -801,11 +801,11 @@ public class InterfaceComponent extends Node {
                           if (component.spriteId != 0) {
                             var38.method824(component.width / 2 + absoluteX, component.height / 2 + absoluteY, component.spriteId, var22);
                           } else if (alpha != 0) {
-                            var38.method818(absoluteX, absoluteY, component.width, component.height, 256 - (alpha & 255));
+                            var38.drawScaled(absoluteX, absoluteY, component.width, component.height, 256 - (alpha & 255));
                           } else if (var20 == component.width && var21 == component.height) {
                             var38.renderAlphaAt(absoluteX, absoluteY);
                           } else {
-                            var38.method807(absoluteX, absoluteY, component.width, component.height);
+                            var38.drawScaled(absoluteX, absoluteY, component.width, component.height);
                           }
                         } else {
                           JagGraphics.setDrawingArea(absoluteX, absoluteY, absoluteX + component.width, absoluteY + component.height);

@@ -15,28 +15,28 @@ public class Huffman {
     this.keys = new int[8];
     this.bits = bits;
 
-    buildHuffmanTree(bits);
+    buildTree(bits);
   }
 
-  private void buildHuffmanTree(byte[] bits) {
-    int[] tempArray = new int[33];
+  private void buildTree(byte[] bits) {
+    int[] cache = new int[33];
     int maxKey = 0;
 
     for (int i = 0; i < bits.length; ++i) {
       byte bit = bits[i];
 
       if (bit != 0) {
-        int mask = tempArray[bit];
+        int mask = cache[bit];
         masks[i] = mask;
         int newMask;
 
         if ((mask & (1 << (32 - bit))) != 0) {
-          newMask = tempArray[bit - 1];
+          newMask = cache[bit - 1];
         } else {
           newMask = mask | (1 << (32 - bit));
 
           for (int j = bit - 1; j >= 1; --j) {
-            int temp = tempArray[j];
+            int temp = cache[j];
 
             if (mask != temp) {
               break;
@@ -45,19 +45,19 @@ public class Huffman {
             int bitMask = 1 << (32 - j);
 
             if ((temp & bitMask) != 0) {
-              tempArray[j] = tempArray[j - 1];
+              cache[j] = cache[j - 1];
               break;
             }
 
-            tempArray[j] = temp | bitMask;
+            cache[j] = temp | bitMask;
           }
         }
 
-        tempArray[bit] = newMask;
+        cache[bit] = newMask;
 
         for (int j = bit + 1; j <= 32; ++j) {
-          if (mask == tempArray[j]) {
-            tempArray[j] = newMask;
+          if (mask == cache[j]) {
+            cache[j] = newMask;
           }
         }
 

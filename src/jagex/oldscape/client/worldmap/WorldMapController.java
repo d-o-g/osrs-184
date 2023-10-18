@@ -180,7 +180,7 @@ public final class WorldMapController {
 
   public void method140(int var1, int var2, int var3, int var4, HashSet var5, int var6, int var7) {
     if (this.aSprite272 != null) {
-      this.aSprite272.method807(var1, var2, var3, var4);
+      this.aSprite272.drawScaled(var1, var2, var3, var4);
       if (var6 > 0 && var6 % var7 < var7 / 2) {
         if (this.icons == null) {
           this.method134();

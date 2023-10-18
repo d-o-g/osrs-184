@@ -5,101 +5,102 @@ import jagex.jagex3.js5.ReferenceTable;
 import jagex.messaging.Buffer;
 
 public class AudioEffect {
+
   public final AudioInstrument[] instruments;
+
   public int start;
   public int end;
 
-  public AudioEffect(Buffer var1) {
+  public AudioEffect(Buffer buffer) {
     instruments = new AudioInstrument[10];
 
-    for (int var2 = 0; var2 < 10; ++var2) {
-      int var3 = var1.g1();
-      if (var3 != 0) {
-        --var1.pos;
-        instruments[var2] = new AudioInstrument();
-        instruments[var2].method1298(var1);
+    for (int i = 0; i < 10; ++i) {
+      int remaining = buffer.g1();
+      if (remaining != 0) {
+        --buffer.pos;
+        instruments[i] = new AudioInstrument();
+        instruments[i].decode(buffer);
       }
     }
 
-    start = var1.g2();
-    end = var1.g2();
+    start = buffer.g2();
+    end = buffer.g2();
   }
 
-  public static AudioEffect load(ReferenceTable var0, int var1, int var2) {
-    byte[] var3 = var0.unpack(var1, var2);
-    return var3 == null ? null : new AudioEffect(new Buffer(var3));
+  public static AudioEffect load(ReferenceTable table, int fileId, int archiveId) {
+    byte[] data = table.unpack(fileId, archiveId);
+    return data == null ? null : new AudioEffect(new Buffer(data));
   }
 
-  public final byte[] method1520() {
-    int var1 = 0;
+  public final byte[] generateData() {
+    int maxDuration = 0;
 
-    int var2;
-    for (var2 = 0; var2 < 10; ++var2) {
-      if (instruments[var2] != null && instruments[var2].anInt1790 + instruments[var2].anInt1787 > var1) {
-        var1 = instruments[var2].anInt1790 + instruments[var2].anInt1787;
+    for (int i = 0; i < 10; ++i) {
+      if (instruments[i] != null && instruments[i].attackDelay + instruments[i].decayDelay > maxDuration) {
+        maxDuration = instruments[i].attackDelay + instruments[i].decayDelay;
       }
     }
 
-    if (var1 == 0) {
+    if (maxDuration == 0) {
       return new byte[0];
     }
-    var2 = var1 * 22050 / 1000;
-    byte[] var3 = new byte[var2];
 
-    for (int var4 = 0; var4 < 10; ++var4) {
-      if (instruments[var4] != null) {
-        int var5 = instruments[var4].anInt1790 * 22050 / 1000;
-        int var6 = instruments[var4].anInt1787 * 22050 / 1000;
-        int[] var7 = instruments[var4].method1299(var5, instruments[var4].anInt1790);
+    int length = maxDuration * 22050 / 1000;
+    byte[] data = new byte[length];
+    for (int i = 0; i < 10; ++i) {
+      if (instruments[i] != null) {
+        int duration = instruments[i].attackDelay * 22050 / 1000;
+        int offset = instruments[i].decayDelay * 22050 / 1000;
+        int[] samples = instruments[i].generateSamples(duration, instruments[i].attackDelay);
 
-        for (int var8 = 0; var8 < var5; ++var8) {
-          int var9 = (var7[var8] >> 8) + var3[var8 + var6];
-          if ((var9 + 128 & -256) != 0) {
-            var9 = var9 >> 31 ^ 127;
+        for (int j = 0; j < duration; ++j) {
+          int sample = (samples[j] >> 8) + data[j + offset];
+          if ((sample + 128 & -256) != 0) {
+            sample = sample >> 31 ^ 127;
           }
 
-          var3[var8 + var6] = (byte) var9;
+          data[j + offset] = (byte) sample;
         }
       }
     }
 
-    return var3;
+    return data;
   }
 
-  public RawAudioOverride method1523() {
-    byte[] var1 = method1520();
-    return new RawAudioOverride(var1, start * 22050 / 1000, end * 22050 / 1000);
+  public RawAudioOverride createOverride() {
+    byte[] data = generateData();
+    return new RawAudioOverride(data, start * 22050 / 1000, end * 22050 / 1000);
   }
 
-  public final int method1521() {
-    int var1 = 9999999;
+  public final int trim() {
+    int minDelay = 9999999;
 
-    int var2;
-    for (var2 = 0; var2 < 10; ++var2) {
-      if (instruments[var2] != null && instruments[var2].anInt1787 / 20 < var1) {
-        var1 = instruments[var2].anInt1787 / 20;
+    for (int i = 0; i < 10; ++i) {
+      if (instruments[i] != null && instruments[i].decayDelay / 20 < minDelay) {
+        minDelay = instruments[i].decayDelay / 20;
       }
     }
 
-    if (start < end && start / 20 < var1) {
-      var1 = start / 20;
+    if (start < end && start / 20 < minDelay) {
+      minDelay = start / 20;
     }
 
-    if (var1 != 9999999 && var1 != 0) {
-      for (var2 = 0; var2 < 10; ++var2) {
-        if (instruments[var2] != null) {
-          AudioInstrument var10000 = instruments[var2];
-          var10000.anInt1787 -= var1 * 20;
+    if (minDelay != 9999999 && minDelay != 0) {
+      for (int i = 0; i < 10; ++i) {
+        if (instruments[i] != null) {
+          AudioInstrument instrument = instruments[i];
+          instrument.decayDelay -= minDelay * 20;
         }
       }
 
       if (start < end) {
-        start -= var1 * 20;
-        end -= var1 * 20;
+        start -= minDelay * 20;
+        end -= minDelay * 20;
       }
 
-      return var1;
+      return minDelay;
     }
+
     return 0;
   }
 }

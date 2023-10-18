@@ -466,39 +466,40 @@ public class ObjectDefinition extends DoublyLinkedNode {
     }
   }
 
-  public final Model method1107(int var1, int var2, int[][] var3, int var4, int var5, int var6, AnimationSequence var7, int var8) {
-    long var9;
+  public final Model method1107(int type, int orientation, int[][] heights, int endX, int averageHeight, int endY, AnimationSequence sequence, int frame) {
+    long key;
     if (modelIds == null) {
-      var9 = var2 + ((long) id << 10);
+      key = orientation + ((long) id << 10);
     } else {
-      var9 = var2 + ((long) var1 << 3) + ((long) id << 10);
+      key = orientation + ((long) type << 3) + ((long) id << 10);
     }
 
-    Model var11 = models.get(var9);
-    if (var11 == null) {
-      UnlitModel var12 = method1102(var1, var2);
-      if (var12 == null) {
+    Model model = models.get(key);
+    if (model == null) {
+      UnlitModel unlit = method1102(type, orientation);
+      if (unlit == null) {
         return null;
       }
 
-      var11 = var12.light(ambient + 64, contrast * 25 + 768, -50, -10, -50);
-      models.put(var11, var9);
+      model = unlit.light(ambient + 64, contrast * 25 + 768, -50, -10, -50);
+      models.put(model, key);
     }
 
-    if (var7 == null && clipType == -1) {
-      return var11;
+    if (sequence == null && clipType == -1) {
+      return model;
     }
-    if (var7 != null) {
-      var11 = var7.method877(var11, var8, var2);
+
+    if (sequence != null) {
+      model = sequence.method877(model, frame, orientation);
     } else {
-      var11 = var11.method1291(true);
+      model = model.method1291(true);
     }
 
     if (clipType >= 0) {
-      var11 = var11.contourGround(var3, var4, var5, var6, false, clipType);
+      model = model.contourGround(heights, endX, averageHeight, endY, false, clipType);
     }
 
-    return var11;
+    return model;
   }
 
   public final Model getLitModel(int var1, int var2, int[][] var3, int var4, int var5, int var6) {

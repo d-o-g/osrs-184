@@ -621,11 +621,11 @@ public class SceneGraph {
       int var10 = var9 * var2 + var3 * var8 >> 16;
       int var11 = var3 * var9 - var8 * var2 >> 16;
       double var12 = Math.atan2(var10, var11);
-      int var14 = var5.anInt380 / 2 - 25;
+      int var14 = var5.width / 2 - 25;
       int var15 = (int) (Math.sin(var12) * (double) var14);
       int var16 = (int) (Math.cos(var12) * (double) var14);
       byte var17 = 20;
-      PendingSpawn.mapedge.method831(var15 + (var0 + var5.anInt380 / 2 - var17 / 2), var5.anInt568 / 2 + var1 - var17 / 2 - var16 - 10, var17, var17, 15, 15, var12, 256);
+      PendingSpawn.mapedge.method831(var15 + (var0 + var5.width / 2 - var17 / 2), var5.height / 2 + var1 - var17 / 2 - var16 - 10, var17, var17, 15, 15, var12, 256);
     } else {
       Statics17.method891(var0, var1, var2, var3, var4, var5);
     }
@@ -1578,12 +1578,12 @@ public class SceneGraph {
     AudioSystem.process();
     ComponentSprite var4 = var0.getSprite(false);
     if (var4 != null) {
-      JagGraphics.setClip(var1, var2, var4.anInt380 + var1, var2 + var4.anInt568);
+      JagGraphics.setClip(var1, var2, var4.width + var1, var2 + var4.height);
       if (client.mapState != 2 && client.mapState != 5) {
         int var5 = Camera.yOffset & 2047;
         int var6 = PlayerEntity.local.absoluteX / 32 + 48;
         int var7 = 464 - PlayerEntity.local.absoluteY / 32;
-        minimapSprite.rotate(var1, var2, var4.anInt380, var4.anInt568, var6, var7, var5, 256, var4.anIntArray1108, var4.anIntArray749);
+        minimapSprite.rotate(var1, var2, var4.width, var4.height, var6, var7, var5, 256, var4.pixels, var4.scanlineOffsets);
 
         int var8;
         int var9;
@@ -1681,10 +1681,10 @@ public class SceneGraph {
         }
 
         if (!PlayerEntity.local.hidden) {
-          JagGraphics.fillRect(var4.anInt380 / 2 + var1 - 1, var4.anInt568 / 2 + var2 - 1, 3, 3, 16777215);
+          JagGraphics.fillRect(var4.width / 2 + var1 - 1, var4.height / 2 + var2 - 1, 3, 3, 16777215);
         }
       } else {
-        JagGraphics.fillRectangles(var1, var2, 0, var4.anIntArray1108, var4.anIntArray749);
+        JagGraphics.fillRectangles(var1, var2, 0, var4.pixels, var4.scanlineOffsets);
       }
 
       client.aBooleanArray1087[var3] = true;
@@ -1968,7 +1968,7 @@ public class SceneGraph {
     SerializableString.loadNpcsIntoScene(true);
     Login.loadPlayersIntoScene();
     SerializableString.loadNpcsIntoScene(false);
-    DynamicObject.loadProjectilesIntoScene();
+    loadProjectilesIntoScene();
 
     for (EffectObject object = client.effectObjects.head(); object != null; object = client.effectObjects.next()) {
       if (object.floorLevel == floorLevel && !object.finished) {
@@ -2234,6 +2234,43 @@ public class SceneGraph {
     if (client.loadingPleaseWait) {
       JagGraphics.fillRect(var0, var1, width, height, 0);
       client.drawLoadingMessage("Loading - please wait.", false);
+    }
+
+  }
+
+  public static void loadProjectilesIntoScene() {
+    Projectile projectile = client.projectiles.head();
+    while (projectile != null) {
+      if (projectile.floorLevel == floorLevel && client.ticks <= projectile.endCycle) {
+        if (client.ticks >= projectile.startCycle) {
+          if (projectile.targetIndex > 0) {
+            NpcEntity npc = client.npcs[projectile.targetIndex - 1];
+            if (npc != null && npc.absoluteX >= 0 && npc.absoluteX < 13312 && npc.absoluteY >= 0 && npc.absoluteY < 13312) {
+              projectile.target(npc.absoluteX, npc.absoluteY, getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
+            }
+          }
+
+          if (projectile.targetIndex < 0) {
+            int var2 = -projectile.targetIndex - 1;
+            PlayerEntity player;
+            if (var2 == client.playerIndex) {
+              player = PlayerEntity.local;
+            } else {
+              player = client.players[var2];
+            }
+
+            if (player != null && player.absoluteX >= 0 && player.absoluteX < 13312 && player.absoluteY >= 0 && player.absoluteY < 13312) {
+              projectile.target(player.absoluteX, player.absoluteY, getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
+            }
+          }
+
+          projectile.method1193(client.anInt972);
+          client.sceneGraph.addEntityMarker(floorLevel, (int) projectile.absoluteX, (int) projectile.absoluteY, (int) projectile.aDouble1660, 60, projectile, projectile.xRotation, -1L, false);
+        }
+      } else {
+        projectile.unlink();
+      }
+      projectile = client.projectiles.next();
     }
 
   }

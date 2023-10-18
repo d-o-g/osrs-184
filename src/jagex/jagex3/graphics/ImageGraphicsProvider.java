@@ -13,8 +13,8 @@ public final class ImageGraphicsProvider extends GraphicsProvider {
   public ImageGraphicsProvider(int width, int height, Component target) {
     super.width = width;
     super.height = height;
-    super.anIntArray1818 = new int[height * width + 1];
-    DataBufferInt data = new DataBufferInt(super.anIntArray1818, super.anIntArray1818.length);
+    super.pixels = new int[height * width + 1];
+    DataBufferInt data = new DataBufferInt(super.pixels, super.pixels.length);
     DirectColorModel model = new DirectColorModel(32, 16711680, 65280, 255);
     WritableRaster raster = Raster.createWritableRaster(model.createCompatibleSampleModel(super.width, super.height), data, null);
     image = new BufferedImage(model, raster, false, new Hashtable<>());

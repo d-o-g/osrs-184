@@ -337,7 +337,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             continue;
           }
 
-          audioEffectDelays[i] += effect.method1521();
+          audioEffectDelays[i] += effect.trim();
           audioEffects[i] = effect;
         }
 
@@ -373,7 +373,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           }
 
           if (var9 > 0) {
-            RawAudioOverride var10 = effect.method1523().resample(Statics46.aClass98_446);
+            RawAudioOverride var10 = effect.createOverride().resample(Statics46.aClass98_446);
             PcmStream_Sub2 var11 = PcmStream_Sub2.method598(var10, 100, var9);
             var11.method585(audioEffectLoops[i] - 1);
             WorldMapLabelSize.aClass5_Sub6_Sub1_528.method312(var11);
@@ -2104,7 +2104,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
               }
 
               Statics57.anAudioTrack1158 = null;
-              FriendLoginUpdate.aClass97_668 = null;
+              FriendLoginUpdate.aAudioManager_668 = null;
             }
           }
         } catch (Exception var9) {
@@ -2112,7 +2112,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           Statics50.aClass5_Sub6_Sub3_326.method756();
           AudioSystem.state = 0;
           Statics57.anAudioTrack1158 = null;
-          FriendLoginUpdate.aClass97_668 = null;
+          FriendLoginUpdate.aAudioManager_668 = null;
           AudioSystem.tracks = null;
         }
 
@@ -2310,17 +2310,17 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
           }
 
-          if (FriendLoginUpdate.aClass97_668 == null) {
-            FriendLoginUpdate.aClass97_668 = new Class97(Statics57.aReferenceTable1159, SecureRandomCallable.aReferenceTable382);
+          if (FriendLoginUpdate.aAudioManager_668 == null) {
+            FriendLoginUpdate.aAudioManager_668 = new AudioManager(Statics57.aReferenceTable1159, SecureRandomCallable.aReferenceTable382);
           }
 
-          if (Statics50.aClass5_Sub6_Sub3_326.method776(Statics57.anAudioTrack1158, Statics57.aReferenceTable1160, FriendLoginUpdate.aClass97_668, 22050)) {
+          if (Statics50.aClass5_Sub6_Sub3_326.method776(Statics57.anAudioTrack1158, Statics57.aReferenceTable1160, FriendLoginUpdate.aAudioManager_668, 22050)) {
             Statics50.aClass5_Sub6_Sub3_326.method775();
             Statics50.aClass5_Sub6_Sub3_326.method703(AudioSystem.volume);
             Statics50.aClass5_Sub6_Sub3_326.method766(Statics57.anAudioTrack1158, AudioSystem.aBoolean620);
             AudioSystem.state = 0;
             Statics57.anAudioTrack1158 = null;
-            FriendLoginUpdate.aClass97_668 = null;
+            FriendLoginUpdate.aAudioManager_668 = null;
             AudioSystem.tracks = null;
             var2 = true;
             break label168;
@@ -2331,7 +2331,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         Statics50.aClass5_Sub6_Sub3_326.method756();
         AudioSystem.state = 0;
         Statics57.anAudioTrack1158 = null;
-        FriendLoginUpdate.aClass97_668 = null;
+        FriendLoginUpdate.aAudioManager_668 = null;
         AudioSystem.tracks = null;
       }
 

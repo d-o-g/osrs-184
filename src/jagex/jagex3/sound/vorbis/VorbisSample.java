@@ -96,7 +96,7 @@ public class VorbisSample extends Node {
     return true;
   }
 
-  public static VorbisSample method399(ReferenceTable var0, int var1, int var2) {
+  public static VorbisSample load(ReferenceTable var0, int var1, int var2) {
     if (!method401(var0)) {
       var0.load(var1, var2);
       return null;
@@ -259,7 +259,7 @@ public class VorbisSample extends Node {
 
   }
 
-  public RawAudioOverride method398(int[] var1) {
+  public RawAudioOverride defineAudioOverride(int[] var1) {
     if (var1 != null && var1[0] <= 0) {
       return null;
     }

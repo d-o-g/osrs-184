@@ -722,7 +722,7 @@ public class PcmStream_Sub2 extends PcmStream {
   }
 
   public static PcmStream_Sub2 method598(RawAudioOverride var0, int var1, int var2) {
-    return var0.samples != null && var0.samples.length != 0 ? new PcmStream_Sub2(var0, (int) ((long) var0.sampleRate * 256L * (long) var1 / (long) (URLRequest.audioSampleRate * 100L)), var2 << 6) : null;
+    return var0.samples != null && var0.samples.length != 0 ? new PcmStream_Sub2(var0, (int) ((long) var0.sampleRate * 256L * (long) var1 / (URLRequest.audioSampleRate * 100L)), var2 << 6) : null;
   }
 
   public synchronized int method599() {
