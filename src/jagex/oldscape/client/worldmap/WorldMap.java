@@ -482,7 +482,7 @@ public class WorldMap {
         minPositionX = getPanelX() - var5 / 2 - var7;
         minPositionY = getPanelY() - var6 / 2 - var7;
         anInt1699 = controller.tileScale;
-        heatmap.method992(minPositionX, minPositionY, aSprite1695, (float) anInt1699 / var10);
+        heatmap.transform(minPositionX, minPositionY, aSprite1695, (float) anInt1699 / var10);
         anInt1697 = client.anInt929;
         var13 = var1 - (var7 + var11 - minPositionX) * controller.tileScale;
         var14 = var2 - controller.tileScale * (var7 - (var12 - minPositionY));

@@ -23,14 +23,14 @@ public class AsyncOutputStream implements Runnable {
   final Thread thread;
   final int payloadCapacity;
   final byte[] payload;
-  boolean aBoolean109;
+  boolean closed;
   IOException error;
-  int anInt104;
-  int anInt102;
+  int writeIndex;
+  int readIndex;
 
   AsyncOutputStream(OutputStream output, int payloadCapacity) {
-    anInt104 = 0;
-    anInt102 = 0;
+    writeIndex = 0;
+    readIndex = 0;
     this.output = output;
     this.payloadCapacity = payloadCapacity + 1;
     payload = new byte[this.payloadCapacity];
@@ -39,7 +39,7 @@ public class AsyncOutputStream implements Runnable {
     thread.start();
   }
 
-  public static void processMinimapClick(InterfaceComponent component, int x, int y) {
+  public static void processMinimapClick(Component component, int x, int y) {
     if (client.mapState != 0 && client.mapState != 3 || ContextMenu.open
         || (Mouse.clickMeta != 1 && (WorldMapObjectIcon.mouseCameraEnabled || Mouse.clickMeta != 4))) {
       return;
@@ -83,31 +83,31 @@ public class AsyncOutputStream implements Runnable {
     }
   }
 
-  void write(byte[] var1, int var2, int var3) throws IOException {
-    if (var3 >= 0 && var2 >= 0 && var3 + var2 <= var1.length) {
+  void write(byte[] buffer, int offset, int length) throws IOException {
+    if (length >= 0 && offset >= 0 && length + offset <= buffer.length) {
       synchronized (this) {
         if (error != null) {
           throw new IOException(error.toString());
         }
-        int var5;
-        if (anInt104 <= anInt102) {
-          var5 = payloadCapacity - anInt102 + anInt104 - 1;
+        int available;
+        if (writeIndex <= readIndex) {
+          available = payloadCapacity - readIndex + writeIndex - 1;
         } else {
-          var5 = anInt104 - anInt102 - 1;
+          available = writeIndex - readIndex - 1;
         }
 
-        if (var5 < var3) {
+        if (available < length) {
           throw new IOException("");
         }
-        if (var3 + anInt102 <= payloadCapacity) {
-          System.arraycopy(var1, var2, payload, anInt102, var3);
+        if (length + readIndex <= payloadCapacity) {
+          System.arraycopy(buffer, offset, payload, readIndex, length);
         } else {
-          int var6 = payloadCapacity - anInt102;
-          System.arraycopy(var1, var2, payload, anInt102, var6);
-          System.arraycopy(var1, var6 + var2, payload, 0, var3 - var6);
+          int preLength = payloadCapacity - readIndex;
+          System.arraycopy(buffer, offset, payload, readIndex, preLength);
+          System.arraycopy(buffer, preLength + offset, payload, 0, length - preLength);
         }
 
-        anInt102 = (var3 + anInt102) % payloadCapacity;
+        readIndex = (length + readIndex) % payloadCapacity;
         notifyAll();
       }
     } else {
@@ -117,7 +117,7 @@ public class AsyncOutputStream implements Runnable {
 
   void close() {
     synchronized (this) {
-      aBoolean109 = true;
+      closed = true;
       notifyAll();
     }
 
@@ -127,16 +127,16 @@ public class AsyncOutputStream implements Runnable {
     }
   }
 
-  boolean method14() {
-    if (aBoolean109) {
+  boolean closeIfPending() {
+    if (closed) {
       try {
         output.close();
         if (error == null) {
           error = new IOException("");
         }
-      } catch (IOException var2) {
+      } catch (IOException e) {
         if (error == null) {
-          error = new IOException(var2);
+          error = new IOException(e);
         }
       }
 
@@ -147,20 +147,20 @@ public class AsyncOutputStream implements Runnable {
 
   public void run() {
     do {
-      int var2;
+      int available;
       synchronized (this) {
         while (true) {
           if (error != null) {
             return;
           }
 
-          if (anInt104 <= anInt102) {
-            var2 = anInt102 - anInt104;
+          if (writeIndex <= readIndex) {
+            available = readIndex - writeIndex;
           } else {
-            var2 = payloadCapacity - anInt104 + anInt102;
+            available = payloadCapacity - writeIndex + readIndex;
           }
 
-          if (var2 > 0) {
+          if (available > 0) {
             break;
           }
 
@@ -171,7 +171,7 @@ public class AsyncOutputStream implements Runnable {
             return;
           }
 
-          if (method14()) {
+          if (closeIfPending()) {
             return;
           }
 
@@ -183,24 +183,24 @@ public class AsyncOutputStream implements Runnable {
       }
 
       try {
-        if (var2 + anInt104 <= payloadCapacity) {
-          output.write(payload, anInt104, var2);
+        if (available + writeIndex <= payloadCapacity) {
+          output.write(payload, writeIndex, available);
         } else {
-          int var5 = payloadCapacity - anInt104;
-          output.write(payload, anInt104, var5);
-          output.write(payload, 0, var2 - var5);
+          int preLength = payloadCapacity - writeIndex;
+          output.write(payload, writeIndex, preLength);
+          output.write(payload, 0, available - preLength);
         }
-      } catch (IOException var10) {
+      } catch (IOException e) {
         synchronized (this) {
-          error = var10;
+          error = e;
           return;
         }
       }
 
       synchronized (this) {
-        anInt104 = (var2 + anInt104) % payloadCapacity;
+        writeIndex = (available + writeIndex) % payloadCapacity;
       }
-    } while (!method14());
+    } while (!closeIfPending());
 
   }
 }

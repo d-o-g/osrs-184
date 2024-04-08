@@ -44,14 +44,14 @@ public class Node_Sub19 extends Node {
   public Node_Sub19() {
   }
 
-  public static void processComponentEvents(InterfaceComponent[] group, int var1, int var2, int var3, int var4, int var5, int rootX, int rootY) {
-    for (InterfaceComponent c : group) {
-      if (c != null && c.parentUid == var1 && (!c.if3 || c.type == 0 || c.decodedObjects || InterfaceComponent.getConfig(c) != 0 || c == client.topLevelOfDraggedComponent || c.clientcode == 1338)) {
+  public static void processComponentEvents(Component[] group, int var1, int var2, int var3, int var4, int var5, int rootX, int rootY) {
+    for (Component c : group) {
+      if (c != null && c.parentUid == var1 && (!c.if3 || c.type == 0 || c.decodedObjects || Component.getConfig(c) != 0 || c == client.topLevelOfDraggedComponent || c.clientcode == 1338)) {
         if (c.if3) {
-          if (InterfaceComponent.isExplicitlyHidden(c)) {
+          if (Component.isExplicitlyHidden(c)) {
             continue;
           }
-        } else if (c.type == 0 && c != OldConnection.hoveredComponent && InterfaceComponent.isExplicitlyHidden(c)) {
+        } else if (c.type == 0 && c != OldConnection.hoveredComponent && Component.isExplicitlyHidden(c)) {
           continue;
         }
 
@@ -214,11 +214,11 @@ public class Node_Sub19 extends Node {
 
                 if (var24) {
                   if (var22 < 10) {
-                    InterfaceComponent.processAction(var22 + 1, c.uid, c.subComponentIndex, c.itemId, "");
+                    Component.processAction(var22 + 1, c.uid, c.subComponentIndex, c.itemId, "");
                   } else if (var22 == 10) {
                     ComponentSelection.process();
-                    ComponentSelection.select(c.uid, c.subComponentIndex, InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(c)), c.itemId);
-                    ComponentSelection.action = InterfaceComponent.getSelectedAction(c);
+                    ComponentSelection.select(c.uid, c.subComponentIndex, Component.getSpellTargets(Component.getConfig(c)), c.itemId);
+                    ComponentSelection.action = Component.getSelectedAction(c);
                     if (ComponentSelection.action == null) {
                       ComponentSelection.action = "null";
                     }
@@ -260,14 +260,14 @@ public class Node_Sub19 extends Node {
               var23 = (Mouse.clickMeta == 1 || !WorldMapObjectIcon.mouseCameraEnabled && Mouse.clickMeta == 4) && Mouse.clickX >= var13 && Mouse.clickY >= var14 && Mouse.clickX < var15 && Mouse.clickY < var16;
 
               if (var23) {
-                InterfaceComponent.drag(c, Mouse.clickX - var11, Mouse.clickY - var12);
+                Component.drag(c, Mouse.clickX - var11, Mouse.clickY - var12);
               }
 
               if (c.clientcode == 1400) {
                 client.worldMap.method1278(var18, var20, var34 & var35, var34 & var23);
               }
 
-              if (client.draggedComponent != null && c != client.draggedComponent && var34 && StockmarketListingQuantityComparator.method477(InterfaceComponent.getConfig(c))) {
+              if (client.draggedComponent != null && c != client.draggedComponent && var34 && StockmarketListingQuantityComparator.method477(Component.getConfig(c))) {
                 client.draggedSpecialComponent = c;
               }
 
@@ -534,11 +534,11 @@ public class Node_Sub19 extends Node {
               }
 
               if (c.type == 8 && Mouse.x >= var13 && Mouse.y >= var14 && Mouse.x < var15 && Mouse.y < var16) {
-                Statics24.anInterfaceComponent1417 = c;
+                Statics24.anComponent1417 = c;
               }
 
               if (c.viewportHeight > c.height) {
-                InterfaceComponent.method177(c, var11 + c.width, var12, c.height, c.viewportHeight, Mouse.x, Mouse.y);
+                Component.method177(c, var11 + c.width, var12, c.height, c.viewportHeight, Mouse.x, Mouse.y);
               }
             }
 

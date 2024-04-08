@@ -1,6 +1,6 @@
 package jagex.oldscape.client.worldmap;
 
-import jagex.statics.Statics35;
+import jagex.core.stringtools.Strings;
 
 public class WorldMapScriptEvent {
   public final int anInt306;
@@ -19,7 +19,7 @@ public class WorldMapScriptEvent {
       throw new IllegalArgumentException("" + Integer.toString(var1, 16));
     }
     if (var1 >= 128 && var1 < 160) {
-      char var2 = Statics35.cp1252AsciiExtension[var1 - 128];
+      char var2 = Strings.cp1252AsciiExtension[var1 - 128];
       if (var2 == 0) {
         var2 = '?';
       }

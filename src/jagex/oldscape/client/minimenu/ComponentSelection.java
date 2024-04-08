@@ -1,6 +1,6 @@
 package jagex.oldscape.client.minimenu;
 
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.script.ScriptEvent;
 
 public class ComponentSelection {
@@ -18,7 +18,7 @@ public class ComponentSelection {
 
   public static void process() {
     if (state) {
-      InterfaceComponent component = InterfaceComponent.lookup(uid, index);
+      Component component = Component.lookup(uid, index);
       if (component != null && component.targetExitListeners != null) {
         ScriptEvent event = new ScriptEvent();
         event.component = component;
@@ -27,12 +27,12 @@ public class ComponentSelection {
       }
 
       state = false;
-      InterfaceComponent.invalidate(component);
+      Component.invalidate(component);
     }
   }
 
   public static void select(int uid, int index, int flags, int target) {
-    InterfaceComponent component = InterfaceComponent.lookup(uid, index);
+    Component component = Component.lookup(uid, index);
     if (component != null && component.targetEnterListeners != null) {
       ScriptEvent event = new ScriptEvent();
       event.component = component;
@@ -45,7 +45,7 @@ public class ComponentSelection {
     ComponentSelection.uid = uid;
     ComponentSelection.index = index;
     ComponentSelection.targetFlags = flags;
-    InterfaceComponent.invalidate(component);
+    Component.invalidate(component);
   }
 
 }

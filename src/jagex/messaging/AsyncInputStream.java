@@ -8,13 +8,13 @@ public class AsyncInputStream implements Runnable {
   final byte[] payload;
   final InputStream input;
   final Thread thread;
-  int anInt1662;
-  int anInt1664;
+  int writeIndex;
+  int readIndex;
   IOException error;
 
   AsyncInputStream(InputStream input, int payloadCapacity) {
-    anInt1664 = 0;
-    anInt1662 = 0;
+    readIndex = 0;
+    writeIndex = 0;
     this.input = input;
     this.payloadCapacity = payloadCapacity + 1;
     payload = new byte[this.payloadCapacity];
@@ -23,75 +23,77 @@ public class AsyncInputStream implements Runnable {
     thread.start();
   }
 
-  boolean available(int var1) throws IOException {
-    if (var1 == 0) {
+  boolean available(int amount) throws IOException {
+    if (amount == 0) {
       return true;
     }
-    if (var1 > 0 && var1 < payloadCapacity) {
+    if (amount > 0 && amount < payloadCapacity) {
       synchronized (this) {
-        int var3;
-        if (anInt1664 <= anInt1662) {
-          var3 = anInt1662 - anInt1664;
+        int available;
+        if (readIndex <= writeIndex) {
+          available = writeIndex - readIndex;
         } else {
-          var3 = payloadCapacity - anInt1664 + anInt1662;
+          available = payloadCapacity - readIndex + writeIndex;
         }
 
-        if (var3 < var1) {
+        if (available < amount) {
           if (error != null) {
             throw new IOException(error.toString());
           }
           notifyAll();
           return false;
         }
+
         return true;
       }
     }
+
     throw new IOException();
   }
 
   int read() throws IOException {
     synchronized (this) {
-      if (anInt1662 == anInt1664) {
+      if (writeIndex == readIndex) {
         if (error != null) {
           throw new IOException(error.toString());
         }
         return -1;
       }
-      int var2 = payload[anInt1664] & 255;
-      anInt1664 = (anInt1664 + 1) % payloadCapacity;
+      int data = payload[readIndex] & 0xff;
+      readIndex = (readIndex + 1) % payloadCapacity;
       notifyAll();
-      return var2;
+      return data;
     }
   }
 
-  int read(byte[] var1, int var2, int var3) throws IOException {
-    if (var3 >= 0 && var2 >= 0 && var3 + var2 <= var1.length) {
+  int read(byte[] buffer, int offset, int length) throws IOException {
+    if (length >= 0 && offset >= 0 && length + offset <= buffer.length) {
       synchronized (this) {
-        int var5;
-        if (anInt1664 <= anInt1662) {
-          var5 = anInt1662 - anInt1664;
+        int available;
+        if (readIndex <= writeIndex) {
+          available = writeIndex - readIndex;
         } else {
-          var5 = payloadCapacity - anInt1664 + anInt1662;
+          available = payloadCapacity - readIndex + writeIndex;
         }
 
-        if (var3 > var5) {
-          var3 = var5;
+        if (length > available) {
+          length = available;
         }
 
-        if (var3 == 0 && error != null) {
+        if (length == 0 && error != null) {
           throw new IOException(error.toString());
         }
-        if (var3 + anInt1664 <= payloadCapacity) {
-          System.arraycopy(payload, anInt1664, var1, var2, var3);
+        if (length + readIndex <= payloadCapacity) {
+          System.arraycopy(payload, readIndex, buffer, offset, length);
         } else {
-          int var6 = payloadCapacity - anInt1664;
-          System.arraycopy(payload, anInt1664, var1, var2, var6);
-          System.arraycopy(payload, 0, var1, var6 + var2, var3 - var6);
+          int preLength = payloadCapacity - readIndex;
+          System.arraycopy(payload, readIndex, buffer, offset, preLength);
+          System.arraycopy(payload, 0, buffer, preLength + offset, length - preLength);
         }
 
-        anInt1664 = (var3 + anInt1664) % payloadCapacity;
+        readIndex = (length + readIndex) % payloadCapacity;
         notifyAll();
-        return var3;
+        return length;
       }
     }
     throw new IOException();
@@ -99,18 +101,18 @@ public class AsyncInputStream implements Runnable {
 
   int available() throws IOException {
     synchronized (this) {
-      int var2;
-      if (anInt1664 <= anInt1662) {
-        var2 = anInt1662 - anInt1664;
+      int available;
+      if (readIndex <= writeIndex) {
+        available = writeIndex - readIndex;
       } else {
-        var2 = payloadCapacity - anInt1664 + anInt1662;
+        available = payloadCapacity - readIndex + writeIndex;
       }
 
-      if (var2 <= 0 && error != null) {
+      if (available <= 0 && error != null) {
         throw new IOException(error.toString());
       }
       notifyAll();
-      return var2;
+      return available;
     }
   }
 
@@ -131,22 +133,22 @@ public class AsyncInputStream implements Runnable {
 
   public void run() {
     while (true) {
-      int var2;
+      int available;
       synchronized (this) {
         while (true) {
           if (error != null) {
             return;
           }
 
-          if (anInt1664 == 0) {
-            var2 = payloadCapacity - anInt1662 - 1;
-          } else if (anInt1664 <= anInt1662) {
-            var2 = payloadCapacity - anInt1662;
+          if (readIndex == 0) {
+            available = payloadCapacity - writeIndex - 1;
+          } else if (readIndex <= writeIndex) {
+            available = payloadCapacity - writeIndex;
           } else {
-            var2 = anInt1664 - anInt1662 - 1;
+            available = readIndex - writeIndex - 1;
           }
 
-          if (var2 > 0) {
+          if (available > 0) {
             break;
           }
 
@@ -157,21 +159,21 @@ public class AsyncInputStream implements Runnable {
         }
       }
 
-      int var5;
+      int bytesRead;
       try {
-        var5 = input.read(payload, anInt1662, var2);
-        if (var5 == -1) {
+        bytesRead = input.read(payload, writeIndex, available);
+        if (bytesRead == -1) {
           throw new EOFException();
         }
-      } catch (IOException var11) {
+      } catch (IOException e) {
         synchronized (this) {
-          error = var11;
+          error = e;
           return;
         }
       }
 
       synchronized (this) {
-        anInt1662 = (var5 + anInt1662) % payloadCapacity;
+        writeIndex = (bytesRead + writeIndex) % payloadCapacity;
       }
     }
   }

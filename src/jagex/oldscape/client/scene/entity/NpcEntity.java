@@ -6,7 +6,6 @@ import jagex.messaging.BitBuffer;
 
 public final class NpcEntity extends PathingEntity {
 
-  public static int port;
   public NpcDefinition definition;
 
   public NpcEntity() {
@@ -61,7 +60,7 @@ public final class NpcEntity extends PathingEntity {
 
       int orientation = client.pathingEntityOrientations[buffer.g(3)];
       if (createdNew) {
-        npc.orientation = npc.turnOrientation = orientation;
+        npc.modelOrientation = npc.pathOrientation = orientation;
       }
 
       int update = buffer.g(1);
@@ -72,9 +71,9 @@ public final class NpcEntity extends PathingEntity {
       int traversed = buffer.g(1);
       npc.definition = NpcDefinition.get(buffer.g(14));
       npc.boundSize = npc.definition.size;
-      npc.rotation = npc.definition.rotation;
-      if (npc.rotation == 0) {
-        npc.turnOrientation = 0;
+      npc.defaultRotation = npc.definition.rotation;
+      if (npc.defaultRotation == 0) {
+        npc.pathOrientation = 0;
       }
 
       npc.walkStance = npc.definition.walkStance;
@@ -173,7 +172,7 @@ public final class NpcEntity extends PathingEntity {
       if ((mask & 32) != 0) {
         npc.definition = NpcDefinition.get(buffer.g2s_le());
         npc.boundSize = npc.definition.size;
-        npc.rotation = npc.definition.rotation;
+        npc.defaultRotation = npc.definition.rotation;
         npc.walkStance = npc.definition.walkStance;
         npc.turnAroundStance = npc.definition.turnAroundStance;
         npc.walkLeftStance = npc.definition.walkLeftStance;
@@ -295,6 +294,7 @@ public final class NpcEntity extends PathingEntity {
     if (definition == null) {
       return null;
     }
+
     AnimationSequence animation = super.animation != -1 && super.animationDelay == 0 ? AnimationSequence.get(super.animation) : null;
     AnimationSequence stance = super.stance != -1 && (super.stance != super.idleStance || animation == null) ? AnimationSequence.get(super.stance) : null;
     Model animatedModel = definition.getModel(animation, super.animationFrame, stance, super.stanceFrame);

@@ -505,7 +505,7 @@ public class Model extends Entity {
     return var2;
   }
 
-  public void computeBoundingBox(int rotation) {
+  public void computeBoundingBox(int orientation) {
     if (anInt711 == -1) {
       int var2 = 0;
       int var3 = 0;
@@ -513,8 +513,8 @@ public class Model extends Entity {
       int var5 = 0;
       int var6 = 0;
       int var7 = 0;
-      int var8 = COS_TABLE[rotation];
-      int var9 = SIN_TABLE[rotation];
+      int var8 = COS_TABLE[orientation];
+      int var9 = SIN_TABLE[orientation];
 
       for (int i = 0; i < vertexCount; ++i) {
         int var11 = JagGraphics3D.dot(xVertices[i], zVertices[i], var8, var9);
@@ -708,13 +708,13 @@ public class Model extends Entity {
     return this;
   }
 
-  public void render(int var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8, long var9) {
+  public void render(int orientation, int var2, int var3, int var4, int var5, int var6, int var7, int var8, long var9) {
     anIntArray1740[0] = -1;
     if (state != 1) {
       computeBounds();
     }
 
-    computeBoundingBox(var1);
+    computeBoundingBox(orientation);
     int var11 = var5 * var8 - var4 * var6 >> 16;
     int var12 = var2 * var7 + var3 * var11 >> 16;
     int var13 = var3 * diagonal >> 16;
@@ -791,9 +791,9 @@ public class Model extends Entity {
               var35 = JagGraphics3D.anInt366;
               var36 = 0;
               var37 = 0;
-              if (var1 != 0) {
-                var36 = SIN_TABLE[var1];
-                var37 = COS_TABLE[var1];
+              if (orientation != 0) {
+                var36 = SIN_TABLE[orientation];
+                var37 = COS_TABLE[orientation];
               }
 
               for (int var40 = 0; var40 < vertexCount; ++var40) {
@@ -801,7 +801,7 @@ public class Model extends Entity {
                 int var42 = yVertices[var40];
                 int var43 = zVertices[var40];
                 int var44;
-                if (var1 != 0) {
+                if (orientation != 0) {
                   var44 = var43 * var36 + var41 * var37 >> 16;
                   var43 = var43 * var37 - var41 * var36 >> 16;
                   var41 = var44;

@@ -425,7 +425,7 @@ public final class PlayerEntity extends PathingEntity {
       if ((mask & 0x20) != 0) {
         player.transformedOrientation = packet.g2();
         if (player.pathQueueSize == 0) {
-          player.orientation = player.transformedOrientation;
+          player.modelOrientation = player.transformedOrientation;
           player.transformedOrientation = -1;
         }
       }
@@ -582,25 +582,25 @@ public final class PlayerEntity extends PathingEntity {
       if (client.ticks >= animationStartCycle && client.ticks < animationEndCycle) {
         var4 = transformedNpcModel;
         var4.offsetBy(maxX * super.absoluteX, baseTileHeight - tileHeight, maxY * super.absoluteY);
-        if (super.orientation == 512) {
+        if (super.modelOrientation == 512) {
           var4.rotate90Y();
           var4.rotate90Y();
           var4.rotate90Y();
-        } else if (super.orientation == 1024) {
+        } else if (super.modelOrientation == 1024) {
           var4.rotate90Y();
           var4.rotate90Y();
-        } else if (super.orientation == 1536) {
+        } else if (super.modelOrientation == 1536) {
           var4.rotate90Y();
         }
 
         var5 = new Model[]{var3, var4};
         var3 = new Model(var5, 2);
-        if (super.orientation == 512) {
+        if (super.modelOrientation == 512) {
           var4.rotate90Y();
-        } else if (super.orientation == 1024) {
+        } else if (super.modelOrientation == 1024) {
           var4.rotate90Y();
           var4.rotate90Y();
-        } else if (super.orientation == 1536) {
+        } else if (super.modelOrientation == 1536) {
           var4.rotate90Y();
           var4.rotate90Y();
           var4.rotate90Y();

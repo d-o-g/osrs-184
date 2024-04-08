@@ -7,12 +7,8 @@ import jagex.oldscape.client.social.AssociateComparator;
 import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.scene.entity.EntityUID;
 import jagex.oldscape.client.scene.entity.NpcEntity;
-import jagex.oldscape.client.type.HitsplatDefinition;
-import jagex.oldscape.client.type.ItemDefinition;
 import jagex.jagex3.graphics.IndexedSprite;
-import jagex.core.compression.bzip2.Bzip2Entry;
 import jagex.messaging.Buffer;
-import jagex.oldscape.shared.prot.login.LoginStep;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -72,25 +68,11 @@ public final class SerializableString implements Serializable {
 
           long uid = EntityUID.build(0, 0, 1, !npc.definition.interactable, client.npcIndices[i]);
           npc.renderCycle = client.ticks;
-          client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.boundSize - 64 + npc.absoluteX, npc.boundSize - 64 + npc.absoluteY, SceneGraph.floorLevel), npc.boundSize - 64 + 60, npc, npc.turnOrientation, uid, npc.stretch);
+          client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, npc.absoluteX, npc.absoluteY, SceneGraph.getTileHeight(npc.boundSize - 64 + npc.absoluteX, npc.boundSize - 64 + npc.absoluteY, SceneGraph.floorLevel), npc.boundSize - 64 + 60, npc, npc.pathOrientation, uid, npc.stretch);
         }
       }
     }
 
-  }
-
-  public static void setWorld(Server var0) {
-    if (var0.isMembers() != client.membersWorld) {
-      client.membersWorld = var0.isMembers();
-      ItemDefinition.setLoadMembers(var0.isMembers());
-    }
-
-    LoginStep.currentDomain = var0.domain;
-    client.currentWorld = var0.id;
-    client.currentWorldMask = var0.mask;
-    HitsplatDefinition.anInt1929 = client.gameTypeId == 0 ? 43594 : var0.id + 40000;
-    Bzip2Entry.anInt1579 = client.gameTypeId == 0 ? 443 : var0.id + 50000;
-    NpcEntity.port = HitsplatDefinition.anInt1929;
   }
 
   void encodeAsString(String value, Buffer buffer) {

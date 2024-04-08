@@ -1,9 +1,9 @@
 package jagex.oldscape;
 
+import jagex.core.stringtools.Strings;
 import jagex.oldscape.client.client;
 import jagex.jagex3.graphics.IndexedSprite;
 import jagex.jagex3.graphics.JagGraphics;
-import jagex.statics.Statics35;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -45,7 +45,7 @@ public class LoginScreenEffect {
   public static boolean method278(char var0) {
     if ((var0 <= 0 || var0 >= 128) && (var0 < 160 || var0 > 255)) {
       if (var0 != 0) {
-        char[] var1 = Statics35.cp1252AsciiExtension;
+        char[] var1 = Strings.cp1252AsciiExtension;
 
         for (char var3 : var1) {
           if (var0 == var3) {

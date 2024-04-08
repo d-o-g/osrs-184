@@ -272,7 +272,7 @@ public class ZoneProt {
         startY = startY * 128 + 64;
         targetX = targetX * 128 + 64;
         targetY = targetY * 128 + 64;
-        Projectile proj = new Projectile(
+        ProjectileAnimation proj = new ProjectileAnimation(
             id,
             SceneGraph.floorLevel, startX, startY, SceneGraph.getTileHeight(startX, startY, SceneGraph.floorLevel) - height,
             startCycle + client.ticks, endCycle + client.ticks,

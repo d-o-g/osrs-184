@@ -4,8 +4,8 @@ import jagex.jagex3.sound.DefaultAudioSystemProvider;
 import jagex.oldscape.client.client;
 import jagex.oldscape.client.fonts.NamedFont;
 import jagex.jagex3.js5.LoadedArchive;
+import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.scene.SceneGraphRenderData;
-import jagex.statics.Statics35;
 
 public class BefriendedPlayer extends Associate<BefriendedPlayer> {
 
@@ -19,7 +19,7 @@ public class BefriendedPlayer extends Associate<BefriendedPlayer> {
     SceneGraphRenderData.underlays = null;
     SceneGraphRenderData.overlays = null;
     DefaultAudioSystemProvider.overlayShapes = null;
-    Statics35.overlayOrientations = null;
+    SceneGraph.overlayOrientations = null;
     SceneGraphRenderData.anIntArrayArrayArray393 = null;
     SceneGraphRenderData.shadows = null;
     DefaultAudioSystemProvider.tileLighting = null;

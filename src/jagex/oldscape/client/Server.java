@@ -2,10 +2,7 @@ package jagex.oldscape.client;
 
 import jagex.messaging.Buffer;
 import jagex.oldscape.URLRequest;
-import jagex.oldscape.client.scene.SceneGraph;
-import jagex.oldscape.client.scene.entity.PathingEntity;
-import jagex.oldscape.shared.prot.ClientProt;
-import jagex.oldscape.shared.prot.OutgoingPacket;
+import jagex.oldscape.client.type.ItemDefinition;
 
 import java.net.URL;
 
@@ -13,12 +10,11 @@ public class Server {
 
   public static Server[] servers;
 
-  public static int[] populationComparator = new int[]{1, 1, 1, 1};
-  public static int[] indexComparator = new int[]{0, 1, 2, 3};
+  public static int[] reverseFlags = new int[]{1, 1, 1, 1};
+  public static int[] comparator = new int[]{0, 1, 2, 3};
 
   public static int count = 0;
   public static int current = 0;
-  public static int expectedRead;
 
   public static URLRequest request;
 
@@ -37,24 +33,6 @@ public class Server {
 
   }
 
-  public static int method1351(int var0, int var1) {
-    int var2 = var0 >>> 31;
-    return (var0 + var2) / var1 - var2;
-  }
-
-  public static void method1343(String var0) {
-    if (!var0.equals("")) {
-      OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.JOIN_CLANCHANNEL, client.stream.encryptor);
-      packet.buffer.p1(Buffer.stringLengthPlusOne(var0));
-      packet.buffer.pcstr(var0);
-      client.stream.writeLater(packet);
-    }
-  }
-
-  public static void absoluteToViewport(PathingEntity entity, int height) {
-    SceneGraph.absoluteToViewport(entity.absoluteX, entity.absoluteY, height);
-  }
-
   public static void sort(int indexType, int populationType) {
     int[] indexComparator = new int[4];
     int[] populationComparator = new int[4];
@@ -63,16 +41,16 @@ public class Server {
 
     int srcIndex = 1;
     for (int dstIndex = 0; dstIndex < 4; ++dstIndex) {
-      if (Server.indexComparator[dstIndex] != indexType) {
-        indexComparator[srcIndex] = Server.indexComparator[dstIndex];
-        populationComparator[srcIndex] = Server.populationComparator[dstIndex];
+      if (Server.comparator[dstIndex] != indexType) {
+        indexComparator[srcIndex] = Server.comparator[dstIndex];
+        populationComparator[srcIndex] = Server.reverseFlags[dstIndex];
         ++srcIndex;
       }
     }
 
-    Server.indexComparator = indexComparator;
-    Server.populationComparator = populationComparator;
-    sort(servers, 0, servers.length - 1, Server.indexComparator, Server.populationComparator);
+    Server.comparator = indexComparator;
+    Server.reverseFlags = populationComparator;
+    sort(servers, 0, servers.length - 1, Server.comparator, Server.reverseFlags);
   }
 
   public static void sort(Server[] array, int start, int end, int[] comparator, int[] reverseFlags) {
@@ -150,7 +128,7 @@ public class Server {
     switch (comparator) {
       case 1:
         int population = server.population;
-        return (population == -1 && comparator == 1) ? 2001 : population;
+        return population == -1 ? 2001 : population;
       case 2:
         return server.index;
       case 3:
@@ -193,7 +171,7 @@ public class Server {
           server.index = i++;
         }
 
-        sort(servers, 0, servers.length - 1, indexComparator, populationComparator);
+        sort(servers, 0, servers.length - 1, comparator, reverseFlags);
         request = null;
         return true;
       }
@@ -203,6 +181,20 @@ public class Server {
     }
 
     return false;
+  }
+
+  public static void setCurrent(Server server) {
+    if (server.isMembers() != client.membersWorld) {
+      client.membersWorld = server.isMembers();
+      ItemDefinition.setLoadMembers(server.isMembers());
+    }
+
+    client.currentDomain = server.domain;
+    client.currentWorld = server.id;
+    client.currentWorldMask = server.mask;
+    client.serverPort = client.gameTypeId == 0 ? 43594 : server.id + 40000;
+    client.js5port = client.gameTypeId == 0 ? 443 : server.id + 50000;
+    client.activePort = client.serverPort;
   }
 
   public boolean isMembers() {

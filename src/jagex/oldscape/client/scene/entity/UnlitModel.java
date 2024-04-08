@@ -298,7 +298,7 @@ public class UnlitModel extends Entity {
     contrast = var1.contrast;
   }
 
-  public static UnlitModel method982(ReferenceTable var0, int var1, int var2) {
+  public static UnlitModel unpack(ReferenceTable var0, int var1, int var2) {
     byte[] var3 = var0.unpack(var1, var2);
     return var3 == null ? null : new UnlitModel(var3);
   }

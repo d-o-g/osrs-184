@@ -252,28 +252,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
       solid = true;
     } else if (var2 == 75) {
       itemSupport = var1.g1();
-    } else if (var2 != 77 && var2 != 92) {
-      if (var2 == 78) {
-        ambientSoundId = var1.g2();
-        anInt1344 = var1.g1();
-      } else if (var2 == 79) {
-        anInt1508 = var1.g2();
-        anInt1510 = var1.g2();
-        anInt1344 = var1.g1();
-        var3 = var1.g1();
-        soundEffects = new int[var3];
-
-        for (var4 = 0; var4 < var3; ++var4) {
-          soundEffects[var4] = var1.g2();
-        }
-      } else if (var2 == 81) {
-        clipType = var1.g1();
-      } else if (var2 == 82) {
-        mapFunction = var1.g2();
-      } else if (var2 == 249) {
-        parameters = IterableNodeTable.decode(var1, parameters);
-      }
-    } else {
+    } else if (var2 == 77 || var2 == 92) {
       varpbitIndex = var1.g2();
       if (varpbitIndex == 65535) {
         varpbitIndex = -1;
@@ -303,6 +282,25 @@ public class ObjectDefinition extends DoublyLinkedNode {
       }
 
       transformIds[var4 + 1] = var3;
+    } else if (var2 == 78) {
+      ambientSoundId = var1.g2();
+      anInt1344 = var1.g1();
+    } else if (var2 == 79) {
+      anInt1508 = var1.g2();
+      anInt1510 = var1.g2();
+      anInt1344 = var1.g1();
+      var3 = var1.g1();
+      soundEffects = new int[var3];
+
+      for (var4 = 0; var4 < var3; ++var4) {
+        soundEffects[var4] = var1.g2();
+      }
+    } else if (var2 == 81) {
+      clipType = var1.g1();
+    } else if (var2 == 82) {
+      mapFunction = var1.g2();
+    } else if (var2 == 249) {
+      parameters = IterableNodeTable.decode(var1, parameters);
     }
 
   }
@@ -336,7 +334,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
 
         var3 = rawmodels.get(var7);
         if (var3 == null) {
-          var3 = UnlitModel.method982(modelsTable, var7 & 65535, 0);
+          var3 = UnlitModel.unpack(modelsTable, var7 & 65535, 0);
           if (var3 == null) {
             return null;
           }
@@ -378,7 +376,7 @@ public class ObjectDefinition extends DoublyLinkedNode {
 
       var3 = rawmodels.get(var5);
       if (var3 == null) {
-        var3 = UnlitModel.method982(modelsTable, var5 & 65535, 0);
+        var3 = UnlitModel.unpack(modelsTable, var5 & 65535, 0);
         if (var3 == null) {
           return null;
         }

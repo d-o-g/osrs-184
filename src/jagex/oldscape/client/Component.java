@@ -30,7 +30,7 @@ import jagex.oldscape.CursorEntities;
 import jagex.statics.Statics24;
 import jagex.oldscape.client.worldmap.WorldMapObjectIcon;
 
-public class InterfaceComponent extends Node {
+public class Component extends Node {
 
   public static final ReferenceCache<Sprite> sprites = new ReferenceCache<>(200);
   public static final ReferenceCache<Font> fonts = new ReferenceCache<>(20);
@@ -45,9 +45,9 @@ public class InterfaceComponent extends Node {
   public static boolean forceRepaint = false;
 
   public static int anInt1342;
-  public static InterfaceComponent[] draggingInterface;
+  public static Component[] draggingInterface;
 
-  public InterfaceComponent[] subcomponents;
+  public Component[] subcomponents;
 
   public Object[] cs2Listeners;
   public Object[] anObjectArray1400;
@@ -105,7 +105,7 @@ public class InterfaceComponent extends Node {
 
   public ComponentFillType fillType;
 
-  public InterfaceComponent parent;
+  public Component parent;
 
   public String toolTip;
   public String selectedAction;
@@ -206,7 +206,7 @@ public class InterfaceComponent extends Node {
   int enabledModelType;
   int enabledModelId;
 
-  public InterfaceComponent() {
+  public Component() {
     if3 = false;
     uid = -1;
     subComponentIndex = -1;
@@ -303,8 +303,8 @@ public class InterfaceComponent extends Node {
     prioritizeMenuOptions = false;
   }
 
-  public static InterfaceComponent lookup(int uid, int subcomponent) {
-    InterfaceComponent component = lookup(uid);
+  public static Component lookup(int uid, int subcomponent) {
+    Component component = lookup(uid);
     if (subcomponent == -1) {
       return component;
     }
@@ -326,7 +326,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static InterfaceComponent lookup(int uid) {
+  public static Component lookup(int uid) {
     int group = uid >> 16;
     int component = uid & 0xffff;
     if (client.interfaces[group] == null || client.interfaces[group][component] == null) {
@@ -339,7 +339,7 @@ public class InterfaceComponent extends Node {
     return client.interfaces[group][component];
   }
 
-  public static InterfaceComponent getTopLevelComponent(InterfaceComponent src) {
+  public static Component getTopLevelComponent(Component src) {
     int depth = getScriptEventDepth(getConfig(src));
     if (depth == 0) {
       return null;
@@ -359,7 +359,7 @@ public class InterfaceComponent extends Node {
     return config >> 17 & 7;
   }
 
-  public static int getConfig(InterfaceComponent component) {
+  public static int getConfig(Component component) {
     IntegerNode node = client.interfaceConfigs.lookup(((long) component.uid << 32) + (long) component.subComponentIndex);
     return node != null ? node.value : component.config;
   }
@@ -390,14 +390,14 @@ public class InterfaceComponent extends Node {
   }
 
   public static void renderComponents(
-      InterfaceComponent[] components, int uid,
+      Component[] components, int uid,
       int x, int y, int width, int height,
       int rootX, int rootY, int boundsIndex) {
 
     JagGraphics.setClip(x, y, width, height);
     JagGraphics3D.method499();
 
-    for (InterfaceComponent component : components) {
+    for (Component component : components) {
       if (component != null && (component.parentUid == uid || uid == 0xabcdabcd && component == client.draggedComponent)) {
         int nextBoundsIndex;
         if (boundsIndex == -1) {
@@ -521,8 +521,8 @@ public class InterfaceComponent extends Node {
               }
 
               if (component.clientcode == 1337) {
-                client.anInt1039 = absoluteX;
-                client.anInt1038 = absoluteY;
+                client.viewportComponentAbsoluteX = absoluteX;
+                client.viewportComponentAbsoluteY = absoluteY;
                 SceneGraph.renderEntities(absoluteX, absoluteY, component.width, component.height);
                 client.renderedComponents[component.boundsIndex] = true;
                 JagGraphics.setClip(absoluteX, absoluteY, width, height);
@@ -645,7 +645,7 @@ public class InterfaceComponent extends Node {
 
                               var28.method832(var22 + var25, var23 + var26, 128);
                               if (uid != -1) {
-                                InterfaceComponent var29 = components[uid & 65535];
+                                Component var29 = components[uid & 65535];
                                 int var30;
                                 if (var23 + var26 < JagGraphics.drawingAreaTop && var29.insetY > 0) {
                                   var30 = (JagGraphics.drawingAreaTop - var23 - var26) * client.anInt972 / 3;
@@ -677,7 +677,7 @@ public class InterfaceComponent extends Node {
                                   invalidate(var29);
                                 }
                               }
-                            } else if (component == StockmarketListingWorldComparator.anInterfaceComponent351 && var19 == client.anInt1015) {
+                            } else if (component == StockmarketListingWorldComparator.anComponent351 && var19 == client.anInt1015) {
                               var28.method832(var22, var23, 128);
                             } else {
                               var28.renderAlphaAt(var22, var23);
@@ -692,7 +692,7 @@ public class InterfaceComponent extends Node {
                     }
                   }
                 } else if (component.type == 3) {
-                  if (Projectile.method1192(component)) {
+                  if (ProjectileAnimation.method1192(component)) {
                     var19 = component.enabledForeground;
                     if (component == OldConnection.hoveredComponent && component.enabledHoverForeground != 0) {
                       var19 = component.enabledHoverForeground;
@@ -734,7 +734,7 @@ public class InterfaceComponent extends Node {
                       }
                     } else {
                       String var45 = component.text;
-                      if (Projectile.method1192(component)) {
+                      if (ProjectileAnimation.method1192(component)) {
                         var20 = component.enabledForeground;
                         if (component == OldConnection.hoveredComponent && component.enabledHoverForeground != 0) {
                           var20 = component.enabledHoverForeground;
@@ -776,7 +776,7 @@ public class InterfaceComponent extends Node {
                   } else if (component.type == 5) {
                     Sprite var38;
                     if (!component.if3) {
-                      var38 = component.method958(Projectile.method1192(component));
+                      var38 = component.method958(ProjectileAnimation.method1192(component));
                       if (var38 != null) {
                         var38.renderAlphaAt(absoluteX, absoluteY);
                       } else if (forceRepaint) {
@@ -831,7 +831,7 @@ public class InterfaceComponent extends Node {
                   } else {
                     ItemDefinition var34;
                     if (component.type == 6) {
-                      boolean var36 = Projectile.method1192(component);
+                      boolean var36 = ProjectileAnimation.method1192(component);
                       if (var36) {
                         var20 = component.enabledAnimation;
                       } else {
@@ -927,7 +927,7 @@ public class InterfaceComponent extends Node {
                         }
                       }
 
-                      if (component.type == 8 && component == Statics24.anInterfaceComponent1417 && client.anInt1041 == client.anInt1036) {
+                      if (component.type == 8 && component == Statics24.anComponent1417 && client.anInt1041 == client.anInt1036) {
                         var19 = 0;
                         var20 = 0;
                         Font var32 = Font.p12full;
@@ -1015,7 +1015,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static String method1005(String str, InterfaceComponent component) {
+  public static String method1005(String str, Component component) {
     if (str.contains("%")) {
       for (int i = 1; i <= 5; ++i) {
         while (true) {
@@ -1040,8 +1040,8 @@ public class InterfaceComponent extends Node {
     return str;
   }
 
-  public static void method513(InterfaceComponent[] group, int parentUid) {
-    for (InterfaceComponent component : group) {
+  public static void method513(Component[] group, int parentUid) {
+    for (Component component : group) {
       if (component != null && component.parentUid == parentUid
           && (!component.if3 || !isExplicitlyHidden(component))) {
         int animationId;
@@ -1066,7 +1066,7 @@ public class InterfaceComponent extends Node {
 
         if (component.type == 6) {
           if (component.animation != -1 || component.enabledAnimation != -1) {
-            boolean var4 = Projectile.method1192(component);
+            boolean var4 = ProjectileAnimation.method1192(component);
             if (var4) {
               animationId = component.enabledAnimation;
             } else {
@@ -1144,14 +1144,14 @@ public class InterfaceComponent extends Node {
       return true;
     }
     if (client.interfaces[group] == null) {
-      client.interfaces[group] = new InterfaceComponent[componentCount];
+      client.interfaces[group] = new Component[componentCount];
     }
 
     for (int i = 0; i < componentCount; ++i) {
       if (client.interfaces[group][i] == null) {
         byte[] data = aReferenceTable1375.unpack(group, i);
         if (data != null) {
-          client.interfaces[group][i] = new InterfaceComponent();
+          client.interfaces[group][i] = new Component();
           client.interfaces[group][i].uid = i + (group << 16);
           if (data[0] == -1) {
             client.interfaces[group][i].decode(new Buffer(data));
@@ -1168,8 +1168,8 @@ public class InterfaceComponent extends Node {
 
   public static void loadAnimable(int group) {
     if (load(group)) {
-      InterfaceComponent[] components = client.interfaces[group];
-      for (InterfaceComponent component : components) {
+      Component[] components = client.interfaces[group];
+      for (Component component : components) {
         if (component != null) {
           component.animationFrame = 0;
           component.animationFrameCycle = 0;
@@ -1178,7 +1178,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static void invalidate(InterfaceComponent component) {
+  public static void invalidate(Component component) {
     if (component.renderCycle == client.anInt1084) {
       client.renderedComponents[component.boundsIndex] = true;
     }
@@ -1191,7 +1191,7 @@ public class InterfaceComponent extends Node {
   }
 
   public static void processAction(int actionIndex, int uid, int subcomponent, int itemId, String actionText) {
-    InterfaceComponent component = lookup(uid, subcomponent);
+    Component component = lookup(uid, subcomponent);
     if (component != null) {
       if (component.cs2Listeners != null) {
         ScriptEvent event = new ScriptEvent();
@@ -1297,7 +1297,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static void method177(InterfaceComponent var0, int var1, int var2, int var3, int var4, int var5, int var6) {
+  public static void method177(Component var0, int var1, int var2, int var3, int var4, int var5, int var6) {
     if (client.useDefaultScrollbar) {
       client.scrollbarWidth = 32;
     } else {
@@ -1337,7 +1337,7 @@ public class InterfaceComponent extends Node {
 
   }
 
-  public static void updateSize(InterfaceComponent component, int parentWidth, int parentHeight, boolean fireInputScripts) {
+  public static void updateSize(Component component, int parentWidth, int parentHeight, boolean fireInputScripts) {
     int width = component.width;
     int height = component.height;
     if (component.xAlignment == 0) {
@@ -1376,11 +1376,11 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static boolean isExplicitlyHidden(InterfaceComponent component) {
+  public static boolean isExplicitlyHidden(Component component) {
     return component.explicitlyHidden;
   }
 
-  public static void updatePosition(InterfaceComponent component, int parentWidth, int parentHeight) {
+  public static void updatePosition(Component component, int parentWidth, int parentHeight) {
     if (component.xLayout == 0) {
       component.relativeX = component.xMargin;
     } else if (component.xLayout == 1) {
@@ -1410,7 +1410,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static void processAppearanceCode(InterfaceComponent var0) {
+  public static void processAppearanceCode(Component var0) {
     int var1 = var0.clientcode;
     if (var1 == 324) {
       if (client.anInt930 == -1) {
@@ -1449,8 +1449,8 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static void resizeGroup(InterfaceComponent[] group, int parentUid, int parentWidth, int parentHeight, boolean fireInputScripts) {
-    for (InterfaceComponent component : group) {
+  public static void resizeGroup(Component[] group, int parentUid, int parentWidth, int parentHeight, boolean fireInputScripts) {
+    for (Component component : group) {
       if (component == null || component.parentUid != parentUid) {
         continue;
       }
@@ -1480,7 +1480,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static String getAction(InterfaceComponent var0, int var1) {
+  public static String getAction(Component var0, int var1) {
     int var2 = getConfig(var0);
     boolean var3 = (var2 >> var1 + 1 & 1) != 0;
     if (!var3 && var0.cs2Listeners == null) {
@@ -1489,7 +1489,7 @@ public class InterfaceComponent extends Node {
     return var0.actions != null && var0.actions.length > var1 && var0.actions[var1] != null && var0.actions[var1].trim().length() != 0 ? var0.actions[var1] : null;
   }
 
-  public static String getSelectedAction(InterfaceComponent var0) {
+  public static String getSelectedAction(Component var0) {
     if (getSpellTargets(getConfig(var0)) == 0) {
       return null;
     }
@@ -1510,7 +1510,7 @@ public class InterfaceComponent extends Node {
       }
     }
 
-    InterfaceComponent cmp = lookup(key);
+    Component cmp = lookup(key);
     if (cmp != null) {
       invalidate(cmp);
     }
@@ -1522,10 +1522,10 @@ public class InterfaceComponent extends Node {
 
   }
 
-  public static void drag(InterfaceComponent component, int var1, int var2) {
+  public static void drag(Component component, int var1, int var2) {
     if (client.draggedComponent == null && !ContextMenu.open) {
       if (component != null) {
-        InterfaceComponent parent = getTopLevelComponent(component);
+        Component parent = getTopLevelComponent(component);
         if (parent == null) {
           parent = component.parent;
         }
@@ -1556,9 +1556,9 @@ public class InterfaceComponent extends Node {
   public static void loadAndInitialize(int var0) {
     if (var0 != -1) {
       if (load(var0)) {
-        InterfaceComponent[] var1 = client.interfaces[var0];
+        Component[] var1 = client.interfaces[var0];
 
-        for (InterfaceComponent var3 : var1) {
+        for (Component var3 : var1) {
           if (var3.initializationListeners != null) {
             ScriptEvent var4 = new ScriptEvent();
             var4.component = var3;
@@ -1571,7 +1571,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static int processCs1(InterfaceComponent component, int cs1OpcodeIndex) {
+  public static int processCs1(Component component, int cs1OpcodeIndex) {
     if (component.cs1Opcodes != null && cs1OpcodeIndex < component.cs1Opcodes.length) {
       try {
         int[] opcodes = component.cs1Opcodes[cs1OpcodeIndex];
@@ -1602,7 +1602,7 @@ public class InterfaceComponent extends Node {
           if (opcode == 4) {
             int componentUid = opcodes[ptr++] << 16;
             componentUid += opcodes[ptr++];
-            InterfaceComponent targetComponent = lookup(componentUid);
+            Component targetComponent = lookup(componentUid);
             int itemId = opcodes[ptr++];
             if (itemId != -1 && (!ItemDefinition.get(itemId).members || client.membersWorld)) {
               for (int i = 0; i < targetComponent.itemIds.length; ++i) {
@@ -1640,7 +1640,7 @@ public class InterfaceComponent extends Node {
           if (opcode == 10) {
             int componentUid = opcodes[ptr++] << 16;
             componentUid += opcodes[ptr++];
-            InterfaceComponent targetComponent = lookup(componentUid);
+            Component targetComponent = lookup(componentUid);
             int itemId = opcodes[ptr++];
             if (itemId != -1 && (!ItemDefinition.get(itemId).members || client.membersWorld)) {
               for (int i = 0; i < targetComponent.itemIds.length; ++i) {
@@ -1724,7 +1724,7 @@ public class InterfaceComponent extends Node {
     return -2;
   }
 
-  public static void setKeyRate(InterfaceComponent component, int index, int keyRate1, int keyRate2) {
+  public static void setKeyRate(Component component, int index, int keyRate1, int keyRate2) {
     if (component.keyRate1 == null) {
       throw new RuntimeException();
     }
@@ -1743,7 +1743,7 @@ public class InterfaceComponent extends Node {
     }
   }
 
-  public static void revalidateScroll(InterfaceComponent[] var0, InterfaceComponent var1, boolean var2) {
+  public static void revalidateScroll(Component[] var0, Component var1, boolean var2) {
     int var3 = var1.viewportWidth != 0 ? var1.viewportWidth : var1.width;
     int var4 = var1.viewportHeight != 0 ? var1.viewportHeight : var1.height;
     resizeGroup(var0, var1.uid, var3, var4, var2);
@@ -1769,7 +1769,7 @@ public class InterfaceComponent extends Node {
     return value >> 11 & 63;
   }
 
-  public static boolean isAppearanceCode(InterfaceComponent component) {
+  public static boolean isAppearanceCode(Component component) {
     int code = component.clientcode;
     if (code == 205) {
       client.logoutTimer = 250;
@@ -2332,7 +2332,7 @@ public class InterfaceComponent extends Node {
     if (var7 == null) {
       UnlitModel var8;
       if (var5 == 1) {
-        var8 = UnlitModel.method982(OldConnectionTaskProcessor.aReferenceTable854, var6, 0);
+        var8 = UnlitModel.unpack(OldConnectionTaskProcessor.aReferenceTable854, var6, 0);
         if (var8 == null) {
           forceRepaint = true;
           return null;

@@ -2,7 +2,6 @@ package jagex.messaging;
 
 import jagex.core.stringtools.Strings;
 import jagex.datastructure.Node;
-import jagex.statics.Statics35;
 import jagex.oldscape.client.worldmap.WorldMapIcon;
 
 import java.math.BigInteger;
@@ -196,27 +195,27 @@ public class Buffer extends Node {
     return size;
   }
 
-  public static String readStringFromBytes(byte[] var0, int var1, int var2) {
-    char[] var3 = new char[var2];
-    int var4 = 0;
+  public static String readStringFromBytes(byte[] raw, int end, int len) {
+    char[] buffer = new char[len];
+    int size = 0;
 
-    for (int var5 = 0; var5 < var2; ++var5) {
-      int var6 = var0[var5 + var1] & 255;
-      if (var6 != 0) {
-        if (var6 >= 128 && var6 < 160) {
-          char var7 = Statics35.cp1252AsciiExtension[var6 - 128];
-          if (var7 == 0) {
-            var7 = '?';
+    for (int i = 0; i < len; ++i) {
+      int ascii = raw[i + end] & 255;
+      if (ascii != 0) {
+        if (ascii >= 128 && ascii < 160) {
+          char character = Strings.cp1252AsciiExtension[ascii - 128];
+          if (character == 0) {
+            character = '?';
           }
 
-          var6 = var7;
+          ascii = character;
         }
 
-        var3[var4++] = (char) var6;
+        buffer[size++] = (char) ascii;
       }
     }
 
-    return new String(var3, 0, var4);
+    return new String(buffer, 0, size);
   }
 
   public static int crc32(byte[] var0, int var1) {
@@ -254,7 +253,6 @@ public class Buffer extends Node {
           }
         }
       }
-
     }
   }
 

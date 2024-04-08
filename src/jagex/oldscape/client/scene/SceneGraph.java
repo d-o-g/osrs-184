@@ -55,7 +55,7 @@ public class SceneGraph {
   public static int anInt1933;
   public static int renderCameraX;
   public static int renderFloor;
-  public static int anInt1962;
+  public static int tileUpdateCount;
   public static int renderCameraY;
   public static int renderTick;
   public static int anInt1931;
@@ -84,10 +84,11 @@ public class SceneGraph {
   public static int anInt1235;
   public static int anInt630;
   public static Sprite minimapSprite;
+  public static byte[][][] overlayOrientations;
 
   static {
     lowMemory = true;
-    anInt1962 = 0;
+    tileUpdateCount = 0;
     renderFloor = 0;
     anEntityMarkerArray1940 = new EntityMarker[100];
     acceptClick = false;
@@ -1242,7 +1243,7 @@ public class SceneGraph {
                       scene.method1480(var4, var13, var25, 0, 0, -1, var33, var34, var38, var35, method848(var41, var36), method848(var41, var37), method848(var41, var50), method848(var41, var40), 0, 0, 0, 0, var46, 0);
                     } else {
                       int var43 = DefaultAudioSystemProvider.overlayShapes[var4][var13][var25] + 1;
-                      byte var74 = Statics35.overlayOrientations[var4][var13][var25];
+                      byte var74 = overlayOrientations[var4][var13][var25];
                       int var53 = var49 - 1;
                       TileOverlay var54 = TileOverlay.cache.get(var53);
                       if (var54 == null) {
@@ -1317,7 +1318,7 @@ public class SceneGraph {
           SceneGraphRenderData.underlays[var4] = null;
           SceneGraphRenderData.overlays[var4] = null;
           DefaultAudioSystemProvider.overlayShapes[var4] = null;
-          Statics35.overlayOrientations[var4] = null;
+          overlayOrientations[var4] = null;
           SceneGraphRenderData.shadows[var4] = null;
         }
 
@@ -1574,7 +1575,7 @@ public class SceneGraph {
     }
   }
 
-  public static void renderMinimap(InterfaceComponent var0, int var1, int var2, int var3) {
+  public static void renderMinimap(Component var0, int var1, int var2, int var3) {
     AudioSystem.process();
     ComponentSprite var4 = var0.getSprite(false);
     if (var4 != null) {
@@ -1696,7 +1697,7 @@ public class SceneGraph {
     SceneGraphRenderData.underlays = new byte[4][104][104];
     SceneGraphRenderData.overlays = new byte[4][104][104];
     DefaultAudioSystemProvider.overlayShapes = new byte[4][104][104];
-    Statics35.overlayOrientations = new byte[4][104][104];
+    overlayOrientations = new byte[4][104][104];
     SceneGraphRenderData.anIntArrayArrayArray393 = new int[4][105][105];
     SceneGraphRenderData.shadows = new byte[4][105][105];
     DefaultAudioSystemProvider.tileLighting = new int[105][105];
@@ -1740,7 +1741,7 @@ public class SceneGraph {
         if (var7 <= 49) {
           SceneGraphRenderData.overlays[var1][var2][var3] = var0.g1b();
           DefaultAudioSystemProvider.overlayShapes[var1][var2][var3] = (byte) ((var7 - 2) / 4);
-          Statics35.overlayOrientations[var1][var2][var3] = (byte) (var7 - 2 + var6 & 3);
+          overlayOrientations[var1][var2][var3] = (byte) (var7 - 2 + var6 & 3);
         } else if (var7 <= 81) {
           SceneGraphRenderData.sceneRenderRules[var1][var2][var3] = (byte) (var7 - 49);
         } else {
@@ -2013,7 +2014,7 @@ public class SceneGraph {
       var8 = Camera.anInt802;
       var9 = Camera.oculusOrbAbsoluteY;
       var12 = var5 * 3 + 600;
-      NpcDefinition.method505(var7, var8, var9, var5, var6, var12, height);
+      Camera.method505(var7, var8, var9, var5, var6, var12, height);
 
     }
 
@@ -2239,19 +2240,19 @@ public class SceneGraph {
   }
 
   public static void loadProjectilesIntoScene() {
-    Projectile projectile = client.projectiles.head();
-    while (projectile != null) {
-      if (projectile.floorLevel == floorLevel && client.ticks <= projectile.endCycle) {
-        if (client.ticks >= projectile.startCycle) {
-          if (projectile.targetIndex > 0) {
-            NpcEntity npc = client.npcs[projectile.targetIndex - 1];
+    ProjectileAnimation projectileAnimation = client.projectiles.head();
+    while (projectileAnimation != null) {
+      if (projectileAnimation.floorLevel == floorLevel && client.ticks <= projectileAnimation.endCycle) {
+        if (client.ticks >= projectileAnimation.startCycle) {
+          if (projectileAnimation.targetIndex > 0) {
+            NpcEntity npc = client.npcs[projectileAnimation.targetIndex - 1];
             if (npc != null && npc.absoluteX >= 0 && npc.absoluteX < 13312 && npc.absoluteY >= 0 && npc.absoluteY < 13312) {
-              projectile.target(npc.absoluteX, npc.absoluteY, getTileHeight(npc.absoluteX, npc.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
+              projectileAnimation.target(npc.absoluteX, npc.absoluteY, getTileHeight(npc.absoluteX, npc.absoluteY, projectileAnimation.floorLevel) - projectileAnimation.targetHeight, client.ticks);
             }
           }
 
-          if (projectile.targetIndex < 0) {
-            int var2 = -projectile.targetIndex - 1;
+          if (projectileAnimation.targetIndex < 0) {
+            int var2 = -projectileAnimation.targetIndex - 1;
             PlayerEntity player;
             if (var2 == client.playerIndex) {
               player = PlayerEntity.local;
@@ -2260,19 +2261,28 @@ public class SceneGraph {
             }
 
             if (player != null && player.absoluteX >= 0 && player.absoluteX < 13312 && player.absoluteY >= 0 && player.absoluteY < 13312) {
-              projectile.target(player.absoluteX, player.absoluteY, getTileHeight(player.absoluteX, player.absoluteY, projectile.floorLevel) - projectile.targetHeight, client.ticks);
+              projectileAnimation.target(player.absoluteX, player.absoluteY, getTileHeight(player.absoluteX, player.absoluteY, projectileAnimation.floorLevel) - projectileAnimation.targetHeight, client.ticks);
             }
           }
 
-          projectile.method1193(client.anInt972);
-          client.sceneGraph.addEntityMarker(floorLevel, (int) projectile.absoluteX, (int) projectile.absoluteY, (int) projectile.aDouble1660, 60, projectile, projectile.xRotation, -1L, false);
+          projectileAnimation.method1193(client.anInt972);
+          client.sceneGraph.addEntityMarker(floorLevel, (int) projectileAnimation.absoluteX, (int) projectileAnimation.absoluteY, (int) projectileAnimation.aDouble1660, 60, projectileAnimation, projectileAnimation.xRotation, -1L, false);
         }
       } else {
-        projectile.unlink();
+        projectileAnimation.unlink();
       }
-      projectile = client.projectiles.next();
+      projectileAnimation = client.projectiles.next();
     }
 
+  }
+
+  public static int method1351(int var0, int var1) {
+    int var2 = var0 >>> 31;
+    return (var0 + var2) / var1 - var2;
+  }
+
+  public static void absoluteToViewport(PathingEntity entity, int height) {
+    absoluteToViewport(entity.absoluteX, entity.absoluteY, height);
   }
 
   public boolean method1464(int var1, int var2, int var3) {
@@ -2393,7 +2403,7 @@ public class SceneGraph {
 
   }
 
-  public void method1451(int var1, int var2, int var3, boolean var4) {
+  public void walkToAndUnsetPending(int var1, int var2, int var3, boolean var4) {
     if (!isMovementPending() || var4) {
       acceptClick = true;
       viewportWalking = var4;
@@ -2872,7 +2882,7 @@ public class SceneGraph {
 
   }
 
-  public void method1443() {
+  public void setViewportWalking() {
     viewportWalking = true;
   }
 
@@ -9082,7 +9092,7 @@ public class SceneGraph {
       }
 
       renderingTile.aBoolean1151 = false;
-      --anInt1962;
+      --tileUpdateCount;
       PickableStack var32 = renderingTile.pickableStack;
       if (var32 != null && var32.height != 0) {
         if (var32.middle != null) {
@@ -9453,7 +9463,7 @@ public class SceneGraph {
     }
 
     this.method1468();
-    anInt1962 = 0;
+    tileUpdateCount = 0;
 
     int var7;
     Tile[][] var8;
@@ -9471,7 +9481,7 @@ public class SceneGraph {
               var11.aBoolean1151 = true;
               var11.drawEntityMarkers = var11.entityMarkerCount > 0;
 
-              ++anInt1962;
+              ++tileUpdateCount;
             } else {
               var11.aBoolean665 = false;
               var11.aBoolean1151 = false;
@@ -9529,7 +9539,7 @@ public class SceneGraph {
               }
             }
 
-            if (anInt1962 == 0) {
+            if (tileUpdateCount == 0) {
               acceptClick = false;
               return;
             }
@@ -9580,7 +9590,7 @@ public class SceneGraph {
               }
             }
 
-            if (anInt1962 == 0) {
+            if (tileUpdateCount == 0) {
               acceptClick = false;
               return;
             }

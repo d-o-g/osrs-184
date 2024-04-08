@@ -21,21 +21,21 @@ public class GPI {
   public static int globalPlayerCount = 0;
   public static int anInt594 = 0;
 
-  public static void loadPlayerIntoScene(PlayerEntity var0, boolean var1) {
-    if (var0 != null && var0.isDefined() && !var0.hidden) {
-      var0.forceInanimate = (client.lowMemory && playerCount > 50 || playerCount > 200) && var1 && var0.idleStance == var0.stance;
+  public static void loadPlayerIntoScene(PlayerEntity player, boolean var1) {
+    if (player != null && player.isDefined() && !player.hidden) {
+      player.forceInanimate = (client.lowMemory && playerCount > 50 || playerCount > 200) && var1 && player.idleStance == player.stance;
 
-      int var2 = var0.absoluteX >> 7;
-      int var3 = var0.absoluteY >> 7;
+      int var2 = player.absoluteX >> 7;
+      int var3 = player.absoluteY >> 7;
       if (var2 >= 0 && var2 < 104 && var3 >= 0 && var3 < 104) {
-        long var4 = EntityUID.build(0, 0, 0, false, var0.index);
-        if (var0.transformedNpcModel != null && client.ticks >= var0.animationStartCycle && client.ticks < var0.animationEndCycle) {
-          var0.forceInanimate = false;
-          var0.tileHeight = SceneGraph.getTileHeight(var0.absoluteX, var0.absoluteY, SceneGraph.floorLevel);
-          var0.renderCycle = client.ticks;
-          client.sceneGraph.addPlayerObject(SceneGraph.floorLevel, var0.absoluteX, var0.absoluteY, var0.tileHeight, var0, var0.turnOrientation, var4, var0.startObjectX, var0.startObjectY, var0.endObjectX, var0.endObjectY);
+        long uid = EntityUID.build(0, 0, 0, false, player.index);
+        if (player.transformedNpcModel != null && client.ticks >= player.animationStartCycle && client.ticks < player.animationEndCycle) {
+          player.forceInanimate = false;
+          player.tileHeight = SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, SceneGraph.floorLevel);
+          player.renderCycle = client.ticks;
+          client.sceneGraph.addPlayerObject(SceneGraph.floorLevel, player.absoluteX, player.absoluteY, player.tileHeight, player, player.pathOrientation, uid, player.startObjectX, player.startObjectY, player.endObjectX, player.endObjectY);
         } else {
-          if ((var0.absoluteX & 127) == 64 && (var0.absoluteY & 127) == 64) {
+          if ((player.absoluteX & 127) == 64 && (player.absoluteY & 127) == 64) {
             if (client.pathingEntityRenderPositions[var2][var3] == client.viewportRenderCount) {
               return;
             }
@@ -43,9 +43,9 @@ public class GPI {
             client.pathingEntityRenderPositions[var2][var3] = client.viewportRenderCount;
           }
 
-          var0.tileHeight = SceneGraph.getTileHeight(var0.absoluteX, var0.absoluteY, SceneGraph.floorLevel);
-          var0.renderCycle = client.ticks;
-          client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, var0.absoluteX, var0.absoluteY, var0.tileHeight, 60, var0, var0.turnOrientation, var4, var0.stretch);
+          player.tileHeight = SceneGraph.getTileHeight(player.absoluteX, player.absoluteY, SceneGraph.floorLevel);
+          player.renderCycle = client.ticks;
+          client.sceneGraph.addEntityMarker(SceneGraph.floorLevel, player.absoluteX, player.absoluteY, player.tileHeight, 60, player, player.pathOrientation, uid, player.stretch);
         }
       }
     }
@@ -84,7 +84,7 @@ public class GPI {
         if (player.transformedOrientation != -1) {
           playerOrientations[index] = player.transformedOrientation;
         } else {
-          playerOrientations[index] = player.orientation;
+          playerOrientations[index] = player.modelOrientation;
         }
 
         playerTargetIndices[index] = player.targetIndex;

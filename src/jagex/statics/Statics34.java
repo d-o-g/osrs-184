@@ -36,7 +36,7 @@ public final class Statics34 {
         var6.decode(GPI.buffers[var1]);
       }
 
-      var6.orientation = GPI.playerOrientations[var1];
+      var6.modelOrientation = GPI.playerOrientations[var1];
       var6.targetIndex = GPI.playerTargetIndices[var1];
       var7 = GPI.playerLocations[var1];
       var8 = var7 >> 28;

@@ -38,13 +38,13 @@ public class ScriptEvent extends Node {
 
   public int type;
   public Object[] args;
-  public InterfaceComponent component;
+  public Component component;
   public int actionIndex;
   public String opbase;
   public boolean mouseInputDerived;
   public int mouseX;
   public int mouseY;
-  public InterfaceComponent dragTarget;
+  public Component dragTarget;
   public int anInt368;
   public int anInt372;
   public int anInt379;
@@ -199,7 +199,7 @@ public class ScriptEvent extends Node {
     }
     if (var0 == 3619) {
       var5 = stringStack[--Statics46.anInt441];
-      Server.method1343(var5);
+      OutgoingPacket.method1343(var5);
       return 1;
     }
     if (var0 == 3620) {
@@ -756,7 +756,7 @@ public class ScriptEvent extends Node {
       } finally {
         if (Statics46.aBoolean439) {
           Statics46.aBoolean449 = true;
-          InterfaceComponent.closeInterface();
+          Component.closeInterface();
           Statics46.aBoolean449 = false;
           Statics46.aBoolean439 = false;
         }
@@ -776,13 +776,13 @@ public class ScriptEvent extends Node {
       if (var4 == 0) {
         throw new RuntimeException();
       }
-      InterfaceComponent var8 = InterfaceComponent.lookup(var3);
+      Component var8 = Component.lookup(var3);
       if (var8.subcomponents == null) {
-        var8.subcomponents = new InterfaceComponent[var5 + 1];
+        var8.subcomponents = new Component[var5 + 1];
       }
 
       if (var8.subcomponents.length <= var5) {
-        InterfaceComponent[] var9 = new InterfaceComponent[var5 + 1];
+        Component[] var9 = new Component[var5 + 1];
 
         System.arraycopy(var8.subcomponents, 0, var9, 0, var8.subcomponents.length);
 
@@ -792,44 +792,44 @@ public class ScriptEvent extends Node {
       if (var5 > 0 && var8.subcomponents[var5 - 1] == null) {
         throw new RuntimeException("" + (var5 - 1));
       }
-      InterfaceComponent var12 = new InterfaceComponent();
+      Component var12 = new Component();
       var12.type = var4;
       var12.parentUid = var12.uid = var8.uid;
       var12.subComponentIndex = var5;
       var12.if3 = true;
       var8.subcomponents[var5] = var12;
       if (var2) {
-        StockmarketListingLifetimeComparator.anInterfaceComponent585 = var12;
+        StockmarketListingLifetimeComparator.anComponent585 = var12;
       } else {
-        IdentikitDefinition.anInterfaceComponent1518 = var12;
+        IdentikitDefinition.anComponent1518 = var12;
       }
 
-      InterfaceComponent.invalidate(var8);
+      Component.invalidate(var8);
       return 1;
     }
-    InterfaceComponent var6;
+    Component var6;
     if (var0 == 101) {
-      var6 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
-      InterfaceComponent var7 = InterfaceComponent.lookup(var6.uid);
+      var6 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
+      Component var7 = Component.lookup(var6.uid);
       var7.subcomponents[var6.subComponentIndex] = null;
-      InterfaceComponent.invalidate(var7);
+      Component.invalidate(var7);
       return 1;
     }
     if (var0 == 102) {
-      var6 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var6 = Component.lookup(intStack[--Statics46.anInt442]);
       var6.subcomponents = null;
-      InterfaceComponent.invalidate(var6);
+      Component.invalidate(var6);
       return 1;
     }
     if (var0 != 200) {
       if (var0 == 201) {
-        var6 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+        var6 = Component.lookup(intStack[--Statics46.anInt442]);
         if (var6 != null) {
           intStack[++Statics46.anInt442 - 1] = 1;
           if (var2) {
-            StockmarketListingLifetimeComparator.anInterfaceComponent585 = var6;
+            StockmarketListingLifetimeComparator.anComponent585 = var6;
           } else {
-            IdentikitDefinition.anInterfaceComponent1518 = var6;
+            IdentikitDefinition.anComponent1518 = var6;
           }
         } else {
           intStack[++Statics46.anInt442 - 1] = 0;
@@ -842,13 +842,13 @@ public class ScriptEvent extends Node {
     Statics46.anInt442 -= 2;
     var3 = intStack[Statics46.anInt442];
     var4 = intStack[Statics46.anInt442 + 1];
-    InterfaceComponent var11 = InterfaceComponent.lookup(var3, var4);
+    Component var11 = Component.lookup(var3, var4);
     if (var11 != null && var4 != -1) {
       intStack[++Statics46.anInt442 - 1] = 1;
       if (var2) {
-        StockmarketListingLifetimeComparator.anInterfaceComponent585 = var11;
+        StockmarketListingLifetimeComparator.anComponent585 = var11;
       } else {
-        IdentikitDefinition.anInterfaceComponent1518 = var11;
+        IdentikitDefinition.anComponent1518 = var11;
       }
     } else {
       intStack[++Statics46.anInt442 - 1] = 0;
@@ -957,9 +957,9 @@ public class ScriptEvent extends Node {
         var7 = intStack[Statics46.anInt442 + 1];
         var9 = ParameterDefinition.get(var7);
         if (var9.isString()) {
-          stringStack[++Statics46.anInt441 - 1] = NpcDefinition.get(var4).method504(var7, var9.defaultString);
+          stringStack[++Statics46.anInt441 - 1] = NpcDefinition.get(var4).getStringParameter(var7, var9.defaultString);
         } else {
-          intStack[++Statics46.anInt442 - 1] = NpcDefinition.get(var4).method511(var7, var9.defaultInteger);
+          intStack[++Statics46.anInt442 - 1] = NpcDefinition.get(var4).getIntegerParameter(var7, var9.defaultInteger);
         }
 
         return 1;
@@ -1827,13 +1827,13 @@ public class ScriptEvent extends Node {
 
   static int method323(int var0, boolean var2) {
     int var3 = -1;
-    InterfaceComponent var4;
+    Component var4;
     if (var0 >= 2000) {
       var0 -= 1000;
       var3 = intStack[--Statics46.anInt442];
-      var4 = InterfaceComponent.lookup(var3);
+      var4 = Component.lookup(var3);
     } else {
-      var4 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+      var4 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     }
 
     if (var0 == 1000) {
@@ -1842,10 +1842,10 @@ public class ScriptEvent extends Node {
       var4.yMargin = intStack[Statics46.anInt442 + 1];
       var4.xLayout = intStack[Statics46.anInt442 + 2];
       var4.yLayout = intStack[Statics46.anInt442 + 3];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       client.instance.updateComponentMargin(var4);
       if (var3 != -1 && var4.type == 0) {
-        InterfaceComponent.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
+        Component.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
       }
 
       return 1;
@@ -1856,10 +1856,10 @@ public class ScriptEvent extends Node {
       var4.baseHeight = intStack[Statics46.anInt442 + 1];
       var4.xAlignment = intStack[Statics46.anInt442 + 2];
       var4.yAlignment = intStack[Statics46.anInt442 + 3];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       client.instance.updateComponentMargin(var4);
       if (var3 != -1 && var4.type == 0) {
-        InterfaceComponent.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
+        Component.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
       }
 
       return 1;
@@ -1868,7 +1868,7 @@ public class ScriptEvent extends Node {
       boolean var5 = intStack[--Statics46.anInt442] == 1;
       if (var5 != var4.explicitlyHidden) {
         var4.explicitlyHidden = var5;
-        InterfaceComponent.invalidate(var4);
+        Component.invalidate(var4);
       }
 
       return 1;
@@ -2498,16 +2498,16 @@ public class ScriptEvent extends Node {
       var14 = intStack[Statics46.anInt442];
       var10 = intStack[Statics46.anInt442 + 1];
       int var8 = intStack[Statics46.anInt442 + 2];
-      InterfaceComponent var15 = InterfaceComponent.lookup(var8);
-      InterfaceComponent.drag(var15, var14, var10);
+      Component var15 = Component.lookup(var8);
+      Component.drag(var15, var14, var10);
       return 1;
     }
     if (var0 == 3109) {
       Statics46.anInt442 -= 2;
       var14 = intStack[Statics46.anInt442];
       var10 = intStack[Statics46.anInt442 + 1];
-      InterfaceComponent var11 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
-      InterfaceComponent.drag(var11, var14, var10);
+      Component var11 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
+      Component.drag(var11, var14, var10);
       return 1;
     }
     if (var0 == 3110) {
@@ -2673,7 +2673,7 @@ public class ScriptEvent extends Node {
     }
     if (var0 == 3140) {
       client.anInt1047 = 3;
-      client.anInt1059 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585.uid : IdentikitDefinition.anInterfaceComponent1518.uid;
+      client.anInt1059 = var2 ? StockmarketListingLifetimeComparator.anComponent585.uid : IdentikitDefinition.anComponent1518.uid;
       return 1;
     }
     boolean var7;
@@ -2847,12 +2847,12 @@ public class ScriptEvent extends Node {
   }
 
   static int method3(int var0, boolean var2) {
-    InterfaceComponent var3;
+    Component var3;
     if (var0 >= 2000) {
       var0 -= 1000;
-      var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var3 = Component.lookup(intStack[--Statics46.anInt442]);
     } else {
-      var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+      var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     }
 
     if (var0 == 1927) {
@@ -2873,14 +2873,14 @@ public class ScriptEvent extends Node {
   }
 
   static int method720(int var0) {
-    InterfaceComponent var3;
+    Component var3;
     if (var0 == 2700) {
-      var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var3 = Component.lookup(intStack[--Statics46.anInt442]);
       intStack[++Statics46.anInt442 - 1] = var3.itemId;
       return 1;
     }
     if (var0 == 2701) {
-      var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var3 = Component.lookup(intStack[--Statics46.anInt442]);
       if (var3.itemId != -1) {
         intStack[++Statics46.anInt442 - 1] = var3.itemStackSize;
       } else {
@@ -2908,9 +2908,9 @@ public class ScriptEvent extends Node {
   }
 
   static int method32(int var0) {
-    InterfaceComponent var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+    Component var3 = Component.lookup(intStack[--Statics46.anInt442]);
     if (var0 == 2800) {
-      intStack[++Statics46.anInt442 - 1] = InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(var3));
+      intStack[++Statics46.anInt442 - 1] = Component.getSpellTargets(Component.getConfig(var3));
       return 1;
     }
     if (var0 != 2801) {
@@ -2937,7 +2937,7 @@ public class ScriptEvent extends Node {
   }
 
   static int method739(int var0) {
-    InterfaceComponent var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+    Component var3 = Component.lookup(intStack[--Statics46.anInt442]);
     if (var0 == 2600) {
       intStack[++Statics46.anInt442 - 1] = var3.insetX;
       return 1;
@@ -3002,7 +3002,7 @@ public class ScriptEvent extends Node {
   }
 
   static int method218(int var0) {
-    InterfaceComponent var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+    Component var3 = Component.lookup(intStack[--Statics46.anInt442]);
     if (var0 == 2500) {
       intStack[++Statics46.anInt442 - 1] = var3.relativeX;
       return 1;
@@ -3031,12 +3031,12 @@ public class ScriptEvent extends Node {
   }
 
   static int method266(int var0, boolean var2) {
-    InterfaceComponent var3;
+    Component var3;
     if (var0 >= 2000) {
       var0 -= 1000;
-      var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var3 = Component.lookup(intStack[--Statics46.anInt442]);
     } else {
-      var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+      var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     }
 
     String var4 = stringStack[--Statics46.anInt441];
@@ -3138,13 +3138,13 @@ public class ScriptEvent extends Node {
 
   static int method120(int var0, boolean var2) {
     boolean var3 = true;
-    InterfaceComponent var4;
+    Component var4;
     if (var0 >= 2000) {
       var0 -= 1000;
-      var4 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var4 = Component.lookup(intStack[--Statics46.anInt442]);
       var3 = false;
     } else {
-      var4 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+      var4 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     }
 
     int var11;
@@ -3162,7 +3162,7 @@ public class ScriptEvent extends Node {
       Statics46.anInt442 -= 2;
       var11 = intStack[Statics46.anInt442];
       var6 = intStack[Statics46.anInt442 + 1];
-      var4.parent = InterfaceComponent.lookup(var11, var6);
+      var4.parent = Component.lookup(var11, var6);
       return 1;
     }
     if (var0 == 1302) {
@@ -3211,7 +3211,7 @@ public class ScriptEvent extends Node {
         var6 = intStack[Statics46.anInt442 + 1];
         var9 = intStack[Statics46.anInt442 + 2];
         if (var11 >= 0 && var11 <= 9) {
-          InterfaceComponent.setKeyRate(var4, var11, var6, var9);
+          Component.setKeyRate(var4, var11, var6, var9);
           return 1;
         }
         throw new RuntimeException();
@@ -3220,7 +3220,7 @@ public class ScriptEvent extends Node {
         var5 = 10;
         var6 = intStack[--Statics46.anInt442];
         var9 = intStack[--Statics46.anInt442];
-        InterfaceComponent.setKeyRate(var4, var5, var6, var9);
+        Component.setKeyRate(var4, var5, var6, var9);
         return 1;
       }
       if (var0 == 1354) {
@@ -3271,15 +3271,15 @@ public class ScriptEvent extends Node {
   }
 
   static int method484(int var0, boolean var2) {
-    InterfaceComponent var3;
+    Component var3;
     if (var0 >= 2000) {
       var0 -= 1000;
-      var3 = InterfaceComponent.lookup(intStack[--Statics46.anInt442]);
+      var3 = Component.lookup(intStack[--Statics46.anInt442]);
     } else {
-      var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+      var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     }
 
-    InterfaceComponent.invalidate(var3);
+    Component.invalidate(var3);
     if (var0 != 1200 && var0 != 1205 && var0 != 1212) {
       if (var0 == 1201) {
         var3.modelType = 2;
@@ -3324,13 +3324,13 @@ public class ScriptEvent extends Node {
 
   static int method386(int var0, boolean var2) {
     int var3 = -1;
-    InterfaceComponent var4;
+    Component var4;
     if (var0 >= 2000) {
       var0 -= 1000;
       var3 = intStack[--Statics46.anInt442];
-      var4 = InterfaceComponent.lookup(var3);
+      var4 = Component.lookup(var3);
     } else {
-      var4 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+      var4 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     }
 
     if (var0 == 1100) {
@@ -3353,48 +3353,48 @@ public class ScriptEvent extends Node {
         var4.insetY = 0;
       }
 
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1101) {
       var4.foreground = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1102) {
       var4.filled = intStack[--Statics46.anInt442] == 1;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1103) {
       var4.alpha = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1104) {
       var4.lineWidth = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1105) {
       var4.materialId = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1106) {
       var4.spriteId = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1107) {
       var4.tileSprites = intStack[--Statics46.anInt442] == 1;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1108) {
       var4.modelType = 1;
       var4.modelId = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1109) {
@@ -3405,7 +3405,7 @@ public class ScriptEvent extends Node {
       var4.zRotation = intStack[Statics46.anInt442 + 3];
       var4.yRotation = intStack[Statics46.anInt442 + 4];
       var4.modelZoom = intStack[Statics46.anInt442 + 5];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     int var8;
@@ -3415,28 +3415,28 @@ public class ScriptEvent extends Node {
         var4.animation = var8;
         var4.animationFrame = 0;
         var4.animationFrameCycle = 0;
-        InterfaceComponent.invalidate(var4);
+        Component.invalidate(var4);
       }
 
       return 1;
     }
     if (var0 == 1111) {
       var4.perpendicular = intStack[--Statics46.anInt442] == 1;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1112) {
       String var6 = stringStack[--Statics46.anInt441];
       if (!var6.equals(var4.text)) {
         var4.text = var6;
-        InterfaceComponent.invalidate(var4);
+        Component.invalidate(var4);
       }
 
       return 1;
     }
     if (var0 == 1113) {
       var4.fontId = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1114) {
@@ -3444,64 +3444,64 @@ public class ScriptEvent extends Node {
       var4.horizontalMargin = intStack[Statics46.anInt442];
       var4.verticalMargin = intStack[Statics46.anInt442 + 1];
       var4.textSpacing = intStack[Statics46.anInt442 + 2];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1115) {
       var4.textShadowed = intStack[--Statics46.anInt442] == 1;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1116) {
       var4.borderThickness = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1117) {
       var4.shadowColor = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1118) {
       var4.flippedVertically = intStack[--Statics46.anInt442] == 1;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1119) {
       var4.flippedHorizontally = intStack[--Statics46.anInt442] == 1;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1120) {
       Statics46.anInt442 -= 2;
       var4.viewportWidth = intStack[Statics46.anInt442];
       var4.viewportHeight = intStack[Statics46.anInt442 + 1];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       if (var3 != -1 && var4.type == 0) {
-        InterfaceComponent.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
+        Component.revalidateScroll(client.interfaces[var3 >> 16], var4, false);
       }
 
       return 1;
     }
     if (var0 == 1121) {
-      InterfaceComponent.processDialogActionPacket(var4.uid, var4.subComponentIndex);
+      Component.processDialogActionPacket(var4.uid, var4.subComponentIndex);
       client.pleaseWaitComponent = var4;
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1122) {
       var4.enabledMaterialId = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1123) {
       var4.enabledForeground = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1124) {
       var4.enabledAlpha = intStack[--Statics46.anInt442];
-      InterfaceComponent.invalidate(var4);
+      Component.invalidate(var4);
       return 1;
     }
     if (var0 == 1125) {
@@ -3509,7 +3509,7 @@ public class ScriptEvent extends Node {
       ComponentFillType var7 = (ComponentFillType) EnumType.getByOrdinal(ComponentFillType.getValues(), var8);
       if (var7 != null) {
         var4.fillType = var7;
-        InterfaceComponent.invalidate(var4);
+        Component.invalidate(var4);
       }
 
       return 1;
@@ -3529,9 +3529,9 @@ public class ScriptEvent extends Node {
   }
 
   static int method1352(int var0, boolean var2) {
-    InterfaceComponent var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+    Component var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     if (var0 == 1800) {
-      intStack[++Statics46.anInt442 - 1] = InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(var3));
+      intStack[++Statics46.anInt442 - 1] = Component.getSpellTargets(Component.getConfig(var3));
       return 1;
     }
     if (var0 != 1801) {
@@ -3558,7 +3558,7 @@ public class ScriptEvent extends Node {
   }
 
   static int method1095(int var0, boolean var2) {
-    InterfaceComponent var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+    Component var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     if (var0 == 1700) {
       intStack[++Statics46.anInt442 - 1] = var3.itemId;
       return 1;
@@ -3580,7 +3580,7 @@ public class ScriptEvent extends Node {
   }
 
   static int method717(int var0, boolean var2) {
-    InterfaceComponent var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+    Component var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     if (var0 == 1600) {
       intStack[++Statics46.anInt442 - 1] = var3.insetX;
       return 1;
@@ -3645,7 +3645,7 @@ public class ScriptEvent extends Node {
   }
 
   static int method1184(int var0, boolean var2) {
-    InterfaceComponent var3 = var2 ? StockmarketListingLifetimeComparator.anInterfaceComponent585 : IdentikitDefinition.anInterfaceComponent1518;
+    Component var3 = var2 ? StockmarketListingLifetimeComparator.anComponent585 : IdentikitDefinition.anComponent1518;
     if (var0 == 1500) {
       intStack[++Statics46.anInt442 - 1] = var3.relativeX;
       return 1;
@@ -4195,7 +4195,7 @@ public class ScriptEvent extends Node {
     return var0 >= '0' && var0 <= '9' || var0 >= 'A' && var0 <= 'Z' || var0 >= 'a' && var0 <= 'z';
   }
 
-  public static void method868(InterfaceComponent var0, int var1, byte[] var2, byte[] var3) {
+  public static void method868(Component var0, int var1, byte[] var2, byte[] var3) {
     if (var0.aByteArrayArray1365 == null) {
       if (var2 == null) {
         return;

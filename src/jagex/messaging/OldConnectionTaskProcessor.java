@@ -34,12 +34,6 @@ public class OldConnectionTaskProcessor implements Runnable {
     thread.start();
   }
 
-  public static double method700(double var0, double var2, double var4) {
-    double var6 = (var0 - var2) / var4;
-    double var8 = Math.exp(-var6 * var6 / 2.0D) / Math.sqrt(6.283185307179586D);
-    return var8 / var4;
-  }
-
   final OldConnectionTask method701(int var1, int var2, Object var4) {
     OldConnectionTask var5 = new OldConnectionTask();
     var5.anInt883 = var1;

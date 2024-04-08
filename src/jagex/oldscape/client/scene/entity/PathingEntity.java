@@ -4,6 +4,7 @@ import jagex.datastructure.instrusive.linklist.LinkedList;
 import jagex.oldscape.client.*;
 import jagex.oldscape.client.fonts.*;
 import jagex.oldscape.client.scene.HintArrow;
+import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.type.*;
 import jagex.jagex3.graphics.*;
 import jagex.messaging.Buffer;
@@ -62,10 +63,10 @@ public abstract class PathingEntity extends Entity {
   public int targetIndex;
   public int animationFrameCycle;
   public int animationLoopCounts;
-  public int orientation;
-  public int turnOrientation;
+  public int modelOrientation;
+  public int pathOrientation;
   public int stanceFrameCycle;
-  public int rotation;
+  public int defaultRotation;
   public int effectFrameCycle;
   public int effectDelay;
   public int anInt2018;
@@ -120,7 +121,7 @@ public abstract class PathingEntity extends Entity {
     npcUpdateCycle = 0;
     modelHeight = 200;
     anInt2018 = 0;
-    rotation = 32;
+    defaultRotation = 32;
     pathQueueSize = 0;
     pathXQueue = new int[10];
     pathYQueue = new int[10];
@@ -161,29 +162,29 @@ public abstract class PathingEntity extends Entity {
           int var7 = entity.pathYQueue[entity.pathQueueSize - 1] * 128 + entity.boundSize;
           if (var3 < var6) {
             if (var5 < var7) {
-              entity.orientation = 1280;
+              entity.modelOrientation = 1280;
             } else if (var5 > var7) {
-              entity.orientation = 1792;
+              entity.modelOrientation = 1792;
             } else {
-              entity.orientation = 1536;
+              entity.modelOrientation = 1536;
             }
           } else if (var3 > var6) {
             if (var5 < var7) {
-              entity.orientation = 768;
+              entity.modelOrientation = 768;
             } else if (var5 > var7) {
-              entity.orientation = 256;
+              entity.modelOrientation = 256;
             } else {
-              entity.orientation = 512;
+              entity.modelOrientation = 512;
             }
           } else if (var5 < var7) {
-            entity.orientation = 1024;
+            entity.modelOrientation = 1024;
           } else if (var5 > var7) {
-            entity.orientation = 0;
+            entity.modelOrientation = 0;
           }
 
           byte var8 = entity.pathQueueTraversed[entity.pathQueueSize - 1];
           if (var6 - var3 <= 256 && var6 - var3 >= -256 && var7 - var5 <= 256 && var7 - var5 >= -256) {
-            int var9 = entity.orientation - entity.turnOrientation & 2047;
+            int var9 = entity.modelOrientation - entity.pathOrientation & 2047;
             if (var9 > 1024) {
               var9 -= 2048;
             }
@@ -209,7 +210,7 @@ public abstract class PathingEntity extends Entity {
             }
 
             if (var12) {
-              if (entity.turnOrientation != entity.orientation && entity.targetIndex == -1 && entity.rotation != 0) {
+              if (entity.pathOrientation != entity.modelOrientation && entity.targetIndex == -1 && entity.defaultRotation != 0) {
                 var11 = 2;
               }
 
@@ -308,7 +309,7 @@ public abstract class PathingEntity extends Entity {
       entity.method1504();
     }
 
-    if (entity.rotation != 0) {
+    if (entity.defaultRotation != 0) {
       if (entity.targetIndex != -1) {
         PathingEntity var13 = null;
         if (entity.targetIndex < 32768) {
@@ -321,7 +322,7 @@ public abstract class PathingEntity extends Entity {
           int var5 = entity.absoluteX - var13.absoluteX;
           int var6 = entity.absoluteY - var13.absoluteY;
           if (var5 != 0 || var6 != 0) {
-            entity.orientation = (int) (Math.atan2(var5, var6) * 325.949D) & 2047;
+            entity.modelOrientation = (int) (Math.atan2(var5, var6) * 325.949D) & 2047;
           }
         } else if (entity.aBoolean2015) {
           entity.targetIndex = -1;
@@ -330,24 +331,24 @@ public abstract class PathingEntity extends Entity {
       }
 
       if (entity.transformedOrientation != -1 && (entity.pathQueueSize == 0 || entity.anInt2022 > 0)) {
-        entity.orientation = entity.transformedOrientation;
+        entity.modelOrientation = entity.transformedOrientation;
         entity.transformedOrientation = -1;
       }
 
-      int var3 = entity.orientation - entity.turnOrientation & 2047;
-      if (var3 == 0 && entity.aBoolean2015) {
+      int delta = entity.modelOrientation - entity.pathOrientation & 2047;
+      if (delta == 0 && entity.aBoolean2015) {
         entity.targetIndex = -1;
         entity.aBoolean2015 = false;
       }
 
-      if (var3 != 0) {
+      if (delta != 0) {
         ++entity.anInt2018;
         boolean var14;
-        if (var3 > 1024) {
-          entity.turnOrientation -= entity.rotation;
+        if (delta > 1024) {
+          entity.pathOrientation -= entity.defaultRotation;
           var14 = true;
-          if (var3 < entity.rotation || var3 > 2048 - entity.rotation) {
-            entity.turnOrientation = entity.orientation;
+          if (delta < entity.defaultRotation || delta > 2048 - entity.defaultRotation) {
+            entity.pathOrientation = entity.modelOrientation;
             var14 = false;
           }
 
@@ -359,10 +360,10 @@ public abstract class PathingEntity extends Entity {
             }
           }
         } else {
-          entity.turnOrientation += entity.rotation;
+          entity.pathOrientation += entity.defaultRotation;
           var14 = true;
-          if (var3 < entity.rotation || var3 > 2048 - entity.rotation) {
-            entity.turnOrientation = entity.orientation;
+          if (delta < entity.defaultRotation || delta > 2048 - entity.defaultRotation) {
+            entity.pathOrientation = entity.modelOrientation;
             var14 = false;
           }
 
@@ -375,7 +376,7 @@ public abstract class PathingEntity extends Entity {
           }
         }
 
-        entity.turnOrientation &= 2047;
+        entity.pathOrientation &= 2047;
       } else {
         entity.anInt2018 = 0;
       }
@@ -478,7 +479,7 @@ public abstract class PathingEntity extends Entity {
     var0.absoluteX += (var2 - var0.absoluteX) / var1;
     var0.absoluteY += (var3 - var0.absoluteY) / var1;
     var0.anInt2022 = 0;
-    var0.orientation = var0.anInt2019;
+    var0.modelOrientation = var0.anInt2019;
   }
 
   public static void renderOverhead(PathingEntity entity, int var1, int var2, int var3, int var4, int var5) {
@@ -500,7 +501,7 @@ public abstract class PathingEntity extends Entity {
       if (var1 < var7 && entity.renderCycle == client.ticks && displayPlayerName((PlayerEntity) entity)) {
         PlayerEntity var10 = (PlayerEntity) entity;
         if (var1 < var7) {
-          Server.absoluteToViewport(entity, entity.modelHeight + 15);
+          SceneGraph.absoluteToViewport(entity, entity.modelHeight + 15);
           BaseFont var11 = client.fonts.get(NamedFont.P12);
           byte var12 = 9;
           var11.method1154(var10.namePair.getRaw(), var2 + client.viewportRenderX, var3 + client.viewportRenderY - var12, 16777215, 0);
@@ -514,7 +515,7 @@ public abstract class PathingEntity extends Entity {
       int var25;
       int var26;
       if (!entity.healthBars.isEmpty()) {
-        Server.absoluteToViewport(entity, entity.modelHeight + 15);
+        SceneGraph.absoluteToViewport(entity, entity.modelHeight + 15);
 
         for (HealthBar bar = entity.healthBars.head(); bar != null; bar = entity.healthBars.next()) {
           HitUpdate update = bar.method695(client.ticks);
@@ -609,7 +610,7 @@ public abstract class PathingEntity extends Entity {
         }
 
         if (player.skullIcon != -1 || player.prayerIcon != -1) {
-          Server.absoluteToViewport(entity, entity.modelHeight + 15);
+          SceneGraph.absoluteToViewport(entity, entity.modelHeight + 15);
           if (client.viewportRenderX > -1) {
             if (player.skullIcon != -1) {
               var13 += 25;
@@ -624,7 +625,7 @@ public abstract class PathingEntity extends Entity {
         }
 
         if (var1 >= 0 && HintArrow.type == 10 && var8[var1] == HintArrow.player) {
-          Server.absoluteToViewport(entity, entity.modelHeight + 15);
+          SceneGraph.absoluteToViewport(entity, entity.modelHeight + 15);
           if (client.viewportRenderX > -1) {
             var13 += HintArrow.overheadSprites[1].height;
             HintArrow.overheadSprites[1].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - var13);
@@ -637,14 +638,14 @@ public abstract class PathingEntity extends Entity {
         }
 
         if (var91.prayerIcon >= 0 && var91.prayerIcon < WorldMapChunkDefinition.prayerIconSprites.length) {
-          Server.absoluteToViewport(entity, entity.modelHeight + 15);
+          SceneGraph.absoluteToViewport(entity, entity.modelHeight + 15);
           if (client.viewportRenderX > -1) {
             WorldMapChunkDefinition.prayerIconSprites[var91.prayerIcon].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - 30);
           }
         }
 
         if (HintArrow.type == 1 && client.npcIndices[var1 - var7] == HintArrow.npc && client.ticks % 20 < 10) {
-          Server.absoluteToViewport(entity, entity.modelHeight + 15);
+          SceneGraph.absoluteToViewport(entity, entity.modelHeight + 15);
           if (client.viewportRenderX > -1) {
             HintArrow.overheadSprites[0].renderAlphaAt(var2 + client.viewportRenderX - 12, var3 + client.viewportRenderY - 28);
           }
@@ -652,7 +653,7 @@ public abstract class PathingEntity extends Entity {
       }
 
       if (entity.overheadText != null && (var1 >= var7 || !entity.aBoolean2005 && (client.publicChatMode == 4 || !entity.autoChatting && (client.publicChatMode == 0 || client.publicChatMode == 3 || client.publicChatMode == 1 && ((PlayerEntity) entity).method609())))) {
-        Server.absoluteToViewport(entity, entity.modelHeight);
+        SceneGraph.absoluteToViewport(entity, entity.modelHeight);
         if (client.viewportRenderX > -1 && client.overheadMessageCount < client.overheadMessageCapacity) {
           client.overheadMessageXShifts[client.overheadMessageCount] = Font.b12full.textWidth(entity.overheadText) / 2;
           client.overheadMessageYShifts[client.overheadMessageCount] = Font.b12full.anInt375;
@@ -730,7 +731,7 @@ public abstract class PathingEntity extends Entity {
           if (var93 == null) {
             entity.hitsplatCycles[var27] = -1;
           } else {
-            Server.absoluteToViewport(entity, entity.modelHeight / 2);
+            SceneGraph.absoluteToViewport(entity, entity.modelHeight / 2);
             if (client.viewportRenderX > -1) {
               if (var27 == 1) {
                 client.viewportRenderY -= 20;
@@ -1283,8 +1284,8 @@ public abstract class PathingEntity extends Entity {
     }
 
     entity.anInt2022 = 0;
-    entity.orientation = entity.anInt2019;
-    entity.turnOrientation = entity.orientation;
+    entity.modelOrientation = entity.anInt2019;
+    entity.pathOrientation = entity.modelOrientation;
   }
 
   public final void addHitSplat(int type, int damage, int specialType, int special, int currentCycle, int delay) {

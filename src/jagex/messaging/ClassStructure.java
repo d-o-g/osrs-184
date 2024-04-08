@@ -8,7 +8,7 @@ import java.lang.reflect.*;
 
 public class ClassStructure extends Node {
 
-  public static LinkedList<ClassStructure> list = new LinkedList<>();
+  public static LinkedList<ClassStructure> pending = new LinkedList<>();
 
   public int size;
   public int elementCount;
@@ -40,62 +40,7 @@ public class ClassStructure extends Node {
     for (int elementIndex = 0; elementIndex < struc.elementCount; ++elementIndex) {
       try {
         int type = buffer.g1();
-        if (type != 0 && type != 1 && type != 2) {
-          if (type == 3 || type == 4) {
-            String className = buffer.gstr();
-            String methodName = buffer.gstr();
-            int argumentCount = buffer.g1();
-            String[] argumentTypeClassNames = new String[argumentCount];
-
-            for (int argumentIndex = 0; argumentIndex < argumentCount; ++argumentIndex) {
-              argumentTypeClassNames[argumentIndex] = buffer.gstr();
-            }
-
-            String returnTypeClassName = buffer.gstr();
-            byte[][] argumentValues = new byte[argumentCount][];
-            if (type == 3) {
-              for (int var12 = 0; var12 < argumentCount; ++var12) {
-                int var13 = buffer.g4();
-                argumentValues[var12] = new byte[var13];
-                buffer.gdata(argumentValues[var12], 0, var13);
-              }
-            }
-
-            struc.types[elementIndex] = type;
-
-            Class<?>[] expectedArgumentTypes = new Class[argumentCount];
-            for (int argumentIndex = 0; argumentIndex < argumentCount; ++argumentIndex) {
-              expectedArgumentTypes[argumentIndex] = getClass(argumentTypeClassNames[argumentIndex]);
-            }
-
-            Class<?> returnType = getClass(returnTypeClassName);
-            if (getClass(className).getClassLoader() == null) {
-              throw new SecurityException();
-            }
-
-            for (Method method : getClass(className).getDeclaredMethods()) {
-              if (method.getName().equals(methodName)) {
-                Class<?>[] argumentTypes = method.getParameterTypes();
-                if (argumentTypes.length == expectedArgumentTypes.length) {
-                  boolean valid = true;
-
-                  for (int expectedArgumentIndex = 0; expectedArgumentIndex < expectedArgumentTypes.length; ++expectedArgumentIndex) {
-                    if (argumentTypes[expectedArgumentIndex] != expectedArgumentTypes[expectedArgumentIndex]) {
-                      valid = false;
-                      break;
-                    }
-                  }
-
-                  if (valid && returnType == method.getReturnType()) {
-                    struc.methods[elementIndex] = method;
-                  }
-                }
-              }
-            }
-
-            struc.methodArgs[elementIndex] = argumentValues;
-          }
-        } else {
+        if (type == 0 || type == 1 || type == 2) {
           String className = buffer.gstr();
           String fieldName = buffer.gstr();
           int constantFieldValue = 0;
@@ -110,6 +55,59 @@ public class ClassStructure extends Node {
           }
 
           struc.fields[elementIndex] = getClass(className).getDeclaredField(fieldName);
+        } else if (type == 3 || type == 4) {
+          String className = buffer.gstr();
+          String methodName = buffer.gstr();
+          int argumentCount = buffer.g1();
+          String[] argumentTypeClassNames = new String[argumentCount];
+
+          for (int argumentIndex = 0; argumentIndex < argumentCount; ++argumentIndex) {
+            argumentTypeClassNames[argumentIndex] = buffer.gstr();
+          }
+
+          String returnTypeClassName = buffer.gstr();
+          byte[][] argumentValues = new byte[argumentCount][];
+          if (type == 3) {
+            for (int argument = 0; argument < argumentCount; ++argument) {
+              int len = buffer.g4();
+              argumentValues[argument] = new byte[len];
+              buffer.gdata(argumentValues[argument], 0, len);
+            }
+          }
+
+          struc.types[elementIndex] = type;
+
+          Class<?>[] expectedArgumentTypes = new Class[argumentCount];
+          for (int argumentIndex = 0; argumentIndex < argumentCount; ++argumentIndex) {
+            expectedArgumentTypes[argumentIndex] = getClass(argumentTypeClassNames[argumentIndex]);
+          }
+
+          Class<?> returnType = getClass(returnTypeClassName);
+          if (getClass(className).getClassLoader() == null) {
+            throw new SecurityException();
+          }
+
+          for (Method method : getClass(className).getDeclaredMethods()) {
+            if (method.getName().equals(methodName)) {
+              Class<?>[] argumentTypes = method.getParameterTypes();
+              if (argumentTypes.length == expectedArgumentTypes.length) {
+                boolean valid = true;
+
+                for (int expectedArgumentIndex = 0; expectedArgumentIndex < expectedArgumentTypes.length; ++expectedArgumentIndex) {
+                  if (argumentTypes[expectedArgumentIndex] != expectedArgumentTypes[expectedArgumentIndex]) {
+                    valid = false;
+                    break;
+                  }
+                }
+
+                if (valid && returnType == method.getReturnType()) {
+                  struc.methods[elementIndex] = method;
+                }
+              }
+            }
+          }
+
+          struc.methodArgs[elementIndex] = argumentValues;
         }
       } catch (ClassNotFoundException e) {
         struc.errors[elementIndex] = -1;
@@ -124,96 +122,98 @@ public class ClassStructure extends Node {
       }
     }
 
-    list.pushBack(struc);
+    pending.pushBack(struc);
   }
 
   public static void process(BitBuffer buffer) {
-    ClassStructure cls = list.head();
-    if (cls != null) {
-      int offset = buffer.pos;
-      buffer.p4(cls.size);
+    ClassStructure cls = pending.head();
+    if (cls == null) {
+      return;
+    }
 
-      for (int i = 0; i < cls.elementCount; ++i) {
-        if (cls.errors[i] != 0) {
-          buffer.p1(cls.errors[i]);
-        } else {
-          try {
-            int type = cls.types[i];
-            if (type == 0) {
-              Field field = cls.fields[i];
-              int value = field.getInt(null);
-              buffer.p1(0);
-              buffer.p4(value);
-            } else if (type == 1) {
-              Field field = cls.fields[i];
-              field.setInt(null, cls.fieldIntValues[i]);
-              buffer.p1(0);
-            } else if (type == 2) {
-              Field field = cls.fields[i];
-              int access = field.getModifiers();
-              buffer.p1(0);
-              buffer.p4(access);
-            }
+    int offset = buffer.pos;
+    buffer.p4(cls.size);
 
-            if (type == 3) {
-              Method method = cls.methods[i];
-              byte[][] args = cls.methodArgs[i];
-              Object[] params = new Object[args.length];
-
-              for (int j = 0; j < args.length; ++j) {
-                ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(args[j]));
-                params[j] = stream.readObject();
-              }
-
-              Object returned = method.invoke(null, params);
-              if (returned == null) {
-                buffer.p1(0);
-              } else if (returned instanceof Number) {
-                buffer.p1(1);
-                buffer.p8(((Number) returned).longValue());
-              } else if (returned instanceof String) {
-                buffer.p1(2);
-                buffer.pcstr((String) returned);
-              } else {
-                buffer.p1(4);
-              }
-            } else if (type == 4) {
-              Method method = cls.methods[i];
-              int access = method.getModifiers();
-              buffer.p1(0);
-              buffer.p4(access);
-            }
-          } catch (ClassNotFoundException e) {
-            buffer.p1(-10);
-          } catch (InvalidClassException e) {
-            buffer.p1(-11);
-          } catch (StreamCorruptedException e) {
-            buffer.p1(-12);
-          } catch (OptionalDataException e) {
-            buffer.p1(-13);
-          } catch (IllegalAccessException e) {
-            buffer.p1(-14);
-          } catch (IllegalArgumentException e) {
-            buffer.p1(-15);
-          } catch (InvocationTargetException e) {
-            buffer.p1(-16);
-          } catch (SecurityException e) {
-            buffer.p1(-17);
-          } catch (IOException e) {
-            buffer.p1(-18);
-          } catch (NullPointerException e) {
-            buffer.p1(-19);
-          } catch (Exception e) {
-            buffer.p1(-20);
-          } catch (Throwable e) {
-            buffer.p1(-21);
+    for (int i = 0; i < cls.elementCount; ++i) {
+      if (cls.errors[i] != 0) {
+        buffer.p1(cls.errors[i]);
+      } else {
+        try {
+          int type = cls.types[i];
+          if (type == 0) {
+            Field field = cls.fields[i];
+            int value = field.getInt(null);
+            buffer.p1(0);
+            buffer.p4(value);
+          } else if (type == 1) {
+            Field field = cls.fields[i];
+            field.setInt(null, cls.fieldIntValues[i]);
+            buffer.p1(0);
+          } else if (type == 2) {
+            Field field = cls.fields[i];
+            int access = field.getModifiers();
+            buffer.p1(0);
+            buffer.p4(access);
           }
+
+          if (type == 3) {
+            Method method = cls.methods[i];
+            byte[][] args = cls.methodArgs[i];
+            Object[] params = new Object[args.length];
+
+            for (int j = 0; j < args.length; ++j) {
+              ObjectInputStream stream = new ObjectInputStream(new ByteArrayInputStream(args[j]));
+              params[j] = stream.readObject();
+            }
+
+            Object returned = method.invoke(null, params);
+            if (returned == null) {
+              buffer.p1(0);
+            } else if (returned instanceof Number) {
+              buffer.p1(1);
+              buffer.p8(((Number) returned).longValue());
+            } else if (returned instanceof String) {
+              buffer.p1(2);
+              buffer.pcstr((String) returned);
+            } else {
+              buffer.p1(4);
+            }
+          } else if (type == 4) {
+            Method method = cls.methods[i];
+            int access = method.getModifiers();
+            buffer.p1(0);
+            buffer.p4(access);
+          }
+        } catch (ClassNotFoundException e) {
+          buffer.p1(-10);
+        } catch (InvalidClassException e) {
+          buffer.p1(-11);
+        } catch (StreamCorruptedException e) {
+          buffer.p1(-12);
+        } catch (OptionalDataException e) {
+          buffer.p1(-13);
+        } catch (IllegalAccessException e) {
+          buffer.p1(-14);
+        } catch (IllegalArgumentException e) {
+          buffer.p1(-15);
+        } catch (InvocationTargetException e) {
+          buffer.p1(-16);
+        } catch (SecurityException e) {
+          buffer.p1(-17);
+        } catch (IOException e) {
+          buffer.p1(-18);
+        } catch (NullPointerException e) {
+          buffer.p1(-19);
+        } catch (Exception e) {
+          buffer.p1(-20);
+        } catch (Throwable e) {
+          buffer.p1(-21);
         }
       }
-
-      buffer.pCrc(offset);
-      cls.unlink();
     }
+
+    buffer.pCrc(offset);
+    cls.unlink();
   }
 
   public static Class<?> getClass(String descriptor) throws ClassNotFoundException {

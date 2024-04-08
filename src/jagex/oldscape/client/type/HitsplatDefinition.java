@@ -17,7 +17,6 @@ public class HitsplatDefinition extends DoublyLinkedNode {
   public static final ReferenceCache<Font> fonts = new ReferenceCache<>(20);
   public static final ReferenceCache<Sprite> sprites = new ReferenceCache<>(64);
   public static ReferenceTable table;
-  public static int anInt1929;
   public static ReferenceTable aReferenceTable1515;
 
   public int textColor;

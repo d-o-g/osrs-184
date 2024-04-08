@@ -1,6 +1,6 @@
 package jagex.oldscape.stockmarket;
 
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.client.client;
 import jagex.oldscape.client.chat.ChatLine;
 import jagex.jagex3.js5.ReferenceTable;
@@ -12,7 +12,7 @@ import java.util.Comparator;
 public class StockmarketListingWorldComparator implements Comparator {
   public static File cachePathFile;
   public static ReferenceTable aReferenceTable350;
-  public static InterfaceComponent anInterfaceComponent351;
+  public static Component anComponent351;
   public static int anInt347;
   public boolean aBoolean349;
 

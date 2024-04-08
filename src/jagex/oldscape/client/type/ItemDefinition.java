@@ -4,7 +4,7 @@ import jagex.datastructure.DoublyLinkedNode;
 import jagex.datastructure.Node;
 import jagex.datastructure.instrusive.cache.ReferenceCache;
 import jagex.datastructure.instrusive.hashtable.IterableNodeTable;
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.client.client;
 import jagex.oldscape.client.fonts.Font;
 import jagex.oldscape.client.minimenu.ContextMenuBuilder;
@@ -195,7 +195,7 @@ public class ItemDefinition extends DoublyLinkedNode {
     return amount < 10000000 ? "<col=ffffff>" + amount / 1000 + "K" + "</col>" : "<col=00ff80>" + amount / 1000000 + "M" + "</col>";
   }
 
-  public static void processOpcode(InterfaceComponent component, ItemDefinition definition, int index, int i, boolean idk) {
+  public static void processOpcode(Component component, ItemDefinition definition, int index, int i, boolean idk) {
     String[] var5 = definition.actions;
     byte var6 = -1;
     String var7 = null;
@@ -490,7 +490,7 @@ public class ItemDefinition extends DoublyLinkedNode {
     if (var5 != null) {
       return var5;
     }
-    UnlitModel var6 = UnlitModel.method982(aReferenceTable722, modelId, 0);
+    UnlitModel var6 = UnlitModel.unpack(aReferenceTable722, modelId, 0);
     if (var6 == null) {
       return null;
     }
@@ -533,7 +533,7 @@ public class ItemDefinition extends DoublyLinkedNode {
       }
     }
 
-    UnlitModel var4 = UnlitModel.method982(aReferenceTable722, modelId, 0);
+    UnlitModel var4 = UnlitModel.unpack(aReferenceTable722, modelId, 0);
     if (var4 == null) {
       return null;
     }
@@ -601,9 +601,9 @@ public class ItemDefinition extends DoublyLinkedNode {
     if (var2 == -1) {
       return null;
     }
-    UnlitModel var4 = UnlitModel.method982(aReferenceTable722, var2, 0);
+    UnlitModel var4 = UnlitModel.unpack(aReferenceTable722, var2, 0);
     if (var3 != -1) {
-      UnlitModel var5 = UnlitModel.method982(aReferenceTable722, var3, 0);
+      UnlitModel var5 = UnlitModel.unpack(aReferenceTable722, var3, 0);
       UnlitModel[] var6 = new UnlitModel[]{var4, var5};
       var4 = new UnlitModel(var6, 2);
     }
@@ -681,11 +681,11 @@ public class ItemDefinition extends DoublyLinkedNode {
     if (var3 == -1) {
       return null;
     }
-    UnlitModel var6 = UnlitModel.method982(aReferenceTable722, var3, 0);
+    UnlitModel var6 = UnlitModel.unpack(aReferenceTable722, var3, 0);
     if (var4 != -1) {
-      UnlitModel var7 = UnlitModel.method982(aReferenceTable722, var4, 0);
+      UnlitModel var7 = UnlitModel.unpack(aReferenceTable722, var4, 0);
       if (var5 != -1) {
-        UnlitModel var8 = UnlitModel.method982(aReferenceTable722, var5, 0);
+        UnlitModel var8 = UnlitModel.unpack(aReferenceTable722, var5, 0);
         UnlitModel[] var9 = new UnlitModel[]{var6, var7, var8};
         var6 = new UnlitModel(var9, 3);
       } else {

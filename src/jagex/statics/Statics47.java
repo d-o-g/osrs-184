@@ -1,14 +1,14 @@
 package jagex.statics;
 
 import jagex.oldscape.ClientLocale;
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.client.chat.ChatLine;
 import jagex.jagex3.graphics.Sprite;
 
 public class Statics47 {
   public static Sprite[] mapmarkers;
 
-  public static void method320(InterfaceComponent var0, int var1) {
+  public static void method320(Component var0, int var1) {
     if (var0.aByteArrayArray1365 == null) {
       throw new RuntimeException();
     }

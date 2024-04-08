@@ -3,13 +3,13 @@ package jagex.oldscape.client.type;
 import jagex.oldscape.Identikit;
 import jagex.datastructure.DoublyLinkedNode;
 import jagex.datastructure.instrusive.linklist.NodeDeque;
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.jagex3.graphics.IndexedSprite;
 import jagex.jagex3.js5.ReferenceTable;
 
 public class AnimationFrameGroup extends DoublyLinkedNode {
 
-  public static InterfaceComponent dragComponent;
+  public static Component dragComponent;
   public static IndexedSprite[] aDoublyNode_Sub24_Sub4Array801;
   public static ReferenceTable aReferenceTable1123;
   public final Identikit[] identikits;

@@ -2,7 +2,7 @@ package jagex.oldscape.client.type;
 
 import jagex.datastructure.DoublyLinkedNode;
 import jagex.datastructure.instrusive.cache.ReferenceCache;
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.client.scene.entity.UnlitModel;
 import jagex.oldscape.stockmarket.StockmarketListingWorldComparator;
 import jagex.jagex3.js5.ReferenceTable;
@@ -14,7 +14,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
 
   public static ReferenceTable table;
 
-  public static InterfaceComponent anInterfaceComponent1518;
+  public static Component anComponent1518;
 
   public int index;
 
@@ -105,7 +105,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
 
     for (int var3 = 0; var3 < 5; ++var3) {
       if (models[var3] != -1) {
-        var1[var2++] = UnlitModel.method982(StockmarketListingWorldComparator.aReferenceTable350, models[var3], 0);
+        var1[var2++] = UnlitModel.unpack(StockmarketListingWorldComparator.aReferenceTable350, models[var3], 0);
       }
     }
 
@@ -159,7 +159,7 @@ public class IdentikitDefinition extends DoublyLinkedNode {
     UnlitModel[] var1 = new UnlitModel[anIntArray747.length];
 
     for (int var2 = 0; var2 < anIntArray747.length; ++var2) {
-      var1[var2] = UnlitModel.method982(StockmarketListingWorldComparator.aReferenceTable350, anIntArray747[var2], 0);
+      var1[var2] = UnlitModel.unpack(StockmarketListingWorldComparator.aReferenceTable350, anIntArray747[var2], 0);
     }
 
     UnlitModel var3;

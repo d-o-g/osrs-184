@@ -6,7 +6,6 @@ import jagex.datastructure.instrusive.cache.ReferenceCache;
 import jagex.datastructure.instrusive.hashtable.IterableNodeTable;
 import jagex.oldscape.client.*;
 import jagex.oldscape.client.scene.entity.*;
-import jagex.jagex3.graphics.JagGraphics3D;
 import jagex.jagex3.js5.ReferenceTable;
 import jagex.messaging.Buffer;
 
@@ -78,56 +77,6 @@ public class NpcDefinition extends DoublyLinkedNode {
     follower = false;
   }
 
-  public static void method505(int renderX, int renderZ, int renderY, int renderPitch, int renderYaw, int var5, int var6) {
-    int var7 = var6 - 334;
-    if (var7 < 0) {
-      var7 = 0;
-    } else if (var7 > 100) {
-      var7 = 100;
-    }
-
-    int var8 = (client.aShort920 - client.aShort913) * var7 / 100 + client.aShort913;
-    int var9 = var5 * var8 / 256;
-    var7 = 2048 - renderPitch & 2047;
-    var8 = 2048 - renderYaw & 2047;
-    int offsetX = 0;
-    int offsetZ = 0;
-    int offsetY = var9;
-    if (var7 != 0) {
-      int sin = JagGraphics3D.SIN_TABLE[var7];
-      int cos = JagGraphics3D.COS_TABLE[var7];
-      int var15 = -var9 * sin >> 16;
-      offsetY = cos * var9 >> 16;
-      offsetZ = var15;
-    }
-
-    if (var8 != 0) {
-      int sin = JagGraphics3D.SIN_TABLE[var8];
-      int cos = JagGraphics3D.COS_TABLE[var8];
-      int var15 = sin * offsetY >> 16;
-      offsetY = offsetY * cos >> 16;
-      offsetX = var15;
-    }
-
-    Camera.x = renderX - offsetX;
-    Camera.z = renderZ - offsetZ;
-    Camera.y = renderY - offsetY;
-    Camera.pitch = renderPitch;
-    Camera.yaw = renderYaw;
-
-    if (Camera.oculusOrbMode == 1
-        && client.rights >= 2
-        && client.ticks % 50 == 0
-        && (Camera.oculusOrbAbsoluteX >> 7 != PlayerEntity.local.absoluteX >> 7
-            || Camera.oculusOrbAbsoluteY >> 7 != PlayerEntity.local.absoluteY >> 7)) {
-      int level = PlayerEntity.local.floorLevel;
-      int x = client.baseX + (Camera.oculusOrbAbsoluteX >> 7);
-      int y = client.baseY + (Camera.oculusOrbAbsoluteY >> 7);
-      client.clientProtHandler.processTeleport(x, y, level, true);
-    }
-
-  }
-
   public static NpcDefinition get(int id) {
     NpcDefinition var2 = cache.get(id);
     if (var2 != null) {
@@ -163,7 +112,7 @@ public class NpcDefinition extends DoublyLinkedNode {
     return id != -1 ? get(id) : null;
   }
 
-  public void decode(Buffer buffer, int opcode) {
+  public void decodeOpcode(Buffer buffer, int opcode) {
     int var3;
     int var4;
     if (opcode == 1) {
@@ -284,59 +233,62 @@ public class NpcDefinition extends DoublyLinkedNode {
 
   public final UnlitModel getBaseModel() {
     if (transformIds != null) {
-      NpcDefinition var1 = transform();
-      return var1 == null ? null : var1.getBaseModel();
+      NpcDefinition transformed = transform();
+      return transformed != null ? transformed.getBaseModel() : null;
     }
+
     if (transformedModelIds == null) {
       return null;
     }
-    boolean var2 = false;
 
+    boolean fail = false;
     for (int id : transformedModelIds) {
       if (!modelTable.load(id, 0)) {
-        var2 = true;
+        fail = true;
       }
     }
 
-    if (var2) {
+    if (fail) {
       return null;
     }
-    UnlitModel[] var4 = new UnlitModel[transformedModelIds.length];
 
+    UnlitModel[] models = new UnlitModel[transformedModelIds.length];
     for (int var5 = 0; var5 < transformedModelIds.length; ++var5) {
-      var4[var5] = UnlitModel.method982(modelTable, transformedModelIds[var5], 0);
+      models[var5] = UnlitModel.unpack(modelTable, transformedModelIds[var5], 0);
     }
 
-    UnlitModel var6;
-    if (var4.length == 1) {
-      var6 = var4[0];
+    UnlitModel base;
+    if (models.length == 1) {
+      base = models[0];
     } else {
-      var6 = new UnlitModel(var4, var4.length);
+      base = new UnlitModel(models, models.length);
     }
 
-    int var7;
     if (textures != null) {
-      for (var7 = 0; var7 < textures.length; ++var7) {
-        var6.texturize(textures[var7], newTextures[var7]);
+      for (int i = 0; i < textures.length; ++i) {
+        base.texturize(textures[i], newTextures[i]);
       }
     }
 
     if (colors != null) {
-      for (var7 = 0; var7 < colors.length; ++var7) {
-        var6.colorize(colors[var7], newColors[var7]);
+      for (int i = 0; i < colors.length; ++i) {
+        base.colorize(colors[i], newColors[i]);
       }
     }
 
-    return var6;
+    return base;
   }
 
   public final Model getModel(AnimationSequence anim, int animFrame, AnimationSequence stance, int stanceFrame) {
     if (transformIds != null) {
-      NpcDefinition trans = transform();
-      return trans == null ? null : trans.getModel(anim, animFrame, stance, stanceFrame);
+      NpcDefinition transformed = transform();
+      return transformed != null ? transformed.getModel(anim, animFrame, stance, stanceFrame) : null;
     }
 
+    //look up model from the in memory cche
     Model staticModel = models.get(id);
+
+    //not present to we need to load it from the cache and process colors/textures/lighting
     if (staticModel == null) {
       boolean var6 = false;
 
@@ -353,7 +305,7 @@ public class NpcDefinition extends DoublyLinkedNode {
       UnlitModel[] unlit = new UnlitModel[modelIds.length];
 
       for (int i = 0; i < modelIds.length; ++i) {
-        unlit[i] = UnlitModel.method982(modelTable, modelIds[i], 0);
+        unlit[i] = UnlitModel.unpack(modelTable, modelIds[i], 0);
       }
 
       UnlitModel base;
@@ -379,6 +331,7 @@ public class NpcDefinition extends DoublyLinkedNode {
       models.put(staticModel, id);
     }
 
+    //apply stance, animation, rotations etc
     Model model;
     if (anim != null && stance != null) {
       model = anim.applyStanceAndAnimation(staticModel, animFrame, stance, stanceFrame);
@@ -390,6 +343,7 @@ public class NpcDefinition extends DoublyLinkedNode {
       model = staticModel.method1291(true);
     }
 
+    //apply scaling
     if (scaleXY != 128 || scaleZ != 128) {
       model.scale(scaleXY, scaleZ, scaleXY);
     }
@@ -398,6 +352,7 @@ public class NpcDefinition extends DoublyLinkedNode {
   }
 
   public void init() {
+
   }
 
   public void decode(Buffer buffer) {
@@ -407,7 +362,7 @@ public class NpcDefinition extends DoublyLinkedNode {
         return;
       }
 
-      decode(buffer, opcode);
+      decodeOpcode(buffer, opcode);
     }
   }
 
@@ -428,11 +383,11 @@ public class NpcDefinition extends DoublyLinkedNode {
     return transformIds[transformIds.length - 1] != -1;
   }
 
-  public int method511(int var1, int var2) {
-    return IterableNodeTable.getIntParameter(parameters, var1, var2);
+  public int getIntegerParameter(int id, int defaultValue) {
+    return IterableNodeTable.getIntParameter(parameters, id, defaultValue);
   }
 
-  public String method504(int var1, String var2) {
-    return IterableNodeTable.getStringParameter(parameters, var1, var2);
+  public String getStringParameter(int id, String defaultValue) {
+    return IterableNodeTable.getStringParameter(parameters, id, defaultValue);
   }
 }

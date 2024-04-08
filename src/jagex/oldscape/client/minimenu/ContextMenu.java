@@ -511,15 +511,15 @@ public class ContextMenu {
         client.stream.writeLater(packet);
       } else if (opcode == 23) {
         if (open) {
-          client.sceneGraph.method1443();
+          client.sceneGraph.setViewportWalking();
         } else {
-          client.sceneGraph.method1451(SceneGraph.floorLevel, secondary, tertiary, true);
+          client.sceneGraph.walkToAndUnsetPending(SceneGraph.floorLevel, secondary, tertiary, true);
         }
       } else if (opcode == 24) {
-        InterfaceComponent component = InterfaceComponent.lookup(tertiary);
+        Component component = Component.lookup(tertiary);
         boolean appearance = true;
         if (component.clientcode > 0) {
-          appearance = InterfaceComponent.isAppearanceCode(component);
+          appearance = Component.isAppearanceCode(component);
         }
 
         if (appearance) {
@@ -529,12 +529,12 @@ public class ContextMenu {
         }
       } else {
         if (opcode == 25) {
-          InterfaceComponent component = InterfaceComponent.lookup(tertiary, secondary);
+          Component component = Component.lookup(tertiary, secondary);
           if (component != null) {
             ComponentSelection.process();
-            ComponentSelection.select(tertiary, secondary, InterfaceComponent.getSpellTargets(InterfaceComponent.getConfig(component)), component.itemId);
+            ComponentSelection.select(tertiary, secondary, Component.getSpellTargets(Component.getConfig(component)), component.itemId);
             ItemSelection.state = 0;
-            ComponentSelection.action = InterfaceComponent.getSelectedAction(component);
+            ComponentSelection.action = Component.getSelectedAction(component);
             if (ComponentSelection.action == null) {
               ComponentSelection.action = "null";
             }
@@ -550,12 +550,12 @@ public class ContextMenu {
         }
 
         if (opcode == 26) {
-          InterfaceComponent.closeInterface();
+          Component.closeInterface();
         } else if (opcode == 28) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.stream.encryptor);
           packet.buffer.p4(tertiary);
           client.stream.writeLater(packet);
-          InterfaceComponent component = InterfaceComponent.lookup(tertiary);
+          Component component = Component.lookup(tertiary);
           if (component.cs1Opcodes != null && component.cs1Opcodes[0][0] == 5) {
             int index = component.cs1Opcodes[0][1];
             Vars.values[index] = 1 - Vars.values[index];
@@ -565,7 +565,7 @@ public class ContextMenu {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.BUTTON_ACTION, client.stream.encryptor);
           packet.buffer.p4(tertiary);
           client.stream.writeLater(packet);
-          InterfaceComponent component = InterfaceComponent.lookup(tertiary);
+          Component component = Component.lookup(tertiary);
           if (component.cs1Opcodes != null && component.cs1Opcodes[0][0] == 5) {
             int index = component.cs1Opcodes[0][1];
             if (Vars.values[index] != component.cs1Values[0]) {
@@ -575,9 +575,9 @@ public class ContextMenu {
           }
         } else if (opcode == 30) {
           if (client.pleaseWaitComponent == null) {
-            InterfaceComponent.processDialogActionPacket(tertiary, secondary);
-            client.pleaseWaitComponent = InterfaceComponent.lookup(tertiary, secondary);
-            InterfaceComponent.invalidate(client.pleaseWaitComponent);
+            Component.processDialogActionPacket(tertiary, secondary);
+            client.pleaseWaitComponent = Component.lookup(tertiary, secondary);
+            Component.invalidate(client.pleaseWaitComponent);
           }
         } else if (opcode == 31) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_ITEM_ON_ITEM, client.stream.encryptor);
@@ -589,7 +589,7 @@ public class ContextMenu {
           packet.buffer.p2(primary);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else if (opcode == 32) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_ITEM, client.stream.encryptor);
@@ -600,7 +600,7 @@ public class ContextMenu {
           packet.buffer.p4_alt1(ComponentSelection.uid);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else if (opcode == 33) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_0, client.stream.encryptor);
@@ -609,7 +609,7 @@ public class ContextMenu {
           packet.buffer.ip2(primary);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else if (opcode == 34) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_1, client.stream.encryptor);
@@ -618,7 +618,7 @@ public class ContextMenu {
           packet.buffer.p2_alt1(primary);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else if (opcode == 35) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_2, client.stream.encryptor);
@@ -627,7 +627,7 @@ public class ContextMenu {
           packet.buffer.p2(secondary);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else if (opcode == 36) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_3, client.stream.encryptor);
@@ -636,7 +636,7 @@ public class ContextMenu {
           packet.buffer.p4_alt2(tertiary);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else if (opcode == 37) {
           OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.ITEM_ACTION_4, client.stream.encryptor);
@@ -645,17 +645,17 @@ public class ContextMenu {
           packet.buffer.p2_alt1(primary);
           client.stream.writeLater(packet);
           client.anInt1018 = 0;
-          StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+          StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
           client.anInt1015 = secondary;
         } else {
           if (opcode == 38) {
             ComponentSelection.process();
-            InterfaceComponent component = InterfaceComponent.lookup(tertiary);
+            Component component = Component.lookup(tertiary);
             ItemSelection.state = 1;
             ItemSelection.id = secondary;
             ItemSelection.uid = tertiary;
             ItemSelection.index = primary;
-            InterfaceComponent.invalidate(component);
+            Component.invalidate(component);
             ItemSelection.name = client.getColorTags(16748608) + ItemDefinition.get(primary).name + client.getColorTags(16777215);
             if (ItemSelection.name == null) {
               ItemSelection.name = "null";
@@ -671,7 +671,7 @@ public class ContextMenu {
             packet.buffer.p4_alt1(tertiary);
             client.stream.writeLater(packet);
             client.anInt1018 = 0;
-            StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+            StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
             client.anInt1015 = secondary;
           } else if (opcode == 40) {
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_1, client.stream.encryptor);
@@ -680,7 +680,7 @@ public class ContextMenu {
             packet.buffer.ip2_alt1(primary);
             client.stream.writeLater(packet);
             client.anInt1018 = 0;
-            StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+            StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
             client.anInt1015 = secondary;
           } else if (opcode == 41) {
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_2, client.stream.encryptor);
@@ -689,7 +689,7 @@ public class ContextMenu {
             packet.buffer.ip2(primary);
             client.stream.writeLater(packet);
             client.anInt1018 = 0;
-            StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+            StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
             client.anInt1015 = secondary;
           } else if (opcode == 42) {
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_3, client.stream.encryptor);
@@ -698,7 +698,7 @@ public class ContextMenu {
             packet.buffer.p4_alt2(tertiary);
             client.stream.writeLater(packet);
             client.anInt1018 = 0;
-            StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+            StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
             client.anInt1015 = secondary;
           } else if (opcode == 43) {
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.TABLE_ACTION_4, client.stream.encryptor);
@@ -707,7 +707,7 @@ public class ContextMenu {
             packet.buffer.p2(secondary);
             client.stream.writeLater(packet);
             client.anInt1018 = 0;
-            StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+            StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
             client.anInt1015 = secondary;
           } else if (opcode == 44) {
             PlayerEntity player = client.players[primary];
@@ -826,7 +826,7 @@ public class ContextMenu {
             {
               if (opcode != 57) {
                 if (opcode == 58) {
-                  InterfaceComponent component = InterfaceComponent.lookup(tertiary, secondary);
+                  Component component = Component.lookup(tertiary, secondary);
                   if (component != null) {
                     OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.USE_SPELL_ON_COMPONENT, client.stream.encryptor);
                     packet.buffer.p4_alt2(tertiary);
@@ -900,7 +900,7 @@ public class ContextMenu {
                 }
 
                 if (opcode == 1005) {
-                  InterfaceComponent component = InterfaceComponent.lookup(tertiary);
+                  Component component = Component.lookup(tertiary);
                   if (component != null && component.itemStackSizes[secondary] >= 100000) {
                     ChatHistory.messageReceived(27, "", component.itemStackSizes[secondary] + " x " + ItemDefinition.get(primary).name);
                   } else {
@@ -910,7 +910,7 @@ public class ContextMenu {
                   }
 
                   client.anInt1018 = 0;
-                  StockmarketListingWorldComparator.anInterfaceComponent351 = InterfaceComponent.lookup(tertiary);
+                  StockmarketListingWorldComparator.anComponent351 = Component.lookup(tertiary);
                   client.anInt1015 = secondary;
                   break label960;
                 }
@@ -924,9 +924,9 @@ public class ContextMenu {
                 }
               }
 
-              InterfaceComponent component = InterfaceComponent.lookup(tertiary, secondary);
+              Component component = Component.lookup(tertiary, secondary);
               if (component != null) {
-                InterfaceComponent.processAction(primary, tertiary, secondary, component.itemId, action);
+                Component.processAction(primary, tertiary, secondary, component.itemId, action);
               }
             }
           }
@@ -936,7 +936,7 @@ public class ContextMenu {
 
     if (ItemSelection.state != 0) {
       ItemSelection.state = 0;
-      InterfaceComponent.invalidate(InterfaceComponent.lookup(ItemSelection.uid));
+      Component.invalidate(Component.lookup(ItemSelection.uid));
     }
 
     if (ComponentSelection.state) {
@@ -944,8 +944,8 @@ public class ContextMenu {
     }
 
     //maybe drag related
-    if (StockmarketListingWorldComparator.anInterfaceComponent351 != null && client.anInt1018 == 0) {
-      InterfaceComponent.invalidate(StockmarketListingWorldComparator.anInterfaceComponent351);
+    if (StockmarketListingWorldComparator.anComponent351 != null && client.anInt1018 == 0) {
+      Component.invalidate(StockmarketListingWorldComparator.anComponent351);
     }
 
   }

@@ -30,8 +30,8 @@ public class MouseRecorder implements Runnable {
     times = new long[500];
   }
 
-  public static void method265(InterfaceComponent[] group, int var1) {
-    for (InterfaceComponent component : group) {
+  public static void method265(Component[] group, int var1) {
+    for (Component component : group) {
       if (component != null) {
         if (component.type == 0) {
           if (component.subcomponents != null) {
@@ -40,7 +40,7 @@ public class MouseRecorder implements Runnable {
 
           SubInterface sub = client.subInterfaces.lookup(component.uid);
           if (sub != null) {
-            InterfaceComponent.executeCloseListeners(sub.id, var1);
+            Component.executeCloseListeners(sub.id, var1);
           }
         }
 
@@ -53,7 +53,7 @@ public class MouseRecorder implements Runnable {
 
         if (var1 == 1 && component.anObjectArray1393 != null) {
           if (component.subComponentIndex >= 0) {
-            InterfaceComponent var6 = InterfaceComponent.lookup(component.uid);
+            Component var6 = Component.lookup(component.uid);
             if (var6 == null || var6.subcomponents == null || component.subComponentIndex >= var6.subcomponents.length || component != var6.subcomponents[component.subComponentIndex]) {
               continue;
             }
@@ -70,12 +70,12 @@ public class MouseRecorder implements Runnable {
   }
 
   public static void method263(ReferenceTable var0, ReferenceTable var1, ReferenceTable var2, ReferenceTable var3) {
-    InterfaceComponent.aReferenceTable1375 = var0;
+    Component.aReferenceTable1375 = var0;
     OldConnectionTaskProcessor.aReferenceTable854 = var1;
-    InterfaceComponent.aReferenceTable364 = var2;
+    Component.aReferenceTable364 = var2;
     SerializableLong.aReferenceTable645 = var3;
-    client.interfaces = new InterfaceComponent[InterfaceComponent.aReferenceTable1375.childrenCount()][];
-    InterfaceComponent.loaded = new boolean[InterfaceComponent.aReferenceTable1375.childrenCount()];
+    client.interfaces = new Component[Component.aReferenceTable1375.childrenCount()][];
+    Component.loaded = new boolean[Component.aReferenceTable1375.childrenCount()];
   }
 
   public void run() {

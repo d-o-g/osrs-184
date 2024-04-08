@@ -1,6 +1,5 @@
 package jagex.oldscape.client;
 
-import jagex.core.compression.bzip2.Bzip2Entry;
 import jagex.core.stringtools.Strings;
 import jagex.jagex3.client.applet.GameShell;
 import jagex.jagex3.client.input.keyboard.Keyboard;
@@ -121,7 +120,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public static final NodeDeque<ScriptEvent> renderEventScripts = new NodeDeque<>();
   public static final NodeDeque<ScriptEvent> inputOccuringEventScripts = new NodeDeque<>();
   public static final NodeDeque<EffectObject> effectObjects = new NodeDeque<>();
-  public static final NodeDeque<Projectile> projectiles = new NodeDeque<>();
+  public static final NodeDeque<ProjectileAnimation> projectiles = new NodeDeque<>();
 
   public static final Map<Integer, ChatHistory> chatHistory = new HashMap<>();
   public static final ArrayList<LoadedArchive> archives = new ArrayList<>(10);
@@ -188,10 +187,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public static int loginProcess = 0; //TODO name
   public static int loginStage = 0;
   public static int gameTypeId = 0;
-  public static int anInt1039 = -1;
+  public static int viewportComponentAbsoluteX = -1;
   public static int relationshipSystemState = 0;
   public static int anInt923 = -1;
-  public static int anInt1038 = -1;
+  public static int viewportComponentAbsoluteY = -1;
   public static int npcCount = 0;
   public static int destinationX = 0;
   public static int loginStageCycles = 0;
@@ -285,15 +284,15 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public static short aShort920 = 320;
   public static String[] aStringArray1533;
   public static String aString1091 = "";
-  public static InterfaceComponent[][] interfaces;
+  public static Component[][] interfaces;
   public static NodeDeque<PendingSpawn> pendingSpawns = new NodeDeque<>();
   public static NodeTable<SubInterface> subInterfaces = new NodeTable<>(8);
   public static NodeTable<IntegerNode> interfaceConfigs = new NodeTable<>(512);
-  public static InterfaceComponent draggedSpecialComponent = null;
-  public static InterfaceComponent draggedComponent = null;
-  public static InterfaceComponent topLevelOfDraggedComponent = null;
-  public static InterfaceComponent pleaseWaitComponent = null;
-  public static InterfaceComponent minimapComponent = null;
+  public static Component draggedSpecialComponent = null;
+  public static Component draggedComponent = null;
+  public static Component topLevelOfDraggedComponent = null;
+  public static Component pleaseWaitComponent = null;
+  public static Component minimapComponent = null;
   public static AttackOptionPriority playerAttackOptionPriority = AttackOptionPriority.HIDDEN;
   public static AttackOptionPriority npcAttackOptionPriority = AttackOptionPriority.HIDDEN;
   public static LoginStep loginStep = LoginStep.anEnum_Sub3_826;
@@ -314,6 +313,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public static GraphicsProvider graphicsProvider;
   public static GameType gameType;
   public static int[] anIntArray1136;
+  public static String currentDomain;
+  public static int activePort;
+  public static int js5port;
+  public static int serverPort;
+  public static int expectedRead;
 
   static {
     overheadMessageCapacity = 50;
@@ -691,10 +695,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     ParameterDefinition.clear();
     WorldMapFunction.cache.clear();
     Class223.clear();
-    InterfaceComponent.sprites.clear();
-    InterfaceComponent.models.clear();
-    InterfaceComponent.fonts.clear();
-    InterfaceComponent.specialSprites.clear();
+    Component.sprites.clear();
+    Component.models.clear();
+    Component.fonts.clear();
+    Component.specialSprites.clear();
     ((DefaultMaterialProvider) JagGraphics3D.materialProvider).clear();
     ClientScript.cache.clear();
     Archive.skeletons.clear();
@@ -885,9 +889,9 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       Buffer.variadic = null;
     }
 
-    HitsplatDefinition.anInt1929 = gameTypeId == 0 ? 43594 : currentWorld + 40000;
-    Bzip2Entry.anInt1579 = gameTypeId == 0 ? 443 : currentWorld + 50000;
-    NpcEntity.port = HitsplatDefinition.anInt1929;
+    serverPort = gameTypeId == 0 ? 43594 : currentWorld + 40000;
+    js5port = gameTypeId == 0 ? 443 : currentWorld + 50000;
+    activePort = serverPort;
     HAlign.aShortArray1482 = PlayerModel.Colors.aShortArray1225;
     PlayerModel.colors = PlayerModel.Colors.aShortArrayArray1226;
     PlayerModel.colors2 = PlayerModel.Colors.aShortArray1224;
@@ -920,17 +924,17 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   }
 
   public void updateSize(boolean fireInputScripts) {
-    InterfaceComponent.resizeGroup(rootInterfaceIndex, canvasWidth, canvasHeight, fireInputScripts);
+    Component.resizeGroup(rootInterfaceIndex, canvasWidth, canvasHeight, fireInputScripts);
   }
 
   public void js5error(int var1) {
     Login.js5task = null;
     Login.js5connection = null;
     js5State = 0;
-    if (NpcEntity.port == HitsplatDefinition.anInt1929) {
-      NpcEntity.port = Bzip2Entry.anInt1579;
+    if (activePort == serverPort) {
+      activePort = js5port;
     } else {
-      NpcEntity.port = HitsplatDefinition.anInt1929;
+      activePort = serverPort;
     }
 
     ++js5ErrorCount;
@@ -1064,12 +1068,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (ServerProt.SET_IF_ANIMATION == stream.currentIncomingPacket) {
         int animation = incoming.g2_alt2();
         int uid = incoming.g4_alt1();
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
         if (animation != component.animation || animation == -1) {
           component.animation = animation;
           component.animationFrame = 0;
           component.animationFrameCycle = 0;
-          InterfaceComponent.invalidate(component);
+          Component.invalidate(component);
         }
 
         stream.currentIncomingPacket = null;
@@ -1084,7 +1088,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           itemId = -1;
         }
 
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
         if (!component.if3) {
           if (itemId == -1) {
             component.modelType = 0;
@@ -1122,7 +1126,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
         }
 
-        InterfaceComponent.invalidate(component);
+        Component.invalidate(component);
         stream.currentIncomingPacket = null;
         return true;
       }
@@ -1130,11 +1134,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (ServerProt.SET_IF_MODEL_TYPE2 == stream.currentIncomingPacket) {
         int uid = incoming.g4_alt1();
         int modelId = incoming.g2_alt4();
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
         if (component.modelType != 2 || modelId != component.modelId) {
           component.modelType = 2;
           component.modelId = modelId;
-          InterfaceComponent.invalidate(component);
+          Component.invalidate(component);
         }
 
         stream.currentIncomingPacket = null;
@@ -1184,14 +1188,14 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
       if (ServerProt.CLEAR_INV == stream.currentIncomingPacket) {
         int uid = incoming.ig4();
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
 
         for (int i = 0; i < component.itemIds.length; ++i) {
           component.itemIds[i] = -1;
           component.itemIds[i] = 0;
         }
 
-        InterfaceComponent.invalidate(component);
+        Component.invalidate(component);
         stream.currentIncomingPacket = null;
         return true;
       }
@@ -1264,7 +1268,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         server.mask = mask;
         setGameState(45);
         connection.stop();
-        SerializableString.setWorld(server);
+        Server.setCurrent(server);
         stream.currentIncomingPacket = null;
         return false;
       }
@@ -1368,8 +1372,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         int rootInterfaceIndex = incoming.g2_alt4();
         client.rootInterfaceIndex = rootInterfaceIndex;
         this.updateSize(false);
-        InterfaceComponent.loadAnimable(rootInterfaceIndex);
-        InterfaceComponent.loadAndInitialize(client.rootInterfaceIndex);
+        Component.loadAnimable(rootInterfaceIndex);
+        Component.loadAndInitialize(client.rootInterfaceIndex);
 
         for (int i = 0; i < 100; ++i) {
           renderedComponents[i] = true;
@@ -1419,10 +1423,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (ServerProt.SET_COMPONENT_HIDDEN == stream.currentIncomingPacket) {
         boolean hidden = incoming.g1() == 1;
         int uid = incoming.ig4();
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
         if (hidden != component.explicitlyHidden) {
           component.explicitlyHidden = hidden;
-          InterfaceComponent.invalidate(component);
+          Component.invalidate(component);
         }
 
         stream.currentIncomingPacket = null;
@@ -1436,7 +1440,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           key += 32768;
         }
 
-        InterfaceComponent component = uid >= 0 ? InterfaceComponent.lookup(uid) : null;
+        Component component = uid >= 0 ? Component.lookup(uid) : null;
 
         while (incoming.pos < stream.incomingPacketSize) {
           int var8 = incoming.gSmarts();
@@ -1457,7 +1461,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         }
 
         if (component != null) {
-          InterfaceComponent.invalidate(component);
+          Component.invalidate(component);
         }
 
         SubInterface.process();
@@ -1469,11 +1473,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (ServerProt.SET_COMPONENT_MODEL_TYPE1 == stream.currentIncomingPacket) {
         int var6 = incoming.g4_alt2();
         int var5 = incoming.g2_alt4();
-        InterfaceComponent component = InterfaceComponent.lookup(var6);
+        Component component = Component.lookup(var6);
         if (component.modelType != 1 || var5 != component.modelId) {
           component.modelType = 1;
           component.modelId = var5;
-          InterfaceComponent.invalidate(component);
+          Component.invalidate(component);
         }
 
         stream.currentIncomingPacket = null;
@@ -1487,10 +1491,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         int var8 = var6 >> 5 & 31;
         int var9 = var6 & 31;
         int var15 = (var8 << 11) + (var7 << 19) + (var9 << 3);
-        InterfaceComponent var59 = InterfaceComponent.lookup(var5);
+        Component var59 = Component.lookup(var5);
         if (var15 != var59.foreground) {
           var59.foreground = var15;
-          InterfaceComponent.invalidate(var59);
+          Component.invalidate(var59);
         }
 
         stream.currentIncomingPacket = null;
@@ -1502,12 +1506,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         int var5 = incoming.g2_alt4();
         int var7 = incoming.g2s_le();
         int var8 = incoming.g4();
-        InterfaceComponent var17 = InterfaceComponent.lookup(var8);
+        Component var17 = Component.lookup(var8);
         if (var5 != var17.xRotation || var7 != var17.zRotation || var6 != var17.modelZoom) {
           var17.xRotation = var5;
           var17.zRotation = var7;
           var17.modelZoom = var6;
-          InterfaceComponent.invalidate(var17);
+          Component.invalidate(var17);
         }
 
         stream.currentIncomingPacket = null;
@@ -1551,7 +1555,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         int var6 = incoming.g2_alt4();
         int var5 = incoming.g4_alt1();
         int var7 = incoming.g2s_le();
-        InterfaceComponent var47 = InterfaceComponent.lookup(var5);
+        Component var47 = Component.lookup(var5);
         var47.rotationKey = var6 + (var7 << 16);
         stream.currentIncomingPacket = null;
         return true;
@@ -1613,7 +1617,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         int id = incoming.g2();
         SubInterface sub = subInterfaces.lookup(key);
         if (sub != null) {
-          InterfaceComponent.close(sub, id != sub.id);
+          Component.close(sub, id != sub.id);
         }
 
         SubInterface.create(key, id, type);
@@ -1625,11 +1629,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         int var6 = incoming.g4();
         SubInterface var58 = subInterfaces.lookup(var6);
         if (var58 != null) {
-          InterfaceComponent.close(var58, true);
+          Component.close(var58, true);
         }
 
         if (pleaseWaitComponent != null) {
-          InterfaceComponent.invalidate(pleaseWaitComponent);
+          Component.invalidate(pleaseWaitComponent);
           pleaseWaitComponent = null;
         }
 
@@ -1661,10 +1665,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
       if (ServerProt.SET_COMPONENT_MODEL_TYPE3 == stream.currentIncomingPacket) {
         int uid = incoming.ig4();
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
         component.modelType = 3;
         component.modelId = PlayerEntity.local.model.hash();
-        InterfaceComponent.invalidate(component);
+        Component.invalidate(component);
         stream.currentIncomingPacket = null;
         return true;
       }
@@ -1734,10 +1738,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (ServerProt.UPDATE_COMPONENT_TEXT == stream.currentIncomingPacket) {
         int uid = incoming.ig4();
         StringBuilder text = new StringBuilder(incoming.gstr());
-        InterfaceComponent component = InterfaceComponent.lookup(uid);
+        Component component = Component.lookup(uid);
         if (!text.toString().equals(component.text)) {
           component.text = text.toString();
-          InterfaceComponent.invalidate(component);
+          Component.invalidate(component);
         }
 
         stream.currentIncomingPacket = null;
@@ -1789,8 +1793,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         if (var5 != rootInterfaceIndex) {
           rootInterfaceIndex = var5;
           this.updateSize(false);
-          InterfaceComponent.loadAnimable(rootInterfaceIndex);
-          InterfaceComponent.loadAndInitialize(rootInterfaceIndex);
+          Component.loadAnimable(rootInterfaceIndex);
+          Component.loadAndInitialize(rootInterfaceIndex);
 
           for (int i = 0; i < 100; ++i) {
             renderedComponents[i] = true;
@@ -1804,7 +1808,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           int type = incoming.g1();
           lookup = subInterfaces.lookup(key);
           if (lookup != null && id != lookup.id) {
-            InterfaceComponent.close(lookup, true);
+            Component.close(lookup, true);
             lookup = null;
           }
 
@@ -1819,7 +1823,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           if (sub.aBoolean790) {
             sub.aBoolean790 = false;
           } else {
-            InterfaceComponent.close(sub, true);
+            Component.close(sub, true);
           }
         }
 
@@ -1872,7 +1876,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
       if (ServerProt.CLOSE_DIALOG == stream.currentIncomingPacket) {
         if (rootInterfaceIndex != -1) {
-          InterfaceComponent.executeCloseListeners(rootInterfaceIndex, 0);
+          Component.executeCloseListeners(rootInterfaceIndex, 0);
         }
 
         stream.currentIncomingPacket = null;
@@ -1948,7 +1952,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (ServerProt.SET_IF_SCROLL == stream.currentIncomingPacket) {
         int var6 = incoming.ig4();
         int var5 = incoming.g2s_le();
-        InterfaceComponent var14 = InterfaceComponent.lookup(var6);
+        Component var14 = Component.lookup(var6);
         if (var14 != null && var14.type == 0) {
           if (var5 > var14.viewportHeight - var14.height) {
             var5 = var14.viewportHeight - var14.height;
@@ -1960,7 +1964,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
           if (var5 != var14.insetY) {
             var14.insetY = var5;
-            InterfaceComponent.invalidate(var14);
+            Component.invalidate(var14);
           }
         }
 
@@ -2005,7 +2009,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       if (--js5Cycles + 1 <= 0) {
         try {
           if (js5State == 0) {
-            Login.js5task = taskProcessor.create(LoginStep.currentDomain, NpcEntity.port);
+            Login.js5task = taskProcessor.create(currentDomain, activePort);
             ++js5State;
           }
 
@@ -2068,7 +2072,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
   public void openMenu(int var1, int var2) {
     ContextMenu.open(var1, var2);
-    sceneGraph.method1451(SceneGraph.floorLevel, var1, var2, false);
+    sceneGraph.walkToAndUnsetPending(SceneGraph.floorLevel, var1, var2, false);
     ContextMenu.open = true;
   }
 
@@ -2191,8 +2195,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   public void method729() {
     if (rootInterfaceIndex != -1) {
       int root = rootInterfaceIndex;
-      if (InterfaceComponent.load(root)) {
-        InterfaceComponent.method513(interfaces[root], -1);
+      if (Component.load(root)) {
+        Component.method513(interfaces[root], -1);
       }
     }
 
@@ -2206,12 +2210,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     anInt1084 = ticks;
-    anInt1039 = -1;
-    anInt1038 = -1;
+    viewportComponentAbsoluteX = -1;
+    viewportComponentAbsoluteY = -1;
     DefaultAudioSystemProvider.processingItemComponent = null;
     if (rootInterfaceIndex != -1) {
       renderedComponentCount = 0;
-      InterfaceComponent.renderInterface(rootInterfaceIndex, 0, 0, canvasWidth, canvasHeight, 0, 0, -1);
+      Component.renderInterface(rootInterfaceIndex, 0, 0, canvasWidth, canvasHeight, 0, 0, -1);
     }
 
     JagGraphics.resetDrawingArea();
@@ -2226,25 +2230,25 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
     }
 
     if (!ContextMenu.open) {
-      if (anInt1039 != -1) {
-        int var1 = anInt1039;
-        int var2 = anInt1038;
+      if (viewportComponentAbsoluteX != -1) {
+        int viewportX = viewportComponentAbsoluteX;
+        int viewportY = viewportComponentAbsoluteY;
         if ((ContextMenu.rowCount >= 2 || ItemSelection.state != 0 || ComponentSelection.state) && displayMouseOverText) {
-          int var3 = ContextMenu.getLastRowIndex();
-          String var4;
+          int rowCountM1 = ContextMenu.getLastRowIndex();
+          String uptext;
           if (ItemSelection.state == 1 && ContextMenu.rowCount < 2) {
-            var4 = "Use" + " " + ItemSelection.name + " " + "->";
+            uptext = "Use" + " " + ItemSelection.name + " " + "->";
           } else if (ComponentSelection.state && ContextMenu.rowCount < 2) {
-            var4 = ComponentSelection.action + " " + ComponentSelection.name + " " + "->";
+            uptext = ComponentSelection.action + " " + ComponentSelection.name + " " + "->";
           } else {
-            var4 = ContextMenu.getRowText(var3);
+            uptext = ContextMenu.getRowText(rowCountM1); //return row < 0 ? "" : targets[row].length() > 0 ? actions[row] + " " + targets[row] : actions[row];
           }
 
           if (ContextMenu.rowCount > 2) {
-            var4 = var4 + getColorTags(16777215) + " " + '/' + " " + (ContextMenu.rowCount - 2) + " more options";
+            uptext = uptext + getColorTags(16777215) + " " + '/' + " " + (ContextMenu.rowCount - 2) + " more options";
           }
 
-          Font.b12full.method1142(var4, var1 + 4, var2 + 15, 16777215, 0, ticks / 1000);
+          Font.b12full.method1142(uptext, viewportX + 4, viewportY + 15, 16777215, 0, ticks / 1000);
         }
       }
     } else {
@@ -2415,8 +2419,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
   }
 
-  public void updateComponentMargin(InterfaceComponent component) {
-    InterfaceComponent parent = component.parentUid != -1 ? InterfaceComponent.lookup(component.parentUid) : null;
+  public void updateComponentMargin(Component component) {
+    Component parent = component.parentUid != -1 ? Component.lookup(component.parentUid) : null;
     int width;
     int height;
     if (parent != null) {
@@ -2427,8 +2431,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       height = canvasHeight;
     }
 
-    InterfaceComponent.updateSize(component, width, height, false);
-    InterfaceComponent.updatePosition(component, width, height);
+    Component.updateSize(component, width, height, false);
+    Component.updatePosition(component, width, height);
   }
 
   public void processPackets() {
@@ -2456,7 +2460,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
     if (gameState == 30) {
       while (true) {
-        ClassStructure structure = ClassStructure.list.head();
+        ClassStructure structure = ClassStructure.pending.head();
         if (structure == null) {
           if (gameStateEvent.shouldProcess) {
             clientProtHandler.processGameStateEvents();
@@ -2527,18 +2531,18 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             }
           }
 
-          if (StockmarketListingWorldComparator.anInterfaceComponent351 != null) {
+          if (StockmarketListingWorldComparator.anComponent351 != null) {
             ++anInt1018;
             if (anInt1018 >= 15) {
-              InterfaceComponent.invalidate(StockmarketListingWorldComparator.anInterfaceComponent351);
-              StockmarketListingWorldComparator.anInterfaceComponent351 = null;
+              Component.invalidate(StockmarketListingWorldComparator.anComponent351);
+              StockmarketListingWorldComparator.anComponent351 = null;
             }
           }
 
-          InterfaceComponent hovered = OldConnection.hoveredComponent;
-          InterfaceComponent var31 = Statics24.anInterfaceComponent1417;
+          Component hovered = OldConnection.hoveredComponent;
+          Component var31 = Statics24.anComponent1417;
           OldConnection.hoveredComponent = null;
-          Statics24.anInterfaceComponent1417 = null;
+          Statics24.anComponent1417 = null;
           draggedSpecialComponent = null;
           processingComponentDrag = false;
           processingComponentDragTopLevel = false;
@@ -2578,8 +2582,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
           ++anInt1075;
 
           while (true) {
-            InterfaceComponent var25;
-            InterfaceComponent var38;
+            Component var25;
+            Component var38;
             ScriptEvent var40;
             do {
               var40 = renderEventScripts.popFirst();
@@ -2603,12 +2607,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             }
 
                             if (AnimationFrameGroup.dragComponent != null) {
-                              InterfaceComponent.invalidate(AnimationFrameGroup.dragComponent);
+                              Component.invalidate(AnimationFrameGroup.dragComponent);
                               ++componentDragCycles;
                               if (Mouse.pressMeta == 0) {
                                 if (draggingComponent) {
                                   if (AnimationFrameGroup.dragComponent == DefaultAudioSystemProvider.processingItemComponent && draggingComponentIndex != draggingComponentSourceIndex) {
-                                    InterfaceComponent dragComponent = AnimationFrameGroup.dragComponent;
+                                    Component dragComponent = AnimationFrameGroup.dragComponent;
                                     byte var35 = 0;
                                     if (anInt1054 == 1 && dragComponent.clientcode == 206) {
                                       var35 = 1;
@@ -2618,7 +2622,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                                       var35 = 0;
                                     }
 
-                                    if (InterfaceComponent.canDrag(InterfaceComponent.getConfig(dragComponent))) {
+                                    if (Component.canDrag(Component.getConfig(dragComponent))) {
                                       int dragSrc = draggingComponentSourceIndex;
                                       int dragDst = draggingComponentIndex;
                                       dragComponent.itemIds[dragDst] = dragComponent.itemIds[dragSrc];
@@ -2683,29 +2687,29 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
                             if (hovered != OldConnection.hoveredComponent) {
                               if (hovered != null) {
-                                InterfaceComponent.invalidate(hovered);
+                                Component.invalidate(hovered);
                               }
 
                               if (OldConnection.hoveredComponent != null) {
-                                InterfaceComponent.invalidate(OldConnection.hoveredComponent);
+                                Component.invalidate(OldConnection.hoveredComponent);
                               }
                             }
 
-                            if (var31 != Statics24.anInterfaceComponent1417 && anInt1036 == anInt1041) {
+                            if (var31 != Statics24.anComponent1417 && anInt1036 == anInt1041) {
                               if (var31 != null) {
-                                InterfaceComponent.invalidate(var31);
+                                Component.invalidate(var31);
                               }
 
-                              if (Statics24.anInterfaceComponent1417 != null) {
-                                InterfaceComponent.invalidate(Statics24.anInterfaceComponent1417);
+                              if (Statics24.anComponent1417 != null) {
+                                Component.invalidate(Statics24.anComponent1417);
                               }
                             }
 
-                            if (Statics24.anInterfaceComponent1417 != null) {
+                            if (Statics24.anComponent1417 != null) {
                               if (anInt1041 < anInt1036) {
                                 ++anInt1041;
                                 if (anInt1041 == anInt1036) {
-                                  InterfaceComponent.invalidate(Statics24.anInterfaceComponent1417);
+                                  Component.invalidate(Statics24.anComponent1417);
                                 }
                               }
                             } else if (anInt1041 > 0) {
@@ -2920,7 +2924,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                             break;
                           }
 
-                          var38 = InterfaceComponent.lookup(var25.parentUid);
+                          var38 = Component.lookup(var25.parentUid);
                         }
                         while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
 
@@ -2933,7 +2937,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                       break;
                     }
 
-                    var38 = InterfaceComponent.lookup(var25.parentUid);
+                    var38 = Component.lookup(var25.parentUid);
                   }
                   while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
 
@@ -2946,7 +2950,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 break;
               }
 
-              var38 = InterfaceComponent.lookup(var25.parentUid);
+              var38 = Component.lookup(var25.parentUid);
             }
             while (var38 == null || var38.subcomponents == null || var25.subComponentIndex >= var38.subcomponents.length || var25 != var38.subcomponents[var25.subComponentIndex]);
 
@@ -2986,7 +2990,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
       if (loginStage == 1) {
         if (LoginProt.task == null) {
-          LoginProt.task = taskProcessor.create(LoginStep.currentDomain, NpcEntity.port);
+          LoginProt.task = taskProcessor.create(currentDomain, activePort);
         }
 
         if (LoginProt.task.state == 2) {
@@ -3244,12 +3248,12 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
 
       } else {
         if (loginStage == 11 && connection.available() >= 1) {
-          Server.expectedRead = connection.read();
+          expectedRead = connection.read();
           loginStage = 12;
         }
 
         int var16;
-        if (loginStage == 12 && connection.available() >= Server.expectedRead) {
+        if (loginStage == 12 && connection.available() >= expectedRead) {
           boolean var5 = connection.read() == 1;
           connection.read(input.payload, 0, 4);
           input.pos = 0;
@@ -3313,7 +3317,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             hasFocus = true;
             previousFocusState = true;
             timeOfPreviousKeyPress = -1L;
-            ClassStructure.list = new LinkedList<>();
+            ClassStructure.pending = new LinkedList<>();
             stream.drop();
             stream.inbuffer.pos = 0;
             stream.currentIncomingPacket = null;
@@ -3379,11 +3383,11 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             varcs.clear();
             followerIndex = -1;
             if (rootInterfaceIndex != -1) {
-              InterfaceComponent.method830(rootInterfaceIndex);
+              Component.method830(rootInterfaceIndex);
             }
 
             for (SubInterface var28 = subInterfaces.head(); var28 != null; var28 = subInterfaces.next()) {
-              InterfaceComponent.close(var28, true);
+              Component.close(var28, true);
             }
 
             rootInterfaceIndex = -1;
@@ -3442,10 +3446,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             ++loginStageCycles;
             if (loginStageCycles > 2000) {
               if (loginProcess < 1) {
-                if (HitsplatDefinition.anInt1929 == NpcEntity.port) {
-                  NpcEntity.port = Bzip2Entry.anInt1579;
+                if (serverPort == activePort) {
+                  activePort = js5port;
                 } else {
-                  NpcEntity.port = HitsplatDefinition.anInt1929;
+                  activePort = serverPort;
                 }
 
                 ++loginProcess;
@@ -3515,10 +3519,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
       }
     } catch (IOException var21) {
       if (loginProcess < 1) {
-        if (NpcEntity.port == HitsplatDefinition.anInt1929) {
-          NpcEntity.port = Bzip2Entry.anInt1579;
+        if (activePort == serverPort) {
+          activePort = js5port;
         } else {
-          NpcEntity.port = HitsplatDefinition.anInt1929;
+          activePort = serverPort;
         }
 
         ++loginProcess;
@@ -3631,8 +3635,8 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             if (var7 == 39 || var7 == 40 || var7 == 41 || var7 == 42 || var7 == 43 || var7 == 33 || var7 == 34 || var7 == 35 || var7 == 36 || var7 == 37 || var7 == 38 || var7 == 1005) {
               var8 = ContextMenu.secondaryArgs[var2];
               var5 = ContextMenu.tertiaryArgs[var2];
-              InterfaceComponent var15 = InterfaceComponent.lookup(var5);
-              if (InterfaceComponent.method650(InterfaceComponent.getConfig(var15)) || InterfaceComponent.canDrag(InterfaceComponent.getConfig(var15))) {
+              Component var15 = Component.lookup(var5);
+              if (Component.method650(Component.getConfig(var15)) || Component.canDrag(Component.getConfig(var15))) {
                 if (AnimationFrameGroup.dragComponent != null && !draggingComponent && ContextMenu.rowCount > 0 && !this.isOpenMenuOnLeftClick()) {
                   SerializableProcessor.method459(draggingComponentX, draggingComponentY);
                 }
@@ -3640,10 +3644,10 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                 draggingComponent = false;
                 componentDragCycles = 0;
                 if (AnimationFrameGroup.dragComponent != null) {
-                  InterfaceComponent.invalidate(AnimationFrameGroup.dragComponent);
+                  Component.invalidate(AnimationFrameGroup.dragComponent);
                 }
 
-                AnimationFrameGroup.dragComponent = InterfaceComponent.lookup(var5);
+                AnimationFrameGroup.dragComponent = Component.lookup(var5);
                 draggingComponentSourceIndex = var8;
                 draggingComponentX = Mouse.clickX;
                 draggingComponentY = Mouse.clickY;
@@ -3651,7 +3655,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
                   ParameterDefinition.method516(var2);
                 }
 
-                InterfaceComponent.invalidate(AnimationFrameGroup.dragComponent);
+                Component.invalidate(AnimationFrameGroup.dragComponent);
                 return;
               }
             }
@@ -3675,7 +3679,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
   }
 
   public void method732() {
-    InterfaceComponent.invalidate(draggedComponent);
+    Component.invalidate(draggedComponent);
     ++CursorEntities.anInt654;
     if (processingComponentDrag && processingComponentDragTopLevel) {
       int var1 = Mouse.x;
@@ -3729,7 +3733,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
             ScriptEvent.fire(var8);
           }
 
-          if (draggedSpecialComponent != null && InterfaceComponent.getTopLevelComponent(draggedComponent) != null) {
+          if (draggedSpecialComponent != null && Component.getTopLevelComponent(draggedComponent) != null) {
             OutgoingPacket packet = OutgoingPacket.prepare(ClientProt.DRAGGED_COMPONENT, stream.encryptor);
             packet.buffer.ip2_alt1(draggedSpecialComponent.subComponentIndex);
             packet.buffer.ip2_alt1(draggedSpecialComponent.itemId);
@@ -3820,7 +3824,7 @@ public final class client extends GameShell implements LocalPlayerNameProvider {
         }
 
         StockmarketListingPriceComparator.method330();
-        LoginStep.currentDomain = this.getCodeBase().getHost();
+        currentDomain = this.getCodeBase().getHost();
         String var4 = devbuild.name;
         byte var5 = 0;
 

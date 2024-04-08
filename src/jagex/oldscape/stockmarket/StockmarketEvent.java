@@ -35,29 +35,29 @@ public class StockmarketEvent {
   }
 
   public static void method388(PendingSpawn var0) {
-    long var1 = 0L;
+    long uid = 0L;
     int var3 = -1;
     int var4 = 0;
     int var5 = 0;
     if (var0.type == 0) {
-      var1 = client.sceneGraph.getBoundaryUidAt(var0.floorLevel, var0.sceneX, var0.sceneY);
+      uid = client.sceneGraph.getBoundaryUidAt(var0.floorLevel, var0.sceneX, var0.sceneY);
     }
 
     if (var0.type == 1) {
-      var1 = client.sceneGraph.getBoundaryDecorUidAt(var0.floorLevel, var0.sceneX, var0.sceneY);
+      uid = client.sceneGraph.getBoundaryDecorUidAt(var0.floorLevel, var0.sceneX, var0.sceneY);
     }
 
     if (var0.type == 2) {
-      var1 = client.sceneGraph.method1461(var0.floorLevel, var0.sceneX, var0.sceneY);
+      uid = client.sceneGraph.method1461(var0.floorLevel, var0.sceneX, var0.sceneY);
     }
 
     if (var0.type == 3) {
-      var1 = client.sceneGraph.method1457(var0.floorLevel, var0.sceneX, var0.sceneY);
+      uid = client.sceneGraph.method1457(var0.floorLevel, var0.sceneX, var0.sceneY);
     }
 
-    if (0L != var1) {
-      int var6 = client.sceneGraph.getConfigAt(var0.floorLevel, var0.sceneX, var0.sceneY, var1);
-      var3 = EntityUID.getObjectId(var1);
+    if (0L != uid) {
+      int var6 = client.sceneGraph.getConfigAt(var0.floorLevel, var0.sceneX, var0.sceneY, uid);
+      var3 = EntityUID.getObjectId(uid);
       var4 = var6 & 31;
       var5 = var6 >> 6 & 3;
     }

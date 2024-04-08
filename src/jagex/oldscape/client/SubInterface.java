@@ -17,10 +17,10 @@ public class SubInterface extends Node {
   public static void process() {
     for (SubInterface sub = client.subInterfaces.head(); sub != null; sub = client.subInterfaces.next()) {
       int groupIndex = sub.id;
-      if (InterfaceComponent.load(groupIndex)) {
+      if (Component.load(groupIndex)) {
         boolean format = true;
-        InterfaceComponent[] group = client.interfaces[groupIndex];
-        for (InterfaceComponent component : group) {
+        Component[] group = client.interfaces[groupIndex];
+        for (Component component : group) {
           if (component != null) {
             format = component.if3;
             break;
@@ -29,9 +29,9 @@ public class SubInterface extends Node {
 
         if (!format) {
           int uid = (int) sub.key;
-          InterfaceComponent component = InterfaceComponent.lookup(uid);
+          Component component = Component.lookup(uid);
           if (component != null) {
-            InterfaceComponent.invalidate(component);
+            Component.invalidate(component);
           }
         }
       }
@@ -44,19 +44,19 @@ public class SubInterface extends Node {
     sub.id = id;
     sub.type = type;
     client.subInterfaces.put(sub, key);
-    InterfaceComponent.loadAnimable(id);
-    InterfaceComponent component = InterfaceComponent.lookup(key);
-    InterfaceComponent.invalidate(component);
+    Component.loadAnimable(id);
+    Component component = Component.lookup(key);
+    Component.invalidate(component);
     if (client.pleaseWaitComponent != null) {
-      InterfaceComponent.invalidate(client.pleaseWaitComponent);
+      Component.invalidate(client.pleaseWaitComponent);
       client.pleaseWaitComponent = null;
     }
 
     ContextMenu.method317();
-    InterfaceComponent.revalidateScroll(client.interfaces[key >> 16], component, false);
-    InterfaceComponent.loadAndInitialize(id);
+    Component.revalidateScroll(client.interfaces[key >> 16], component, false);
+    Component.loadAndInitialize(id);
     if (client.rootInterfaceIndex != -1) {
-      InterfaceComponent.executeCloseListeners(client.rootInterfaceIndex, 1);
+      Component.executeCloseListeners(client.rootInterfaceIndex, 1);
     }
 
     return sub;

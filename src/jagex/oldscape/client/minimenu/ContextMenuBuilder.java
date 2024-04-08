@@ -2,7 +2,7 @@ package jagex.oldscape.client.minimenu;
 
 import jagex.jagex3.sound.DefaultAudioSystemProvider;
 import jagex.datastructure.instrusive.linklist.NodeDeque;
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.client.client;
 import jagex.oldscape.client.option.AttackOptionPriority;
 import jagex.oldscape.client.scene.SceneGraph;
@@ -34,14 +34,14 @@ public class ContextMenuBuilder {
     }
   }
 
-  public static void applyComponentActions(InterfaceComponent component, int rootX, int rootY) {
+  public static void applyComponentActions(Component component, int rootX, int rootY) {
 
     if (component.buttonType == 1) {
       insertRow(component.toolTip, "", 24, 0, 0, component.uid);
     }
 
     if (component.buttonType == 2 && !ComponentSelection.state) {
-      String action = InterfaceComponent.getSelectedAction(component);
+      String action = Component.getSelectedAction(component);
       if (action != null) {
         insertRow(action, client.getColorTags(65280) + component.spellName, 25, 0, -1, component.uid);
       }
@@ -82,7 +82,7 @@ public class ContextMenuBuilder {
               {
                 ItemDefinition def = ItemDefinition.get(component.itemIds[index] - 1);
                 if (ItemSelection.state == 1) {
-                  int cfg = InterfaceComponent.getConfig(component);
+                  int cfg = Component.getConfig(component);
                   boolean allowUsability = (cfg >> 30 & 1) != 0;
                   if (allowUsability) {
                     if (component.uid != ItemSelection.uid || index != ItemSelection.id) {
@@ -93,7 +93,7 @@ public class ContextMenuBuilder {
                 }
 
                 if (ComponentSelection.state) {
-                  int cfg = InterfaceComponent.getConfig(component);
+                  int cfg = Component.getConfig(component);
                   boolean allowUsability = (cfg >> 30 & 1) != 0;
                   if (allowUsability) {
                     if ((ComponentSelection.targetFlags & 16) == 16) {
@@ -108,7 +108,7 @@ public class ContextMenuBuilder {
                   shiftIndex = def.getShiftOptionIndex();
                 }
 
-                int cfg = InterfaceComponent.getConfig(component);
+                int cfg = Component.getConfig(component);
                 boolean var15 = (cfg >> 30 & 1) != 0;
                 if (var15) {
                   for (int var16 = 4; var16 >= 3; --var16) {
@@ -118,13 +118,13 @@ public class ContextMenuBuilder {
                   }
                 }
 
-                int var17 = InterfaceComponent.getConfig(component);
+                int var17 = Component.getConfig(component);
                 boolean var26 = (var17 >> 31 & 1) != 0;
                 if (var26) {
                   insertRow("Use", client.getColorTags(16748608) + def.name, 38, def.id, index, component.uid);
                 }
 
-                int var18 = InterfaceComponent.getConfig(component);
+                int var18 = Component.getConfig(component);
                 boolean allowUsability = (var18 >> 30 & 1) != 0;
                 if (allowUsability) {
                   for (int i = 2; i >= 0; --i) {
@@ -180,32 +180,32 @@ public class ContextMenuBuilder {
 
     if (component.if3) {
       if (ComponentSelection.state) {
-        int cfg = InterfaceComponent.getConfig(component);
+        int cfg = Component.getConfig(component);
         boolean var24 = (cfg >> 21 & 1) != 0;
         if (var24 && (ComponentSelection.targetFlags & 32) == 32) {
           insertRow(ComponentSelection.action, ComponentSelection.name + " " + "->" + " " + component.name, 58, 0, component.subComponentIndex, component.uid);
         }
       } else {
         for (int i = 9; i >= 5; --i) {
-          String action = InterfaceComponent.getAction(component, i);
+          String action = Component.getAction(component, i);
           if (action != null) {
             insertRow(action, component.name, 1007, i + 1, component.subComponentIndex, component.uid);
           }
         }
 
-        String selected = InterfaceComponent.getSelectedAction(component);
+        String selected = Component.getSelectedAction(component);
         if (selected != null) {
           insertRow(selected, component.name, 25, 0, component.subComponentIndex, component.uid);
         }
 
         for (int i = 4; i >= 0; --i) {
-          String action = InterfaceComponent.getAction(component, i);
+          String action = Component.getAction(component, i);
           if (action != null) {
             insertRow(action, component.name, 57, i + 1, component.subComponentIndex, component.uid, component.prioritizeMenuOptions);
           }
         }
 
-        int cfg = InterfaceComponent.getConfig(component);
+        int cfg = Component.getConfig(component);
         boolean var25 = (cfg & 1) != 0;
         if (var25) {
           insertRow("Continue", "", 30, 0, component.subComponentIndex, component.uid);

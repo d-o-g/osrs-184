@@ -1,12 +1,12 @@
 package jagex.jagex3.sound;
 
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.jagex3.graphics.JagGraphics;
 import jagex.jagex3.graphics.JagGraphics3D;
 
 public class DefaultAudioSystemProvider implements AudioSystemProvider {
   public static short[][] aShortArrayArray145;
-  public static InterfaceComponent processingItemComponent;
+  public static Component processingItemComponent;
   public static byte[][][] overlayShapes;
   public static int[][] tileLighting;
   public static int anInt142;

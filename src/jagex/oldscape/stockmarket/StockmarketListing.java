@@ -15,9 +15,11 @@ public class StockmarketListing {
   public int transferred;
   public int spent;
   public byte state;
+
   public StockmarketListing() {
 
   }
+
   public StockmarketListing(Buffer var1) {
     this.state = var1.g1b();
     this.itemId = var1.g2();

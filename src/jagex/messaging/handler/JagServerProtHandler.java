@@ -132,9 +132,9 @@ public class JagServerProtHandler extends ServerProtHandler {
       key += 32768;
     }
 
-    InterfaceComponent component = null;
+    Component component = null;
     if (componentUid >= 0) {
-      component = InterfaceComponent.lookup(componentUid);
+      component = Component.lookup(componentUid);
     }
 
     if (component != null) {
@@ -163,7 +163,7 @@ public class JagServerProtHandler extends ServerProtHandler {
     }
 
     if (component != null) {
-      InterfaceComponent.invalidate(component);
+      Component.invalidate(component);
     }
 
     SubInterface.process();
@@ -233,16 +233,16 @@ public class JagServerProtHandler extends ServerProtHandler {
     int yMargin = incoming.g2_alt3();
     int xMargin = incoming.g2_alt3();
     int uid = incoming.ig4();
-    InterfaceComponent component = InterfaceComponent.lookup(uid);
+    Component component = Component.lookup(uid);
     if (xMargin != component.xMargin || yMargin != component.yMargin || component.xLayout != 0 || component.yLayout != 0) {
       component.xMargin = xMargin;
       component.yMargin = yMargin;
       component.xLayout = 0;
       component.yLayout = 0;
-      InterfaceComponent.invalidate(component);
+      Component.invalidate(component);
       client.instance.updateComponentMargin(component);
       if (component.type == 0) {
-        InterfaceComponent.revalidateScroll(client.interfaces[uid >> 16], component, false);
+        Component.revalidateScroll(client.interfaces[uid >> 16], component, false);
       }
     }
 
@@ -312,7 +312,7 @@ public class JagServerProtHandler extends ServerProtHandler {
     SubInterface sub1 = client.subInterfaces.lookup(key1);
     SubInterface sub2 = client.subInterfaces.lookup(key2);
     if (sub2 != null) {
-      InterfaceComponent.close(sub2, sub1 == null || sub2.id != sub1.id);
+      Component.close(sub2, sub1 == null || sub2.id != sub1.id);
     }
 
     if (sub1 != null) {
@@ -320,19 +320,19 @@ public class JagServerProtHandler extends ServerProtHandler {
       client.subInterfaces.put(sub1, key2);
     }
 
-    InterfaceComponent component = InterfaceComponent.lookup(key1);
+    Component component = Component.lookup(key1);
     if (component != null) {
-      InterfaceComponent.invalidate(component);
+      Component.invalidate(component);
     }
 
-    component = InterfaceComponent.lookup(key2);
+    component = Component.lookup(key2);
     if (component != null) {
-      InterfaceComponent.invalidate(component);
-      InterfaceComponent.revalidateScroll(client.interfaces[component.uid >>> 16], component, true);
+      Component.invalidate(component);
+      Component.revalidateScroll(client.interfaces[component.uid >>> 16], component, true);
     }
 
     if (client.rootInterfaceIndex != -1) {
-      InterfaceComponent.executeCloseListeners(client.rootInterfaceIndex, 1);
+      Component.executeCloseListeners(client.rootInterfaceIndex, 1);
     }
 
     stream.currentIncomingPacket = null;

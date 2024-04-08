@@ -1,8 +1,8 @@
 package jagex.oldscape.shared.prot;
 
 import jagex.datastructure.Node;
-import jagex.messaging.BitBuffer;
-import jagex.messaging.IsaacCipher;
+import jagex.messaging.*;
+import jagex.oldscape.client.client;
 
 public class OutgoingPacket extends Node {
 
@@ -61,6 +61,15 @@ public class OutgoingPacket extends Node {
     packet.payloadSize = 0;
     packet.buffer = new BitBuffer(5000);
     return packet;
+  }
+
+  public static void method1343(String var0) {
+    if (!var0.equals("")) {
+      OutgoingPacket packet = prepare(ClientProt.JOIN_CLANCHANNEL, client.stream.encryptor);
+      packet.buffer.p1(Buffer.stringLengthPlusOne(var0));
+      packet.buffer.pcstr(var0);
+      client.stream.writeLater(packet);
+    }
   }
 
   public void cache() {

@@ -17,7 +17,7 @@ import java.io.*;
 import java.net.Socket;
 
 public final class OldConnection extends Connection implements Runnable {
-  public static InterfaceComponent hoveredComponent;
+  public static Component hoveredComponent;
   final int anInt871;
   final int anInt870;
   final OldConnectionTaskProcessor aOldConnectionTaskProcessor_878;

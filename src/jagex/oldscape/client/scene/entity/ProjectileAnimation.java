@@ -1,10 +1,10 @@
 package jagex.oldscape.client.scene.entity;
 
-import jagex.oldscape.client.InterfaceComponent;
+import jagex.oldscape.client.Component;
 import jagex.oldscape.client.type.AnimationSequence;
 import jagex.oldscape.client.type.EffectAnimation;
 
-public final class Projectile extends Entity {
+public final class ProjectileAnimation extends Entity {
 
   public final AnimationSequence sequence;
 
@@ -36,7 +36,7 @@ public final class Projectile extends Entity {
   public int yRotation;
   public int xRotation;
 
-  public Projectile(int id, int floorLevel, int startX, int startY, int height, int startCycle, int endCycle, int slope, int targetDistance, int targetIndex, int targetHeight) {
+  public ProjectileAnimation(int id, int floorLevel, int startX, int startY, int height, int startCycle, int endCycle, int slope, int targetDistance, int targetIndex, int targetHeight) {
     anInt1659 = 0;
     anInt1661 = 0;
     this.id = id;
@@ -57,12 +57,12 @@ public final class Projectile extends Entity {
 
   }
 
-  public static boolean method1192(InterfaceComponent var0) {
+  public static boolean method1192(Component var0) {
     if (var0.cs1Types == null) {
       return false;
     }
     for (int var1 = 0; var1 < var0.cs1Types.length; ++var1) {
-      int var2 = InterfaceComponent.processCs1(var0, var1);
+      int var2 = Component.processCs1(var0, var1);
       int var3 = var0.cs1Values[var1];
       if (var0.cs1Types[var1] == 2) {
         if (var2 >= var3) {

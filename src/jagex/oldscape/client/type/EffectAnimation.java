@@ -101,7 +101,7 @@ public class EffectAnimation extends DoublyLinkedNode {
   public final Model getModel(int frame) {
     Model cached = modelCache.get(id);
     if (cached == null) {
-      UnlitModel unlit = UnlitModel.method982(table, modelId, 0);
+      UnlitModel unlit = UnlitModel.unpack(table, modelId, 0);
       if (unlit == null) {
         return null;
       }

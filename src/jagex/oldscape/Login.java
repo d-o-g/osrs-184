@@ -157,13 +157,13 @@ public class Login {
 
       if (StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653 != null) {
         var41 = paddingX + 280;
-        if (Server.indexComparator[0] == 0 && Server.populationComparator[0] == 0) {
+        if (Server.comparator[0] == 0 && Server.reverseFlags[0] == 0) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var41, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var41, 4);
         }
 
-        if (Server.indexComparator[0] == 0 && Server.populationComparator[0] == 1) {
+        if (Server.comparator[0] == 0 && Server.reverseFlags[0] == 1) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var41 + 15, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var41 + 15, 4);
@@ -171,13 +171,13 @@ public class Login {
 
         var0.drawString("World", var41 + 32, 17, 16777215, -1);
         var8 = paddingX + 390;
-        if (Server.indexComparator[0] == 1 && Server.populationComparator[0] == 0) {
+        if (Server.comparator[0] == 1 && Server.reverseFlags[0] == 0) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var8, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var8, 4);
         }
 
-        if (Server.indexComparator[0] == 1 && Server.populationComparator[0] == 1) {
+        if (Server.comparator[0] == 1 && Server.reverseFlags[0] == 1) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var8 + 15, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var8 + 15, 4);
@@ -185,13 +185,13 @@ public class Login {
 
         var0.drawString("Players", var8 + 32, 17, 16777215, -1);
         var39 = paddingX + 500;
-        if (Server.indexComparator[0] == 2 && Server.populationComparator[0] == 0) {
+        if (Server.comparator[0] == 2 && Server.reverseFlags[0] == 0) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var39, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var39, 4);
         }
 
-        if (Server.indexComparator[0] == 2 && Server.populationComparator[0] == 1) {
+        if (Server.comparator[0] == 2 && Server.reverseFlags[0] == 1) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var39 + 15, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var39 + 15, 4);
@@ -199,13 +199,13 @@ public class Login {
 
         var0.drawString("Location", var39 + 32, 17, 16777215, -1);
         var36 = paddingX + 610;
-        if (Server.indexComparator[0] == 3 && Server.populationComparator[0] == 0) {
+        if (Server.comparator[0] == 3 && Server.reverseFlags[0] == 0) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[2].renderAt(var36, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[0].renderAt(var36, 4);
         }
 
-        if (Server.indexComparator[0] == 3 && Server.populationComparator[0] == 1) {
+        if (Server.comparator[0] == 3 && Server.reverseFlags[0] == 1) {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[3].renderAt(var36 + 15, 4);
         } else {
           StockmarketListingQuantityComparator.aDoublyNode_Sub24_Sub4Array653[1].renderAt(var36 + 15, 4);
@@ -1315,14 +1315,14 @@ public class Login {
           }
 
           if (Mouse.clickX >= paddingX + 708 && Mouse.clickY >= 4 && Mouse.clickX <= paddingX + 708 + 50 && Mouse.clickY <= 20) {
-            WorldMapHeatMap.method1402();
+            method1402();
             break;
           }
 
           if (anInt463 != -1) {
             Server var7 = Server.servers[anInt463];
-            SerializableString.setWorld(var7);
-            WorldMapHeatMap.method1402();
+            Server.setCurrent(var7);
+            method1402();
           } else {
             if (anInt460 > 0 && leftArrow != null && Mouse.clickX >= 0 && Mouse.clickX <= leftArrow.anInt378 && Mouse.clickY >= client.canvasHeight / 2 - 50 && Mouse.clickY <= client.canvasHeight / 2 + 50) {
               --anInt460;
@@ -1336,7 +1336,7 @@ public class Login {
         }
 
         if (SecureRandomService.anInt457 == 13) {
-          WorldMapHeatMap.method1402();
+          method1402();
           break;
         }
 
@@ -1955,5 +1955,12 @@ public class Login {
       rightTitleSprite.renderAt(paddingX + 382, 0);
       logoSprite.renderAt(paddingX + 382 - logoSprite.anInt378 / 2, 18);
     }
+  }
+
+  public static void method1402() {
+    worldSelectorOpen = false;
+    leftTitleSprite.renderAt(paddingX, 0);
+    rightTitleSprite.renderAt(paddingX + 382, 0);
+    logoSprite.renderAt(paddingX + 382 - logoSprite.anInt378 / 2, 18);
   }
 }

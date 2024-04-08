@@ -9,7 +9,6 @@ public enum LoginStep implements EnumType {
   anEnum_Sub3_826(2, 2),
   anEnum_Sub3_825(0, 3);
 
-  public static String currentDomain;
   public final int anInt619;
   final int anInt824;
 

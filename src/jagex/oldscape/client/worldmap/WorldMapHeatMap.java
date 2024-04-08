@@ -1,14 +1,14 @@
 package jagex.oldscape.client.worldmap;
 
 import jagex.oldscape.Bounds;
-import jagex.oldscape.Login;
 import jagex.jagex3.graphics.Sprite;
 import jagex.oldscape.script.ClientScriptFrame;
-import jagex.statics.Statics35;
+import jagex.statics.Gaussian;
 
 import java.util.HashMap;
 
 public class WorldMapHeatMap {
+
   public static int[] anIntArray1520;
   final HashMap<Integer, Sprite> sprites;
   final int[] anIntArray1449;
@@ -45,13 +45,6 @@ public class WorldMapHeatMap {
 
   }
 
-  public static void method1402() {
-    Login.worldSelectorOpen = false;
-    Login.leftTitleSprite.renderAt(Login.paddingX, 0);
-    Login.rightTitleSprite.renderAt(Login.paddingX + 382, 0);
-    Login.logoSprite.renderAt(Login.paddingX + 382 - Login.logoSprite.anInt378 / 2, 18);
-  }
-
   Sprite computeIfAbsent(int id) {
     if (!sprites.containsKey(id)) {
       compute(id);
@@ -60,99 +53,89 @@ public class WorldMapHeatMap {
     return sprites.get(id);
   }
 
-  void compute(int var1) {
-    int var2 = var1 * 2 + 1;
-    double[] var3 = Statics35.method1172(0.0D, (float) var1 / 3.0F, var1);
-    double var4 = var3[var1] * var3[var1];
-    int[] var6 = new int[var2 * var2];
-    boolean var7 = false;
+  void compute(int id) {
+    int size = id * 2 + 1;
+    double[] gaussian = Gaussian.generate(0.0D, (float) id / 3.0F, id);
+    double normalizationFactor = gaussian[id] * gaussian[id];
+    int[] pixels = new int[size * size];
+    boolean filled = false;
 
-    for (int var8 = 0; var8 < var2; ++var8) {
-      for (int var9 = 0; var9 < var2; ++var9) {
-        int var10 = var6[var9 + var8 * var2] = (int) (256.0D * (var3[var8] * var3[var9] / var4));
-        if (!var7 && var10 > 0) {
-          var7 = true;
+    for (int x = 0; x < size; ++x) {
+      for (int y = 0; y < size; ++y) {
+        int pixel = pixels[y + x * size] = (int) (256.0D * (gaussian[x] * gaussian[y] / normalizationFactor));
+        if (!filled && pixel > 0) {
+          filled = true;
         }
       }
     }
 
-    Sprite var11 = new Sprite(var6, var2, var2);
-    sprites.put(var1, var11);
+    Sprite sprite = new Sprite(pixels, size, size);
+    sprites.put(id, sprite);
   }
 
-  void method991(Sprite var1, Sprite var2, Bounds var3) {
-    if (var3.width != 0 && var3.height != 0) {
-      int var4 = 0;
-      int var5 = 0;
-      if (var3.x == 0) {
-        var4 = var1.width - var3.width;
+  void blend(Sprite s1, Sprite s2, Bounds bounds) {
+    if (bounds.width != 0 && bounds.height != 0) {
+      int xOffset = 0;
+      int yOffset = 0;
+      if (bounds.x == 0) {
+        xOffset = s1.width - bounds.width;
       }
 
-      if (var3.y == 0) {
-        var5 = var1.height - var3.height;
+      if (bounds.y == 0) {
+        yOffset = s1.height - bounds.height;
       }
 
-      int var6 = var4 + var5 * var1.width;
-      int var7 = var3.x + var2.width * var3.y;
+      int destOffset = xOffset + yOffset * s1.width;
+      int srcOffset = bounds.x + s2.width * bounds.y;
 
-      for (int var8 = 0; var8 < var3.height; ++var8) {
-        for (int var9 = 0; var9 < var3.width; ++var9) {
-          int[] var10000 = var2.pixels;
-          int var10001 = var7++;
-          var10000[var10001] += var1.pixels[var6++];
+      for (int x = 0; x < bounds.height; ++x) {
+        for (int y = 0; y < bounds.width; ++y) {
+          int[] pixels = s2.pixels;
+          int next = srcOffset++;
+          pixels[next] += s1.pixels[destOffset++];
         }
 
-        var6 += var1.width - var3.width;
-        var7 += var2.width - var3.width;
+        destOffset += s1.width - bounds.width;
+        srcOffset += s2.width - bounds.width;
       }
-
     }
   }
 
-  public final void method992(int var1, int var2, Sprite var3, float var4) {
-    int var5 = (int) (var4 * 18.0F);
-    Sprite var6 = computeIfAbsent(var5);
-    int var7 = var5 * 2 + 1;
-    Bounds var8 = new Bounds(0, 0, var3.width, var3.height);
-    Bounds var9 = new Bounds(0, 0);
-    size.setSize(var7, var7);
-    System.nanoTime();
+  public final void transform(int x, int y, Sprite base, float intensity) {
+    int radius = (int) (intensity * 18.0F);
+    Sprite heatmap = computeIfAbsent(radius);
+    int size = radius * 2 + 1;
+    Bounds srcBounds = new Bounds(0, 0, base.width, base.height);
+    Bounds dstBounds = new Bounds(0, 0);
+    this.size.setSize(size, size);
 
-    int var10;
-    int var11;
-    int var12;
-    for (var10 = 0; var10 < anInt1447; ++var10) {
-      var11 = anIntArray1449[var10];
-      var12 = anIntArray1448[var10];
-      int var13 = (int) ((float) (var11 - var1) * var4) - var5;
-      int var14 = (int) ((float) var3.height - var4 * (float) (var12 - var2)) - var5;
-      size.setLocation(var13, var14);
-      size.add(var8, var9);
-      method991(var6, var3, var9);
+    for (int i = 0; i < anInt1447; ++i) {
+      int posX = anIntArray1449[i];
+      int posY = anIntArray1448[i];
+      int srcX = (int) ((float) (posX - x) * intensity) - radius;
+      int srcY = (int) ((float) base.height - intensity * (float) (posY - y)) - radius;
+      this.size.setLocation(srcX, srcY);
+      this.size.add(srcBounds, dstBounds);
+      blend(heatmap, base, dstBounds);
     }
 
-    System.nanoTime();
-    System.nanoTime();
-
-    for (var10 = 0; var10 < var3.pixels.length; ++var10) {
-      if (var3.pixels[var10] == 0) {
-        var3.pixels[var10] = -16777216;
+    for (int i = 0; i < base.pixels.length; ++i) {
+      if (base.pixels[i] == 0) {
+        base.pixels[i] = 0xff000000;
       } else {
-        var11 = (var3.pixels[var10] + 64 - 1) / 256;
+        int var11 = (base.pixels[i] + 64 - 1) / 256;
         if (var11 <= 0) {
-          var3.pixels[var10] = -16777216;
+          base.pixels[i] = -16777216;
         } else {
           if (var11 > anIntArray1520.length) {
             var11 = anIntArray1520.length;
           }
 
-          var12 = anIntArray1520[var11 - 1];
-          var3.pixels[var10] = -16777216 | var12;
+          int var12 = anIntArray1520[var11 - 1];
+          base.pixels[i] = -16777216 | var12;
         }
       }
     }
-
-    System.nanoTime();
   }
 
   public final void method993() {

@@ -22,7 +22,7 @@ import java.util.Random;
 
 public final class StockmarketListingLifetimeComparator implements Comparator<StockmarketEvent> {
   public static boolean inFriendsChat;
-  public static InterfaceComponent anInterfaceComponent585;
+  public static Component anComponent585;
 
   public static void method411() {
     Login.username = Login.username.trim();

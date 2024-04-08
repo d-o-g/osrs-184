@@ -2,7 +2,7 @@ package jagex.jagex3.sound;
 
 import jagex.jagex3.sound.vorbis.RawAudioOverride;
 import jagex.datastructure.Node;
-import jagex.oldscape.client.Server;
+import jagex.oldscape.client.scene.SceneGraph;
 import jagex.oldscape.client.type.VarDefinition;
 import jagex.jagex3.js5.ReferenceTable;
 import jagex.messaging.Buffer;
@@ -341,7 +341,7 @@ public class AudioOverride extends Node {
         var38 = var35 * (var36 - var46) + (var36 - var46) / 2;
 
         for (var39 = var46; var39 < var36; ++var39) {
-          var40 = Server.method1351(var38, var36 - var46);
+          var40 = SceneGraph.method1351(var38, var36 - var46);
           aByteArray1141[var39] = (byte) (var40 * aByteArray1141[var39] + 32 >> 6);
           var38 += var37 - var35;
         }
@@ -388,7 +388,7 @@ public class AudioOverride extends Node {
         var38 = var44 * (var36 - var46) + (var36 - var46) / 2;
 
         for (var39 = var46; var39 < var36; ++var39) {
-          var40 = Server.method1351(var38, var36 - var46);
+          var40 = SceneGraph.method1351(var38, var36 - var46);
           int var41 = var40 + (aByteArray1140[var39] & 255);
           if (var41 < 0) {
             var41 = 0;

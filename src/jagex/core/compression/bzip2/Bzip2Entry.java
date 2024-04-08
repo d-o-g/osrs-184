@@ -2,7 +2,6 @@ package jagex.core.compression.bzip2;
 
 public final class Bzip2Entry {
 
-  public static int anInt1579;
   public final int anInt1614;
   public final int anInt1595;
   public final int anInt1607;
